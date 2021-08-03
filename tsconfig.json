@@ -1,0 +1,70 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "checkJs": false,
+    "declaration": false,
+    //"outDir": "bin",
+    "diagnostics": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "jsxFactory": "h",
+    "lib": [
+      "dom",
+      "ES5",
+      "ES6",
+      "ES7",
+      "ES2015",
+      "ES2016",
+      "ES2017",
+      "ES2018",
+      "ES2019",
+      "ES2020",
+      "ES2020.Promise"
+    ],
+    "module": "ES2020",
+    "target": "ES2020",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noStrictGenericChecks": true,
+    "noImplicitAny": false,
+    "pretty": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "types": [
+      "jest",
+      "node",
+      "reflect-metadata"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "src/types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/__tests__/*.ts"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "2712952",
+  "name": "antdv-x",
+  "font_family": "ant-x-icon",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "23252625",
+      "name": "angle-double-down",
+      "font_class": "angle-double-down",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "23252626",
+      "name": "angle-double-left",
+      "font_class": "angle-double-left",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "23252627",
+      "name": "angle-double-right",
+      "font_class": "angle-double-right",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "23252629",
+      "name": "angle-double-up",
+      "font_class": "angle-double-up",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    }
+  ]
+}
