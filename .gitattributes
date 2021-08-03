@@ -1,0 +1,5 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# exclude some files when merge
+.editorconfig merge=ours
