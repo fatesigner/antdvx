@@ -7,7 +7,7 @@
   >
     <template v-if="valid">
       <div :class="$style.being">
-        <icon-check-blod scale="1.2" />
+        <Iconfont name="check-blod" scale="1.2" />
       </div>
       <div :class="$style.tip" :title="$t(i18nMessages.antd.slideCaptcha.validText)">
         {{ $t(i18nMessages.antd.slideCaptcha.validText) }}
@@ -26,23 +26,24 @@
   </div>
   <teleport to="body">
     <div :class="$style.mask" v-if="presented" @click="dismissCaptchaModal" />
-    <slide-modal v-if="presented" :theme="theme" :position="position" @close="dismissCaptchaModal" @failed="onFailed" @successful="onSuccessful" />
+    <SlideModal v-if="presented" :theme="theme" :position="position" @close="dismissCaptchaModal" @failed="onFailed" @successful="onSuccessful" />
   </teleport>
 </template>
 
 <script lang="ts">
 import { PropType, defineComponent, reactive, ref, watch } from 'vue';
 
-import { IconCheckBlod } from '../iconfont';
 import { i18nMessages } from '../../i18n/messages';
+
+import { Iconfont } from '../iconfont';
 
 import SlideModal from './slide-modal.vue';
 
 export default defineComponent({
-  name: 'SlideCaptcha',
+  name: 'slide-captcha',
   components: {
-    SlideModal,
-    IconCheckBlod
+    Iconfont,
+    SlideModal
   },
   props: {
     theme: {
@@ -81,7 +82,9 @@ export default defineComponent({
         if (val) {
           presentCaptchaModal();
         } else {
-          dismissCaptchaModal();
+          if (presented.value) {
+            dismissCaptchaModal();
+          }
         }
       }
     );
@@ -119,8 +122,10 @@ export default defineComponent({
       let _p = getCaptchaModalPosition();
       position.top = _p.top;
       position.left = _p.left;
-      presented.value = true;
-      emit('update:presented', true);
+      if (!presented.value) {
+        presented.value = true;
+        emit('update:presented', true);
+      }
     };
 
     // Dismiss captcha modal

@@ -49,10 +49,10 @@
       <div :class="$style.footer">
         <div :class="$style.actions">
           <div :class="$style.action">
-            <antd-button pure size="small" type="link" @click="close"><icon-times scale="1.4" /></antd-button>
+            <AntdButton pure size="small" type="link" @click="close"><Iconfont name="times" scale="1.4" /></AntdButton>
           </div>
           <div :class="$style.action">
-            <antd-button pure size="small" type="link" @click="refreshImage"><icon-redo /></antd-button>
+            <AntdButton pure size="small" type="link" @click="refreshImage"><Iconfont name="redo" /></AntdButton>
           </div>
         </div>
         <div :class="$style.copyright"></div>
@@ -69,17 +69,17 @@ import { map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { PropType, defineComponent, onBeforeUnmount, onMounted, ref, useCssModule } from 'vue';
 
-import { AntdButton } from '../button';
 import { i18nMessages } from '../../i18n/messages';
-import { IconRedo, IconTimes } from '../iconfont';
 import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
 
+import { AntdButton } from '../button';
+import { Iconfont } from '../iconfont';
+
 export default defineComponent({
-  name: 'SlideCaptcha',
+  name: 'slide-modal',
   components: {
-    AntdButton,
-    IconRedo,
-    IconTimes
+    Iconfont,
+    AntdButton
   },
   props: {
     theme: {

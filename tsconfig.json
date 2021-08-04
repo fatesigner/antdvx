@@ -59,6 +59,7 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
+    "src/**/*.vue",
     "src/types/**/*.d.ts"
   ],
   "exclude": [
