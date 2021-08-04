@@ -1,3 +1,10 @@
+# [1.0.0-alpha.5](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2021-08-04)
+
+
+### Features
+
+* update table component ([1ddb13b](https://github.com/fatesigner/antdvx/commit/1ddb13b39e0c9b997ff1e83d8d4c2e4cf267ecba))
+
 # [1.0.0-alpha.4](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2021-08-04)
 
 
