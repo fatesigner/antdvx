@@ -27,10 +27,11 @@ export const defaultXTableProps: IXTablePropsType = {
   }
 };
 
-export function createXTable<TModel extends Record<string, any> = Record<string, any>, TParams extends Record<string, any> = Record<string, any>>(
-  props: IXTablePropsType<TModel, TParams>,
-  listeners?: IXTableListenersType
-): IXTableRefType<TModel, TParams> {
+export function createXTable<
+  TModel extends Record<string, any> = Record<string, any>,
+  TParams extends Record<string, any> = Record<string, any>,
+  TMethods extends Record<string, (...args: any[]) => any> = Record<string, (...args: any[]) => any>
+>(props: IXTablePropsType<TModel, TParams>, listeners?: IXTableListenersType, methods?: TMethods): IXTableRefType<TModel, TParams, TMethods> {
   const handler: IXTableHandlers<TModel> = {
     refresh: null,
     reload: null,
@@ -46,6 +47,7 @@ export function createXTable<TModel extends Record<string, any> = Record<string,
   return {
     options: reactive(merge({}, defaultXTableProps, props) as any),
     listeners,
-    handler
+    handler,
+    methods
   };
 }

@@ -57,8 +57,13 @@ export interface IXTableListenersType<TModel extends Record<string, any> = Recor
   readonly onRowSelectInvert?: (selectedRows: TModel[]) => void;
 }
 
-export interface IXTableRefType<TModel extends Record<string, any> = Record<string, any>, TParams extends Record<string, any> = Record<string, any>> {
+export interface IXTableRefType<
+  TModel extends Record<string, any> = Record<string, any>,
+  TParams extends Record<string, any> = Record<string, any>,
+  TMethods extends Record<string, (...args: any[]) => any> = Record<string, (...args: any[]) => any>
+> {
   options: IXTablePropsType<TModel, TParams>;
   listeners: IXTableListenersType<TModel>;
   handler: IXTableHandlers<TModel>;
+  methods: TMethods;
 }

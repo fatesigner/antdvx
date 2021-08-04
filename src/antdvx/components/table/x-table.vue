@@ -45,7 +45,7 @@
   >
     <template v-for="(_, name) in $slots" #[name]="slotData">
       <template v-if="name === 'title'">
-        <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2">
+        <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1">
           <div class="tw-flex-1 tw-p-2">
             <slot :name="name" v-bind="{ ...slotData, loading: options.loading, addItem, updateItem, refresh, handleRecordChange }" />
           </div>
