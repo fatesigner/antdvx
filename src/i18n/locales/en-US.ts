@@ -5,40 +5,72 @@
 import { I18nMessagesType } from '../messages';
 
 export default {
-  antd: {
-    action: {
-      add: 'Add',
-      edit: 'Edit',
-      delete: {
-        oktext: 'Confirm',
-        cancelText: 'Cancele',
-        confirmText: 'Are you sure to delete it ?',
-        title: 'Delete',
-        success: 'Delete success.'
+  app: {
+    sidebar: {
+      shrink: 'shrink',
+      unfold: 'unfold'
+    },
+    route: {
+      error: {
+        notFound: {
+          name: 'notfound',
+          title: 'Page Not Found',
+          description: 'Please check that the URL you entered is correct, or click the button below to return to the homepage.',
+          back: 'back'
+        },
+        unauthorized: {
+          name: 'unauthorized',
+          title: 'You do not have permission to go to this page',
+          title2: 'Please contact your leader if you are dissatisfied',
+          title3: 'Or you can go',
+          back: 'back',
+          gotologin: 'login',
+          gotohome: 'home'
+        }
       },
-      save: 'Save',
+      login: 'login',
+      menus: 'menus auth',
+      dashboard: 'dashboard',
+      table: 'table',
+      grid: 'kendo grid',
+      pc2is: 'pc2is',
+      pc2i: 'pc2i'
+    },
+    navbar: {
+      logOut: 'Log Out',
+      dashboard: 'Dashboard',
+      github: 'Github',
+      theme: 'Theme',
+      size: 'Global Size',
+      profile: 'Profile',
+      individuation: 'Individuation'
+    },
+    login: {
+      title: 'Login Form',
+      logIn: 'Login',
+      username: 'Username',
+      password: 'Password',
+      any: 'any',
+      thirdparty: 'Or connect with',
+      thirdpartyTips: 'Can not be simulated on i18n, so please combine you own business simulation! ! !'
+    },
+    tabsView: {
       refresh: 'Refresh',
-      upload: 'Upload',
-      export: 'Export',
-      exporting: 'Exporting',
-      exportToPDF: 'Export to pdf',
-      exportToImage: 'Export to image',
-      exportToExcel: 'Export to excel'
+      close: 'Close',
+      closeOthers: 'Close others',
+      closeAll: 'Close all',
+      openInNewTab: 'Open in new tab'
     },
-    pagination: {
-      of: 'of',
-      items: 'items'
+    settings: {
+      title: 'Page style setting',
+      theme: 'Theme Color',
+      showTagsView: 'Open Tags-View',
+      showSidebarLogo: 'Sidebar Logo',
+      fixedHeader: 'Fixed Header'
     },
-    slideCaptcha: {
-      tip: 'Click the button to verify',
-      handingTip: 'Please move the slider to complete the verification',
-      loading: 'Loading the captcha',
-      slider: 'Drag the left slider to complete the top puzzle',
-      validText: 'Passed the verification',
-      result: {
-        failed: 'Drag the slider to stitch the hover image together correctly',
-        successful: 'Complete picture matching and verification'
-      }
+    notification: {
+      login: 'Login successfully',
+      logout: 'You have logged out.'
     }
   }
 } as I18nMessagesType;

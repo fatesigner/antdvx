@@ -12,7 +12,7 @@ gulp.task('build-esm', async function () {
 
   // Copy all files to output
   await new Promise((resolve) => {
-    gulp.src(path.join(env.srcPath, '**/*')).pipe(gulp.dest(env.outputPath)).on('end', resolve);
+    gulp.src(path.join(env.srcPath, 'antdvx/**/*')).pipe(gulp.dest(env.outputPath)).on('end', resolve);
   });
 
   // Build esm module

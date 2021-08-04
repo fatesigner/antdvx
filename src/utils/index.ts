@@ -2,184 +2,329 @@
  * utils
  */
 
-import { cloneDeep } from 'lodash-es';
-import { isNullOrUndefined, isObject } from '@fatesigner/utils/type-check';
+import { StructureTree } from '@fatesigner/utils/structure-tree';
+import { isBoolean, isObject } from '@fatesigner/utils/type-check';
 
-// 验证是否外部地址
-export function isExternal(path: string) {
-  return /^(https?:|mailto:|tel:)/.test(path);
-}
+import { IMenu } from '@/types/menu';
+import { IRouteConfig } from '@/types/route';
 
-// 复制文本
-export function copy(text: string) {
-  const input = document.createElement('textarea');
-  input.value = text;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand('copy');
-  document.body.removeChild(input);
-}
-
-const isMergeObject = function (val) {
-  return Object.prototype.toString.call(val) === '[object Object]' || Object.prototype.toString.call(val) === '[object Undefined]';
-};
-
-/**
- * 合并对象，遇到数组属性覆盖
- * @param defaultProps 默认值
- * @param props 需要覆盖的对象
- * @param deep 是否深度合并，默认为 false
- * @param assignment 自定义赋值操作，默认为引用或值的传递
- * @constructor
- */
-export function mergeProps(
-  defaultProps,
-  props,
-  deep = false,
-  assignment = function (target, property, val) {
-    target[property] = val;
-  }
-) {
-  if (!props) {
-    return defaultProps;
-  }
-  if (isMergeObject(defaultProps) && isMergeObject(props)) {
-    Object.keys(defaultProps).forEach(function (key) {
-      if (isMergeObject(props[key])) {
-        if (Object.prototype.hasOwnProperty.call(props, key)) {
-          mergeProps(defaultProps[key], props[key], deep);
+export function getColumns(res) {
+  const obj = res[0];
+  const columns = [];
+  let template = '';
+  Object.keys(obj)
+    .filter(
+      (x) =>
+        !['isUpdated', 'apiToken', 'errorMessage', 'updateTime', 'updateBy', 'infoJasonValues', 'returnInfoType', 'inputInfoType'].includes(x) &&
+        !isObject(obj[x])
+    )
+    .forEach((x) => {
+      if (x === 'title') {
+        columns.push({
+          title: 'title_',
+          dataIndex: 'title_',
+          width: 150
+        });
+        template += `
+         <template #title_="{ record, handleRecordChange }">
+            <AInput v-model:value="record.title_" style="width: 150px" @change="handleRecordChange(record)" />
+          </template>
+        `;
+      } else {
+        columns.push({
+          title: x.replace(/_/g, ' '),
+          dataIndex: x,
+          width: 150
+        });
+        if (isBoolean(obj[x])) {
+          template += `
+         <template #${x}="{ record, handleRecordChange }">
+            <a-checkbox v-model:checked="record.${x}" @change="handleRecordChange(record)" />
+          </template>
+        `;
         } else {
-          if (isObject(defaultProps[key])) {
-            if (deep) {
-              // 深度合并
-              assignment(props, key, {});
-              mergeProps(defaultProps[key], props[key], deep);
-            } else {
-              assignment(props, key, defaultProps[key]);
-            }
-          } else if (Array.isArray(defaultProps[key])) {
-            // 数组类型，将其克隆后替换
-            if (deep) {
-              assignment(props, key, cloneDeep(defaultProps[key]));
-            } else {
-              assignment(props, key, defaultProps[key]);
-            }
-          } else {
-            // 其他非引用类型的值
-            assignment(props, key, defaultProps[key]);
-          }
+          template += `
+         <template #${x}="{ record, handleRecordChange }">
+            <AInput v-model:value="record.${x}" style="width: 150px" @change="handleRecordChange(record)" />
+          </template>
+        `;
         }
       }
     });
-  }
-  return props;
+
+  console.log('columns', JSON.stringify(columns));
+  console.log('columns slot', JSON.stringify(columns.map((x) => ({ ...x, slots: { customRender: x.dataIndex } }))));
+  console.log('template', template);
 }
 
 /**
- * 将容器滚动到指定位置
- * @param containerEl 容器元素
- * @param left
- * @param top
- * @param duration 间隔时间，默认为 0，即无动画效果
- * @returns {Promise}
+ * 从当前 vue router 中获取 Menu 菜单
+ * @param routes
+ * @param filter
  */
-export function scrollTo(containerEl: HTMLElement, left: number, top: number, duration = 0): Promise<void> {
-  if (isNullOrUndefined(left) && isNullOrUndefined(top)) {
-    return Promise.resolve();
-  }
-
-  const initialX = containerEl.scrollLeft;
-  const initialY = containerEl.scrollTop;
-
-  const baseX = (initialX + left ?? 0) * 0.5;
-  const baseY = (initialY + top ?? 0) * 0.5;
-  const differenceX = initialX - baseX;
-  const differenceY = initialY - baseY;
-
-  const startTime = performance.now();
-
-  return new Promise((resolve) => {
-    const _scrollTo = isNullOrUndefined(left)
-      ? function (normalizedTime) {
-          containerEl.scrollTo(initialX, baseY + differenceY * Math.cos(normalizedTime * Math.PI));
-        }
-      : isNullOrUndefined(top)
-      ? function (normalizedTime) {
-          containerEl.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), initialY);
-        }
-      : function (normalizedTime) {
-          containerEl.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
+export function getMenusFromRoutes(routes: IRouteConfig[], filter?: (router: any) => boolean) {
+  const strutreeRouters: StructureTree<IRouteConfig> = new StructureTree<IRouteConfig>();
+  // 解析路由表
+  return strutreeRouters.reduce(
+    routes,
+    (prev, cur, index, parentNodes) => {
+      if (cur.name) {
+        const menu: IMenu = {
+          id: cur.name.toString(),
+          name: cur.name.toString(),
+          label: cur?.meta?.label,
+          url: parentNodes.map((x: any) => x.path).join('/') + cur.path,
+          level: parentNodes.length
         };
-
-    const step = function () {
-      let normalizedTime = (performance.now() - startTime) / duration;
-      if (normalizedTime > 1) {
-        normalizedTime = 1;
+        if (!filter || filter(cur)) {
+          prev.push(menu);
+        }
       }
 
-      _scrollTo(normalizedTime);
+      return prev;
+    },
+    []
+  );
+}
 
-      if (normalizedTime < 1) {
-        requestAnimationFrame(step);
+// 将冗余数据转换为多维结构数据
+export function convertRedundancy<T extends Record<string, any>, T2 extends Record<string, any>>(
+  data: T[],
+  rootMap: (node: T) => boolean,
+  itemMap: (node: T) => T2,
+  prop: keyof T,
+  parentProp: keyof T
+) {
+  // 先找出 root 节点
+  const nodes = data.filter((x) => rootMap(x));
+  const props = nodes.map((x) => x[prop]);
+  const res = nodes.map((x) => itemMap(x));
+
+  const redundancy = function (res: T2[], props: any[], remaining: T[]) {
+    res.forEach(function (item: any, index) {
+      const children = remaining.filter((x) => x[parentProp] === props[index]);
+      item.children = children.map((x) => itemMap(x));
+      if (children.length) {
+        redundancy(
+          item.children,
+          children.map((x) => x[prop]),
+          remaining
+        );
+      }
+    });
+  };
+
+  redundancy(res, props, data);
+
+  return res;
+}
+
+export function getBytesFromFile(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function () {
+      const arrayBuffer: any = this.result;
+      const array = new Uint8Array(arrayBuffer);
+      const binaryString = String.fromCharCode.apply(null, array);
+      resolve(binaryString);
+    };
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+export function getBase64FromFile(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function () {
+      resolve(this.result as string);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// 动态添加角色选择控件，用于 develop 模式
+export function appendRadios<T extends { name: string; text: string }>(
+  name: string,
+  title: string,
+  value: string,
+  arr: T[],
+  container: HTMLElement,
+  targetEl: HTMLElement,
+  callback: (arg0: T) => any
+) {
+  let htmlStr = '';
+  let cur = -1;
+  if (value) {
+    const i = arr.findIndex((x) => x.name === value);
+    if (i > -1) {
+      cur = i;
+    }
+  }
+  arr.forEach((role, index) => {
+    htmlStr += `<label class="roles-radios" style="margin-right: 5px; white-space: nowrap; cursor: pointer;"><input name="${name}" type="radio" value="${index}" ${
+      index === cur ? 'checked' : ''
+    }/>&nbsp;${role.text}</label>&nbsp;`;
+  });
+  htmlStr = `<div style="display: flex;margin-bottom: 10px;"><strong style="white-space: nowrap;">${title}：</strong><div>${htmlStr}</div></div>`;
+  const element = document.createElement('div');
+  element.innerHTML = htmlStr;
+  container.insertBefore(element.children[0], targetEl || container.firstChild);
+  // 绑定 radio change 事件
+  container.querySelectorAll(`.roles-radios input[name='${name}']`).forEach(($radio: HTMLElement) => {
+    $radio.onclick = (e: any) => {
+      callback(arr[e.target.value]);
+    };
+  });
+  if (cur > -1) {
+    callback(arr[cur]);
+  }
+}
+
+export function getOffset(element: any, target: HTMLElement = null) {
+  const offset = {
+    left: 0,
+    top: 0
+  };
+  while (element !== target) {
+    offset.left += element.offsetLeft;
+    offset.top += element.offsetTop;
+    element = element.offsetParent;
+  }
+  return offset;
+}
+
+export function registerStoreModule({ module, moduleName, store }: any) {
+  const moduleIsRegistered = store._modules.root._children[moduleName] !== undefined;
+  const stateExists = store.state[moduleName];
+  if (!moduleIsRegistered) {
+    store.registerModule(moduleName, module, { preserveState: stateExists });
+  }
+}
+
+// 导入流文件
+export function importStreamFile(accept = '') {
+  return new Promise((resolve, reject) => {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = accept;
+    input.onchange = (e: any) => {
+      const files = e.target.files;
+      if (!files || !files.length) {
+        input = null;
+        reject(new Error('file not exist.'));
+      }
+      const reader = new FileReader();
+      reader.onload = (e2: any) => {
+        try {
+          resolve(JSON.parse(e2.target.result));
+        } catch (e) {
+          reject(e);
+        }
+        input = null;
+      };
+      reader.readAsText(files[0]);
+    };
+    input.click();
+  });
+}
+
+// 导出文件
+export function exportStreamFile(data: any, filename: string, contentType = 'application/octet-stream'): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (data) {
+      if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        window.navigator.msSaveBlob(new Blob([data]), filename);
+        resolve();
       } else {
+        const url = window.URL.createObjectURL(new Blob([data], { type: contentType }));
+        const link = document.createElement('a');
+        link.style.display = 'none';
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
         resolve();
       }
-    };
-
-    requestAnimationFrame(step);
+    } else {
+      reject(new Error('文件不存在'));
+    }
   });
 }
 
-export function waitTransitionend(el: HTMLElement): Promise<void> {
-  return new Promise((resolve) => {
-    const callback = () => {
-      resolve();
-      el.removeEventListener('transitionend', callback);
-    };
-    el.addEventListener('transitionend', callback, false);
-  });
+export function downloadFile(file: Blob | File, filename: string) {
+  const url = window.URL.createObjectURL(file);
+  const link = document.createElement('a');
+  link.style.display = 'none';
+  link.href = url;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
 }
 
-export function getBoundaryPosition(value, min, max): number {
-  return Math.min(Math.max(value, min), max);
-}
+/**
+ * 获取指定的时间戳对应的时分秒的值
+ * @timestamp number
+ * @constructor
+ */
+export function getTimestamp(timestamp: number) {
+  const res = {
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  };
 
-export function getTranslate3dStyle(el: HTMLElement) {
-  const results: any[] = getComputedStyle(el, null)
-    .getPropertyValue('transform')
-    .match(/-?\d+\.?\d*/g);
-
-  if (!results) {
-    return [0, 0, 0];
+  if (timestamp >= 86400000) {
+    res.days = Math.floor(timestamp / 86400000);
+    timestamp = timestamp % 86400000;
   }
 
-  if (results.length === 6) {
-    results.push(0);
-    return results.slice(4, 6).map((x) => parseFloat(x));
-  } else if (results.length === 16) {
-    return results.slice(13, 16).map((x) => parseFloat(x));
-  } else {
-    return results.map((x) => parseFloat(x));
+  if (timestamp >= 3600000) {
+    res.hours = Math.floor(timestamp / 3600000);
+    timestamp = timestamp % 3600000;
   }
+
+  if (timestamp >= 60000) {
+    res.minutes = Math.floor(timestamp / 60000);
+    timestamp = timestamp % 60000;
+  }
+
+  res.seconds = Math.floor(timestamp / 1000);
+
+  return res;
 }
 
-export function getEventTarget(e: Event) {
-  return e.target || e.srcElement;
-}
-
-export function getEventArgs(e: MouseEvent | TouchEvent) {
-  if ((e as TouchEvent).touches) {
-    return {
-      // TouchEvent does not support offset position
-      offsetX: 0,
-      offsetY: 0,
-      points: Array.from((e as TouchEvent).touches).map(({ clientX, clientY }) => [clientX, clientY])
-    };
-  } else {
-    return {
-      offsetX: (e as MouseEvent).offsetX,
-      offsetY: (e as MouseEvent).offsetY,
-      points: [[(e as MouseEvent).clientX, (e as MouseEvent).clientY]]
-    };
+/**
+ * 获取指定的时间戳对应的时分秒的字符串
+ * @param timestamp
+ * @param format
+ */
+export function getTimestampStr(
+  timestamp: number,
+  format?: {
+    day?: string;
+    hour?: string;
+    minute?: string;
+    second?: string;
   }
+) {
+  const res = this.getTimestamp(timestamp);
+  let str = '';
+  if (format?.day && res.days) {
+    str += res.days.toString() + format?.day;
+  }
+  if (format?.hour && res.hours) {
+    str += res.hours.toString() + format?.hour;
+  }
+  if (format?.minute && res.minutes) {
+    str += res.minutes.toString() + format?.minute;
+  }
+  if (format?.second && res.seconds) {
+    str += res.seconds.toString() + format?.second;
+  }
+  return str;
 }

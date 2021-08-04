@@ -1,0 +1,5 @@
+/**
+ * index
+ */
+
+export * from './error';

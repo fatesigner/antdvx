@@ -1,0 +1,27 @@
+.invalid {
+  .ivu-select-selection,
+  .ivu-input {
+    border: 1px solid #e64545;
+  }
+
+  &.ant-input,
+  .ant-input,
+  .ant-select-selection {
+    border: 1px solid #e64545;
+
+    &:focus {
+      outline: 0;
+      box-shadow: 0 0 0 2px rgba(#e64545, 0.2);
+    }
+  }
+}
+
+.invalid-message {
+  display: block;
+  padding: 5px 8px;
+  font-size: 12px;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 14px;
+  color: #da4747;
+}

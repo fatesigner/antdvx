@@ -5,40 +5,68 @@
 import { createLocaleMessages } from '@fatesigner/i18n';
 
 export const i18nMessages = createLocaleMessages({
-  antd: {
-    action: {
-      add: '',
-      edit: '',
-      delete: {
-        oktext: '',
-        cancelText: '',
-        confirmText: '',
-        title: '',
-        success: ''
+  app: {
+    route: {
+      error: {
+        notFound: {
+          name: '',
+          title: '',
+          description: '',
+          back: ''
+        },
+        unauthorized: {
+          name: '',
+          title: '',
+          title2: '',
+          title3: '',
+          back: '',
+          gotologin: '',
+          gotohome: ''
+        }
       },
-      save: '',
+      login: '',
+      menus: '',
+      dashboard: '',
+      table: '',
+      grid: '',
+      pc2is: '',
+      pc2i: ''
+    },
+    navbar: {
+      logOut: '',
+      dashboard: '',
+      github: '',
+      theme: '',
+      size: '',
+      profile: '',
+      individuation: ''
+    },
+    login: {
+      title: '',
+      logIn: '',
+      username: '',
+      password: '',
+      any: '',
+      thirdparty: '',
+      thirdpartyTips: ''
+    },
+    tabsView: {
       refresh: '',
-      upload: '',
-      export: '',
-      exporting: '',
-      exportToPDF: '',
-      exportToImage: '',
-      exportToExcel: ''
+      close: '',
+      closeOthers: '',
+      closeAll: '',
+      openInNewTab: ''
     },
-    pagination: {
-      of: '',
-      items: ''
+    settings: {
+      title: '',
+      theme: '',
+      showTagsView: '',
+      showSidebarLogo: '',
+      fixedHeader: ''
     },
-    slideCaptcha: {
-      tip: '',
-      handingTip: '',
-      loading: '',
-      slider: '',
-      validText: '',
-      result: {
-        failed: '',
-        successful: ''
-      }
+    notification: {
+      login: '',
+      logout: ''
     }
   }
 });

@@ -6,7 +6,8 @@ module.exports = {
   globals: {
     'ts-jest': {
       diagnostics: false,
-      tsconfig: 'tsconfig.test.json'
+      tsconfig: 'tsconfig.test.json',
+      babelConfig: 'babel.test.config.js'
     }
   },
   testEnvironment: 'node',

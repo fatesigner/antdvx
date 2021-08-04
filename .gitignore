@@ -5,7 +5,7 @@ release.md
 /deploykeys*
 
 # dependencies
-/node_modules
+node_modules
 
 # test output
 /.nyc_output

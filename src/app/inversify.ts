@@ -1,0 +1,199 @@
+/**
+ * inversify（IOC/DI）
+ * IOC 容器，注入 APP 依赖
+ */
+
+import { Container, ContainerModule } from 'inversify';
+import { isString } from '@fatesigner/utils/type-check';
+import { ANTDVX_SYMBOLS } from 'antdvx/symbols';
+import { IAuthService } from 'antdvx/interfaces/auth.interface';
+import { IHttpService } from 'antdvx/interfaces/http.interface';
+import { ISessionService } from 'antdvx/interfaces/session.interface';
+import { IStorageService } from 'antdvx/interfaces/storage.interface';
+import { AuthService, AuthServiceConfig } from 'antdvx/services/auth.service';
+import { HttpService, HttpServiceConfig } from 'antdvx/services/http.service';
+import { SessionService, SessionServiceConfig } from 'antdvx/services/session.service';
+import { StorageService } from 'antdvx/services/storage.service';
+
+import { env } from '@/env';
+import { IUser } from '@/types/user';
+import { RouteMeta } from '@/types/route';
+import { login$, logout$, roleChanged$ } from '@/app/events';
+import { ROLES } from '@/app/constants';
+
+// 定义服务类型
+export type SessionServiceType = ISessionService<IUser<typeof ROLES.keys>, typeof ROLES.keys>;
+export type AuthServiceType = IAuthService<IUser<typeof ROLES.keys>, typeof ROLES.keys, RouteMeta<typeof ROLES.keys>>;
+
+// 新建 IOC 容器
+const appDIC = new Container({ defaultScope: 'Singleton' });
+
+const antdvxModule = new ContainerModule((bind) => {
+  // StorageService
+  bind(ANTDVX_SYMBOLS.STORAGE_SERVICE_IDENTIFICATION).toConstantValue(env.APP_NAME);
+  bind<IStorageService>(ANTDVX_SYMBOLS.STORAGE_SERVICE).to(StorageService);
+
+  // SessionService
+  bind<SessionServiceConfig<IUser<typeof ROLES.keys>, typeof ROLES.keys>>(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG).toConstantValue({
+    // 用户登录
+    onLogin(user) {
+      login$.emit(user);
+    },
+    onLogout(res) {
+      logout$.emit(res);
+    },
+    onRoleChanged(roles) {
+      roleChanged$.emit(roles);
+    },
+    getUserModel() {
+      return {
+        username: '',
+        nickname: '',
+        password: '',
+        privileges: null,
+        roles: [],
+        avatar: '',
+        usercode: '',
+        realname: '',
+        tokenType: '',
+        accessToken: '',
+        accessTokenFull: '',
+        refreshToken: '',
+        tokenExpirationTime: 0,
+        menus: [],
+        permissions: []
+      };
+    }
+  });
+  bind<SessionServiceType>(ANTDVX_SYMBOLS.SESSION_SERVICE).to(SessionService);
+
+  // AuthService
+  bind<AuthServiceConfig<typeof ROLES.keys>>(ANTDVX_SYMBOLS.AUTH_SERVICE_CONFIG).toConstantValue({
+    // 主页地址
+    homePage: 'dashboard',
+    // 授权界面地址 name
+    authPage: 'login',
+    // 授权认证模式
+    authMode: 'client',
+    // 是否开启重定向模式，登出后将暂存当前地址，登录后重定向至该地址
+    redirectEnable: false,
+    // 超级管理员角色，该角色将会跳过认证
+    superRole: ['admin']
+  });
+  bind<AuthServiceType>(ANTDVX_SYMBOLS.AUTH_SERVICE).to(AuthService);
+
+  // HttpService
+  bind<HttpServiceConfig>(ANTDVX_SYMBOLS.HTTP_SERVICE_CONFIG).toDynamicValue((context) => {
+    const sessionService = context.container.get<SessionServiceType>(ANTDVX_SYMBOLS.SESSION_SERVICE);
+    return {
+      baseURL: env.APP_APIHOST,
+      withCredentials: false,
+      responseType: 'text',
+      addXMLHttpRequestHeader: true,
+      transformResponse(res) {
+        // Do your own parsing here if needed ie JSON.parse(res);
+        return res;
+      },
+      configure(defaultConfig, interceptors) {
+        // 为请求 添加 access-token
+        interceptors.request.use(
+          function (config) {
+            // 在此可设置请求的默认 header 头
+            if (!config.headers.token) {
+              config.headers.ApiToken = env.APP_NAME;
+              config.headers.authorization = sessionService.user.accessToken;
+            }
+            return config;
+          },
+          function (error: Error): Promise<any> {
+            return Promise.reject(error);
+          }
+        );
+
+        // 响应拦截
+        interceptors.response.use(
+          function (res) {
+            // 补丁：解决 JsonParse 大整数精度丢失的问题
+            try {
+              res.data = JSON.parse(res.data.replace(/\d{18}/g, (id) => `"${id}"`));
+              // eslint-disable-next-line no-empty
+            } catch (e) {}
+
+            // 在此定义请求成功后的处理逻辑，需要与后端配合
+            if (isString(res.data) || !res.data || res?.data?.code === undefined || res?.data?.code === 0 || res?.data?.code === 200) {
+              return res;
+            } else if (res?.data?.code === 401 || res?.data?.code === 403) {
+              // 判断返回状态为 unauthorized 未授权，则登出当前账户，并将错误消息传递过去
+              sessionService.logout({
+                expired: true,
+                message: res?.data?.msg
+              });
+            }
+
+            // 其余情况，均视为请求出错
+            const err = {
+              code: res?.data?.code,
+              data: res?.data?.data,
+              message: res?.data?.msg || res?.data?.message || 'Request error, please contact administrator.'
+            };
+
+            return Promise.reject(err);
+          },
+          function (rejection): Promise<any> {
+            // 在此定义请求错误的处理逻辑
+            let data: any = {};
+            let message;
+            let status;
+            if (rejection.response) {
+              if (rejection.response.data) {
+                try {
+                  data = JSON.parse(rejection.response.data.replace(/\d{18}/g, (id) => `"${id}"`));
+                  // eslint-disable-next-line no-empty
+                } catch (e) {}
+              }
+              if (rejection.response.status) {
+                status = rejection.response.status;
+              }
+            }
+            switch (status) {
+              case -1: {
+                // 远程服务器无响应
+                message = 'The server does not respond, please check your network Settings.';
+                break;
+              }
+              case 401: {
+                // unauthorized 未授权，登出账户
+                message = 'Your current session has timed out. Please log in again.';
+                sessionService.logout();
+                break;
+              }
+              case 408: {
+                message = 'Your current session is over time, please log in again.';
+                break;
+              }
+              default: {
+                if (rejection.code === 'ECONNABORTED') {
+                  message = 'Connect the server timeout, check your network Settings.';
+                } else {
+                  if (Object.prototype.toString.call(data) === '[object String]') {
+                    message = data;
+                  } else {
+                    message = data.msg || data.message || 'Request error, please contact administrator.';
+                  }
+                }
+              }
+            }
+
+            // 抛出一个错误
+            return Promise.reject(new Error(message));
+          }
+        );
+      }
+    };
+  });
+  bind<IHttpService>(ANTDVX_SYMBOLS.HTTP_SERVICE).to(HttpService);
+});
+
+appDIC.load(antdvxModule);
+
+export { appDIC };

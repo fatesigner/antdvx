@@ -5,40 +5,72 @@
 import { I18nMessagesType } from '../messages';
 
 export default {
-  antd: {
-    action: {
-      add: '添加',
-      edit: '编辑',
-      delete: {
-        oktext: '确定',
-        cancelText: '取消',
-        confirmText: '确定删除？',
-        title: '删除',
-        success: '删除成功.'
+  app: {
+    sidebar: {
+      shrink: '收缩',
+      unfold: '展开'
+    },
+    route: {
+      error: {
+        notFound: {
+          name: '未找到页面',
+          title: '页面丢失',
+          description: '请检查您输入的网址是否正确，或点击下面的按钮返回主页.',
+          back: '返回'
+        },
+        unauthorized: {
+          name: '未授权',
+          title: '你没有权限访问该页面',
+          title2: '如有不满请联系你领导',
+          title3: '或者你可以去',
+          back: '回到主页',
+          gotologin: '重新登录',
+          gotohome: '回到主页'
+        }
       },
-      save: '保存',
+      login: '登录',
+      menus: '菜单授权',
+      dashboard: '首页',
+      table: '表格',
+      grid: 'kendo grid',
+      pc2is: 'pc2is',
+      pc2i: 'pc2i'
+    },
+    navbar: {
+      logOut: '退出登录',
+      dashboard: '主页',
+      github: '项目地址',
+      theme: '换肤',
+      size: '布局大小',
+      profile: '个人中心',
+      individuation: '个性化'
+    },
+    login: {
+      title: '系统登录',
+      logIn: '登录',
+      username: '账号',
+      password: '密码',
+      any: '随便填',
+      thirdparty: '第三方登录',
+      thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
+    },
+    tabsView: {
       refresh: '刷新',
-      upload: '上传',
-      export: '导出',
-      exporting: '正在导出',
-      exportToPDF: '导出到PDF',
-      exportToImage: '导出到图片',
-      exportToExcel: '导出到Excel'
+      close: '关闭',
+      closeOthers: '关闭其它',
+      closeAll: '关闭所有',
+      openInNewTab: '在新窗口中打开'
     },
-    pagination: {
-      of: '',
-      items: '项'
+    settings: {
+      title: '系统布局配置',
+      theme: '主题色',
+      showTagsView: '显示 Tags-View',
+      showSidebarLogo: '显示侧边栏 Logo',
+      fixedHeader: '固定 Header'
     },
-    slideCaptcha: {
-      tip: '点击按钮进行验证',
-      handingTip: '请移动滑块，完成验证',
-      loading: '正在加载验证码',
-      slider: '拖动左边滑块完成上方拼图',
-      validText: '已通过验证',
-      result: {
-        failed: '拖动滑块将悬浮图像正确拼合',
-        successful: '完成图片拼合验证'
-      }
+    notification: {
+      login: '登录成功',
+      logout: '您已退出登录'
     }
   }
 } as I18nMessagesType;

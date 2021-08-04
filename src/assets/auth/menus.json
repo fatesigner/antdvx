@@ -1,0 +1,64 @@
+[
+  {
+    "id": "f76020586bf6",
+    "label": "首页",
+    "name": "dashboard",
+    "url": "/",
+    "target": null,
+    "icon": "star-off"
+  },
+  {
+    "id": "ed9d4d63a0d2",
+    "label": "基础组件",
+    "url": null,
+    "target": null,
+    "icon": "setting",
+    "children": [
+      {
+        "id": "b796690e6975",
+        "label": "表格",
+        "name": "table",
+        "url": "/table",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
+        "id": "b796690e697z",
+        "label": "表格（vxe-table）",
+        "name": "vxe-table",
+        "url": "/vxe-table",
+        "target": null,
+        "icon": "",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "0de468996de8",
+    "label": "系统设置",
+    "name": null,
+    "url": null,
+    "target": null,
+    "icon": "setting",
+    "children": [
+      {
+        "id": "b724c8a0b1ad",
+        "label": "route.menus",
+        "name": "Menus",
+        "url": "/menus",
+        "target": "_self",
+        "icon": "",
+        "children": []
+      },
+      {
+        "id": "ae5b3b625fc0",
+        "label": "route.auth",
+        "name": "Auth",
+        "url": "/auth",
+        "target": "_self",
+        "children": []
+      }
+    ]
+  }
+]
