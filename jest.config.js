@@ -13,7 +13,7 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
   transform: {
-    '^.+\\.jsx?$': 'babel-jest',
+    // '^.+\\.jsx?$': 'babel-jest',
     '^.+\\.tsx?$': 'ts-jest'
   },
   testRegex: ['(/__tests__/.*|(\\.|/)(test))\\.jsx?$', '(/__tests__/.*|(\\.|/)(test))\\.tsx?$'],

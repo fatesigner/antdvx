@@ -62,9 +62,6 @@ export class HttpService implements IHttpService {
       }
     });
 
-    // 默认 header 为 application/json
-    this.instance.defaults.headers.post['content-type'] = HttpContentType.JSON;
-
     if (config.addXMLHttpRequestHeader) {
       // 为 xhr 请求添加 header 头
       this.instance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
