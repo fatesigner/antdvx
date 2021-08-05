@@ -3,7 +3,7 @@
  */
 
 import { createApp } from 'vue';
-import { TransitionRouter } from '@/antdvx/components/transitions';
+import { TransitionRouter } from 'antdvx/components/transitions';
 
 // Plugins
 import { i18n } from '@/i18n';
@@ -24,11 +24,11 @@ async function mountApp() {
 
   const app = createApp(App).use(router).use(i18n._).use(Antdv).use(Dayjs).use(VeeValidate).use(Pipes);
 
-  // 注册全局组件
+  // 在此处注册全局组件
   app.component('TransitionRouter', TransitionRouter);
 
   router.isReady().then(() => {
-    // 隐藏启动界面
+    // 移除首屏启动界面
     const $splashScreen = document.getElementById('splash-screen');
     if ($splashScreen) {
       $splashScreen.remove();

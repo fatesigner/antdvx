@@ -14,7 +14,7 @@ module.exports = webpackConfig(function () {
       app: Path.join(env.srcPath, 'main.ts')
     },
     template: Path.join(env.srcPath, 'index.ejs'),
-    outputPath: Path.join(env.outputPath),
+    outputPath: Path.join(env.rootPath, 'example'),
     publicPath: '',
     baseHref: '',
     less: {

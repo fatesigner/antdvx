@@ -76,23 +76,26 @@
           :title="column.title"
           :field="column.field"
           :width="column.width"
+          :align="column.align"
+          :fixed="column.fixed"
           :min-width="column.minWidth"
           :resizable="column.resizable"
-          :align="column.align"
+          :formatter="column.formatter"
           :cell-type="column.cellType"
           :cell-render="column.cellRender"
+          :filter-method="column.filterMethod"
+          :filter-multiple="column.filterMultiple"
           :header-align="column.headerAlign"
           :header-class-name="column.headerClassName"
           :show-overflow="column.showOverflow"
           :show-header-overflow="column.showHeaderOverflow"
-          :fixed="column.fixed"
         >
           <template #header>
             <slot :name="column.field + '.header'" v-bind="{ loading: options.loading, column, refresh, handleRecordChange }">
               {{ column.title }}
             </slot>
           </template>
-          <template #default="{ row, rowIndex }" v-if="!column.editRender && !column.cellRender">
+          <template #default="{ row, rowIndex }" v-if="!column.editRender && !column.cellRender && !column.formatter">
             <slot :name="column.field" v-bind="{ loading: options.loading, column, row, rowIndex, refresh, handleRecordChange }">
               {{ row[column.field] }}
             </slot>

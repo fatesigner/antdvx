@@ -1,0 +1,1 @@
+'use strict';(self['webpackChunk']=self['webpackChunk']||[]).push([[7687],{97687:function(e){e.exports=JSON.parse('[{"roleid":"user","rolename":"用户","description":"用户","createTime":null},{"roleid":"admin","rolename":"管理员","description":"管理员","createTime":null,"id":"admin","name":"admin"},{"roleid":"operator","rolename":"操作员","description":"操作员","createTime":null}]')}}]);

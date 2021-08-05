@@ -5,6 +5,10 @@
         <img width="80" height="80" src="@/assets/img/logo.png" :alt="title" :title="title" />
       </div>
 
+      <div class="tw-mb-4 tw-text-center tw-text-xl">
+        {{ title }}
+      </div>
+
       <AAlert v-if="error" type="error" closable @close="closeError">
         <template #description>{{ error }}</template>
       </AAlert>
@@ -49,10 +53,10 @@
 import to from 'await-to-js';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { AntdButton } from 'antdvx/components/button';
+import { SlideCaptcha } from 'antdvx/components/slide-captcha';
 import { computed, defineComponent, onDeactivated, reactive, ref } from 'vue';
 import { Alert, Button, Form, Input, message, notification } from 'ant-design-vue';
-import { SlideCaptcha } from 'antdvx/components/slide-captcha';
-import { AntdButton } from 'antdvx/components/button';
 
 import { env } from '@/env';
 import { Api } from '@/mocks';
@@ -61,16 +65,15 @@ import { authService, sessionService } from '@/app/services';
 
 export default defineComponent({
   components: {
-    // Antd
     AntdButton,
     SlideCaptcha,
-    [Form.name]: Form,
-    [Form.Item.name]: Form.Item,
     [Input.name]: Input,
-    InputPassword: Input.Password,
     [Input.name]: Input,
     [Alert.name]: Alert,
-    [Button.name]: Button
+    [Button.name]: Button,
+    [Form.name]: Form,
+    [Form.Item.name]: Form.Item,
+    InputPassword: Input.Password
   },
   setup() {
     const { t } = useI18n();
@@ -149,12 +152,10 @@ export default defineComponent({
 
     // On submit
     const onSubmit = async (values) => {
-      if (process.env.APP_MODE === 'production') {
-        if (!captcha.valid) {
-          // 弹出验证码控件
-          captcha.presented = true;
-          return;
-        }
+      if (!captcha.valid) {
+        // 弹出验证码控件
+        captcha.presented = true;
+        return;
       }
 
       const [err, data] = await to(Api.login(values));
