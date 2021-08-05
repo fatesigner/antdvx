@@ -1,3 +1,10 @@
+# [1.0.0-alpha.6](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2021-08-05)
+
+
+### Features
+
+* update vxe-table and example ([5690373](https://github.com/fatesigner/antdvx/commit/569037303c886fb79280c9dd08f8683ab6f121a2))
+
 # [1.0.0-alpha.5](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2021-08-04)
 
 
