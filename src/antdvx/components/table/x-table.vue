@@ -114,7 +114,7 @@ import { PropType, defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { Pagination, Table, notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { AntdHttpAdapter } from '../../antdv';
+import { AntdHttpAdapter } from '../../antdvx';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
 import { IXTableHandlers, IXTableListenersType, IXTablePropsType } from './types';

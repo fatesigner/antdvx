@@ -42,6 +42,7 @@
       :show-footer="options.showFooter"
       :footer-method="options.footerMethod"
       :loading="options.loading"
+      :seq-config="options.seqConfig"
       :expand-config="options.expandConfig"
       :export-config="options.exportConfig"
       @toggle-row-expand="toggleExpandChangeEvent"
@@ -143,7 +144,7 @@ import { Empty, Pagination, Spin, Table, notification } from 'ant-design-vue';
 import { isFunction, isString } from '@fatesigner/utils/type-check';
 import { PropType, computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue';
 
-import { AntdHttpAdapter } from '../../antdv';
+import { AntdHttpAdapter } from '../../antdvx';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
