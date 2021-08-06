@@ -186,8 +186,6 @@ module.exports = class WebpackHtmlEmbedSourcePlugin {
           (assets) => {
             Object.keys(assets).forEach((assetName) => {
               if (this.isEmbedAsset(assetName)) {
-                console.log('\nassetName', assetName);
-                console.log('   matched');
                 delete assets[assetName];
               }
             });

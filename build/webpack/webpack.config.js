@@ -141,7 +141,6 @@ module.exports = async function (getOptions) {
        * @returns {string}
        */
       name: (path) => {
-        // console.log('url path', path);
         const pathArr = Utils.getNodeModulesRegexPath('', path);
         if (pathArr && pathArr.length) {
           // console.log('url pathArr', JSON.stringify(pathArr));

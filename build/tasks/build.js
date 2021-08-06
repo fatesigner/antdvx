@@ -33,6 +33,14 @@ gulp.task(
         return prev;
       }, {});
     }
+    if (pkg.dependencies) {
+      pkg.dependencies = Object.keys(pkg.dependencies).reduce((prev, key) => {
+        if (key !== 'antdvx') {
+          prev[key] = pkg.dependencies[key];
+        }
+        return prev;
+      }, {});
+    }
     fs.writeFileSync(path.join(env.outputPath, 'package.json'), JSON.stringify(pkg, null, 2), { encoding: 'utf8' });
   })
 );
