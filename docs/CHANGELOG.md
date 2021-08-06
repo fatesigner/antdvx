@@ -1,3 +1,10 @@
+# [1.0.0-alpha.8](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2021-08-06)
+
+
+### Bug Fixes
+
+* package.json dependencies ([f58cd96](https://github.com/fatesigner/antdvx/commit/f58cd96ea94ec1b5b5050d356b3e3444b7a5ccb8))
+
 # [1.0.0-alpha.7](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2021-08-06)
 
 
