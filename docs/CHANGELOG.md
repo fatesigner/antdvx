@@ -1,3 +1,10 @@
+# [1.0.0-alpha.7](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2021-08-06)
+
+
+### Features
+
+* update drawer style ([41e6c32](https://github.com/fatesigner/antdvx/commit/41e6c32c472b7030a4909d85ad13867b12e1c141))
+
 # [1.0.0-alpha.6](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2021-08-05)
 
 
