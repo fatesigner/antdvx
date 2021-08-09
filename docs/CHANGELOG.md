@@ -1,3 +1,10 @@
+# [1.0.0-alpha.10](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2021-08-09)
+
+
+### Bug Fixes
+
+* update VxeGrid ([55e3184](https://github.com/fatesigner/antdvx/commit/55e31846ed669e40cb1dcfb16e6bda354ccfc48e))
+
 # [1.0.0-alpha.9](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2021-08-09)
 
 
