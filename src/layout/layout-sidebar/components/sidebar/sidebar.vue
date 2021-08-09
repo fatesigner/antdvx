@@ -13,11 +13,7 @@
       </div>
       <div class="tw-flex-1 tw-overflow-hidden tw-relative">
         <ScrollView @scroll="onScroll">
-          <AMenu class="sidebar-menu" mode="inline" :theme="theme" :inlineIndent="0" v-model:open-keys="openKeys" v-model:selected-keys="selectedKeys">
-            <template v-for="item in menus" :key="item.name">
-              <MenuItem :data="item" :inline-indent="16" />
-            </template>
-          </AMenu>
+          <Menus />
         </ScrollView>
       </div>
 
@@ -29,7 +25,6 @@
 </template>
 
 <script lang="ts">
-import { StructureTree } from '@fatesigner/utils/structure-tree';
 import { addClass, removeClass } from '@fatesigner/utils/document';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
@@ -43,14 +38,13 @@ import { ScrollView } from 'antdvx/components/scroll-view';
 
 import { env } from '@/env';
 import { i18nMessages } from '@/i18n';
-import { IMenu } from '@/types/menu';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';
 
-import MenuItem from './menu-item.vue';
+import { Menus } from '../menus';
 
 export default defineComponent({
   components: {
-    MenuItem,
+    Menus,
     ScrollView,
     // Antd
     Iconfont,
@@ -67,12 +61,6 @@ export default defineComponent({
     AppstoreOutlined
   },
   setup() {
-    const strutree = new StructureTree<IMenu>({
-      idKey: 'id',
-      labelKey: 'path',
-      childrenKey: 'children'
-    });
-
     // 当前路由
     const currentRoute = useRoute();
     const $style = useCssModule();
@@ -86,8 +74,6 @@ export default defineComponent({
     const $wrap = ref<any>(null);
     const $header = ref<HTMLElement>(null);
     const $border = ref<HTMLElement>(null);
-
-    const menus = ref<IMenu[]>(require('@/assets/auth/menus.json'));
 
     let preOpenKeys = [];
     const openKeys = reactive([]);
@@ -106,11 +92,6 @@ export default defineComponent({
         LayoutSidebarStore.setTheme(val);
       }
     });
-
-    // 获取指定 name 的菜单
-    const getMenu = (name: string) => {
-      return strutree.find(menus.value, (x) => x.name === name);
-    };
 
     const toggleCollapsed = (val?: boolean) => {
       LayoutSidebarStore.setCollapsed(val ?? !collapsed.value);
@@ -184,34 +165,6 @@ export default defineComponent({
       }
     });
 
-    // 跟随页面路由变化，切换菜单选中状态
-    watch(
-      () => currentRoute.fullPath,
-      () => {
-        if (collapsed.value) {
-          return;
-        }
-
-        let menu = getMenu(currentRoute.name as string);
-
-        // 将父级菜单添加至 openKeys
-        if (menu) {
-          menu.parentNodes
-            .map((x) => x.id)
-            .forEach((x) => {
-              if (!openKeys.includes(x)) {
-                openKeys.push(x);
-              }
-            });
-        }
-
-        selectedKeys.value = [currentRoute.name];
-      },
-      {
-        immediate: true
-      }
-    );
-
     onMounted(() => {
       setTimeout(() => {
         if ($border.value) {
@@ -235,7 +188,6 @@ export default defineComponent({
       headerEl: $header,
       borderEl: $border,
       width,
-      menus,
       openKeys,
       selectedKeys,
       collapsed,
@@ -268,8 +220,8 @@ export default defineComponent({
   transition: background-color 200ms;
 
   img {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
   }
 
   &:hover {

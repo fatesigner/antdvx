@@ -113,8 +113,8 @@ import { isFunction, isString } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { Pagination, Table, notification } from 'ant-design-vue';
 
+import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
-import { AntdHttpAdapter } from '../../antdvx';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
 import { IXTableHandlers, IXTableListenersType, IXTablePropsType } from './types';

@@ -1,5 +1,5 @@
 <template>
-  <antd-button
+  <AntdButton
     ref="el"
     :class="['action-upload', appearance === 'custom' ? 'action-custom' : '']"
     :block="block"
@@ -14,8 +14,8 @@
     :notify="notify"
     :title="title ? title : $t(i18nMessages.antd.action.upload)"
   >
-    <upload-outlined v-if="!loading && icon" /><slot>{{ $t(i18nMessages.antd.action.upload) }}</slot>
-  </antd-button>
+    <UploadOutlined v-if="!loading && icon" /><slot>{{ $t(i18nMessages.antd.action.upload) }}</slot>
+  </AntdButton>
 </template>
 
 <script lang="ts">

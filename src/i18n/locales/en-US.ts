@@ -28,6 +28,7 @@ export default {
           gotohome: 'home'
         }
       },
+      button: 'button',
       login: 'login',
       menus: 'menus auth',
       dashboard: 'dashboard',

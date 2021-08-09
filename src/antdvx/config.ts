@@ -1,5 +1,5 @@
 /**
- * Antdv
+ * Antdv config
  */
 
 import { IHttpAdapter } from './types/data-source';

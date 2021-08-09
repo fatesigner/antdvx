@@ -2,35 +2,34 @@
   <header class="tw-relative tw-flex tw-pr-4 tw-pl-4" :class="$style.header">
     <div class="tw-flex-initial tw-self-center tw-pt-2 tw-pb-2">
       <div :class="$style.folder" @click="toggleCollapsed">
-        <icon-bars scale=".8" />
+        <IconBars scale=".8" />
       </div>
     </div>
     <div class="tw-flex-1 tw-self-center"></div>
     <div class="tw-flex-initial">
-      <user />
+      <User />
     </div>
     <div class="tw-flex-initial">
-      <language />
+      <Language />
     </div>
   </header>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { IconBars, IconHome } from 'antdvx/components/iconfont';
+import { IconBars } from 'antdvx/components/iconfont';
 
-import Language from '@/shared/language/language.vue';
-
-import User from '../user/user.vue';
+import { Language } from '@/shared/language';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';
+
+import { User } from '../user';
 
 export default defineComponent({
   components: {
     User,
     Language,
     // Antd
-    IconBars,
-    IconHome
+    IconBars
   },
   setup() {
     const collapsed = computed(() => LayoutSidebarStore.state.collapsed);

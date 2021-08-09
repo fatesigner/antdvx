@@ -7,7 +7,7 @@
       </template>
       <template v-for="item in data.children" :key="item.id">
         <template v-if="!item.children">
-          <AMenuItem :key="item.name" @click="clickMenuItem(item)">
+          <AMenuItem :key="item.name || item.id" @click="clickMenuItem(item)">
             <Iconfont name="copy" />
             <span>{{ $t(item.label) }}</span>
           </AMenuItem>
@@ -17,7 +17,7 @@
         </template>
       </template>
     </ASubMenu>
-    <AMenuItem v-else :key="data.name" @click="clickMenuItem(data)">
+    <AMenuItem v-else :key="data.name || data.id" @click="clickMenuItem(data)">
       <Iconfont name="copy" />
       <span>{{ data.label }}</span>
     </AMenuItem>

@@ -1,7 +1,7 @@
 <template>
   <div class="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full tw-pt-12 tw-pr-4 tw-pb-12 tw-pl-4" :class="$style.bg">
     <div class="tw-min-w" :class="$style.container">
-      <div class="tw-mb-4 tw-text-center">
+      <div class="tw-flex tw-justify-center tw-mb-4">
         <img width="80" height="80" src="@/assets/img/logo.png" :alt="title" :title="title" />
       </div>
 

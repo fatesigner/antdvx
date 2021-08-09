@@ -15,6 +15,33 @@
     "icon": "setting",
     "children": [
       {
+        "id": "b796690e69zd",
+        "label": "按钮",
+        "name": "button",
+        "url": "/button",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
+        "id": "d796690e69zd",
+        "label": "输入框",
+        "name": "input",
+        "url": "/input",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
+        "id": "d796690e69sc",
+        "label": "弹出框",
+        "name": "popup",
+        "url": "/popup",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "b796690e6975",
         "label": "表格",
         "name": "table",

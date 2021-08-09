@@ -2,6 +2,6 @@
  * index
  */
 
-import AntdButton from './button.vue';
+import AntdButton from './button';
 
 export { AntdButton };

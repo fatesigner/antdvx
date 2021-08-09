@@ -24,6 +24,7 @@ export const i18nMessages = createLocaleMessages({
           gotohome: ''
         }
       },
+      button: '',
       login: '',
       menus: '',
       dashboard: '',

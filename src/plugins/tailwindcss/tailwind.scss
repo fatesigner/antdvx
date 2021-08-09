@@ -2,7 +2,19 @@
  * This injects Tailwind's base styles and any base styles registered by
  * plugins.
  */
-//@tailwind base;
+
+/* @tailwind base; */
+
+/**
+ * In order to make it easy to add a border by simply adding the border class,
+ * Tailwind overrides the default border styles for all elements with the following rules:
+ */
+*,
+::before,
+::after {
+  border-style: solid;
+  border-width: 0;
+}
 
 /**
  * This injects Tailwind's component classes and any component classes

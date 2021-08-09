@@ -144,7 +144,7 @@ import { Empty, Pagination, Spin, Table, notification } from 'ant-design-vue';
 import { isFunction, isString } from '@fatesigner/utils/type-check';
 import { PropType, computed, defineComponent, onMounted, onUnmounted, ref, watch } from 'vue';
 
-import { AntdHttpAdapter } from '../../antdvx';
+import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
@@ -542,11 +542,12 @@ export default defineComponent({
     &.size--small,
     &.size--medium,
     &.size--mini {
-      font-size: 0.75rem;
+      /* font-size: 0.75rem; */
     }
 
     .vxe-header--column {
       font-weight: 300;
+      user-select: auto;
 
       .vxe-cell--title {
         color: #333;

@@ -11,10 +11,7 @@ export interface IXModalHandlers<TArgs extends any[]> {
   destroy: () => void;
 }
 
-export interface IXModalPropsType extends Omit<ModalProps, 'afterClose' | 'visible' | 'destroyOnClose' | 'width'> {
-  // Antd
-  width?: number | string;
-
+export interface IXModalPropsType extends Omit<ModalProps, 'afterClose' | 'visible' | 'destroyOnClose'> {
   // Custom
   /**
    * 自动显示

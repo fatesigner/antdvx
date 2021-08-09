@@ -68,7 +68,8 @@
     "vue-i18n": "9.x",
     "vue-router": "4.x",
     "vuedraggable": "4.x",
-    "vxe-table": "4.x"
+    "vxe-table": "4.x",
+    "xe-utils": "3.x"
   },
   "devDependencies": {
     "@babel/core": "7.15.0",

@@ -77,6 +77,7 @@ export default defineComponent({
   width: 20px;
   margin-top: 1px;
   overflow: hidden;
+  font-size: 12px;
   text-overflow: ellipsis;
 }
 </style>

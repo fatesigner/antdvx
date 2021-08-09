@@ -28,15 +28,14 @@
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
 
-import NotFound from '@/shared/error/not-found.vue';
-import Unauthorized from '@/shared/error/unauthorized.vue';
-import ProgressBar from '@/shared/progress-bar/progress-bar.vue';
-import Language from '@/shared/language/language.vue';
-
-import User from './components/user/user.vue';
-import Header from './components/header/header.vue';
-import Sidebar from './components/sidebar/sidebar.vue';
+import { Language } from '@/shared/language';
+import { ProgressBar } from '@/shared/progress-bar';
+import { NotFound, Unauthorized } from '@/shared/error';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';
+
+import { User } from './components/user';
+import { Sidebar } from './components/sidebar';
+import { AppHeader } from './components/header';
 
 export default defineComponent({
   components: {
@@ -44,7 +43,7 @@ export default defineComponent({
     Language,
     Unauthorized,
     ProgressBar,
-    AppHeader: Header,
+    AppHeader,
     User,
     Sidebar
   },

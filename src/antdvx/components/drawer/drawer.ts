@@ -2,25 +2,24 @@ import { timer } from 'rxjs';
 import { merge } from 'lodash-es';
 import { bindLazyFunc } from '@fatesigner/utils';
 import { getGUID } from '@fatesigner/utils/random';
-import { Modal, notification } from 'ant-design-vue';
+import { Drawer, notification } from 'ant-design-vue';
 import { createApp, h, nextTick, onMounted, reactive, ref, toRefs } from 'vue';
 import { Component } from '@vue/runtime-core';
 
 import { Iconfont } from '../iconfont';
 
-import { IXModalCompOptions, IXModalListenersType, IXModalPropsType, IXModalRef } from './types';
+import { IXDrawerCompOptions, IXDrawerListenersType, IXDrawerPropsType, IXDrawerRef } from './types';
 
-import './modal.scss';
+import './drawer.scss';
 
 const SYMBOLS = {
-  BASE_CLASS: 'ant-modal-x',
-  FULLSCREEN_CLASS: 'ant-modal-fullscreen'
+  BASE_CLASS: 'ant-drawer-x',
+  FULLSCREEN_CLASS: 'ant-drawer-fullscreen'
 };
 
-export const defaultXModalProps: Partial<IXModalPropsType> = {
+export const defaultXDrawerProps: Partial<IXDrawerPropsType> = {
   // Antd
   title: null,
-  footer: null,
 
   // Custom
   autoOpened: false,
@@ -48,24 +47,24 @@ function destroy(instance, $container, wrapClassName) {
  * @param $container
  * @param wrapClassName
  */
-function resizeLayout<TArgs extends any[], P extends Record<string, any>>(ref: IXModalRef<TArgs, P>, $container, wrapClassName) {}
+function resizeLayout<TArgs extends any[], P extends Record<string, any>>(ref: IXDrawerRef<TArgs, P>, $container, wrapClassName) {}
 
 /**
- * XModal
+ * XDrawer
  */
-export function createXModal<C extends Component, P extends Record<string, any>, L extends Record<string, (...args: any[]) => any>>(
-  compOptions: IXModalCompOptions<C, P, L>,
-  modalOptions?: {
-    props?: Partial<IXModalPropsType>;
-    listeners?: Partial<IXModalListenersType>;
+export function createXDrawer<C extends Component, P extends Record<string, any>, L extends Record<string, (...args: any[]) => any>>(
+  compOptions: IXDrawerCompOptions<C, P, L>,
+  drawerOptions?: {
+    props?: Partial<IXDrawerPropsType>;
+    listeners?: Partial<IXDrawerListenersType>;
   }
-): IXModalRef<any[], P> {
+): IXDrawerRef<any[], P> {
   const $app = document.createElement('div');
   document.body.appendChild($app);
 
-  const modalRef: IXModalRef<any[], P> = {
+  const modalRef: IXDrawerRef<any[], P> = {
     compOptions: reactive(compOptions?.props ?? {}) as any,
-    options: reactive(merge({}, defaultXModalProps, modalOptions?.props)),
+    options: reactive(merge({}, defaultXDrawerProps, drawerOptions?.props)),
     present: null,
     dismiss: null,
     destroy: null
@@ -85,16 +84,21 @@ export function createXModal<C extends Component, P extends Record<string, any>,
 
             let hooks: ((...args: any[]) => void)[] = [];
 
-            const afterClose = () => {
+            const afterVisibleChange = (visible) => {
               // If keepAlive is false, then destroy it
-              if (!modalRef.options.keepAlive) {
-                destroy(app, $app, wrapClassName);
+              if (visible) {
+                // Emit presented event
+                drawerOptions?.listeners?.presented?.();
+              } else {
+                if (!modalRef.options.keepAlive) {
+                  destroy(app, $app, wrapClassName);
+                }
+                // Emit dismissed event
+                drawerOptions?.listeners?.dismissed?.();
               }
-              // Emit dismissed event
-              modalOptions?.listeners?.dismissed?.();
             };
 
-            const present: IXModalRef<any[], P>['present'] = async (onDismissed) => {
+            const present: IXDrawerRef<any[], P>['present'] = async (onDismissed) => {
               if (onDismissed) {
                 hooks.push(onDismissed);
               }
@@ -103,17 +107,17 @@ export function createXModal<C extends Component, P extends Record<string, any>,
                 .toPromise()
                 .finally(() => {
                   // Emit presented event
-                  modalOptions?.listeners?.presented?.();
+                  drawerOptions?.listeners?.presented?.();
                 });
             };
 
-            const dismiss: IXModalRef<any[], P>['dismiss'] = async (...args: any[]) => {
+            const dismiss: IXDrawerRef<any[], P>['dismiss'] = async (...args: any[]) => {
               vIf.value = false;
               timer(1000)
                 .toPromise()
                 .finally(() => {
                   // Emit dismissed event
-                  modalOptions?.listeners?.dismissed?.();
+                  drawerOptions?.listeners?.dismissed?.();
                   if (hooks.length) {
                     hooks.forEach((hook) => {
                       if (hook) {
@@ -141,19 +145,21 @@ export function createXModal<C extends Component, P extends Record<string, any>,
 
             return () =>
               h(
-                Modal as any,
+                Drawer as any,
                 {
                   visible: vIf.value,
                   destroyOnClose: false,
-                  afterClose: afterClose,
+                  afterVisibleChange: afterVisibleChange,
                   title: modalRef.options.title,
                   closable: modalRef.options.closable,
+                  maskClosable: modalRef.options.maskClosable,
+                  mask: modalRef.options.mask,
                   width: modalRef.options.width,
                   footer: null,
                   wrapClassName: [SYMBOLS.BASE_CLASS, modalRef.options?.fullscreen ? SYMBOLS.FULLSCREEN_CLASS : '', modalRef.options?.wrapClassName ?? ''].join(
                     ' '
                   ),
-                  onCancel() {
+                  onClose() {
                     (dismiss as any)();
                   }
                 },

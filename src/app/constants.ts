@@ -53,21 +53,94 @@ export const ROLES = convertModelArrToEnum([
   }
 ]);
 
-// 定义排序方式
-export const SORTORDS = convertModelArrToEnum([
+// 颜色
+export const COLORS = convertModelArrToEnum([
   {
-    value: 1,
-    text: '最新排序',
-    name: 'latest'
+    value: 'primary',
+    text: 'primary',
+    name: 'primary'
   },
   {
-    value: 2,
-    text: '从低到高',
-    name: 'ASC'
+    value: 'secondary',
+    text: 'secondary',
+    name: 'secondary'
   },
   {
-    value: 3,
-    text: '从高到底',
-    name: 'DESC'
+    value: 'tertiary',
+    text: 'tertiary',
+    name: 'tertiary'
+  },
+  {
+    value: 'success',
+    text: 'success',
+    name: 'success'
+  },
+  {
+    value: 'warning',
+    text: 'warning',
+    name: 'warning'
+  },
+  {
+    value: 'danger',
+    text: 'danger',
+    name: 'danger'
+  },
+  {
+    value: 'light',
+    text: 'light',
+    name: 'light'
+  },
+  {
+    value: 'dark',
+    text: 'dark',
+    name: 'dark'
+  },
+  {
+    value: 'purple',
+    text: 'purple',
+    name: 'purple'
+  }
+]);
+
+// 尺寸
+export const SIZES = convertModelArrToEnum([
+  {
+    value: 'default',
+    text: 'default',
+    name: 'default'
+  },
+  {
+    value: 'large',
+    text: 'large',
+    name: 'large'
+  },
+  {
+    value: 'small',
+    text: 'small',
+    name: 'small'
+  }
+]);
+
+// 按钮类型
+export const BUTTON_TYPES = convertModelArrToEnum([
+  {
+    value: 'default',
+    text: 'default',
+    name: 'default'
+  },
+  {
+    value: 'primary',
+    text: 'primary',
+    name: 'primary'
+  },
+  {
+    value: 'dashed',
+    text: 'dashed',
+    name: 'dashed'
+  },
+  {
+    value: 'link',
+    text: 'link',
+    name: 'link'
   }
 ]);

@@ -28,6 +28,7 @@ export default {
           gotohome: '回到主页'
         }
       },
+      button: '按钮',
       login: '登录',
       menus: '菜单授权',
       dashboard: '首页',

@@ -1,10 +1,8 @@
 import { Button } from 'ant-design-vue';
 import { PropType, defineComponent } from 'vue';
-import buttonProps from 'ant-design-vue/lib/button/buttonTypes';
 
 export default defineComponent({
   props: {
-    ...buttonProps,
     type: {
       type: String as PropType<'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link' | '3d'>,
       default: 'default'
@@ -54,7 +52,6 @@ export default defineComponent({
             htmlType={props.htmlType}
             loading={props.loading}
             type={props.type}
-            size={props.size}
             title={props.title}
           >
             {slots.default?.()}
