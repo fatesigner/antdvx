@@ -54,7 +54,7 @@ export function createVxeGrid<TModel extends Record<string, any> = Record<string
 
   return {
     options: reactive(merge({}, defaultVxeGridProps, props) as any),
-    listeners,
+    listeners: listeners ?? {},
     handler
   };
 }

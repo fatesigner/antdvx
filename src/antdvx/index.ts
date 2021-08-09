@@ -10,6 +10,7 @@ export * from './components/action-bars';
 export * from './components/async-section';
 export * from './components/button';
 export * from './components/code-editor';
+export * from './components/drawer';
 export * from './components/echarts';
 export * from './components/form-generator';
 export * from './components/iconfont';

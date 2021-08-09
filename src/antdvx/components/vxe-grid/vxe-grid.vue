@@ -100,7 +100,7 @@ import { IVxeGridHandlers, IVxeGridListenersType, IVxeGridPropsType } from './ty
 //const erd = elementResizeDetectorMaker();
 
 export default defineComponent({
-  name: 'vxe-t',
+  name: 'vxe-g',
   components: {
     [Table.name]: Table,
     [Spin.name]: Spin,
