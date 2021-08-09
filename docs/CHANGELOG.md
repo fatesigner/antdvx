@@ -1,3 +1,10 @@
+# [1.0.0-alpha.9](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2021-08-09)
+
+
+### Features
+
+* add drawer component ([79f6d4e](https://github.com/fatesigner/antdvx/commit/79f6d4e7deb9c5c059fa0269675b9e34afec187a))
+
 # [1.0.0-alpha.8](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2021-08-06)
 
 
