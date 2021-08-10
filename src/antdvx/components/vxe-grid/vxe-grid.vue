@@ -1,7 +1,7 @@
 <template>
   <div class="antd-vxe-grid">
     <div
-      class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-transition-opacity"
+      class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1 tw-transition-opacity"
       :class="{ 'ant-vxe-table-blur': options.loading }"
     >
       <div class="tw-flex-1 tw-p-2">
@@ -430,8 +430,8 @@ export default defineComponent({
   min-height: 100px;
 }
 
-.antd-vxe-grid-transition-item {
-}
+/* .antd-vxe-grid-transition-item {
+} */
 
 .antd-vxe-grid {
   position: relative;
@@ -442,12 +442,12 @@ export default defineComponent({
   }
 
   .vxe-table {
-    &,
+    /* &,
     &.size--small,
     &.size--medium,
     &.size--mini {
       font-size: 0.75rem;
-    }
+    } */
 
     .vxe-header--column {
       font-weight: 300;
@@ -456,11 +456,6 @@ export default defineComponent({
       .vxe-cell--title {
         color: #333;
       }
-    }
-
-    .vxe-table--header-wrapper {
-      color: rgba(0, 0, 0, 0.85);
-      background-color: #fafafa;
     }
 
     &.vxe-table--render-default {
@@ -481,6 +476,17 @@ export default defineComponent({
       .vxe-body--column,
       .vxe-footer--column {
         padding: 16px 0;
+      }
+
+      &.border--default,
+      &.border--full,
+      &.border--inner,
+      &.border--outer,
+      &.border--none {
+        .vxe-table--header-wrapper {
+          color: rgba(0, 0, 0, 0.85);
+          background-color: #fafafa;
+        }
       }
 
       &.border--default,
