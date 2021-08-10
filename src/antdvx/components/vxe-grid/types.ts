@@ -3,25 +3,26 @@
  */
 
 import { VxeGridProps } from 'vxe-table';
-import { VxeGridListeners, VxeGridMethods, VxeGridPropTypes } from 'vxe-table/types/grid';
+import { VxeTableDefines } from 'vxe-table/types/table';
 import { ColumnProps } from 'ant-design-vue/es/table/interface';
+import { VxeGridListeners, VxeGridMethods } from 'vxe-table/types/grid';
 
 import { IDataSource } from './data-source';
 
-export type IVxeGridLoadData<TModel extends Record<string, any>, TQuery extends Record<string, any>> = (query: TQuery) => Promise<TModel[]>;
-
 export type IVxeGridRowKeyFunc<TModel extends Record<string, any>> = (record: TModel, index: number) => string;
 
-export type IVxeGridColumnProps<TModel extends Record<string, any> = Record<string, any>> = VxeGridPropTypes.Columns & {
-  field?: keyof TModel | string;
+export type IVxeGridColumnProps<TModel extends Record<string, any>> = Omit<VxeTableDefines.ColumnOptions, 'field'> & {
+  field?: keyof TModel;
 };
 
-export interface IVxeGridPropsType<TModel extends Record<string, any> = Record<string, any>, TParams extends Record<string, any> = Record<string, any>>
-  extends Omit<VxeGridProps<TModel>, 'dataSource' | 'rowKey' | 'scroll' | 'pagination'> {
+export type IVxeGridTmodelExtend<T extends Record<string, any>> = Partial<T> & Record<string, any>;
+
+export interface IVxeGridPropsType<TModel extends Record<string, any> = any, TParams extends Record<string, any> = any>
+  extends Omit<VxeGridProps<TModel>, 'columns' | 'dataSource' | 'rowKey' | 'scroll' | 'pagination'> {
   // Override
-  //columns?: IVxeGridColumnProps<TModel>[];
+  columns?: IVxeGridColumnProps<TModel>[];
   rowKey?: keyof TModel | IVxeGridRowKeyFunc<TModel>;
-  scroll?: { x?: boolean | number; y?: boolean | number };
+
   // Add custom
   params?: TParams;
   rowDirtyClass?: string;
@@ -54,33 +55,33 @@ export interface IVxeGridHandlers<TModel extends Record<string, any> = Record<st
 
   /**
    * 添加数据
-   * @param index 数组中开始插入元素的从零开始的位置
-   * @param data 数据或数据集
+   * @param start 指定插入的开始位置（从0计数）。如果超出了数组的长度，则从数组末尾开始添加内容；如果是负值，则表示从数组末位开始的第几位（从-1计数，这意味着-n是倒数第n个元素并且等价于array.length-n）；如果负数的绝对值大于数组的长度，则表示开始位置为第0位。
+   * @param data 插入的数据或者数组
    */
-  addData?: (start: number, data: TModel | TModel[]) => void;
+  addData?: (start: number, data: IVxeGridTmodelExtend<TModel> | IVxeGridTmodelExtend<TModel>[]) => void;
 
   /**
    * 更新数据
-   * @param key 数据的 key 或者 所在数组中的序号
+   * @param index 数据所在数组中的序号
    * @param data 待更新的数据
    */
-  updateData?: (key: string | number, data: TModel) => TModel;
+  updateData?: (index: number, data: IVxeGridTmodelExtend<TModel>) => void;
 
   /**
    * 删除指定数据
-   * @param key 数据的 key 或者 所在数据集的序号
+   * @param index 数据所在数组中的序号
    */
-  removeData?: (key: string | number) => void;
+  removeData?: (index: number) => void;
 
   /**
    * 获取选中的数据
    */
-  getSelectedData?: () => TModel[];
+  getSelectedData?: () => IVxeGridTmodelExtend<TModel>[];
 
   /**
    * 获取所有数据，非分页后
    */
-  getAllData?: () => TModel[];
+  getAllData?: () => IVxeGridTmodelExtend<TModel>[];
 
   /**
    * 全选
@@ -124,7 +125,7 @@ export interface IVxeGridListenersType<TModel extends Record<string, any> = Reco
 }
 
 export interface IVxeGridRefType<TModel extends Record<string, any> = Record<string, any>, TParams extends Record<string, any> = Record<string, any>> {
-  options: VxeGridProps<TModel>;
+  options: IVxeGridPropsType<TModel, TParams>;
   listeners: IVxeGridListenersType<TModel>;
   handler: IVxeGridHandlers<TModel>;
 }

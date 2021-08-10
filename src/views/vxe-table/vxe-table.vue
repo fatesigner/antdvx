@@ -100,7 +100,6 @@ export default defineComponent({
           },
           {
             title: '操作',
-            field: 'actions',
             fixed: 'right',
             width: 150,
             slots: { default: 'actions' }

@@ -13,7 +13,6 @@ export const defaultVxeGridProps: IVxeGridPropsType = {
   loading: false,
   data: [],
   rowDirtyClass: 'x-table-row-dirty',
-  scroll: { x: true },
   expandConfig: {
     iconClose: VXE_GRID_SYMBOLS.EXPAND_CLOSE_CLASS,
     iconOpen: VXE_GRID_SYMBOLS.EXPAND_OPEN_CLASS

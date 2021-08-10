@@ -325,7 +325,6 @@ export default defineComponent({
     };
 
     const addData: IVxeGridHandlers['addData'] = (start: number, data: Record<string, any> | Record<string, any>[]) => {
-      debugger;
       if (isArray(data)) {
         props.options.data.splice(start, 0, ...(data as any[]));
       } else {
@@ -334,13 +333,14 @@ export default defineComponent({
       $vxeGrid.value.loadData(props.options.data);
     };
 
-    const updateData: IVxeGridHandlers['updateData'] = (key: string | number, data: Record<string, any>) => {
-      debugger;
-      return null;
+    const updateData: IVxeGridHandlers['updateData'] = (index: number, data: Record<string, any>) => {
+      props.options.data.splice(index, 1, data);
+      $vxeGrid.value.loadData(props.options.data);
     };
 
-    const removeData: IVxeGridHandlers['removeData'] = (key: string | number) => {
-      debugger;
+    const removeData: IVxeGridHandlers['removeData'] = (index: number) => {
+      props.options.data.splice(index, 1);
+      $vxeGrid.value.loadData(props.options.data);
     };
 
     const getSelectedData: IVxeGridHandlers['getSelectedData'] = () => {
@@ -523,11 +523,6 @@ export default defineComponent({
       }
     }
 
-    .vxe-table--empty-placeholder {
-      display: flex !important;
-      height: inherit !important;
-    }
-
     .vxe-loading {
       background-color: transparent;
     }
@@ -539,6 +534,11 @@ export default defineComponent({
     &.is--empty {
       .antd-vxe-grid-transition-wrap {
         max-height: 100px;
+      }
+
+      .vxe-table--empty-placeholder {
+        display: flex !important;
+        height: inherit !important;
       }
     }
   }
