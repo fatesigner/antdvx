@@ -2,8 +2,6 @@
  * types
  */
 
-import { AsyncComponentLoader, AsyncComponentOptions, Component } from '@vue/runtime-core';
-
 export interface IXDrawerHandlers<TArgs extends any[]> {
   present: (onDismissed?: (...args: TArgs) => void) => Promise<void>;
   dismiss: (...args: TArgs) => Promise<void>;
@@ -61,22 +59,28 @@ export interface IXDrawerPropsType {
    * 保持组件处于活动状态，关闭后不销毁
    */
   keepAlive?: boolean;
+
+  /**
+   * Modal 弹出事件
+   */
+  onPresented: () => void;
+
+  /**
+   * Modal 关闭事件
+   */
+  onDismissed: () => void;
 }
 
-export interface IXDrawerListenersType {
-  cancel: (e: any) => void;
-  ok: (e: any) => void;
-  presented: () => void;
-  dismissed: () => void;
-}
-
-export interface IXDrawerCompOptions<C extends Component, P extends Record<string, any>, L extends Record<string, (...args: any[]) => any>> {
-  comp: AsyncComponentLoader<C> | AsyncComponentOptions<C>;
-  props?: P;
-  listeners?: L;
-}
-
-export interface IXDrawerRef<TArgs extends any[], P extends Record<string, any>> extends IXDrawerHandlers<TArgs> {
-  compOptions: P;
+/**
+ * XDrawer 选项
+ */
+export interface IXDrawerRef<CompProps extends Record<string, any>, Args extends any[]> extends IXDrawerHandlers<Args> {
+  /**
+   * 待加载的组件的 props 选项
+   */
+  compProps: Partial<CompProps>;
+  /**
+   * XModal 选项
+   */
   options: Partial<IXDrawerPropsType>;
 }

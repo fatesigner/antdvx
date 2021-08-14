@@ -1,7 +1,8 @@
 module.exports = {
   extends: '@fatesigner/stylelint-config',
   rules: {
-    'property-no-unknown': null,
-    'no-descending-specificity': null
+    'function-name-case': null,
+    'no-descending-specificity': null,
+    'property-no-unknown': null
   }
 };

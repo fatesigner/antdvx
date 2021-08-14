@@ -2,17 +2,17 @@
   <div v-if="loading || error" v-bind="$attrs">
     <slot v-if="loading" name="loading">
       <div class="tw-overflow-hidden">
-        <spinner-loading :size="loadingSize" />
+        <SpinnerLoading :size="loadingSize" />
         <div v-if="loadingText" class="tw-mt-5">{{ loadingText }}</div>
       </div>
     </slot>
     <slot v-else name="error" v-bind="{ error }" :refresh="refresh">
-      <a-alert type="error" show-icon>
+      <AAlert type="error" show-icon>
         <template #description>
           {{ error }}
-          <ActionRefresh :handler="refresh" size="small" />
+          <XButton :handler="refresh" size="small" />
         </template>
-      </a-alert>
+      </AAlert>
     </slot>
   </div>
 
@@ -25,19 +25,18 @@
 </template>
 
 <script lang="ts">
-import { Alert, Button } from 'ant-design-vue';
+import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
 import { defineComponent, nextTick, onMounted, ref } from 'vue';
 
+import { XButton } from '../button';
 import { SpinnerLoading } from '../loading';
-import { ActionRefresh } from '../action-bars';
 
 export default defineComponent({
   components: {
-    [Alert.name]: Alert,
-    [Button.name]: Button,
+    XButton,
     SpinnerLoading,
-    ActionRefresh
+    [Alert.name]: Alert
   },
   inheritAttrs: false,
   props: {

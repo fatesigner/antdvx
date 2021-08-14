@@ -3,7 +3,10 @@
 </template>
 
 <script lang="ts">
-import { PropType, defineAsyncComponent, defineComponent } from 'vue';
+import { Component } from '@vue/runtime-core';
+import { defineAsyncComponent, defineComponent } from 'vue';
+
+import { ANTDVX_ICONS_REGISTERED, AntdvxIconNames } from './config';
 
 export default defineComponent({
   name: 'iconfont',
@@ -13,7 +16,7 @@ export default defineComponent({
       default: null
     },
     color: {
-      type: String as PropType<'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'danger' | 'light' | 'purple' | 'dark'>,
+      type: String,
       default: null
     },
     style: {
@@ -38,13 +41,24 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const comp = props.name
-      ? defineAsyncComponent(() =>
-          import(`./icons/${props.name}`).then((res) => {
-            return res.default;
-          })
-        )
-      : null;
+    let comp: Component;
+
+    if (props.name) {
+      let exsitIcon = ANTDVX_ICONS_REGISTERED.find((x) => x.name === props.name);
+      if (exsitIcon) {
+        comp = exsitIcon.comp;
+      } else {
+        if (AntdvxIconNames.includes(props.name)) {
+          comp = defineAsyncComponent(() =>
+            import(`./icons/${props.name}`).then((res) => {
+              return res.default;
+            })
+          );
+        } else {
+          throw new Error(`The iconfont name '${props.name}' is not registed.`);
+        }
+      }
+    }
 
     return {
       comp

@@ -16,7 +16,7 @@
 
 <script lang="ts">
 import { addClass, hasClass, removeClass } from '@fatesigner/utils/document';
-import { animationFrameScheduler, fromEvent, merge, Subscription } from 'rxjs';
+import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, useCssModule } from 'vue';
 

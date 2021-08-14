@@ -2,7 +2,7 @@
  * Icon
  */
 
-import { createIcon } from '../iconfont';
+import { createIcon } from '../core';
 
 export default createIcon('usd-circle', {
   viewBox: '0 0 496 512',

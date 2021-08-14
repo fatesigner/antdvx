@@ -2,7 +2,7 @@
  * Icon
  */
 
-import { createIcon } from '../iconfont';
+import { createIcon } from '../core';
 
 export default createIcon('adn', {
   viewBox: '0 0 448 512',

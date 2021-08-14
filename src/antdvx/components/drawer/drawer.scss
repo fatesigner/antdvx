@@ -17,7 +17,7 @@
     max-width: 100%;
   }
 
-  &.ant-drawer-fullscreen {
+  &.ant-drawer-x-fullscreen {
     .ant-drawer-content-wrapper {
       width: 100% !important;
       height: 100% !important;
@@ -72,4 +72,11 @@
 
 .ant-drawer-x-body {
   overflow: auto;
+}
+
+.ant-drawer-x-loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
 }

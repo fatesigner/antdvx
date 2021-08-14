@@ -36,8 +36,8 @@
                   <Component :is="getComp(element.component)" :field="element.field" />
                 </AFormItem>
                 <div :class="$style.actions">
-                  <AntdButton class="tw-mr-1" size="small" type="default" title="复制" @click="copy(element, index)"><Iconfont name="copy" /></AntdButton>
-                  <AntdButton size="small" type="default" title="删除" @click="remove(element, index)"><Iconfont name="trash-alt" /></AntdButton>
+                  <XButton class="tw-mr-1" size="small" type="default" title="复制" @click="copy(element, index)"><Iconfont name="copy" /></XButton>
+                  <XButton size="small" type="default" title="删除" @click="remove(element, index)"><Iconfont name="trash-alt" /></XButton>
                 </div>
               </div>
             </TransitionGroup>
@@ -56,7 +56,7 @@ import { PropType, defineComponent, onMounted, ref, toRaw, watch } from 'vue';
 
 import { Iconfont } from '../../iconfont';
 import { ScrollView } from '../../scroll-view';
-import { AntdButton } from '../../button';
+import { XButton } from '../../button';
 
 import { IFormDesignerBinds, IFormDesignerWidget } from '../config';
 import { FORM_DESIGNER_SYMBOLS } from '../symbols';
@@ -66,7 +66,7 @@ import { FormDesignerConfig } from './designer';
 export default defineComponent({
   components: {
     Iconfont,
-    AntdButton,
+    XButton,
     ScrollView,
     Draggable,
     // Antd
@@ -176,9 +176,6 @@ export default defineComponent({
   transition-duration: 0.2s;
   transition-property: transform;
   transform: translate3d(0, 100%, 0);
-}
-
-.label {
 }
 
 .widget {

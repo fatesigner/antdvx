@@ -140,9 +140,7 @@ export default defineComponent({
 
     watch(
       () => props.options.data,
-      (val, newval) => {
-        console.log(val.length);
-      },
+      (val, newval) => {},
       {
         deep: true
       }

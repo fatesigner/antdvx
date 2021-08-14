@@ -6,15 +6,15 @@
           <div class="tw-flex tw-items-center tw-space-x-2">
             <div class="tw-flex-initial">筛选：</div>
             <AInput class="tw-w-72" placeholder="搜索患者案例..." />
-            <ActionButton outline :handler="gridRef.handler.refresh">搜索</ActionButton>
-            <ActionRefresh :handler="refresh" />
+            <XButton outline :handler="gridRef.handler.refresh">搜索</XButton>
+            <XButtonRefresh :handler="refresh" />
           </div>
         </template>
         <template #no="{ record, rowIndex }"> {{ rowIndex + 1 }} </template>
         <template #actions="{ record }">
           <div class="tw-space-x-2">
-            <ActionEdit pure mode="icon" type="link" size="small" :handler="edit" />
-            <ActionDelete pure confirmed notify mode="icon" color="danger" type="link" size="small" :handler="del(record)" />
+            <XButtonEdit pure mode="icon" type="link" size="small" :handler="edit" />
+            <XButtonDelete pure confirmed notify mode="icon" color="danger" type="link" size="small" :handler="del(record)" />
           </div>
         </template>
       </VxeG>
@@ -25,11 +25,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Input } from 'ant-design-vue';
-import { AntdButton } from 'antdvx/components/button';
-import { IconIdBadge } from 'antdvx/components/iconfont';
-import { ScrollView } from 'antdvx/components/scroll-view';
-import { VxeG, createVxeGrid } from 'antdvx/components/vxe-grid';
-import { ActionAdd, ActionButton, ActionDelete, ActionEdit, ActionRefresh } from 'antdvx/components/action-bars';
+import { ScrollView, VxeG, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, createVxeGrid } from 'antdvx';
 
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';
@@ -37,14 +33,11 @@ import { IUser } from '@/types/user';
 export default defineComponent({
   components: {
     VxeG,
+    XButton,
     ScrollView,
-    AntdButton,
-    ActionButton,
-    ActionAdd,
-    ActionEdit,
-    ActionDelete,
-    ActionRefresh,
-    IconIdBadge,
+    XButtonEdit,
+    XButtonDelete,
+    XButtonRefresh,
     [Input.name]: Input
   },
   setup() {
@@ -81,6 +74,7 @@ export default defineComponent({
           {
             title: '手机号',
             field: 'phone',
+            sortable: true,
             minWidth: 80
           },
           {

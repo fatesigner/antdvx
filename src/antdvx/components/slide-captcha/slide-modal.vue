@@ -49,10 +49,10 @@
       <div :class="$style.footer">
         <div :class="$style.actions">
           <div :class="$style.action">
-            <AntdButton pure size="small" type="link" @click="close"><Iconfont name="times" scale="1.4" /></AntdButton>
+            <XButton pure size="small" type="link" @click="close"><Iconfont name="times" scale="1.4" /></XButton>
           </div>
           <div :class="$style.action">
-            <AntdButton pure size="small" type="link" @click="refreshImage"><Iconfont name="redo" /></AntdButton>
+            <XButton pure size="small" type="link" @click="refreshImage"><Iconfont name="redo" /></XButton>
           </div>
         </div>
         <div :class="$style.copyright"></div>
@@ -72,14 +72,14 @@ import { PropType, defineComponent, onBeforeUnmount, onMounted, ref, useCssModul
 import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
 
-import { AntdButton } from '../button';
+import { XButton } from '../button';
 import { Iconfont } from '../iconfont';
 
 export default defineComponent({
   name: 'slide-modal',
   components: {
     Iconfont,
-    AntdButton
+    XButton
   },
   props: {
     theme: {

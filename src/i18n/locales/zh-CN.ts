@@ -69,6 +69,13 @@ export default {
       showSidebarLogo: '显示侧边栏 Logo',
       fixedHeader: '固定 Header'
     },
+    http: {
+      noResponse: '服务器没有响应，请检查您的网络设置',
+      unauthorized: '您的会话已超时，请重新登录',
+      requestFailed: '请求失败，请联系管理员',
+      requestTimeout: '您的会话已结束，请重新登录',
+      connectionAbort: '连接服务器超时，检查您的网络设置'
+    },
     notification: {
       login: '登录成功',
       logout: '您已退出登录'

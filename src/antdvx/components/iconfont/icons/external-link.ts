@@ -2,7 +2,7 @@
  * Icon
  */
 
-import { createIcon } from '../iconfont';
+import { createIcon } from '../core';
 
 export default createIcon('external-link', {
   viewBox: '0 0 512 512',

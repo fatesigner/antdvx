@@ -8,10 +8,6 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
@@ -20,7 +16,14 @@
   justify-content: center;
   width: 100vw;
   height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
   background-color: #fff
+}
+
+#splash-screen .inner {
+  width: 66%;
+  text-align: center;
 }
 
 #splash-screen .mask {
@@ -58,7 +61,9 @@
 }
 
 #splash-screen .logo img {
-  width: 160px
+  display: block;
+  width: 160px;
+  margin: auto;
 }
 
 #splash-screen .progress-bar {
@@ -66,7 +71,7 @@
   width: 66%;
   max-width: 300px;
   height: 4px;
-  margin-top: 40px;
+  margin: 40px auto 0;
   overflow: hidden;
   background-color: #f1f1f1;
   opacity: 0;
@@ -89,7 +94,7 @@
 
 #splash-screen .message {
   position: relative;
-  margin-top: 50px;
+  margin: 50px auto 0;
   font-size: 20px;
   line-height: 15px;
   text-align: center;

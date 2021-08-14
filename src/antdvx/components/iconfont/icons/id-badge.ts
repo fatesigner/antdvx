@@ -2,7 +2,7 @@
  * Icon
  */
 
-import { createIcon } from '../iconfont';
+import { createIcon } from '../core';
 
 export default createIcon('id-badge', {
   viewBox: '0 0 384 512',

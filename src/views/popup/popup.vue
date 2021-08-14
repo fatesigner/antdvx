@@ -1,69 +1,76 @@
 <template>
   <ScrollView>
-    <div class="tw-p-4 tw-space-x-4">
-      <ActionButton outline :handler="openModal()">打开 Modal</ActionButton>
-      <ActionButton outline :handler="openModal(true)">打开 Modal（全屏）</ActionButton>
-      <ActionButton outline :handler="openDrawer()">打开 Drawer</ActionButton>
-      <ActionButton outline :handler="openDrawer(true)">打开 Drawer（全屏）</ActionButton>
+    <div class="tw-flex tw-flex-wrap tw-p-2">
+      <div class="tw-p-2">
+        <XButton outline :handler="openModal()">打开 Modal</XButton>
+      </div>
+      <div class="tw-p-2">
+        <XButton outline :handler="openModal(true)">打开 Modal（全屏）</XButton>
+      </div>
+      <div class="tw-p-2">
+        <XButton outline :handler="openDrawer()">打开 Drawer</XButton>
+      </div>
+      <div class="tw-p-2">
+        <XButton outline :handler="openDrawer(true)">打开 Drawer（全屏）</XButton>
+      </div>
     </div>
   </ScrollView>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { ScrollView } from 'antdvx/components/scroll-view';
-import { ActionButton } from 'antdvx/components/action-bars';
-import { createXModal } from '@/antdvx';
-import { createXDrawer } from '@/antdvx/components/drawer';
+import { defineAsyncComponent, defineComponent } from 'vue';
+import { ScrollView, XButton, createXDrawer, createXModal } from 'antdvx';
 
 export default defineComponent({
   components: {
-    ScrollView,
-    ActionButton
+    XButton,
+    ScrollView
   },
   setup() {
     const modalRef = createXModal(
+      defineAsyncComponent(() => import('./form.vue')),
       {
-        comp: () => import('./form.vue'),
-        props: {
-          id: null
+        id: null,
+        onDone(e) {
+          if (e) {
+            modalRef.dismiss();
+          }
         }
       },
       {
-        props: {
-          title: 'modal 标题',
-          width: '300px'
-        }
+        fullscreen: true
       }
     );
 
     const drawerRef = createXDrawer(
+      () => import('./form.vue'),
       {
-        comp: () => import('./form.vue'),
-        props: {
-          id: null
+        id: null,
+        onDone(e) {
+          if (e) {
+            modalRef.dismiss();
+          }
         }
       },
       {
-        props: {
-          title: 'drawer 标题',
-          width: '66%'
-        }
+        title: 'drawer 标题',
+        width: '66%'
       }
     );
 
     const openModal = (fullscreen = false) => {
       return async () => {
-        modalRef.compOptions.id = 'modal';
+        modalRef.compProps.id = 'modal';
         modalRef.options.fullscreen = fullscreen;
         modalRef.present().then((e) => {
           console.log('modal presented:', e);
         });
       };
     };
+
     const openDrawer = (fullscreen = false) => {
       return async () => {
-        drawerRef.compOptions.id = 'drawer';
+        drawerRef.compProps.id = 'drawer';
         drawerRef.options.fullscreen = fullscreen;
         drawerRef.present().then((e) => {
           console.log('drawer presented:', e);

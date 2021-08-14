@@ -1,0 +1,132 @@
+@import "~ant-design-vue/lib/style/themes/default";
+@import "~ant-design-vue/es/button/style/mixin";
+
+.set-btn-color(@type, @color, @background, @border) {
+  // type = default
+  .ant-btn-default.ant-color-@{type}:not([disabled]) {
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
+    }
+  }
+
+  // type = outline
+  .ant-btn-outline.ant-color-@{type}:not(.ant-btn-primary):not(.ant-btn-danger):not([disabled]) {
+    .button-color(@background; #fff; @background);
+
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
+    }
+  }
+
+  // type = primary
+  .ant-btn-primary.ant-color-@{type} {
+    .button-color(@color; @background; @background);
+
+    text-shadow: @btn-text-shadow;
+    box-shadow: @btn-primary-shadow;
+
+    &:hover,
+    &:focus {
+      .button-color(@color; ~`colorPalette('@{background}', 5)`; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(@color; ~`colorPalette('@{background}', 7)`; ~`colorPalette('@{background}', 7)`);
+    }
+
+    .button-disabled();
+
+    .ant-btn-group {
+      &:not(:first-child):not(:last-child) {
+        border-right-color: @border;
+        border-left-color: @border;
+
+        &:disabled {
+          border-color: @btn-default-border;
+        }
+      }
+
+      &:first-child {
+        &:not(:last-child) {
+          border-right-color: @border;
+
+          &[disabled] {
+            border-right-color: @btn-default-border;
+          }
+        }
+      }
+    }
+
+    .ant-btn-group &:last-child:not(:first-child),
+    .ant-btn-group & + & {
+      border-left-color: @border;
+
+      &[disabled] {
+        border-left-color: @btn-default-border;
+      }
+    }
+  }
+
+  // type = dashed
+  .ant-btn-dashed.ant-color-@{type} {
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
+    }
+  }
+
+  // type = link
+  .ant-btn-link.ant-color-@{type} {
+    color: @background;
+
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; transparent; transparent);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; transparent; transparent);
+    }
+  }
+
+  // type = text
+  .ant-btn-text.ant-color-@{type} {
+    color: @background;
+
+    &:hover,
+    &:focus {
+      color: ~`colorPalette("@{background}", 5) `;
+    }
+
+    &:active,
+    &.active {
+      color: ~`colorPalette("@{background}", 7) `;
+    }
+  }
+
+  // type = 3d
+  .ant-btn-3d.ant-color-@{type} {
+    background: radial-gradient(100% 100% at 100% 0%, #5adaff 0%, #5468ff 100%);
+    box-shadow: 0 2px 4px rgb(45 35 66 / 40%), 0 7px 13px -3px rgb(45 35 66 / 30%), inset 0 -3px 0 #d6d6e7;
+    .button-color(@color; ~`colorPalette('@{background}', 7)`; ~`colorPalette('@{background}', 7)`);
+  }
+}

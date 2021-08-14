@@ -1,5 +1,5 @@
 <template>
-  <v-echarts
+  <VEcharts
     ref="chart"
     :instance="instance"
     :options="options"
@@ -10,16 +10,16 @@
     :empty="empty"
   >
     <template #loading>
-      <a-spin :class="$style.loading" size="large" />
+      <ASpin :class="$style.loading" size="large" />
     </template>
 
     <template #error="{ error }">
-      <div :class="$style.error">{{ error }}<ActionRefresh :handler="refresh" size="small" /></div>
+      <div :class="$style.error">{{ error }}<XButtonRefresh :handler="refresh" size="small" /></div>
     </template>
 
     <template #empty>
       <div :class="$style.empty">
-        <empty />
+        <AEmpty />
       </div>
     </template>
 
@@ -28,30 +28,27 @@
         <img width="100" height="50" src="@/assets/img/logo.png" alt="" title="" />
       </div>
       <div :class="$style.actions">
-        <ActionRefresh v-if="refreshable" :disabled="loading" class="tw-mr-2" size="small" :handler="refresh" />
-        <ActionExport :disabled="loading" size="small" placement="bottomRight" filename="Selected Alpha Group" :target="getTarget" />
+        <XButtonRefresh v-if="refreshable" :disabled="loading" class="tw-mr-2" size="small" :handler="refresh" />
+        <XButtonExport :disabled="loading" size="small" placement="bottomRight" filename="Selected Alpha Group" :target="getTarget" />
       </div>
     </template>
-  </v-echarts>
+  </VEcharts>
 </template>
 
 <script lang="ts">
 import { Empty, Spin } from 'ant-design-vue';
 import { PropType, defineComponent, ref } from 'vue';
-import { IconRedo, IconSync } from 'antdvx/components/iconfont';
-import { ActionExport, ActionRefresh } from 'antdvx/components/action-bars';
-import { EChartsOption, EChartsOptionPromise, EChartsType, VEcharts } from 'antdvx/components/echarts';
+import { EChartsOption, EChartsOptionPromise, EChartsType, IconRedo, IconSync, VEcharts, XButtonExport, XButtonRefresh } from 'antdvx';
 
 export default defineComponent({
   components: {
-    ActionExport,
-    ActionRefresh,
     VEcharts,
-    // Antd
-    [Empty.name]: Empty,
-    [Spin.name]: Spin,
     IconRedo,
-    IconSync
+    IconSync,
+    XButtonExport,
+    XButtonRefresh,
+    [Empty.name]: Empty,
+    [Spin.name]: Spin
   },
   props: {
     logo: {

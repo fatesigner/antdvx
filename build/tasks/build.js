@@ -7,12 +7,13 @@ const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 
+require('./build-icons');
 require('./build-esm');
 require('./clean');
 
 gulp.task(
   'build',
-  gulp.series('clean', gulp.parallel('build-esm'), async function () {
+  gulp.series('clean', 'build-icons', gulp.parallel('build-esm'), async function () {
     const env = require('../env')();
 
     // Copy npm publish files to output

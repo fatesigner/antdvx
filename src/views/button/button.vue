@@ -4,29 +4,32 @@
       <div class="tw-text-lg">基础</div>
       <div class="tw-grid md:tw-grid-cols-2 tw-gap-4">
         <div class="tw-p-2 tw-border tw-border-gray-300" v-for="type in types">
-          <div class="tw-text-lg tw-p-2">{{ type.text }} button</div>
+          <div class="tw-text-lg tw-p-2">{{ type }} button</div>
+          <div class="tw-text-sm tw-p-2">Colors</div>
           <div class="tw-flex tw-flex-wrap">
+            <div class="tw-p-2">
+              <XButton :type="type">normal</XButton>
+            </div>
             <div class="tw-p-2" v-for="color in colors">
-              <AntdButton :color="color.value" :type="type.value">{{ color.text }}</AntdButton>
+              <XButton :color="color" :type="type">{{ color }}</XButton>
             </div>
             <div class="tw-p-2">
-              <AntdButton loading :type="type.value">loading</AntdButton>
+              <XButton loading :type="type">loading</XButton>
             </div>
             <div class="tw-p-2">
-              <AntdButton disabled :type="type.value">disabled</AntdButton>
+              <XButton disabled :type="type">disabled</XButton>
             </div>
           </div>
           <div class="tw-p-2">
-            <AntdButton block :type="type.value">block</AntdButton>
+            <XButton block :type="type">block</XButton>
           </div>
+          <div class="tw-text-sm tw-p-2">Sizes</div>
           <div class="tw-flex tw-flex-wrap">
             <div class="tw-p-2" v-for="size in sizes">
-              <AntdButton :size="size.value" :type="type.value">{{ size.text }}</AntdButton>
-            </div>
-            <div class="tw-p-2">
-              <AntdButton pure :type="type.value">pure</AntdButton>
+              <XButton :size="size" :type="type">{{ size }}</XButton>
             </div>
           </div>
+          <div class="tw-text-sm tw-p-2">Dropdown</div>
           <div class="tw-p-2">
             <ADropdown>
               <template #overlay>
@@ -36,77 +39,58 @@
                   <AMenuItem key="3">3rd item</AMenuItem>
                 </AMenu>
               </template>
-              <AntdButton :type="type.value">
+              <XButton :type="type">
                 Actions
                 <DownOutlined />
-              </AntdButton>
+              </XButton>
             </ADropdown>
           </div>
         </div>
         <div class="tw-p-2 tw-border tw-border-gray-300">
-          <div class="tw-text-lg tw-p-2">outline button</div>
-          <div class="tw-flex tw-flex-wrap">
-            <div class="tw-p-2" v-for="color in colors">
-              <AntdButton :color="color.value" outline>{{ color.text }}</AntdButton>
-            </div>
-            <div class="tw-p-2">
-              <AntdButton loading outline>loading</AntdButton>
-            </div>
-            <div class="tw-p-2">
-              <AntdButton disabled outline>disabled</AntdButton>
-            </div>
-          </div>
-          <div class="tw-p-2">
-            <AntdButton color="primary" block outline>block</AntdButton>
-          </div>
-          <div class="tw-flex tw-flex-wrap">
-            <div class="tw-p-2" v-for="size in sizes">
-              <AntdButton :size="size.value">{{ size.text }}</AntdButton>
-            </div>
-          </div>
-          <div class="tw-p-2">
-            <ADropdown>
-              <template #overlay>
-                <AMenu>
-                  <AMenuItem key="1">1st item</AMenuItem>
-                  <AMenuItem key="2">2nd item</AMenuItem>
-                  <AMenuItem key="3">3rd item</AMenuItem>
-                </AMenu>
-              </template>
-              <AntdButton outline>
-                Actions
-                <DownOutlined />
-              </AntdButton>
-            </ADropdown>
-          </div>
-        </div>
-      </div>
-
-      <div class="tw-text-lg">功能性</div>
-      <div class="tw-grid md:tw-grid-cols-2 tw-gap-4">
-        <div class="tw-p-2 tw-border tw-border-gray-300">
-          <div class="tw-text-lg tw-p-2">Action Button</div>
+          <div class="tw-text-lg tw-p-2">功能性</div>
           <div class="tw-p-2 tw-text-gray-600 tw-text-xs">
             用于需要异步操作的按钮，提供一个异步函数 handler，函数执行阶段，将自动添加 loading，结束后，若该函数抛出异常，则自动显示 notification。
           </div>
           <div class="tw-flex tw-flex-wrap">
             <div class="tw-p-2" v-for="type in types">
-              <ActionButton outline notify :type="type.value" :handler="load(3000, true)">加载</ActionButton>
+              <XButton outline notify :type="type" :handler="load(3000, true)">加载</XButton>
             </div>
             <div class="tw-p-2">
-              <ActionButton outline pure notify :handler="load(3000, true)">加载</ActionButton>
+              <XButton outline pure notify :handler="load(3000, true)">加载</XButton>
             </div>
           </div>
-          <div class="tw-p-2 tw-text-gray-600 tw-text-xs">基于 ActionButton 封装的常用的一些操作。</div>
+          <div class="tw-p-2 tw-text-gray-600 tw-text-xs">基于 Button 封装的常用的一些操作按钮。</div>
           <div class="tw-flex tw-flex-wrap">
             <div class="tw-p-2">
-              <ActionAdd outline notify :handler="load(3000, true)">添加</ActionAdd>
+              <XButtonAdd type="outline" notify :handler="load(3000, true)">添加</XButtonAdd>
             </div>
             <div class="tw-p-2">
-              <ActionEdit outline notify :handler="load(3000, true)">编辑</ActionEdit>
+              <XButtonEdit type="outline" notify :handler="load(3000, true)">编辑</XButtonEdit>
             </div>
             <div class="tw-p-2">
-              <ActionDelete confirmed outline notify :handler="load(3000, true)">删除</ActionDelete>
+              <XButtonDelete confirmed notify type="outline" :handler="load(3000, true)">删除</XButtonDelete>
+            </div>
+          </div>
+          <div class="tw-flex tw-flex-wrap">
+            <div class="tw-p-2">
+              <XButtonAdd type="outline" notify :handler="load(3000, true)">添加</XButtonAdd>
+            </div>
+            <div class="tw-p-2">
+              <XButtonEdit type="outline" notify :handler="load(3000, true)">编辑</XButtonEdit>
+            </div>
+            <div class="tw-p-2">
+              <XButtonDelete confirmed notify type="outline" :handler="load(3000, true)"></XButtonDelete>
+            </div>
+          </div>
+          <div class="tw-flex tw-flex-wrap">
+            <div class="tw-p-2">
+              <XButtonAdd color="success" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonEdit color="primary" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonDelete confirmed notify color="danger" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
             </div>
           </div>
         </div>
@@ -120,21 +104,16 @@ import { timer } from 'rxjs';
 import { defineComponent } from 'vue';
 import { Dropdown, Menu } from 'ant-design-vue';
 import { DownOutlined } from '@ant-design/icons-vue';
-import { AntdButton } from 'antdvx/components/button';
-import { ScrollView } from 'antdvx/components/scroll-view';
-import { ActionAdd, ActionButton, ActionDelete, ActionEdit, ActionRefresh } from 'antdvx/components/action-bars';
-
-import { BUTTON_TYPES, COLORS, SIZES } from '@/app/constants';
+import { ANTDVX_BUTTON_TYPES, ANTDVX_COLORS, ANTDVX_SIZES, ScrollView, XButton, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh } from 'antdvx';
 
 export default defineComponent({
   components: {
+    XButton,
+    XButtonAdd,
+    XButtonEdit,
+    XButtonDelete,
+    XButtonRefresh,
     ScrollView,
-    AntdButton,
-    ActionAdd,
-    ActionEdit,
-    ActionDelete,
-    ActionRefresh,
-    ActionButton,
     // Antd
     DownOutlined,
     [Menu.name]: Menu,
@@ -154,7 +133,7 @@ export default defineComponent({
       };
     };
 
-    return { sizes: SIZES.arr, colors: COLORS.arr, types: BUTTON_TYPES.arr, load };
+    return { sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load };
   }
 });
 </script>

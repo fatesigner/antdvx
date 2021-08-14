@@ -8,12 +8,12 @@
       <template #overlay>
         <AMenu>
           <AMenuItem>
-            <IconCog />
+            <Iconfont name="cog" />
             <span>{{ $t(i18nMessages.app.navbar.individuation) }}</span>
           </AMenuItem>
           <AMenuDivider />
           <AMenuItem @click="logout">
-            <IconLogout />
+            <Iconfont name="logout" />
             <span>{{ $t(i18nMessages.app.navbar.logOut) }}</span>
           </AMenuItem>
         </AMenu>
@@ -23,11 +23,11 @@
 </template>
 
 <script lang="ts">
+import { Iconfont } from 'antdvx';
 import { useI18n } from 'vue-i18n';
 import { Subscription } from 'rxjs';
 import { Dropdown, Menu, message } from 'ant-design-vue';
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
-import { IconCog, IconLogout } from 'antdvx/components/iconfont';
 
 import { env } from '@/env';
 import { IUser } from '@/types/user';
@@ -38,13 +38,11 @@ import { sessionService } from '@/app/services';
 
 export default defineComponent({
   components: {
-    // Antd
+    Iconfont,
     [Dropdown.name]: Dropdown,
     [Menu.name]: Menu,
     [Menu.Item.name]: Menu.Item,
-    [Menu.Divider.name]: Menu.Divider,
-    IconLogout,
-    IconCog
+    [Menu.Divider.name]: Menu.Divider
   },
   setup() {
     const { t } = useI18n();

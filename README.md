@@ -23,15 +23,15 @@ npm i -S antdvx
 ## 示例 [online](https://fatesigner.github.io/antdvx/example/)
 ```vue
 <template>
-  <AntdButton size="small" @click="onClick">button</AntdButton>
+  <XButton size="small" @click="onClick">button</XButton>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { AntdButton } from 'antdvx/components/button';
+import { XButton } from 'antdvx/components/button';
 
 export default defineComponent({
-  components: { AntdButton },
+  components: { XButton },
   setup(){
     const onClick = () => {
       console.log('button click.');

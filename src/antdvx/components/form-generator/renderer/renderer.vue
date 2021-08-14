@@ -38,7 +38,7 @@ import { Form, Input, Radio, RadioGroup, Spin, Textarea } from 'ant-design-vue';
 import { PropType, defineComponent, nextTick, onMounted, reactive, ref, toRaw, watch } from 'vue';
 
 import { Iconfont } from '../../iconfont';
-import { AntdButton } from '../../button';
+import { XButton } from '../../button';
 import { ScrollView } from '../../scroll-view';
 
 import { IFormGeneratorData } from '../config';
@@ -47,7 +47,7 @@ export default defineComponent({
   name: 'antd-form-renderer',
   components: {
     Iconfont,
-    AntdButton,
+    XButton,
     ScrollView,
     // Antd
     [Spin.name]: Spin,

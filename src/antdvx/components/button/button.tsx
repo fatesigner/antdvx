@@ -1,63 +1,73 @@
-import { Button } from 'ant-design-vue';
-import { PropType, defineComponent } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
+import { Button, notification } from 'ant-design-vue';
 
-export default defineComponent({
-  props: {
-    type: {
-      type: String as PropType<'default' | 'primary' | 'ghost' | 'dashed' | 'danger' | 'link' | '3d'>,
-      default: 'default'
-    },
-    pure: {
-      type: Boolean,
-      default: false
-    },
-    color: {
-      type: String as PropType<'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'danger' | 'light' | 'purple' | 'dark'>,
-      default: null
-    },
-    outline: {
-      type: Boolean,
-      default: false
-    },
-    title: {
-      type: String,
-      default: null
-    }
-  },
-  setup(props: any, { emit, slots }) {
-    return () => {
-      if (props.type === '3d') {
-        return (
-          <Button
-            class={['ant-btn-3d', props.color ? `ant-color-${props.color}` : '']}
-            block={props.block}
-            disabled={props.disabled}
-            ghost={props.ghost}
-            htmlType={props.htmlType}
-            loading={props.loading}
-            type='default'
-            size={props.size}
-            title={props.title}
-          >
-            {slots.default?.()}
-          </Button>
-        );
+import { XButtonProps } from './types';
+
+import './button.less';
+
+export const XButton = defineComponent({
+  name: 'x-button',
+  props: XButtonProps,
+  emits: ['click'],
+  setup(props: any, { emit }) {
+    const loading_ = ref(false);
+
+    watch(
+      () => props.loading,
+      (val) => {
+        if (loading_.value !== val) {
+          loading_.value = val;
+        }
+      },
+      {
+        immediate: true
+      }
+    );
+
+    const trigger = (e) => {
+      if (props.handler) {
+        loading_.value = true;
+        props
+          .handler()
+          .catch((err) => {
+            if (props.notify) {
+              notification.error({ message: '', description: err.message });
+            }
+          })
+          .finally(() => {
+            loading_.value = false;
+          });
       } else {
-        return (
-          <Button
-            class={{ ['ant-color-' + props.color]: !!props.color, 'ant-btn-outline': props.outline, 'ant-btn-pure': props.pure }}
-            block={props.block}
-            disabled={props.disabled}
-            ghost={props.ghost}
-            htmlType={props.htmlType}
-            loading={props.loading}
-            type={props.type}
-            title={props.title}
-          >
-            {slots.default?.()}
-          </Button>
-        );
+        emit('click', e);
       }
     };
+
+    return { loading_, trigger };
+  },
+  render(ctx) {
+    return (
+      <Button
+        class={{
+          ['ant-color-' + ctx.color]: !!ctx.color,
+          'ant-btn-outline': ctx.type === 'outline',
+          'ant-btn-3d': ctx.type === '3d',
+          'ant-btn-mini': ctx.size === 'mini'
+        }}
+        block={ctx.block}
+        disabled={ctx.disabled}
+        ghost={ctx.ghost}
+        href={ctx.href}
+        htmlType={ctx.htmlType}
+        loading={ctx.loading_}
+        shape={ctx.shape}
+        size={ctx.size}
+        target={ctx.target}
+        type={ctx.type === 'outline' || ctx.type === '3d' ? undefined : ctx.type}
+        title={ctx.title}
+        onClick={ctx.trigger}
+      >
+        {ctx.$slots.default?.({ loading: ctx.loading_ })}
+      </Button>
+    );
   }
 });

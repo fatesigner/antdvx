@@ -14,7 +14,7 @@
               <span class="tw-text-xxs">用户输入后触发</span>
             </div>
           </template>
-          <AntdButton class="tw-ml-1" color="primary" pure size="small" type="link"><Iconfont name="question-circle" /></AntdButton>
+          <XButton class="tw-ml-1" color="primary" pure size="small" type="link"><Iconfont name="question-circle" /></XButton>
         </APopover>
       </div>
     </template>
@@ -98,7 +98,7 @@
 import { PropType, computed, defineComponent, ref } from 'vue';
 import { AutoComplete, Checkbox, DatePicker, Form, Input, InputNumber, Popover, Radio, RadioButton, RadioGroup, Select } from 'ant-design-vue';
 
-import { AntdButton } from '../../../button';
+import { XButton } from '../../../button';
 import { Iconfont } from '../../../iconfont';
 
 import { DATE_FORMATS } from '../../constants';
@@ -106,7 +106,7 @@ import { IFormDesignerBinds, IRuleType, ruleTypeDesc } from '../../config';
 
 export default defineComponent({
   components: {
-    AntdButton,
+    XButton,
     Iconfont,
     // Antd
     [Popover.name]: Popover,

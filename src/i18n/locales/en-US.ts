@@ -69,6 +69,13 @@ export default {
       showSidebarLogo: 'Sidebar Logo',
       fixedHeader: 'Fixed Header'
     },
+    http: {
+      noResponse: 'The server does not respond, please check your network Settings',
+      unauthorized: 'Your session has timed out. Please log in again',
+      requestFailed: 'Request failed, please contact administrator',
+      requestTimeout: 'Your session has timed out. Please log in again',
+      connectionAbort: 'Connect the server timeout, check your network Settings'
+    },
     notification: {
       login: 'Login successfully',
       logout: 'You have logged out.'

@@ -7,7 +7,7 @@ import { TransitionRouter } from 'antdvx/components/transitions';
 
 // Plugins
 import { i18n } from '@/i18n';
-import { Antdv } from '@/plugins/antdv';
+import { Antdvx } from '@/plugins/antdvx';
 import { Dayjs } from '@/plugins/dayjs';
 import { VeeValidate } from '@/plugins/vee-validate';
 
@@ -22,7 +22,7 @@ import { createAppRouter } from '@/app/router';
 async function mountApp() {
   const router = await createAppRouter();
 
-  const app = createApp(App).use(router).use(i18n._).use(Antdv).use(Dayjs).use(VeeValidate).use(Pipes);
+  const app = createApp(App).use(router).use(i18n._).use(Antdvx).use(Dayjs).use(VeeValidate).use(Pipes);
 
   // 在此处注册全局组件
   app.component('TransitionRouter', TransitionRouter);

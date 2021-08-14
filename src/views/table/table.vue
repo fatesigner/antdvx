@@ -4,14 +4,14 @@
       <XTable v-bind="tableRef">
         <template #title="{ loading, refresh }">
           <div class="tw-space-x-2">
-            <ActionAdd size="small" :handler="add" />
-            <ActionRefresh size="small" :handler="refresh" />
+            <XButtonAdd size="small" :handler="add" />
+            <XButtonRefresh size="small" :handler="refresh" />
           </div>
         </template>
         <template #actions="{ record }">
           <div class="tw-space-x-2">
-            <ActionEdit pure mode="icon" type="link" size="small" :handler="edit" />
-            <ActionDelete pure confirmed notify mode="icon" color="danger" type="link" size="small" :handler="del(record)" />
+            <XButtonEdit pure mode="icon" type="link" size="small" :handler="edit" />
+            <XButtonDelete pure confirmed notify mode="icon" color="danger" type="link" size="small" :handler="del(record)" />
           </div>
         </template>
       </XTable>
@@ -21,11 +21,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { AntdButton } from 'antdvx/components/button';
-import { IconIdBadge } from 'antdvx/components/iconfont';
-import { ScrollView } from 'antdvx/components/scroll-view';
-import { XTable, createXTable } from 'antdvx/components/table';
-import { ActionAdd, ActionDelete, ActionEdit, ActionRefresh } from 'antdvx/components/action-bars';
+import { ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XTable, createXTable } from 'antdvx';
 
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';
@@ -34,12 +30,10 @@ export default defineComponent({
   components: {
     XTable,
     ScrollView,
-    AntdButton,
-    ActionAdd,
-    ActionEdit,
-    ActionDelete,
-    ActionRefresh,
-    IconIdBadge
+    XButtonAdd,
+    XButtonEdit,
+    XButtonDelete,
+    XButtonRefresh
   },
   setup() {
     const tableRef = createXTable<IUser<any>>({

@@ -65,6 +65,13 @@ export const i18nMessages = createLocaleMessages({
       showSidebarLogo: '',
       fixedHeader: ''
     },
+    http: {
+      noResponse: '',
+      unauthorized: '',
+      requestFailed: '',
+      requestTimeout: '',
+      connectionAbort: ''
+    },
     notification: {
       login: '',
       logout: ''

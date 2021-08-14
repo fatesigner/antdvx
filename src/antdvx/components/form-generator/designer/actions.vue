@@ -4,32 +4,32 @@
       {{ binds.schema.name }}
     </div>
     <div class="tw-flex-initial">
-      <ActionButton type="link" size="small" :handler="uploadJson">
+      <XButton type="link" size="small" :handler="uploadJson">
         <template #icon></template>
         导入JSON
-      </ActionButton>
+      </XButton>
 
       <APopconfirm title="确认清空当前表单?" ok-text="确定" cancel-text="取消" @confirm="clear">
-        <AButton type="link" size="small">
+        <XButton type="link" size="small">
           <template #icon> </template>
           清空
-        </AButton>
+        </XButton>
       </APopconfirm>
 
-      <ActionButton type="link" size="small" :handler="preview">
+      <XButton type="link" size="small" :handler="preview">
         <template #icon> </template>
         预览
-      </ActionButton>
+      </XButton>
 
-      <ActionButton type="link" size="small" :handler="generateJson">
+      <XButton type="link" size="small" :handler="generateJson">
         <template #icon> </template>
         生成JSON
-      </ActionButton>
+      </XButton>
 
-      <ActionButton type="link" size="small" :handler="generateCode">
+      <XButton type="link" size="small" :handler="generateCode">
         <template #icon></template>
         生成代码
-      </ActionButton>
+      </XButton>
     </div>
 
     <AModal v-model:visible="uploadedJson.visible" title="导入JSON" :width="800" @ok="onUpload">
@@ -48,8 +48,8 @@
         <FormRenderer :data="previewed.data" ref="formRef"></FormRenderer>
       </ScrollView>
       <template #footer>
-        <ActionButton>重置</ActionButton>
-        <ActionButton type="primary" :handler="getFormData">获取数据</ActionButton>
+        <XButton>重置</XButton>
+        <XButton type="primary" :handler="getFormData">获取数据</XButton>
       </template>
     </AModal>
   </div>
@@ -60,9 +60,9 @@ import { PropType, defineComponent, reactive, ref } from 'vue';
 import { Alert, Button, Modal, Popconfirm, message, notification } from 'ant-design-vue';
 
 import { copy } from '../../../utils';
+import { XButton } from '../../button';
 import { CodeEditor } from '../../code-editor';
 import { ScrollView } from '../../scroll-view';
-import { ActionButton } from '../../action-bars';
 
 import { IFormDesignerBinds } from '../config';
 
@@ -72,10 +72,10 @@ import FormRenderer from '../renderer/renderer.vue';
 
 export default defineComponent({
   components: {
-    ActionButton,
-    FormRenderer,
+    XButton,
     CodeEditor,
     ScrollView,
+    FormRenderer,
     // Antd
     [Alert.name]: Alert,
     [Modal.name]: Modal,

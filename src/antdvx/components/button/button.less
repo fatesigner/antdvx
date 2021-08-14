@@ -1,0 +1,296 @@
+@import "~ant-design-vue/lib/style/themes/default";
+@import "~ant-design-vue/es/button/style/mixin";
+@import "../../themes/default";
+
+.set-btn-color(@type, @color, @background, @border) {
+  // default type
+  .ant-btn-default.ant-color-@{type}:not([disabled]) {
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
+    }
+  }
+
+  // primary type
+  .ant-btn-primary.ant-color-@{type} {
+    .button-color(@color; @background; @background);
+
+    text-shadow: @btn-text-shadow;
+    box-shadow: @btn-primary-shadow;
+
+    &:hover,
+    &:focus {
+      .button-color(@color; ~`colorPalette('@{background}', 5)`; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(@color; ~`colorPalette('@{background}', 7)`; ~`colorPalette('@{background}', 7)`);
+    }
+
+    .button-disabled();
+
+    .ant-btn-group {
+      &:not(:first-child):not(:last-child) {
+        border-right-color: @border;
+        border-left-color: @border;
+
+        &:disabled {
+          border-color: @btn-default-border;
+        }
+      }
+
+      &:first-child {
+        &:not(:last-child) {
+          border-right-color: @border;
+
+          &[disabled] {
+            border-right-color: @btn-default-border;
+          }
+        }
+      }
+    }
+
+    .ant-btn-group &:last-child:not(:first-child),
+    .ant-btn-group & + & {
+      border-left-color: @border;
+
+      &[disabled] {
+        border-left-color: @btn-default-border;
+      }
+    }
+  }
+
+  // dashed type
+  .ant-btn-dashed.ant-color-@{type} {
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
+    }
+  }
+
+  // link type
+  .ant-btn-link.ant-color-@{type} {
+    color: @background;
+
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; transparent; transparent);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; transparent; transparent);
+    }
+  }
+
+  // text type
+  .ant-btn-text.ant-color-@{type} {
+    color: @background;
+
+    &:hover,
+    &:focus {
+      color: ~`colorPalette("@{background}", 5) `;
+    }
+
+    &:active,
+    &.active {
+      color: ~`colorPalette("@{background}", 7) `;
+    }
+  }
+
+  // outline type
+  .ant-btn-outline.ant-color-@{type}:not(.ant-btn-primary):not(.ant-btn-danger):not([disabled]) {
+    .button-color(@background; #fff; @background);
+
+    &:hover,
+    &:focus {
+      .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
+    }
+
+    &:active,
+    &.active {
+      .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
+    }
+  }
+
+  // 3d type
+  .ant-btn.ant-btn-3d.ant-color-@{type} {
+    color: #fff;
+    background: radial-gradient(100% 100% at 100% 0%, @background 0%, @background 100%);
+    border-color: ~`colorPalette('@{background}', 6.7) `;
+    box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 ~`colorPalette('@{background}', 6.7) `;
+
+    &:active {
+      color: #fff;
+      box-shadow: inset 0 3px 7px ~`colorPalette('@{background}', 7) `;
+    }
+  }
+}
+
+// default type normal
+.ant-btn.ant-btn-default {
+  @color: rgba(0, 0, 0, 1);
+
+  &:hover,
+  &:focus {
+    .button-color(@color; #fff; #999);
+  }
+
+  &:active,
+  &.active {
+    .button-color(#333; #fff; #666);
+  }
+}
+
+// primary type normal
+.ant-btn.ant-btn-primary.ant-color-default {
+  @color: rgba(0, 0, 0, 0.85);
+  @background: #fff;
+  @border: #ddd;
+
+  .button-color(@color; @background; @border);
+
+  text-shadow: none;
+  box-shadow: none;
+  //text-shadow: @btn-text-shadow;
+  //box-shadow: @btn-primary-shadow;
+
+  &:hover,
+  &:focus {
+    .button-color(@color; #f1f1f1; #ddd);
+  }
+
+  &:active,
+  &.active {
+    .button-color(@color; #ddd; #ccc);
+  }
+
+  .button-disabled();
+
+  .ant-btn-group {
+    &:not(:first-child):not(:last-child) {
+      border-right-color: @border;
+      border-left-color: @border;
+
+      &:disabled {
+        border-color: @btn-default-border;
+      }
+    }
+
+    &:first-child {
+      &:not(:last-child) {
+        border-right-color: @border;
+
+        &[disabled] {
+          border-right-color: @btn-default-border;
+        }
+      }
+    }
+  }
+
+  .ant-btn-group &:last-child:not(:first-child),
+  .ant-btn-group & + & {
+    border-left-color: @border;
+
+    &[disabled] {
+      border-left-color: @btn-default-border;
+    }
+  }
+}
+
+// dashed type normal
+.ant-btn.ant-btn-dashed {
+  &:hover,
+  &:focus {
+    .button-color(~`colorPalette('#666', 2)`; #fff; ~`colorPalette('#666', 2)`);
+  }
+
+  &:active,
+  &.active {
+    .button-color(~`colorPalette('#666', 5)`; #fff; ~`colorPalette('#666', 5)`);
+  }
+}
+
+// link type normal
+.ant-btn.ant-btn-link {
+  color: rgba(0, 0, 0, 0.85);
+
+  &:hover,
+  &:focus {
+    .button-color(~`colorPalette('#666', 2)`; transparent; transparent);
+  }
+
+  &:active,
+  &.active {
+    .button-color(~`colorPalette('#666', 5)`; transparent; transparent);
+  }
+}
+
+// outline type normal
+.ant-btn.ant-btn-outline {
+  @color: rgba(0, 0, 0, 1);
+
+  &:hover,
+  &:focus {
+    .button-color(@color; #fff; #999);
+  }
+
+  &:active,
+  &.active {
+    .button-color(#333; #fff; #666);
+  }
+}
+
+// 3d type normal
+.ant-btn.ant-btn-3d {
+  background: #fcfcfd;
+  box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 #d6d6e7;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  will-change: box-shadow, transform;
+
+  &:hover {
+    color: inherit;
+    border-color: #d9d9d9;
+    box-shadow: 0 4px 8px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 #d6d6e7;
+    transform: translateY(-2px);
+  }
+
+  &:not([disabled]):active {
+    color: inherit;
+    border-color: #ddd;
+    box-shadow: inset 0 3px 7px #d6d6e7;
+    transform: translateY(2px);
+  }
+
+  &:focus {
+    color: inherit;
+    border-color: #d9d9d9;
+  }
+}
+
+// size=mini
+.ant-btn.ant-btn-mini {
+  width: initial;
+  height: initial;
+  padding: 0;
+  line-height: initial;
+
+  .anticon {
+    line-height: 0;
+  }
+}
+
+each(@colors, {
+  .set-btn-color(@key, #fff, @value, @green-5);
+});

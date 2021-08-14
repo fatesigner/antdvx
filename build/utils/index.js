@@ -108,13 +108,19 @@ exports.isArray = function (obj) {
 /**
  * 将-连接字符串转换为驼峰式
  * @param {string} bridge
+ * @param capitalize 首字母大写
  * @returns {string} hump
  */
-exports.convertBridgeStrToHump = function (bridge) {
+exports.convertBridgeStrToHump = function (bridge, capitalize = false) {
   if (bridge) {
-    return bridge.replace(/-(\w)/g, function (all, letter) {
+    const str = bridge.replace(/-(\w)/g, function (all, letter) {
       return letter.toUpperCase();
     });
+    if (capitalize) {
+      return str.substring(0, 1).toUpperCase() + str.substring(1);
+    } else {
+      return str;
+    }
   }
   return '';
 };

@@ -5,19 +5,25 @@
 
 import { Container, ContainerModule } from 'inversify';
 import { isString } from '@fatesigner/utils/type-check';
-import { ANTDVX_SYMBOLS } from 'antdvx/symbols';
-import { IAuthService } from 'antdvx/interfaces/auth.interface';
-import { IHttpService } from 'antdvx/interfaces/http.interface';
-import { ISessionService } from 'antdvx/interfaces/session.interface';
-import { IStorageService } from 'antdvx/interfaces/storage.interface';
-import { AuthService, AuthServiceConfig } from 'antdvx/services/auth.service';
-import { HttpService, HttpServiceConfig } from 'antdvx/services/http.service';
-import { SessionService, SessionServiceConfig } from 'antdvx/services/session.service';
-import { StorageService } from 'antdvx/services/storage.service';
+import {
+  ANTDVX_SYMBOLS,
+  AuthService,
+  AuthServiceConfig,
+  HttpService,
+  HttpServiceConfig,
+  IAuthService,
+  IHttpService,
+  ISessionService,
+  IStorageService,
+  SessionService,
+  SessionServiceConfig,
+  StorageService
+} from 'antdvx';
 
 import { env } from '@/env';
 import { IUser } from '@/types/user';
 import { RouteMeta } from '@/types/route';
+import { i18n, i18nMessages } from '@/i18n';
 import { login$, logout$, roleChanged$ } from '@/app/events';
 import { ROLES } from '@/app/constants';
 
@@ -88,7 +94,6 @@ const antdvxModule = new ContainerModule((bind) => {
     return {
       baseURL: env.APP_APIHOST,
       withCredentials: false,
-      responseType: 'text',
       addXMLHttpRequestHeader: true,
       transformResponse(res) {
         // Do your own parsing here if needed ie JSON.parse(res);
@@ -113,12 +118,6 @@ const antdvxModule = new ContainerModule((bind) => {
         // 响应拦截
         interceptors.response.use(
           function (res) {
-            // 补丁：解决 JsonParse 大整数精度丢失的问题
-            try {
-              res.data = JSON.parse(res.data.replace(/\d{18}/g, (id) => `"${id}"`));
-              // eslint-disable-next-line no-empty
-            } catch (e) {}
-
             // 在此定义请求成功后的处理逻辑，需要与后端配合
             if (isString(res.data) || !res.data || res?.data?.code === undefined || res?.data?.code === 0 || res?.data?.code === 200) {
               return res;
@@ -134,51 +133,40 @@ const antdvxModule = new ContainerModule((bind) => {
             const err = {
               code: res?.data?.code,
               data: res?.data?.data,
-              message: res?.data?.msg || res?.data?.message || 'Request error, please contact administrator.'
+              message: res?.data?.msg || res?.data?.message || i18n._.global.tc(i18nMessages.app.http.requestFailed)
             };
 
             return Promise.reject(err);
           },
           function (rejection): Promise<any> {
             // 在此定义请求错误的处理逻辑
-            let data: any = {};
             let message;
-            let status;
-            if (rejection.response) {
-              if (rejection.response.data) {
-                try {
-                  data = JSON.parse(rejection.response.data.replace(/\d{18}/g, (id) => `"${id}"`));
-                  // eslint-disable-next-line no-empty
-                } catch (e) {}
-              }
-              if (rejection.response.status) {
-                status = rejection.response.status;
-              }
-            }
+            const err = rejection?.response?.data ?? {};
+            const status = rejection?.response?.status;
             switch (status) {
               case -1: {
                 // 远程服务器无响应
-                message = 'The server does not respond, please check your network Settings.';
+                message = i18n._.global.tc(i18nMessages.app.http.noResponse);
                 break;
               }
               case 401: {
                 // unauthorized 未授权，登出账户
-                message = 'Your current session has timed out. Please log in again.';
+                message = i18n._.global.tc(i18nMessages.app.http.unauthorized);
                 sessionService.logout();
                 break;
               }
               case 408: {
-                message = 'Your current session is over time, please log in again.';
+                message = i18n._.global.tc(i18nMessages.app.http.requestTimeout);
                 break;
               }
               default: {
-                if (rejection.code === 'ECONNABORTED') {
-                  message = 'Connect the server timeout, check your network Settings.';
+                if (rejection.err === 'ECONNABORTED') {
+                  message = i18n._.global.tc(i18nMessages.app.http.connectionAbort);
                 } else {
-                  if (Object.prototype.toString.call(data) === '[object String]') {
-                    message = data;
+                  if (Object.prototype.toString.call(err) === '[object String]') {
+                    message = err;
                   } else {
-                    message = data.msg || data.message || 'Request error, please contact administrator.';
+                    message = err.msg || err.Message || i18n._.global.tc(i18nMessages.app.http.requestFailed);
                   }
                 }
               }
