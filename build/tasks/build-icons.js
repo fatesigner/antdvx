@@ -53,7 +53,7 @@ gulp.task('build-icons', async function () {
       `/**
  * Antdvx 已注册的 icons
  */\n` +
-      'export const ICONS_REGISTERED: { name: string; comp: Component }[] = [];\n',
+      'export const ANTDVX_ICONS_REGISTERED: { name: string; comp: Component }[] = [];\n',
     {
       encoding: 'utf-8'
     }
