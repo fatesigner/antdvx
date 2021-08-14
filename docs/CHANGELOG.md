@@ -1,3 +1,10 @@
+# [1.0.0-alpha.14](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2021-08-14)
+
+
+### Bug Fixes
+
+* icons ([becc2ea](https://github.com/fatesigner/antdvx/commit/becc2eaa00b26d5bb8e670f55ba3764ae9083a8d))
+
 # [1.0.0-alpha.13](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2021-08-14)
 
 
