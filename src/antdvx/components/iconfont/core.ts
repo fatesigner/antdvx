@@ -4,8 +4,9 @@
 
 import Icon from '@ant-design/icons-vue';
 import { Component } from '@vue/runtime-core';
-import { PropType, defineComponent, h } from 'vue';
+import { defineComponent, h } from 'vue';
 
+import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, IAntdvxIconNames } from './config';
 
 /**
@@ -13,62 +14,58 @@ import { ANTDVX_ICONS_REGISTERED, IAntdvxIconNames } from './config';
  * @param name
  * @param options
  */
-export function createIcon(name: string, options: { viewBox: string; d: string }) {
+export function createIcon(
+  name: string,
+  options: {
+    viewBox: string;
+    d?: string;
+    paths?: {
+      d: string;
+      color?: 'currentColor' | string;
+      pid?: string;
+    }[];
+  }
+) {
   return defineComponent({
     name: 'icon-' + name,
-    props: {
-      color: {
-        type: String as PropType<'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'danger' | 'light' | 'purple' | 'dark'>,
-        default: null
-      },
-      style: {
-        type: Object,
-        default: null
-      },
-      scale: {
-        type: [Number, String],
-        default: null
-      },
-      spin: {
-        type: Boolean,
-        default: false
-      },
-      rotate: {
-        type: Number,
-        default: null
-      },
-      twoToneColor: {
-        type: String,
-        default: null
-      }
-    },
-    render() {
+    props: IconfontProps,
+    render(ctx) {
       return h(
         Icon,
         {
-          class: [this.color ? `anticon-color-${this.color}` : null],
+          class: [ctx.color ? `anticon-color-${ctx.color}` : null],
           style: Object.assign(
             {},
-            this.scale
+            ctx.scale
               ? {
-                  fontSize: this.scale + 'em'
+                  fontSize: ctx.scale + 'em'
                 }
               : null,
-            this.style
+            ctx.style
           ),
-          spin: this.spin,
-          rotate: this.rotate,
-          twoToneColor: this.twoToneColor,
+          spin: ctx.spin,
+          rotate: ctx.rotate,
+          //twoToneColor: ctx.twoToneColor,
           viewBox: options.viewBox
           // class: 'fa-icon'
         },
         {
           default() {
-            return [
-              h('path', {
-                d: options.d
-              })
-            ];
+            if (options?.paths?.length) {
+              return options.paths.map((x, index) => {
+                return h('path', {
+                  d: x.d,
+                  fill: ctx?.colors?.[index] ?? x.color ?? 'currentColor',
+                  'p-id': x.pid
+                });
+              });
+            } else {
+              return [
+                h('path', {
+                  d: options.d
+                })
+              ];
+            }
           }
         }
       );

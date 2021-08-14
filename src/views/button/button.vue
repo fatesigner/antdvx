@@ -92,6 +92,9 @@
             <div class="tw-p-2">
               <XButtonDelete confirmed notify color="danger" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
             </div>
+            <div class="tw-p-2">
+              <XButtonRefresh color="primary" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
           </div>
         </div>
       </div>

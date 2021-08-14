@@ -1,40 +1,12 @@
 import { Component, h } from '@vue/runtime-core';
 import { defineAsyncComponent, defineComponent } from 'vue';
 
+import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, AntdvxIconNames } from './config';
 
 export const Iconfont = defineComponent({
   name: 'iconfont',
-  props: {
-    name: {
-      type: String,
-      default: null
-    },
-    color: {
-      type: String,
-      default: null
-    },
-    style: {
-      type: Object,
-      default: null
-    },
-    scale: {
-      type: [Number, String],
-      default: null
-    },
-    spin: {
-      type: Boolean,
-      default: false
-    },
-    rotate: {
-      type: Number,
-      default: null
-    },
-    twoToneColor: {
-      type: String,
-      default: null
-    }
-  },
+  props: IconfontProps,
   setup(props) {
     let comp: Component;
 

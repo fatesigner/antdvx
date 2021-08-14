@@ -2,6 +2,7 @@ import { PropType, defineComponent, ref } from 'vue';
 import { PlusOutlined } from '@ant-design/icons-vue';
 
 import { i18nMessages } from '../../i18n/messages';
+import { Iconfont } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
@@ -46,7 +47,7 @@ export const XButtonAdd = defineComponent({
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.add)}
         v-slots={{
           default: ({ loading }) => [
-            !loading && (ctx.mode === 'default' || ctx.mode === 'icon') ? <PlusOutlined /> : '',
+            !loading && (ctx.mode === 'default' || ctx.mode === 'icon') ? <Iconfont name={'plus'} colors={['red']} /> : '',
             ctx.$slots?.default ? (
               ctx.$slots?.default()
             ) : ctx.mode === 'default' || ctx.mode === 'text' ? (

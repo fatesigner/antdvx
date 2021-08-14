@@ -46,7 +46,7 @@ export const XButtonEdit = defineComponent({
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.edit)}
         v-slots={{
           default: ({ loading }) => [
-            !loading && (ctx.mode === 'default' || ctx.mode === 'icon') ? <Iconfont name={'pen'} scale={0.9} /> : '',
+            !loading && (ctx.mode === 'default' || ctx.mode === 'icon') ? <Iconfont name={'pen'} /> : '',
             ctx.$slots?.default ? (
               ctx.$slots?.default()
             ) : ctx.mode === 'default' || ctx.mode === 'text' ? (
