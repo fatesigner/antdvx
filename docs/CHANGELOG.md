@@ -1,3 +1,10 @@
+# [1.0.0-alpha.15](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2021-08-15)
+
+
+### Features
+
+* update icons ([dcdccfc](https://github.com/fatesigner/antdvx/commit/dcdccfc44585828746a182e4cb94ef2b8e4feeb0))
+
 # [1.0.0-alpha.14](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2021-08-14)
 
 
