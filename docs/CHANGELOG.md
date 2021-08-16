@@ -1,3 +1,10 @@
+# [1.0.0-alpha.16](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2021-08-16)
+
+
+### Bug Fixes
+
+* reset plus icon ([f8177da](https://github.com/fatesigner/antdvx/commit/f8177da032fc0a545f5a5afca3ec5d5c648a4ae7))
+
 # [1.0.0-alpha.15](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2021-08-15)
 
 
