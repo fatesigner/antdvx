@@ -19,6 +19,7 @@ export default {
       save: 'Save',
       refresh: 'Refresh',
       upload: 'Upload',
+      search: 'Search',
       export: 'Export',
       exporting: 'Exporting',
       exportToPDF: 'Export to pdf',

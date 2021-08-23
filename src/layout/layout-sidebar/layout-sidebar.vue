@@ -26,11 +26,12 @@
   </div>
 </template>
 <script lang="ts">
+import { TransitionRouter } from 'antdvx';
 import { computed, defineComponent } from 'vue';
 
 import { Language } from '@/shared/language';
 import { ProgressBar } from '@/shared/progress-bar';
-import { NotFound, Unauthorized } from '@/shared/error';
+import { NotFound, Unauthorized } from '@/shared/exception';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';
 
 import { User } from './components/user';
@@ -45,7 +46,8 @@ export default defineComponent({
     ProgressBar,
     AppHeader,
     User,
-    Sidebar
+    Sidebar,
+    TransitionRouter
   },
   setup() {
     const theme = computed({

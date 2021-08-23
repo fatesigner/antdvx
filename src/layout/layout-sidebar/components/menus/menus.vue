@@ -93,6 +93,16 @@ export default defineComponent({
     line-height: 32px !important;
   }
 
+  .anticon {
+    margin-right: 4px;
+    font-size: 18px;
+  }
+
+  .ant-menu-title-content {
+    display: flex;
+    align-items: center;
+  }
+
   &.ant-menu-vertical .ant-menu-item,
   &.ant-menu-vertical-left .ant-menu-item,
   &.ant-menu-vertical-right .ant-menu-item,

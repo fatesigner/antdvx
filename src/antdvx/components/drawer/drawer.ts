@@ -59,7 +59,7 @@ export function createXDrawer<
   /**
    * 待加载的组件的 props 选项
    */
-  compProps: PropsOptions,
+  compProps?: PropsOptions,
   /**
    * XDrawer 选项
    */
@@ -162,7 +162,7 @@ export function createXDrawer<
           Drawer,
           {
             visible: vIf.value,
-            destroyOnClose: false,
+            destroyOnClose: drawerRef.options.destroyOnClose,
             afterVisibleChange: afterVisibleChange,
             title: drawerRef.options.title,
             closable: drawerRef.options.closable,

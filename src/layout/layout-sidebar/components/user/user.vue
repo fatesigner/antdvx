@@ -8,13 +8,17 @@
       <template #overlay>
         <AMenu>
           <AMenuItem>
-            <Iconfont name="cog" />
-            <span>{{ $t(i18nMessages.app.navbar.individuation) }}</span>
+            <div class="tw-flex tw-items-center tw-space-x-1">
+              <IconTShirtLine />
+              <span>{{ $t(i18nMessages.app.navbar.individuation) }}</span>
+            </div>
           </AMenuItem>
           <AMenuDivider />
           <AMenuItem @click="logout">
-            <Iconfont name="logout" />
-            <span>{{ $t(i18nMessages.app.navbar.logOut) }}</span>
+            <div class="tw-flex tw-items-center tw-space-x-1">
+              <IconLogoutBoxLine name="logout-box-line" />
+              <span>{{ $t(i18nMessages.app.navbar.logOut) }}</span>
+            </div>
           </AMenuItem>
         </AMenu>
       </template>
@@ -23,22 +27,22 @@
 </template>
 
 <script lang="ts">
-import { Iconfont } from 'antdvx';
 import { useI18n } from 'vue-i18n';
 import { Subscription } from 'rxjs';
 import { Dropdown, Menu, message } from 'ant-design-vue';
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { IconLogoutBoxLine, IconTShirtLine } from 'antdvx';
 
-import { env } from '@/env';
 import { IUser } from '@/types/user';
 import { i18nMessages } from '@/i18n';
-import { ROLES } from '@/app/constants';
+import { ENV, ROLES } from '@/app/constants';
 import { login$, logout$ } from '@/app/events';
 import { sessionService } from '@/app/services';
 
 export default defineComponent({
   components: {
-    Iconfont,
+    IconTShirtLine,
+    IconLogoutBoxLine,
     [Dropdown.name]: Dropdown,
     [Menu.name]: Menu,
     [Menu.Item.name]: Menu.Item,
@@ -46,8 +50,6 @@ export default defineComponent({
   },
   setup() {
     const { t } = useI18n();
-
-    const title = env.APP_TITLE;
 
     let loginUn: Subscription;
     let lougoutUn: Subscription;
@@ -75,7 +77,7 @@ export default defineComponent({
 
     return {
       i18nMessages,
-      title,
+      title: ENV.APP_TITLE,
       user,
       logout
     };

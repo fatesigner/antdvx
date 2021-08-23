@@ -1,0 +1,27 @@
+@keyframes antdvx-icon-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.antdvx-icon {
+  display: inline-block;
+  vertical-align: middle;
+
+  svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+  }
+}
+
+.antdvx-icon-spin {
+  animation: antdvx-icon-spin 1s infinite linear;
+}
+
+.ant-btn {
+  .antdvx-icon {
+    vertical-align: -2px;
+  }
+}

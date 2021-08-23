@@ -40,13 +40,13 @@ export interface ISessionService<TUser extends SessionUser<TRoles>, TRoles exten
    * 登录
    * @param user
    */
-  login(user: TUser): void;
+  login(user: TUser): Promise<void>;
 
   /**
    * 注销
    * @param config
    */
-  logout(config?: SessionLogoutResult): void;
+  logout(config?: SessionLogoutResult): Promise<void>;
 
   /**
    * 更新当前用户信息

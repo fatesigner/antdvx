@@ -19,7 +19,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import NotFound from '@/shared/error/not-found.vue';
+import NotFound from '@/shared/exception/not-found.vue';
 import Language from '@/shared/language/language.vue';
 
 export default defineComponent({

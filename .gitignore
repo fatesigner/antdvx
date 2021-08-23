@@ -17,6 +17,7 @@ coverage.lcov
 
 # compiled output
 /dist
+/example
 /static
 /tmp
 /temp

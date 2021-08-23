@@ -18,7 +18,8 @@ export interface RouteMeta<TRoles extends readonly string[] = string[]> {
   auth?: TRoles[number][];
 }
 
-export type IRouteConfig<TRoles extends readonly string[] = string[]> = RouteRecordRaw & {
+export type IRouteConfig<TRoles extends readonly string[] = string[]> = Omit<RouteRecordRaw, 'name'> & {
+  name?: string;
   components?: {
     default: Component;
     header?: Component;

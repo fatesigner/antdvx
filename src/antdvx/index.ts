@@ -25,5 +25,6 @@ export * from './components/transitions';
 export * from './components/vxe-grid';
 
 // services
+export * from './helpers';
 export * from './interfaces';
 export * from './services';

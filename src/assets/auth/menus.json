@@ -5,14 +5,14 @@
     "name": "dashboard",
     "url": "/",
     "target": null,
-    "icon": "star-off"
+    "icon": "home-2-line"
   },
   {
     "id": "ed9d4d63a0d2",
     "label": "基础组件",
     "url": null,
     "target": null,
-    "icon": "setting",
+    "icon": "code-box-line",
     "children": [
       {
         "id": "b796690e69zd",
@@ -67,7 +67,7 @@
     "name": null,
     "url": null,
     "target": null,
-    "icon": "setting",
+    "icon": "settings-line",
     "children": [
       {
         "id": "b724c8a0b1ad",
@@ -75,7 +75,7 @@
         "name": "Menus",
         "url": "/menus",
         "target": "_self",
-        "icon": "",
+        "icon": null,
         "children": []
       },
       {

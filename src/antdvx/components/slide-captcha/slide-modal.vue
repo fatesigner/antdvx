@@ -49,13 +49,13 @@
       <div :class="$style.footer">
         <div :class="$style.actions">
           <div :class="$style.action">
-            <XButton pure size="small" type="link" @click="close"><Iconfont name="times" scale="1.4" /></XButton>
+            <XButton size="mini" type="link" @click="close"><IconCloseLine scale="1.2" /></XButton>
           </div>
           <div :class="$style.action">
-            <XButton pure size="small" type="link" @click="refreshImage"><Iconfont name="redo" /></XButton>
+            <XButton size="mini" type="link" @click="refreshImage"><IconRefreshLine /></XButton>
           </div>
         </div>
-        <div :class="$style.copyright"></div>
+        <div :class="$style.copyright" />
       </div>
     </div>
   </div>
@@ -73,12 +73,13 @@ import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
 
 import { XButton } from '../button';
-import { Iconfont } from '../iconfont';
+import { IconCloseLine, IconRefreshLine } from '../iconfont';
 
 export default defineComponent({
   name: 'slide-modal',
   components: {
-    Iconfont,
+    IconCloseLine,
+    IconRefreshLine,
     XButton
   },
   props: {

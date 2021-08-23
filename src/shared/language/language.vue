@@ -1,7 +1,7 @@
 <template>
   <ADropdown>
     <div :class="$style.dropdown">
-      <GlobalOutlined class="tw-mr-1" /><span :class="$style.text">{{ currentLang }}</span>
+      <IconGlobalLine class="tw-mr-1" /><span :class="$style.text">{{ currentLang }}</span>
     </div>
     <template #overlay>
       <AMenu v-model:selectedKeys="selectedKeys" @click="langSelected">
@@ -12,21 +12,15 @@
 </template>
 
 <script lang="ts">
+import { IconGlobalLine } from 'antdvx';
 import { computed, defineComponent } from 'vue';
 import { Dropdown, Menu } from 'ant-design-vue';
-import { GlobalOutlined } from '@ant-design/icons-vue';
 
 import { Languages } from '@/i18n';
 import { AppStore } from '@/app/store';
 
 export default defineComponent({
-  components: {
-    // Antd
-    [Dropdown.name]: Dropdown,
-    [Menu.name]: Menu,
-    [Menu.Item.name]: Menu.Item,
-    GlobalOutlined
-  },
+  components: { IconGlobalLine, [Dropdown.name]: Dropdown, [Menu.name]: Menu, [Menu.Item.name]: Menu.Item },
   setup() {
     const langs = Languages.arr;
 

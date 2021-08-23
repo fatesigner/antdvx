@@ -6,6 +6,7 @@ import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 import { ANTDVX_SYMBOLS } from '../symbols';
 import { IStorageService } from '../interfaces/storage.interface';
 import { ISessionService, SessionLogoutResult, SessionUser } from '../interfaces/session.interface';
+import { timer } from 'rxjs';
 
 /**
  * session config
@@ -59,20 +60,23 @@ export class SessionService<TUser extends SessionUser<TRoles>, TRoles extends re
    * 登录
    * @param user
    */
-  login(user: TUser) {
+  async login(user: TUser) {
     this.updateUser(user);
-    // 用户登录
     this.config?.onLogin?.(user);
+    // 因为事件传递需要事件，这里做延迟 1s 处理
+    await timer(500).toPromise();
   }
 
   /**
    * 注销
    * @param config
    */
-  logout(config?: SessionLogoutResult) {
+  async logout(config?: SessionLogoutResult) {
     // 保存上次登录过的用户名
     this.updateUser(this.getDefaultUser({ username: this.user.username } as any));
     this.config?.onLogout?.(config);
+    // 因为事件传递需要事件，这里做延迟处理
+    await timer(500).toPromise();
   }
 
   /**

@@ -1,13 +1,1 @@
 .idea/
-build/
-dist/
-src/
-temp/
-test/
-.editorconfig
-.eslintignore
-.eslintrc.js
-.gitignore
-.npmignore
-tsconfig.json
-tslint.json

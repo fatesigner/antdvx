@@ -2,7 +2,7 @@
   <div class="action-panel" @click="trigger" :title="title">
     <slot />
     <div class="loading" v-if="loading">
-      <Iconfont name="spinner-third" spin />
+      <IconRefreshLine spin />
     </div>
   </div>
 </template>
@@ -10,10 +10,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { Iconfont } from '../iconfont';
+import { IconRefreshLine } from '../iconfont';
 
 export default defineComponent({
-  components: { Iconfont },
+  components: { IconRefreshLine },
   props: {
     title: {
       type: String,

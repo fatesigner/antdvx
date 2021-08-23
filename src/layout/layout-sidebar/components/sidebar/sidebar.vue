@@ -36,8 +36,8 @@ import { getEventArgs } from 'antdvx/utils';
 import { Iconfont } from 'antdvx/components/iconfont';
 import { ScrollView } from 'antdvx/components/scroll-view';
 
-import { env } from '@/env';
 import { i18nMessages } from '@/i18n';
+import { ENV } from '@/app/constants';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';
 
 import { Menus } from '../menus';
@@ -61,8 +61,6 @@ export default defineComponent({
     AppstoreOutlined
   },
   setup() {
-    // 当前路由
-    const currentRoute = useRoute();
     const $style = useCssModule();
 
     // 容器宽度
@@ -183,7 +181,7 @@ export default defineComponent({
 
     return {
       i18nMessages,
-      title: env.APP_TITLE,
+      title: ENV.APP_TITLE,
       wrapEl: $wrap,
       headerEl: $header,
       borderEl: $border,

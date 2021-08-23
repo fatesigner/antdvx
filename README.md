@@ -20,15 +20,15 @@
 npm i -S antdvx
 ```
 
-## 示例 [online](https://fatesigner.github.io/antdvx/example/)
+## 示例 [online](https://antdvx.repository.fatesigner.com/)
 ```vue
 <template>
   <XButton size="small" @click="onClick">button</XButton>
 </template>
 
 <script lang="ts">
+import { XButton } from 'antdvx';
 import { defineComponent } from 'vue';
-import { XButton } from 'antdvx/components/button';
 
 export default defineComponent({
   components: { XButton },

@@ -2,6 +2,4 @@
  * index
  */
 
-import XTabs from './tabs.vue';
-
-export { XTabs };
+export { default as XTabs } from './tabs.vue';

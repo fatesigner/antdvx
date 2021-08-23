@@ -21,7 +21,7 @@ export function createIcon(
     d?: string;
     paths?: {
       d: string;
-      color?: 'currentColor' | string;
+      fill?: 'currentColor' | string;
       pid?: string;
     }[];
   }
@@ -33,7 +33,7 @@ export function createIcon(
       return h(
         Icon,
         {
-          class: [ctx.color ? `anticon-color-${ctx.color}` : null],
+          class: ['antdvx-icon', ctx.color ? `antdvx-color-${ctx.color}` : null],
           style: Object.assign(
             {},
             ctx.scale
@@ -55,7 +55,7 @@ export function createIcon(
               return options.paths.map((x, index) => {
                 return h('path', {
                   d: x.d,
-                  fill: ctx?.colors?.[index] ?? x.color ?? 'currentColor',
+                  fill: ctx?.colors?.[index] ?? x.fill ?? 'currentColor',
                   'p-id': x.pid
                 });
               });

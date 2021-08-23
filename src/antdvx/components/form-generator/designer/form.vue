@@ -36,8 +36,8 @@
                   <Component :is="getComp(element.component)" :field="element.field" />
                 </AFormItem>
                 <div :class="$style.actions">
-                  <XButton class="tw-mr-1" size="small" type="default" title="复制" @click="copy(element, index)"><Iconfont name="copy" /></XButton>
-                  <XButton size="small" type="default" title="删除" @click="remove(element, index)"><Iconfont name="trash-alt" /></XButton>
+                  <XButton class="tw-mr-1" size="small" type="default" title="复制" @click="copy(element, index)"><IconFileCopyLine /></XButton>
+                  <XButton size="small" type="default" title="删除" @click="remove(element, index)"><IconDeleteBinLine /></XButton>
                 </div>
               </div>
             </TransitionGroup>
@@ -54,7 +54,7 @@ import { Form } from 'ant-design-vue';
 import { cloneDeep } from 'lodash-es';
 import { PropType, defineComponent, onMounted, ref, toRaw, watch } from 'vue';
 
-import { Iconfont } from '../../iconfont';
+import { IconDeleteBinLine, IconFileCopyLine } from '../../iconfont';
 import { ScrollView } from '../../scroll-view';
 import { XButton } from '../../button';
 
@@ -65,7 +65,8 @@ import { FormDesignerConfig } from './designer';
 
 export default defineComponent({
   components: {
-    Iconfont,
+    IconDeleteBinLine,
+    IconFileCopyLine,
     XButton,
     ScrollView,
     Draggable,

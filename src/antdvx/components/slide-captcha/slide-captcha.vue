@@ -7,7 +7,7 @@
   >
     <template v-if="valid">
       <div :class="$style.being">
-        <Iconfont name="check-blod" scale="1.2" />
+        <IconCheckLine scale="1.2" />
       </div>
       <div :class="$style.tip" :title="$t(i18nMessages.antd.slideCaptcha.validText)">
         {{ $t(i18nMessages.antd.slideCaptcha.validText) }}
@@ -35,16 +35,17 @@ import { PropType, defineComponent, reactive, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
 
-import { Iconfont } from '../iconfont';
+import { IconCheckLine } from '../iconfont';
 
 import SlideModal from './slide-modal.vue';
 
 export default defineComponent({
   name: 'slide-captcha',
   components: {
-    Iconfont,
-    SlideModal
+    SlideModal,
+    IconCheckLine
   },
+  emits: ['update:presented', 'update:valid'],
   props: {
     theme: {
       type: String as PropType<'dark' | 'light'>,

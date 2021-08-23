@@ -195,8 +195,6 @@ exports.getNodeModulesRegexPath = function (moduleName, _path) {
 
   const regR = _path.match(new RegExp(regStr, 'i'));
   if (regR && regR.length > 1) {
-    // console.log('path.sep：' + path.sep);
-    // console.log('path.sepRegStr：' + sepRegStr);
     const splits = regR[1].split(path.sep);
     if (splits.length) {
       // ignore css module

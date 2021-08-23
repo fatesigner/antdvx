@@ -29,18 +29,20 @@ const WebpackHtmlEmbedSourcePlugin = require('./plugins/webpack-html-embed-sourc
 
 const Utils = require('../utils');
 
-module.exports = async function (getOptions) {
-  // 运行 dotenv 任务，加载环境变量
-  const dotenvs = require('../tasks/dotenv');
-  const env = require('../env')();
+module.exports = async function (options) {
+  const { ENV, SRC_PATH, ROOT_PATH } = require('../constants');
 
-  const options = getOptions();
+  options = _.merge({}, options);
 
   const isProd = Utils.isProd();
   const isDevServer = process.argv.some((v) => v.includes('--hot')) && process.argv.some((v) => v.includes('serve'));
 
   const localIdentNameSet = Utils.createRandomIdentGetter(5, true);
   const urlLoaderSet = Utils.createRandomIdentGetter(5);
+
+  if (isProd) {
+    console.log(`The webpack build mode is ${process.env.NODE_ENV}`);
+  }
 
   const loaders = {
     cssExtract: {
@@ -57,7 +59,7 @@ module.exports = async function (getOptions) {
       modules: {
         // namedExport: true,
         // exportLocalsConvention: 'camelCaseOnly',
-        localIdentContext: env.srcPath,
+        localIdentContext: SRC_PATH,
         // localIdentName: '[name]-[local]-[hash:base64:5]',
         // localIdentName: '[local]-[hash:base64:5]',
         /* getLocalIdent: (context, localIdentName, localName, options) => {
@@ -125,7 +127,7 @@ module.exports = async function (getOptions) {
       // 使用 happyPackMode 模式加速编译，并减少 Webpack 报告的错误
       happyPackMode: true,
       // tsconfig.json 文件路径
-      configFile: path.join(env.rootPath, 'tsconfig.json'),
+      configFile: path.join(ROOT_PATH, 'tsconfig.json'),
       appendTsSuffixTo: [/\.vue$/],
       appendTsxSuffixTo: [/\.vue$/]
     },
@@ -143,7 +145,6 @@ module.exports = async function (getOptions) {
       name: (path) => {
         const pathArr = Utils.getNodeModulesRegexPath('', path);
         if (pathArr && pathArr.length) {
-          // console.log('url pathArr', JSON.stringify(pathArr));
           const packageDir = pathArr[0];
           // 将长路径转换成 hash
           // const s = pathArr.join('/');
@@ -158,7 +159,7 @@ module.exports = async function (getOptions) {
 
   const config = {
     mode: process.env.NODE_ENV,
-    context: env.srcPath,
+    context: SRC_PATH,
     cache:
       options.cache ??
       (isProd
@@ -167,7 +168,7 @@ module.exports = async function (getOptions) {
             type: 'filesystem',
             allowCollectingMemory: !isProd,
             buildDependencies: {
-              config: [__filename, path.join(env.rootPath, '.browserslistrc'), path.join(env.rootPath, 'webpack.config.js')]
+              config: [__filename, path.join(ROOT_PATH, '.browserslistrc'), path.join(ROOT_PATH, 'webpack.config.js')]
             },
             name: ''
           }),
@@ -446,7 +447,7 @@ module.exports = async function (getOptions) {
   config.resolve = {
     alias: _.merge(
       {
-        '@': env.srcPath
+        '@': SRC_PATH
       },
       options.alias
     ),
@@ -519,8 +520,8 @@ module.exports = async function (getOptions) {
   // plugins
   config.plugins = [
     new webpack.DefinePlugin({
-      ...Object.keys(dotenvs).reduce((prev, key) => {
-        prev[`process.env.${key}`] = JSON.stringify(dotenvs[key]);
+      ...Object.entries(ENV).reduce((prev, [key, val]) => {
+        prev[`process.env.${key}`] = JSON.stringify(val);
         return prev;
       }, {}),
       __VUE_OPTIONS_API__: JSON.stringify(true),

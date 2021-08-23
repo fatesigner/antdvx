@@ -59,8 +59,8 @@ class Debugger {
       const subTitleFormatted = colors.formatText(severity, subtitle);
       const message = `${titleFormatted} ${subTitleFormatted}`;
 
-      // In test environment we don't include timestamp
-      if (process.env.NODE_ENV === 'test') {
+      // In production environment we don't include timestamp
+      if (process.env.NODE_ENV === 'production') {
         this.log(message);
         this.log();
         return;

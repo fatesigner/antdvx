@@ -2,7 +2,9 @@ import { Component, h } from '@vue/runtime-core';
 import { defineAsyncComponent, defineComponent } from 'vue';
 
 import { IconfontProps } from './types';
-import { ANTDVX_ICONS_REGISTERED, AntdvxIconNames } from './config';
+import { ANTDVX_ICONS_REGISTERED, ANTDVX_ICON_NAMES } from './config';
+
+import './iconfont.scss';
 
 export const Iconfont = defineComponent({
   name: 'iconfont',
@@ -15,14 +17,15 @@ export const Iconfont = defineComponent({
       if (exsitIcon) {
         comp = exsitIcon.comp;
       } else {
-        if (AntdvxIconNames.includes(props.name)) {
+        if (ANTDVX_ICON_NAMES.includes(props.name)) {
           comp = defineAsyncComponent(() =>
-            import(`./icons/${props.name}`).then((res) => {
+            import(`./remixicons/${props.name}`).then((res) => {
               return res.default;
             })
           );
         } else {
-          throw new Error(`The iconfont name '${props.name}' is not registed.`);
+          comp = <span title={props.name} />;
+          console.warn(`The iconfont name '${props.name}' is not registed.`);
         }
       }
     }

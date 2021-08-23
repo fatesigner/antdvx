@@ -9,9 +9,8 @@ export * from './button-delete';
 export * from './button-edit';
 export * from './button-refresh';
 export * from './button-save';
+export * from './button-search';
+export * from './button-upload';
 
-import XButtonExport from './button-export.vue';
-import XButtonPanel from './button-panel.vue';
-import XButtonUpload from './button-upload.vue';
-
-export { XButtonExport, XButtonPanel, XButtonUpload };
+export { default as XButtonExport } from './button-export.vue';
+export { default as XButtonPanel } from './button-panel.vue';

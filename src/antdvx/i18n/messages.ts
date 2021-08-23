@@ -19,6 +19,7 @@ export const i18nMessages = createLocaleMessages({
       save: '',
       refresh: '',
       upload: '',
+      search: '',
       export: '',
       exporting: '',
       exportToPDF: '',

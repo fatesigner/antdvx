@@ -33,8 +33,6 @@
       .button-color(@color; ~`colorPalette('@{background}', 7)`; ~`colorPalette('@{background}', 7)`);
     }
 
-    .button-disabled();
-
     .ant-btn-group {
       &:not(:first-child):not(:last-child) {
         border-right-color: @border;
@@ -128,11 +126,17 @@
   .ant-btn.ant-btn-3d.ant-color-@{type} {
     color: #fff;
     background: radial-gradient(100% 100% at 100% 0%, @background 0%, @background 100%);
-    border-color: ~`colorPalette('@{background}', 6.7) `;
-    box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 ~`colorPalette('@{background}', 6.7) `;
+    border-color: ~`colorPalette('@{background}', 6.2) `;
+    box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 ~`colorPalette('@{background}', 6.7) `;
+
+    &:hover {
+      border-color: ~`colorPalette('@{background}', 6.2) `;
+      box-shadow: 0 4px 6px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 ~`colorPalette('@{background}', 6.7) `;
+    }
 
     &:active {
       color: #fff;
+      border-color: transparent;
       box-shadow: inset 0 3px 7px ~`colorPalette('@{background}', 7) `;
     }
   }
@@ -255,22 +259,24 @@
 // 3d type normal
 .ant-btn.ant-btn-3d {
   background: #fcfcfd;
-  box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 #d6d6e7;
+
+  /* box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 #d6d6e7; */
+  box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #d6d6e7;
   transition: box-shadow 0.15s ease, transform 0.15s ease;
   will-change: box-shadow, transform;
 
   &:hover {
     color: inherit;
     border-color: #d9d9d9;
-    box-shadow: 0 4px 8px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 #d6d6e7;
-    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #d6d6e7;
+    transform: translateY(-1px);
   }
 
   &:not([disabled]):active {
     color: inherit;
     border-color: #ddd;
     box-shadow: inset 0 3px 7px #d6d6e7;
-    transform: translateY(2px);
+    transform: translateY(1px);
   }
 
   &:focus {
@@ -285,10 +291,12 @@
   height: initial;
   padding: 0;
   line-height: initial;
+}
 
-  .anticon {
-    line-height: 0;
-  }
+.ant-btn.ant-loading {
+  pointer-events: none;
+  opacity: 0.35;
+  transition: none;
 }
 
 each(@colors, {

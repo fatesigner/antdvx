@@ -20,12 +20,11 @@ import {
   StorageService
 } from 'antdvx';
 
-import { env } from '@/env';
 import { IUser } from '@/types/user';
 import { RouteMeta } from '@/types/route';
 import { i18n, i18nMessages } from '@/i18n';
 import { login$, logout$, roleChanged$ } from '@/app/events';
-import { ROLES } from '@/app/constants';
+import { ENV, ROLES } from '@/app/constants';
 
 // 定义服务类型
 export type SessionServiceType = ISessionService<IUser<typeof ROLES.keys>, typeof ROLES.keys>;
@@ -36,7 +35,7 @@ const appDIC = new Container({ defaultScope: 'Singleton' });
 
 const antdvxModule = new ContainerModule((bind) => {
   // StorageService
-  bind(ANTDVX_SYMBOLS.STORAGE_SERVICE_IDENTIFICATION).toConstantValue(env.APP_NAME);
+  bind(ANTDVX_SYMBOLS.STORAGE_SERVICE_IDENTIFICATION).toConstantValue(ENV.APP_NAME);
   bind<IStorageService>(ANTDVX_SYMBOLS.STORAGE_SERVICE).to(StorageService);
 
   // SessionService
@@ -92,7 +91,7 @@ const antdvxModule = new ContainerModule((bind) => {
   bind<HttpServiceConfig>(ANTDVX_SYMBOLS.HTTP_SERVICE_CONFIG).toDynamicValue((context) => {
     const sessionService = context.container.get<SessionServiceType>(ANTDVX_SYMBOLS.SESSION_SERVICE);
     return {
-      baseURL: env.APP_APIHOST,
+      baseURL: ENV.APP_APIHOST,
       withCredentials: false,
       addXMLHttpRequestHeader: true,
       transformResponse(res) {
@@ -105,7 +104,7 @@ const antdvxModule = new ContainerModule((bind) => {
           function (config) {
             // 在此可设置请求的默认 header 头
             if (!config.headers.token) {
-              config.headers.ApiToken = env.APP_NAME;
+              config.headers.ApiToken = ENV.APP_NAME;
               config.headers.authorization = sessionService.user.accessToken;
             }
             return config;

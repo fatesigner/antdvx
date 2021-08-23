@@ -2,6 +2,4 @@
  * index
  */
 
-import SpinnerLoading from './spinner-loading.vue';
-
-export { SpinnerLoading };
+export { default as SpinnerLoading } from './spinner-loading.vue';

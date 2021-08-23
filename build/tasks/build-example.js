@@ -3,8 +3,6 @@
  */
 
 const gulp = require('gulp');
-const log = require('fancy-log');
-const webpack = require('webpack');
 const exec = require('child_process').exec;
 
 gulp.task('build-example', async function () {
@@ -18,16 +16,5 @@ gulp.task('build-example', async function () {
         resolve();
       }
     });
-    /* webpack(require('../../webpack.config'), (err, stats) => {
-      if (err || (stats && stats.compilation && stats.compilation.errors && stats.compilation.errors.length)) {
-        if (!err) {
-          err = stats.compilation.errors[0];
-        }
-        reject(err);
-      } else {
-        log('[webpack]', stats.toString({ colors: true }));
-        resolve(stats);
-      }
-    }); */
   });
 });

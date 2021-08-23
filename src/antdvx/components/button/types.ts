@@ -95,6 +95,13 @@ export const XButtonProps = {
     type: String as PropType<typeof ANTDVX_COLORS[number]>
   },
   /**
+   * 当 loading 为 true 时，是否显示 spin 图标
+   */
+  spin: {
+    type: Boolean,
+    default: true
+  },
+  /**
    * 是否自动弹出消息通知，当设置  handler 后生效
    */
   handler: {

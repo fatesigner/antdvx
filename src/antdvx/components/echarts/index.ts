@@ -2,8 +2,6 @@
  * index
  */
 
-import VEcharts from './v-echarts.vue';
+export { default as VEcharts } from './v-echarts.vue';
 
 export * from './echarts';
-
-export { VEcharts };

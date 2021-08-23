@@ -3,7 +3,6 @@
  */
 
 import { createApp } from 'vue';
-import { TransitionRouter } from 'antdvx/components/transitions';
 
 // Plugins
 import { i18n } from '@/i18n';
@@ -23,9 +22,6 @@ async function mountApp() {
   const router = await createAppRouter();
 
   const app = createApp(App).use(router).use(i18n._).use(Antdvx).use(Dayjs).use(VeeValidate).use(Pipes);
-
-  // 在此处注册全局组件
-  app.component('TransitionRouter', TransitionRouter);
 
   router.isReady().then(() => {
     // 移除首屏启动界面

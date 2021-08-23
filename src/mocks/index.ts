@@ -90,4 +90,15 @@ export const Api = new (class {
       }).data+
     );*/
   }
+
+  async getUsersWithPage(params: { pageNo: number; pageSize: number }) {
+    await timer(1000).toPromise();
+    return import('@/assets/auth/users.json').then((res: any) => {
+      const start = ((params?.pageNo ?? 1) - 1) * params?.pageSize ?? 10;
+      return {
+        data: res.default.slice(start, start + params?.pageSize ?? 10),
+        total: res.default.length
+      };
+    });
+  }
 })();

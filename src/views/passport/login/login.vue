@@ -9,7 +9,7 @@
         {{ title }}
       </div>
 
-      <AAlert v-if="error" type="error" closable @close="closeError">
+      <AAlert class="tw-mb-4" v-if="error" type="error" closable @close="closeError">
         <template #description>{{ error }}</template>
       </AAlert>
 
@@ -36,11 +36,11 @@
             <VeeErrorMessage class="invalid-message" name="password" />
           </AFormItem>
           <AFormItem>
-            <SlideCaptcha v-model:presented="captcha.presented" v-model:valid="captcha.valid" @update:presented="onSlideCaptchaChange" />
+            <SlideCaptcha v-model:presented="captcha.presented" v-model:valid="captcha.valid" @update:valid="onSlideCaptchaValid" />
           </AFormItem>
           <AFormItem>
             <XButton ref="submitBtnRef" block size="large" type="primary" :loading="isSubmitting" @click="handleSubmit(onSubmit)">
-              {{ $t(i18nMessages.app.login.logIn) }}
+              {{ $t(i18nMessages.app.passport.logIn) }}
             </XButton>
           </AFormItem>
         </AForm>
@@ -57,9 +57,9 @@ import { useRoute, useRouter } from 'vue-router';
 import { computed, defineComponent, onDeactivated, reactive, ref } from 'vue';
 import { Alert, Button, Form, Input, message, notification } from 'ant-design-vue';
 
-import { env } from '@/env';
 import { Api } from '@/mocks';
 import { i18nMessages } from '@/i18n';
+import { ENV } from '@/app/constants';
 import { authService, sessionService } from '@/app/services';
 
 export default defineComponent({
@@ -81,8 +81,6 @@ export default defineComponent({
 
     const submitBtnRef = ref<any>();
 
-    const title = env.APP_TITLE;
-
     // get error message
     const error = computed(() => {
       return route.params.error;
@@ -94,12 +92,21 @@ export default defineComponent({
       presented: false
     });
 
-    // form validate
-    const form = {
-      state: {
+    let formState = {
+      username: '',
+      password: ''
+    };
+
+    if (process.env.APP_DEBUG === 'true') {
+      formState = {
         username: 'admin',
         password: '12345678'
-      },
+      };
+    }
+
+    // form validate
+    const form = {
+      state: formState,
       schema: {
         username: 'required',
         password: 'required'
@@ -109,8 +116,8 @@ export default defineComponent({
     // Save response user info
     let loginResponse: any = null;
 
-    const onSlideCaptchaChange = (visible) => {
-      if (!visible) {
+    const onSlideCaptchaValid = (valid) => {
+      if (valid) {
         // 自动提交
         submitBtnRef?.value?.$el?.click();
       }
@@ -151,10 +158,12 @@ export default defineComponent({
 
     // On submit
     const onSubmit = async (values) => {
-      if (!captcha.valid) {
-        // 弹出验证码控件
-        captcha.presented = true;
-        return;
+      if (process.env.APP_DEBUG !== 'true') {
+        if (!captcha.valid) {
+          // 弹出验证码控件
+          captcha.presented = true;
+          return;
+        }
       }
 
       const [err, data] = await to(Api.login(values));
@@ -181,10 +190,10 @@ export default defineComponent({
       submitBtnRef,
       i18nMessages,
       captcha,
-      title,
+      title: ENV.APP_TITLE,
       error,
       form,
-      onSlideCaptchaChange,
+      onSlideCaptchaValid,
       login,
       onSubmit,
       closeError

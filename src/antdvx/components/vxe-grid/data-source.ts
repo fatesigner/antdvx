@@ -36,7 +36,7 @@ export interface IQueryParams {
   pageSize: number;
 }
 
-export type IDataSourceResponse = (response: any) => any;
+export type IDataSourceResponse<TResult = any> = (response: any) => TResult;
 
 export type IDataSourceRequestOptions<TParams extends Record<string, any> = Record<string, any>> = {
   url: string;
@@ -50,10 +50,7 @@ export type IDataSourceRequestOptions<TParams extends Record<string, any> = Reco
 
 export type IHttpAdapter = (options: IDataSourceRequestOptions) => Promise<any>;
 
-export type IDatasourceTransportReadMethod<
-  TModel extends Record<string, any> = Record<string, any>,
-  TParams extends Record<string, any> = Record<string, any>
-> = (query: IQueryParams, params: TParams) => Promise<TModel[]>;
+export type IDatasourceTransportReadMethod<TParams extends Record<string, any> = Record<string, any>> = (query: IQueryParams, params: TParams) => Promise<any>;
 
 export type IDatasourceTransportPostMethod<
   TModel extends Record<string, any> = Record<string, any>,
@@ -87,7 +84,7 @@ export interface IDataSourceTransport<TModel extends Record<string, any>, TParam
    * 如果指定为字符串，则数据源使用此字符串作为远程服务的 URL 并执行 ajax 请求
    * 如果指定为函数，则数据源调用该函数而不是 ajax
    */
-  read: string | IDataSourceRequestOptions | IDatasourceTransportReadMethod;
+  read: string | IDataSourceRequestOptions<TParams> | IDatasourceTransportReadMethod<TParams>;
   /*getParameterMap?: TGetMap;
   postParameterMap?: TPostMap;
   putParameterMap?: TPutMap;
@@ -158,16 +155,16 @@ export interface IDataSourceSchema<TModel extends Record<string, any>, TParams e
    * 指定服务端响应中包含数据项的字段，可以设置为一个函数，该函数将被调用以返回响应的数据项
    * @param response
    */
-  data?: string | IDataSourceResponse;
+  data?: string | IDataSourceResponse<TModel[]>;
   /**
    * 指定服务器响应中包含数据项总数的字段，可以设置为一个函数，该函数将被调用以返回响应的数据项总数
    * @param response
    */
-  total?: (response: any) => any;
+  total?: string | IDataSourceResponse<number>;
   /**
    * 指定服务端响应中包含服务器端错误的字段，可以设置为一个函数，该函数将被调用以返回响应的错误
    */
-  errors?: string | IDataSourceResponse;
+  errors?: string | IDataSourceResponse<string>;
 
   addingMap?: IDataSourceTransportAddingMap<TModel, TParams>;
   editingMap?: IDataSourceTransportEditingMap<TModel, TParams>;

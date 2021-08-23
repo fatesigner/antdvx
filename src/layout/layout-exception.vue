@@ -15,7 +15,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import NotFound from '@/shared/error/not-found.vue';
+import { NotFound } from '@/shared/exception';
 
 export default defineComponent({
   components: {

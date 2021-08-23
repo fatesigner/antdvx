@@ -2,12 +2,12 @@
  * router
  */
 
-import { getAccessPermission } from 'antdvx/utils/router';
+import { getAccessPermission } from 'antdvx';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { authService } from '@/app/services';
 import { login$, logout$, roleChanged$ } from '@/app/events';
-import { AddNotFoundRoute, AddUnauthorizedRoute } from '@/shared/error';
+import { addExceptionRoute } from '@/shared/exception';
 
 // 基础路由表，可匿名访问
 const baseRoutes = [];
@@ -104,18 +104,21 @@ export async function createAppRouter() {
 
     if (status === 401) {
       // 无访问权限，通常是未登录状态，将重定向至授权界面
+      console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not allowed`);
       return next({
         name: authService.config.authPage,
         query: { redirect: authService.config.redirectEnable ? to.fullPath : undefined }
       });
     } else if (status === 403) {
       // 最终确认当前用户没有该路由的访问授权，动态添加 403 路由，该界面将提示用户未获得对应的访问权限
-      AddUnauthorizedRoute(to, router, () => import('@/layout/layout-empty.vue'));
-      return next({ path: to.path });
+      console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not allowed`);
+      const name = addExceptionRoute(router, status, to, () => import('@/layout/layout-empty.vue'));
+      return next({ name: name });
     } else if (status === 404) {
       // 该路由不存在，动态添加 404 路由，该界面将提示用户当前页面 not found
-      AddNotFoundRoute(to, router, () => import('@/layout/layout-empty.vue'));
-      return next({ path: to.path });
+      console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not defined`);
+      const name = addExceptionRoute(router, status, to, () => import('@/layout/layout-empty.vue'));
+      return next({ name: name });
     }
 
     // 添加 router key 以取消默认的视图共享逻辑

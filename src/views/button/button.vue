@@ -2,7 +2,7 @@
   <ScrollView>
     <div class="tw-p-4 tw-space-y-4">
       <div class="tw-text-lg">基础</div>
-      <div class="tw-grid md:tw-grid-cols-2 tw-gap-4">
+      <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4">
         <div class="tw-p-2 tw-border tw-border-gray-300" v-for="type in types">
           <div class="tw-text-lg tw-p-2">{{ type }} button</div>
           <div class="tw-text-sm tw-p-2">Colors</div>
@@ -48,52 +48,88 @@
         </div>
         <div class="tw-p-2 tw-border tw-border-gray-300">
           <div class="tw-text-lg tw-p-2">功能性</div>
-          <div class="tw-p-2 tw-text-gray-600 tw-text-xs">
+          <div class="tw-p-2 tw-text-gray-600 tw-text-sm">基于 Button 封装的常用的一些操作按钮。</div>
+          <div class="tw-p-2 tw-text-gray-500 tw-text-xxs">
             用于需要异步操作的按钮，提供一个异步函数 handler，函数执行阶段，将自动添加 loading，结束后，若该函数抛出异常，则自动显示 notification。
           </div>
           <div class="tw-flex tw-flex-wrap">
-            <div class="tw-p-2" v-for="type in types">
-              <XButton outline notify :type="type" :handler="load(3000, true)">加载</XButton>
+            <div class="tw-p-2">
+              <XButtonAdd notify type="outline" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButton outline pure notify :handler="load(3000, true)">加载</XButton>
-            </div>
-          </div>
-          <div class="tw-p-2 tw-text-gray-600 tw-text-xs">基于 Button 封装的常用的一些操作按钮。</div>
-          <div class="tw-flex tw-flex-wrap">
-            <div class="tw-p-2">
-              <XButtonAdd type="outline" notify :handler="load(3000, true)">添加</XButtonAdd>
+              <XButtonEdit notify type="outline" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonEdit type="outline" notify :handler="load(3000, true)">编辑</XButtonEdit>
+              <XButtonSave notifytype="outline" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonDelete confirmed notify type="outline" :handler="load(3000, true)">删除</XButtonDelete>
-            </div>
-          </div>
-          <div class="tw-flex tw-flex-wrap">
-            <div class="tw-p-2">
-              <XButtonAdd type="outline" notify :handler="load(3000, true)">添加</XButtonAdd>
+              <XButtonDelete confirmed notify type="outline" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonEdit type="outline" notify :handler="load(3000, true)">编辑</XButtonEdit>
+              <XButtonRefresh notify type="outline" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonDelete confirmed notify type="outline" :handler="load(3000, true)"></XButtonDelete>
+              <XButtonUpload notify type="outline" :handler="upload(3000)" />
             </div>
           </div>
           <div class="tw-flex tw-flex-wrap">
             <div class="tw-p-2">
-              <XButtonAdd color="success" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
+              <XButtonAdd only-icon type="text" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonEdit color="primary" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
+              <XButtonEdit only-icon type="text" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonDelete confirmed notify color="danger" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
+              <XButtonSave only-icon type="text" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonRefresh color="primary" mode="icon" size="mini" type="link" :handler="load(3000, true)" />
+              <XButtonDelete confirmed only-icon type="text" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonRefresh only-icon type="text" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonUpload only-icon type="text" :handler="upload(3000, true)" />
+            </div>
+          </div>
+          <div class="tw-flex tw-flex-wrap">
+            <div class="tw-p-2">
+              <XButtonAdd color="success" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonEdit color="primary" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonSave color="secondary" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonDelete confirmed color="danger" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonRefresh color="primary" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonUpload color="secondary" size="mini" type="link" :handler="upload(3000, true)" />
+            </div>
+          </div>
+          <div class="tw-flex tw-flex-wrap">
+            <div class="tw-p-2">
+              <XButtonAdd only-icon color="success" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonEdit only-icon color="primary" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonSave only-icon color="secondary" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonDelete confirmed only-icon color="danger" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="load(3000, true)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonUpload only-icon color="secondary" size="mini" type="link" :handler="upload(3000, true)" />
             </div>
           </div>
         </div>
@@ -102,20 +138,37 @@
   </ScrollView>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
 import { timer } from 'rxjs';
 import { defineComponent } from 'vue';
 import { Dropdown, Menu } from 'ant-design-vue';
 import { DownOutlined } from '@ant-design/icons-vue';
-import { ANTDVX_BUTTON_TYPES, ANTDVX_COLORS, ANTDVX_SIZES, ScrollView, XButton, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh } from 'antdvx';
+import {
+  ANTDVX_BUTTON_TYPES,
+  ANTDVX_COLORS,
+  ANTDVX_SIZES,
+  ScrollView,
+  XButton,
+  XButtonAdd,
+  XButtonDelete,
+  XButtonEdit,
+  XButtonRefresh,
+  XButtonSave,
+  XButtonUpload,
+  createXModal
+} from 'antdvx';
+
+import { getBase64FromFile } from '@/utils';
 
 export default defineComponent({
   components: {
     XButton,
     XButtonAdd,
     XButtonEdit,
+    XButtonSave,
     XButtonDelete,
     XButtonRefresh,
+    XButtonUpload,
     ScrollView,
     // Antd
     DownOutlined,
@@ -124,6 +177,7 @@ export default defineComponent({
     [Dropdown.name]: Dropdown
   },
   setup() {
+    // 加载数据
     const load = (duration?: number, error?: boolean) => {
       return async () => {
         return timer(duration ?? 2000)
@@ -136,7 +190,36 @@ export default defineComponent({
       };
     };
 
-    return { sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load };
+    // 上传
+    const upload = (duration?: number, error?: boolean) => {
+      return async (file) => {
+        return timer(duration ?? 2000)
+          .toPromise()
+          .then(() => {
+            if (error) {
+              throw new Error('Load failed, please try again.');
+            } else {
+              // 获取图片预览地址
+              getBase64FromFile(file).then((base64) => {
+                createXModal(
+                  defineComponent({
+                    render() {
+                      return <img src={base64} title='' alt='' />;
+                    }
+                  }),
+                  null,
+                  {
+                    autoOpened: true,
+                    destroyOnClose: true
+                  }
+                );
+              });
+            }
+          });
+      };
+    };
+
+    return { sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
   }
 });
 </script>

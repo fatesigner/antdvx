@@ -2,7 +2,7 @@
   <header class="tw-relative tw-flex tw-pr-4 tw-pl-4" :class="$style.header">
     <div class="tw-flex-initial tw-self-center tw-pt-2 tw-pb-2">
       <div :class="$style.folder" @click="toggleCollapsed">
-        <IconBars scale=".8" />
+        <IconMenuLine color="primary" />
       </div>
     </div>
     <div class="tw-flex-1 tw-self-center"></div>
@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { IconBars } from 'antdvx/components/iconfont';
+import { IconMenuLine } from 'antdvx';
 
 import { Language } from '@/shared/language';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';
@@ -28,8 +28,7 @@ export default defineComponent({
   components: {
     User,
     Language,
-    // Antd
-    IconBars
+    IconMenuLine
   },
   setup() {
     const collapsed = computed(() => LayoutSidebarStore.state.collapsed);

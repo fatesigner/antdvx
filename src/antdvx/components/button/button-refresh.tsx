@@ -1,19 +1,19 @@
-import { PropType, defineComponent, ref, watch } from 'vue';
+import { notification } from 'ant-design-vue';
+import { defineComponent, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconRedo, IconSync } from '../iconfont';
+import { IconRefreshLine } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
-import { notification } from 'ant-design-vue';
 
 export const XButtonRefresh = defineComponent({
   name: 'x-button-refresh',
   props: {
     ...XButtonProps,
-    mode: {
-      type: String as PropType<'default' | 'icon' | 'text'>,
-      default: 'default'
+    onlyIcon: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: any, { emit }) {
@@ -54,34 +54,27 @@ export const XButtonRefresh = defineComponent({
   render(ctx) {
     return (
       <XButton
-        ref={'btnRef'}
         block={ctx.block}
         disabled={ctx.disabled}
         ghost={ctx.ghost}
         href={ctx.href}
         htmlType={ctx.htmlType}
-        //loading={this.loading_}
+        loading={ctx.loading_}
         shape={ctx.shape}
         size={ctx.size}
         target={ctx.target}
         type={ctx.type}
         color={ctx.color}
+        spin={false}
         //handler={ctx.handler}
-        notify={ctx.notify}
+        //notify={ctx.notify}
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.refresh)}
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            !ctx.loading_ && (ctx.mode === 'default' || ctx.mode === 'icon') ? <IconRedo scale='0.9' /> : ctx.loading_ ? <IconSync scale='0.9' spin /> : '',
-            ctx.$slots?.default ? (
-              ctx.$slots?.default()
-            ) : ctx.mode === 'default' || ctx.mode === 'text' ? (
-              <span>{ctx.$t(i18nMessages.antd.action.refresh)}</span>
-            ) : (
-              ''
-            )
-          ],
-          title: () => <span>{ctx.loading_}</span>
+            <IconRefreshLine spin={ctx.loading_} />,
+            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.refresh)}</span>
+          ]
         }}
       />
     );

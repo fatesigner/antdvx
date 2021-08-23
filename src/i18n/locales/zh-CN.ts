@@ -28,8 +28,10 @@ export default {
           gotohome: '回到主页'
         }
       },
+      passport: {
+        login: '登录'
+      },
       button: '按钮',
-      login: '登录',
       menus: '菜单授权',
       dashboard: '首页',
       table: '表格',
@@ -45,15 +47,6 @@ export default {
       size: '布局大小',
       profile: '个人中心',
       individuation: '个性化'
-    },
-    login: {
-      title: '系统登录',
-      logIn: '登录',
-      username: '账号',
-      password: '密码',
-      any: '随便填',
-      thirdparty: '第三方登录',
-      thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
     },
     tabsView: {
       refresh: '刷新',
@@ -75,6 +68,15 @@ export default {
       requestFailed: '请求失败，请联系管理员',
       requestTimeout: '您的会话已结束，请重新登录',
       connectionAbort: '连接服务器超时，检查您的网络设置'
+    },
+    passport: {
+      title: '系统登录',
+      logIn: '登录',
+      username: '账号',
+      password: '密码',
+      any: '随便填',
+      thirdparty: '第三方登录',
+      thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
     },
     notification: {
       login: '登录成功',

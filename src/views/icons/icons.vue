@@ -2,11 +2,15 @@
   <ScrollView>
     <div class="tw-p-4 tw-space-y-4">
       <div class="tw-text-lg">基础</div>
-      <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes">
+      <div class="tw-grid md:tw-grid-cols-2 tw-gap-4">
         <div class="tw-flex tw-items-center tw-space-x-2">
           <div class="tw-flex-initial">筛选：</div>
-          <AInput class="tw-w-72" :size="size" placeholder="搜索患者案例..." />
-          <XButton outline :size="size">搜索</XButton>
+          <AInput class="tw-w-72" placeholder="搜索图标..." />
+        </div>
+      </div>
+      <div class="tw-flex tw-flex-wrap">
+        <div class="tw-p-2" v-for="item in icons">
+          {{ item }}
         </div>
       </div>
     </div>
@@ -16,7 +20,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Input } from 'ant-design-vue';
-import { ANTDVX_SIZES, ScrollView, XButton } from 'antdvx';
+import { ANTDVX_ICON_NAMES, ScrollView, XButton } from 'antdvx';
 
 export default defineComponent({
   components: {
@@ -26,7 +30,7 @@ export default defineComponent({
   },
   setup() {
     return {
-      sizes: ANTDVX_SIZES
+      icons: ANTDVX_ICON_NAMES
     };
   }
 });

@@ -51,14 +51,15 @@ export const XButton = defineComponent({
           ['ant-color-' + ctx.color]: !!ctx.color,
           'ant-btn-outline': ctx.type === 'outline',
           'ant-btn-3d': ctx.type === '3d',
-          'ant-btn-mini': ctx.size === 'mini'
+          'ant-btn-mini': ctx.size === 'mini',
+          'ant-loading': !ctx.spin && ctx.loading_
         }}
         block={ctx.block}
         disabled={ctx.disabled}
         ghost={ctx.ghost}
         href={ctx.href}
         htmlType={ctx.htmlType}
-        loading={ctx.loading_}
+        loading={ctx.spin ? ctx.loading_ : false}
         shape={ctx.shape}
         size={ctx.size}
         target={ctx.target}

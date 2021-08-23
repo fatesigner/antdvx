@@ -103,7 +103,7 @@ export class AuthService<
             return isa.permissible;
           } else {
             // 验证用户是否登录
-            return roles.length;
+            return this.isAuthenticated();
           }
         } else {
           // 无 name 属性，视为虚拟路由，跳过

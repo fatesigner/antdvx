@@ -29,6 +29,6 @@ export const IconfontProps = {
     default: false
   },
   rotate: {
-    type: Number
+    type: [Number]
   }
 };

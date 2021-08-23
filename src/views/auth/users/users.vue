@@ -10,7 +10,7 @@
         </template>
         <template #actions="{ record }">
           <div class="tw-space-x-2">
-            <XButton size="small" @click="showAuthModal(record)"><IconIdBadge />授权</XButton>
+            <XButton size="small" @click="showAuthModal(record)"><IconShieldUserLine />授权</XButton>
             <XButtonEdit pure mode="icon" type="link" size="small" :handler="edit" />
             <XButtonDelete pure confirmed notify mode="icon" color="danger" type="link" size="small" :handler="del(record)" />
           </div>
@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IconIdBadge, ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XTable, createXDrawer, createXTable } from 'antdvx';
+import { IconShieldUserLine, ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XTable, createXDrawer, createXTable } from 'antdvx';
 
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';
@@ -30,8 +30,8 @@ import { IUser } from '@/types/user';
 export default defineComponent({
   components: {
     XTable,
-    IconIdBadge,
     ScrollView,
+    IconShieldUserLine,
     XButtonAdd,
     XButtonEdit,
     XButtonDelete,

@@ -6,7 +6,7 @@ import { ValueOf } from '@fatesigner/typed';
 import { createVueI18n } from '@fatesigner/i18n';
 import { convertModelArrToEnum } from '@fatesigner/utils';
 
-import { env } from '@/env';
+import { ENV } from '@/app/constants';
 
 export * from './messages';
 
@@ -29,15 +29,15 @@ export type LanguageType = ValueOf<typeof Languages.enum>;
 // 创建 i18n
 export const i18n = createVueI18n(
   {
-    locale: env.LANG,
+    locale: ENV.APP_LANG,
     messages: {
       // 同步加载默认语言包，因为使用按需加载的方式，所以在此不导入其他语言包
-      [env.LANG]: require(`./locales/${env.LANG}`).default
+      [ENV.APP_LANG]: require(`./locales/${ENV.APP_LANG}`).default
     },
     // 是否使用 vue-i18n Legacy API 模式，默认为 true
     legacy: true,
     // 当前不存在 message 键时，将会显式回退到指定的语言环境
-    fallbackLocale: env.LANG,
+    fallbackLocale: ENV.APP_LANG,
     // 只保留那些完全没有翻译给定关键字的警告
     silentFallbackWarn: true
   },

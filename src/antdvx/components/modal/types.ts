@@ -10,7 +10,7 @@ export interface IXModalHandlers<TArgs extends any[]> {
   destroy: () => void;
 }
 
-export interface IXModalPropsType extends Omit<ModalProps, 'afterClose' | 'visible' | 'destroyOnClose'> {
+export interface IXModalPropsType extends Omit<ModalProps, 'afterClose' | 'visible'> {
   // Custom
   /**
    * 自动显示

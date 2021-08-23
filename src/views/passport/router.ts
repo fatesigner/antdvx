@@ -6,6 +6,7 @@ import { i18nMessages } from '@/i18n';
 import { IRouteConfig } from '@/types/route';
 
 export default {
+  name: 'passport',
   path: '/passport',
   component: () => import('@/layout/layout-empty.vue'),
   children: [
@@ -14,7 +15,7 @@ export default {
       path: 'login',
       component: () => import('./login/login.vue'),
       meta: {
-        label: i18nMessages.app.route.login,
+        label: i18nMessages.app.route.passport.login,
         keepAlive: true,
         allowAnonymous: true
       }

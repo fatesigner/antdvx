@@ -363,17 +363,17 @@ export default defineComponent({
 
     onActivated(() => {
       // 还原上次的滚动条位置
-      if ($content.value) {
-        $content.value.scrollTop = scrollPos.top;
-        $content.value.scrollLeft = scrollPos.left;
+      if ($view.value) {
+        $view.value.scrollTop = scrollPos.top;
+        $view.value.scrollLeft = scrollPos.left;
       }
     });
 
     onDeactivated(() => {
       // 记录滚动条位置
-      if ($content.value) {
-        scrollPos.top = $content.value.scrollTop;
-        scrollPos.left = $content.value.scrollLeft;
+      if ($view.value) {
+        scrollPos.top = $view.value.scrollTop;
+        scrollPos.left = $view.value.scrollLeft;
       }
     });
 

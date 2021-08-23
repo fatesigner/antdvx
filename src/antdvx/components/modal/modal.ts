@@ -4,9 +4,9 @@ import { Modal, Spin } from 'ant-design-vue';
 import { bindLazyFunc } from '@fatesigner/utils';
 import { getGUID } from '@fatesigner/utils/random';
 import { createApp, h, nextTick, onMounted, reactive, ref } from 'vue';
-import { AsyncComponentLoader, AsyncComponentOptions, Component, ComponentPublicInstance } from '@vue/runtime-core';
+import { Component, ComponentPublicInstance } from '@vue/runtime-core';
 
-import { Iconfont } from '../iconfont';
+import { IconCloseLine } from '../iconfont';
 
 import { IXModalPropsType, IXModalRef } from './types';
 
@@ -60,7 +60,7 @@ export function createXModal<
   /**
    * 待加载的组件的 props 选项
    */
-  compProps: PropsOptions,
+  compProps?: PropsOptions,
   /**
    * XModal 选项
    */
@@ -167,7 +167,7 @@ export function createXModal<
           Modal,
           {
             visible: vIf.value,
-            destroyOnClose: false,
+            destroyOnClose: modalRef.options.destroyOnClose,
             afterClose: afterClose,
             title: modalRef.options.title,
             closable: modalRef.options.closable,
@@ -180,8 +180,7 @@ export function createXModal<
           },
           {
             closeIcon() {
-              return h(Iconfont, {
-                name: 'times',
+              return h(IconCloseLine, {
                 scale: 1.2
               });
             },

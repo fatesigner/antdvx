@@ -23,11 +23,11 @@
             <AInput v-model:value="item.label" placeholder="输入描述" />
           </div>
           <div class="tw-flex-initial" style="width: 28px">
-            <XButton size="small" type="link" title="删除" @click="remove(index)"><Iconfont name="trash-alt" /></XButton>
+            <XButton size="small" type="link" title="删除" @click="remove(index)"><IconDeleteBinLine /></XButton>
           </div>
         </div>
       </div>
-      <XButton class="tw-mt-2" pure size="small" type="link" title="添加选项" @click="add"><Iconfont name="plus" />添加选项</XButton>
+      <XButton class="tw-mt-2" pure size="small" type="link" title="添加选项" @click="add"><IconAddLine />添加选项</XButton>
     </div>
     <div v-show="field.options.mode === 'remote'">remote</div>
   </AFormItem>
@@ -38,12 +38,13 @@ import { PropType, defineComponent, watch } from 'vue';
 import { Checkbox, Form, Input, RadioButton, RadioGroup } from 'ant-design-vue';
 
 import { XButton } from '../../../button';
-import { Iconfont } from '../../../iconfont';
+import { IconAddLine, IconDeleteBinLine } from '../../../iconfont';
 
 export default defineComponent({
   components: {
     XButton,
-    Iconfont,
+    IconAddLine,
+    IconDeleteBinLine,
     // Antd
     [Form.Item.name]: Form.Item,
     [Input.name]: Input,

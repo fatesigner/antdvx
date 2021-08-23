@@ -28,8 +28,10 @@ export default {
           gotohome: 'home'
         }
       },
+      passport: {
+        login: 'Login'
+      },
       button: 'button',
-      login: 'login',
       menus: 'menus auth',
       dashboard: 'dashboard',
       table: 'table',
@@ -45,15 +47,6 @@ export default {
       size: 'Global Size',
       profile: 'Profile',
       individuation: 'Individuation'
-    },
-    login: {
-      title: 'Login Form',
-      logIn: 'Login',
-      username: 'Username',
-      password: 'Password',
-      any: 'any',
-      thirdparty: 'Or connect with',
-      thirdpartyTips: 'Can not be simulated on i18n, so please combine you own business simulation! ! !'
     },
     tabsView: {
       refresh: 'Refresh',
@@ -75,6 +68,15 @@ export default {
       requestFailed: 'Request failed, please contact administrator',
       requestTimeout: 'Your session has timed out. Please log in again',
       connectionAbort: 'Connect the server timeout, check your network Settings'
+    },
+    passport: {
+      title: 'Login Form',
+      logIn: 'Login',
+      username: 'Username',
+      password: 'Password',
+      any: 'any',
+      thirdparty: 'Or connect with',
+      thirdpartyTips: 'Can not be simulated on i18n, so please combine you own business simulation! ! !'
     },
     notification: {
       login: 'Login successfully',

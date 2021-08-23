@@ -1,13 +1,13 @@
-import { PropType, defineComponent, ref, watch } from 'vue';
+import { timer } from 'rxjs';
+import { useI18n } from 'vue-i18n';
+import { defineComponent, ref, watch } from 'vue';
 import { Popconfirm, message, notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { Iconfont } from '../iconfont';
+import { IconDeleteBinLine, IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
-import { timer } from 'rxjs';
-import { useI18n } from 'vue-i18n';
 
 export const XButtonDelete = defineComponent({
   name: 'x-button-delete',
@@ -17,9 +17,9 @@ export const XButtonDelete = defineComponent({
       type: Boolean,
       default: false
     },
-    mode: {
-      type: String as PropType<'default' | 'icon' | 'text'>,
-      default: 'default'
+    onlyIcon: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props: any, { emit, slots }) {
@@ -50,7 +50,7 @@ export const XButtonDelete = defineComponent({
           })
           .catch((err: Error) => {
             if (props.notify) {
-              notification.error({ message: 'error', description: err.message });
+              notification.error({ message: '', description: err.message });
             }
           })
           .finally(() => {
@@ -65,7 +65,7 @@ export const XButtonDelete = defineComponent({
   render(ctx) {
     return ctx.confirmed ? (
       <Popconfirm
-        disabled={ctx.disabled}
+        disabled={ctx.disabled || ctx.loading_}
         okType={'primary'}
         okText={ctx.$t(i18nMessages.antd.action.delete.oktext)}
         cancelText={ctx.$t(i18nMessages.antd.action.delete.cancelText)}
@@ -84,19 +84,14 @@ export const XButtonDelete = defineComponent({
           target={ctx.target}
           type={ctx.type}
           color={ctx.color}
+          spin={false}
           //handler={ctx.handler}
           //notify={ctx.notify}
           title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.delete.title)}
           v-slots={{
-            default: ({ loading }) => [
-              !loading && (ctx.mode === 'default' || ctx.mode === 'icon') ? <Iconfont name={'trash-alt'} scale={0.9} /> : '',
-              ctx.$slots?.default ? (
-                ctx.$slots?.default()
-              ) : ctx.mode === 'default' || ctx.mode === 'text' ? (
-                <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
-              ) : (
-                ''
-              )
+            default: () => [
+              ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconDeleteBinLine />,
+              ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
             ]
           }}
         />
@@ -114,20 +109,15 @@ export const XButtonDelete = defineComponent({
         target={ctx.target}
         type={ctx.type}
         color={ctx.color}
+        spin={false}
         //handler={ctx.handler}
         //notify={ctx.notify}
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.delete.title)}
         onClick={ctx.trigger}
         v-slots={{
-          default: ({ loading }) => [
-            !loading && (ctx.mode === 'default' || ctx.mode === 'icon') ? <Iconfont name={'trash-alt'} scale={0.9} /> : '',
-            ctx.$slots?.default ? (
-              ctx.$slots?.default()
-            ) : ctx.mode === 'default' || ctx.mode === 'text' ? (
-              <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
-            ) : (
-              ''
-            )
+          default: () => [
+            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconDeleteBinLine />,
+            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
           ]
         }}
       />

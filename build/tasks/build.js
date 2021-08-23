@@ -7,20 +7,19 @@ const fs = require('fs');
 const path = require('path');
 const gulp = require('gulp');
 
-require('./build-icons');
-require('./build-esm');
 require('./clean');
+require('./build-esm');
 
 gulp.task(
   'build',
-  gulp.series('clean', 'build-icons', gulp.parallel('build-esm'), async function () {
-    const env = require('../env')();
+  gulp.series('clean', 'build-esm', async function () {
+    const { ROOT_PATH, OUTPUT_PATH } = require('../constants');
 
     // Copy npm publish files to output
     await new Promise((resolve) => {
       gulp
-        .src(['README.md'].map((x) => path.join(env.rootPath, x)))
-        .pipe(gulp.dest(env.outputPath))
+        .src(['README.md'].map((x) => path.join(ROOT_PATH, x)))
+        .pipe(gulp.dest(OUTPUT_PATH))
         .on('end', resolve);
     });
 
@@ -42,6 +41,6 @@ gulp.task(
         return prev;
       }, {});
     }
-    fs.writeFileSync(path.join(env.outputPath, 'package.json'), JSON.stringify(pkg, null, 2), { encoding: 'utf8' });
+    fs.writeFileSync(path.join(OUTPUT_PATH, 'package.json'), JSON.stringify(pkg, null, 2), { encoding: 'utf8' });
   })
 );

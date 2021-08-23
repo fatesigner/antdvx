@@ -3,11 +3,12 @@
     <div class="tw-p-4">
       <VxeG v-bind="gridRef">
         <template #title="{ loading, refresh }">
-          <div class="tw-flex tw-items-center tw-space-x-2">
+          <div class="tw-flex tw-items-center tw-space-x-4">
             <div class="tw-flex-initial">筛选：</div>
             <AInput class="tw-w-72" placeholder="搜索患者案例..." />
-            <XButton outline :handler="gridRef.handler.refresh">搜索</XButton>
-            <XButtonRefresh :handler="refresh" />
+            <XButtonSearch type="primary" :handler="gridRef.handler.refresh">搜索</XButtonSearch>
+            <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="refresh" />
+            <ACheckbox v-model:checked="gridRef.options.dataSource.serverPaging">服务端分页</ACheckbox>
           </div>
         </template>
         <template #no="{ record, rowIndex }"> {{ rowIndex + 1 }} </template>
@@ -24,21 +25,23 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Input } from 'ant-design-vue';
-import { ScrollView, VxeG, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, createVxeGrid } from 'antdvx';
+import { Checkbox, Input } from 'ant-design-vue';
+import { ScrollView, VxeG, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, createVxeGrid } from 'antdvx';
 
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';
 
 export default defineComponent({
   components: {
+    XButtonSearch,
     VxeG,
     XButton,
     ScrollView,
     XButtonEdit,
     XButtonDelete,
     XButtonRefresh,
-    [Input.name]: Input
+    [Input.name]: Input,
+    [Checkbox.name]: Checkbox
   },
   setup() {
     const gridRef = createVxeGrid<IUser<any>>(
@@ -95,15 +98,32 @@ export default defineComponent({
           {
             title: '操作',
             fixed: 'right',
-            width: 150,
+            width: 200,
             slots: { default: 'actions' }
           }
         ],
         dataSource: {
+          serverPaging: false,
+          schema: {
+            parse(res) {
+              return res;
+            },
+            data(res) {
+              return res.data;
+            },
+            total(res) {
+              return res.total;
+            }
+          },
           transport: {
-            read() {
+            read(query) {
+              if (gridRef.options.dataSource.serverPaging) {
+                return Api.getUsersWithPage({ pageNo: query.pageNo, pageSize: query.pageSize }).then((res) => {
+                  return res;
+                });
+              }
               return Api.getUsers().then((res) => {
-                return [];
+                return res;
               });
             }
           }

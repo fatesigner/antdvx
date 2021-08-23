@@ -2,8 +2,5 @@
  * index
  */
 
-import AsyncSection from './async-section.vue';
-
-export { AsyncSection };
-
 export * from './types';
+export { default as AsyncSection } from './async-section.vue';

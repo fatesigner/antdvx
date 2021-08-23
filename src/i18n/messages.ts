@@ -24,8 +24,10 @@ export const i18nMessages = createLocaleMessages({
           gotohome: ''
         }
       },
+      passport: {
+        login: ''
+      },
       button: '',
-      login: '',
       menus: '',
       dashboard: '',
       table: '',
@@ -41,15 +43,6 @@ export const i18nMessages = createLocaleMessages({
       size: '',
       profile: '',
       individuation: ''
-    },
-    login: {
-      title: '',
-      logIn: '',
-      username: '',
-      password: '',
-      any: '',
-      thirdparty: '',
-      thirdpartyTips: ''
     },
     tabsView: {
       refresh: '',
@@ -71,6 +64,15 @@ export const i18nMessages = createLocaleMessages({
       requestFailed: '',
       requestTimeout: '',
       connectionAbort: ''
+    },
+    passport: {
+      title: '',
+      logIn: '',
+      username: '',
+      password: '',
+      any: '',
+      thirdparty: '',
+      thirdpartyTips: ''
     },
     notification: {
       login: '',

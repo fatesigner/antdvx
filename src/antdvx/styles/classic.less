@@ -4,7 +4,7 @@
 // Set font color
 // ---------------------------------------------------
 each(@colors, {
-  .ant-color-@{key} {
+  .antdvx-color-@{key} {
     color: @value;
   }
 });
@@ -48,12 +48,33 @@ body.antdvx-theme-classic {
 
   // Button
   // ---------------------------------------------------
+  .ant-btn-icon-only {
+    font-size: 1em;
+  }
+
+  .ant-btn-icon-only > * {
+    font-size: 1em;
+  }
+
+  .ant-btn > .antdvx-icon + span,
+  .ant-btn > span + .antdvx-icon {
+    margin-left: 6px;
+  }
+
   .ant-btn.ant-btn-sm {
     > span + .anticon,
     > .anticon + .anticon,
     > .anticon + span {
-      margin-left: 4px;
+      margin-left: 6px;
     }
+  }
+
+  .ant-btn-two-chinese-chars > *:not(.anticon) {
+    letter-spacing: 0.14em;
+  }
+
+  .ant-btn > .anticon {
+    line-height: 0;
   }
 
   // Menu

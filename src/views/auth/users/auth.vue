@@ -76,7 +76,7 @@ export default defineComponent({
 
       const [err] = await to(Api.saveRoles(targetKeys));
       if (err) {
-        notification.error({ message: 'error', description: err.message });
+        notification.error({ message: '', description: err.message });
       } else {
         // 保存成功后关闭
         visible_.value = false;

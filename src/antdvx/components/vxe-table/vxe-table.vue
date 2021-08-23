@@ -560,7 +560,7 @@ export default defineComponent({
     }
 
     &.vxe-table--render-default {
-      .vxe-table--border-line {
+      > .vxe-table--border-line {
         border-color: #f0f0f0;
       }
 
@@ -593,7 +593,7 @@ export default defineComponent({
           border-right: 1px solid #f0f0f0;
         }
 
-        .vxe-table--border-line {
+        > .vxe-table--border-line {
           border-right: 0;
         }
 

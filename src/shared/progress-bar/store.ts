@@ -2,7 +2,7 @@
  * store
  */
 
-import { createStore } from 'antdvx/utils/store';
+import { createStore } from 'antdvx';
 
 const _dampingCoefficient = 0.9066;
 const _duration = 1000;

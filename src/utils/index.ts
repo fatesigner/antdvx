@@ -3,7 +3,7 @@
  */
 
 import { StructureTree } from '@fatesigner/utils/structure-tree';
-import { isBoolean, isObject } from '@fatesigner/utils/type-check';
+import { isBoolean, isNullOrUndefined, isObject } from '@fatesigner/utils/type-check';
 
 import { IMenu } from '@/types/menu';
 import { IRouteConfig } from '@/types/route';
@@ -55,6 +55,41 @@ export function getColumns(res) {
   console.log('columns', JSON.stringify(columns));
   console.log('columns slot', JSON.stringify(columns.map((x) => ({ ...x, slots: { customRender: x.dataIndex } }))));
   console.log('template', template);
+}
+
+/**
+ * 高亮搜索关键字
+ * @param keywords
+ * @param text
+ * @param className
+ */
+export function highlightHtml(keywords: string, text: string, className: string) {
+  if (!text) {
+    return '';
+  }
+  if (!keywords) {
+    return text;
+  }
+  return text.replace(new RegExp(keywords, 'g'), `<span class="${className}">${keywords}</span>`);
+}
+
+/**
+ * 获取 Odata 参数
+ * @param options
+ */
+export function getOdataQueryStr(options: { pageNo?: number; pageSize?: number; filters?: (() => string)[] }) {
+  const filter = options?.filters.reduce((prev, cur) => {
+    const r = cur();
+    if (r) {
+      prev.push(r);
+    }
+    return prev;
+  }, []);
+  return {
+    skip: isNullOrUndefined(options?.pageNo) || isNullOrUndefined(options?.pageSize) ? undefined : options.pageSize * options.pageNo,
+    top: isNullOrUndefined(options?.pageNo) || isNullOrUndefined(options?.pageSize) ? undefined : options.pageSize,
+    filter: filter.length ? filter.join(' and ') : undefined
+  };
 }
 
 /**

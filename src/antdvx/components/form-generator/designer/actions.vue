@@ -124,7 +124,7 @@ export default defineComponent({
         analyzeFormDesignerJsonData(jsonData, props.binds);
         uploadedJson.visible = false;
       } catch (err) {
-        notification.error({ message: 'error', description: err.message });
+        notification.error({ message: '', description: err.message });
       }
     };
 

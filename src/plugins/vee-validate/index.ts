@@ -5,14 +5,14 @@
 import AllRules from '@vee-validate/rules';
 import { configure, defineRule } from 'vee-validate';
 import { localize, setLocale } from '@vee-validate/i18n';
-import { ErrorMessage as VeeErrorMessage, Field as VeeField, Form as VeeForm } from 'vee-validate';
+import { ErrorMessage, Field, Form } from 'vee-validate';
 
 import { i18n } from '@/i18n';
 
 import './vee-validate.scss';
 
 export const VeeValidate = {
-  install(Vue) {
+  install(app) {
     Object.keys(AllRules).forEach((rule) => {
       defineRule(rule, AllRules[rule]);
     });
@@ -26,9 +26,9 @@ export const VeeValidate = {
     });
 
     // Register global component
-    Vue.component('VeeForm', VeeForm);
-    Vue.component('VeeField', VeeField);
-    Vue.component('VeeErrorMessage', VeeErrorMessage);
+    app.component('VeeForm', Form);
+    app.component('VeeField', Field);
+    app.component('VeeErrorMessage', ErrorMessage);
 
     const loadLang = async (lang) => {
       // 导入 language，非中文环境统一使用英文

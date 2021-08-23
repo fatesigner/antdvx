@@ -6,7 +6,11 @@
 const gulp = require('gulp');
 const rimraf = require('rimraf');
 
-gulp.task('clean', async function () {
-  const ENV = require('../env')();
-  rimraf.sync(ENV.outputPath);
-});
+const clean = async function () {
+  const { OUTPUT_PATH } = require('../constants');
+  rimraf.sync(OUTPUT_PATH);
+};
+
+gulp.task('clean', clean);
+
+module.exports = clean;

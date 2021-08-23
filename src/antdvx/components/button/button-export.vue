@@ -2,22 +2,25 @@
   <ADropdown :disabled="disabled || loading" :placement="placement">
     <XButton
       :block="block"
-      :disabled="disabled || loading"
+      :disabled="disabled"
       :ghost="ghost"
       :href="href"
       :htmlType="htmlType"
-      :loading="loading"
+      :loading="loading_"
       :shape="shape"
       :size="size"
       :target="target"
       :type="type"
       :color="color"
+      :spin="false"
       :handler="handler"
       :notify="notify"
       :title="title ? title : $t(i18nMessages.antd.action.export)"
     >
-      <template v-if="loading">{{ $t(i18nMessages.antd.action.exporting) }}... </template>
-      <template v-else><Iconfont name="external-link" scale="0.9" />{{ $t(i18nMessages.antd.action.export) }}</template>
+      <IconRefreshLine :spin="loading_" />
+      <template v-if="!onlyIcon">
+        {{ $t(i18nMessages.antd.action.export) }}
+      </template>
     </XButton>
     <template #overlay>
       <AMenu @click="onActionClick">
@@ -38,7 +41,7 @@ import { isFunction } from '@fatesigner/utils/type-check';
 import { convertHtmlToCanvas } from '@fatesigner/utils/html-canvas';
 
 import { i18nMessages } from '../../i18n/messages';
-import { Iconfont } from '../iconfont';
+import { IconRefreshLine, IconShareBoxLine } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
@@ -46,13 +49,18 @@ import { XButtonProps } from './types';
 export default defineComponent({
   components: {
     XButton,
-    Iconfont,
+    IconRefreshLine,
+    IconShareBoxLine,
     [Dropdown.name]: Dropdown,
     [Menu.name]: Menu,
     [Menu.Item.name]: Menu.Item
   },
   props: {
     ...XButtonProps,
+    onlyIcon: {
+      type: Boolean,
+      default: false
+    },
     placement: {
       type: String,
       default: 'bottomLeft'
@@ -63,7 +71,7 @@ export default defineComponent({
     pdf: Object as any
   },
   setup(props) {
-    const loading = ref(false);
+    const loading_ = ref(false);
 
     const download = async (workbook, filename?) => {
       const buffer = await workbook.xlsx.writeBuffer();
@@ -78,7 +86,7 @@ export default defineComponent({
     };
 
     const onActionClick = async (e) => {
-      loading.value = true;
+      loading_.value = true;
       await timer(300).toPromise();
       if (e.key === 'pdf') {
         let target;
@@ -195,12 +203,12 @@ export default defineComponent({
         }
       }
 
-      loading.value = false;
+      loading_.value = false;
     };
 
     return {
       i18nMessages,
-      loading,
+      loading_,
       onActionClick,
       download
     };

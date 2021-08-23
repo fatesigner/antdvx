@@ -5,7 +5,7 @@
       :class="{ 'ant-vxe-table-blur': options.loading }"
     >
       <div class="tw-flex-1 tw-p-2">
-        <slot name="title" v-bind="{ loading: options.loading, addData, updateData, refresh, handleRecordChange }" />
+        <slot name="title" v-bind="{ loading: options.loading, addData, updateData, refresh, reload, handleRecordChange }" />
       </div>
       <div
         class="tw-flex-initial tw-p-2"
@@ -85,9 +85,9 @@
 import to from 'await-to-js';
 import { VxeGridInstance } from 'vxe-table';
 import { VxeGridListeners } from 'vxe-table/types/grid';
+import { PropType, computed, defineComponent, onMounted, ref } from 'vue';
 import { Empty, Pagination, Spin, Table, notification } from 'ant-design-vue';
 import { isArray, isFunction, isString } from '@fatesigner/utils/type-check';
-import { PropType, computed, defineComponent, onMounted, ref, watch } from 'vue';
 
 import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
@@ -138,13 +138,13 @@ export default defineComponent({
     let dataOverall = [];
     let selectedRows = [];
 
-    watch(
+    /*watch(
       () => props.options.data,
       (val, newval) => {},
       {
         deep: true
       }
-    );
+    );*/
 
     // 对当前数据执行分页
     const paging = () => {
@@ -177,7 +177,7 @@ export default defineComponent({
         props.options.loading = true;
 
         dataOverall = [];
-        let data = [];
+        let _res: any;
 
         if (isFunction(props?.options?.dataSource.transport?.read)) {
           let [err, res] = await to<any>(
@@ -192,7 +192,7 @@ export default defineComponent({
           if (err) {
             notification.error({ message: '', description: err.message });
           } else {
-            data = res;
+            _res = res;
           }
         } else {
           let requestOptions: IDataSourceRequestOptions = {
@@ -215,19 +215,44 @@ export default defineComponent({
 
           let [err, res] = await to<any>(AntdHttpAdapter(requestOptions));
           if (err) {
-            notification.error({ message: '', description: err.message });
+            let errMsg = err.message;
+            if (isString(props?.options?.dataSource?.schema?.errors)) {
+              errMsg = res[props.options.dataSource.schema.errors];
+            } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
+              errMsg = props.options.dataSource.schema.errors(res);
+            }
+            notification.error({ message: '', description: errMsg });
           } else {
-            data = res;
+            _res = res;
           }
         }
 
-        /*if (props.options.schema && props.options.schema.total) {
-            props.options.total = props.options.schema.total.call(this.getContext(), res);
-          } else {
-            props.options.total = data.total;
-          }*/
+        // 服务端分页
+        if (props?.options?.dataSource?.serverPaging) {
+          // parse
+          if (props?.options?.dataSource?.schema?.parse) {
+            _res = props?.options?.dataSource?.schema?.parse(_res);
+          }
 
-        dataOverall = data;
+          // total
+          if (isString(props?.options?.dataSource?.schema?.total)) {
+            props.options.dataSource.total = _res[props.options.dataSource.schema.total];
+          } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
+            props.options.dataSource.total = props.options.dataSource.schema.total(_res);
+          }
+
+          // data
+          if (isString(props?.options?.dataSource?.schema?.data)) {
+            dataOverall = _res[props.options.dataSource.schema.data];
+          } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
+            dataOverall = props.options.dataSource.schema.data(_res);
+          } else {
+            dataOverall = _res;
+          }
+        } else {
+          // 客户端分页
+          dataOverall = _res;
+        }
 
         paging();
 
@@ -237,9 +262,15 @@ export default defineComponent({
       }
     };
 
+    // 刷新数据，重置分页、将会重新请求远端数据
+    const reload = async () => {
+      props.options.dataSource.pageNo = 1;
+      return refresh();
+    };
+
     // 切换 pageIndex 和 pageSize
     const onPageChange = () => {
-      if (props?.options?.transport?.serverPaging) {
+      if (props?.options?.dataSource?.serverPaging) {
         // 服务端分页
         refresh();
       } else {
@@ -338,6 +369,8 @@ export default defineComponent({
 
     const removeData: IVxeGridHandlers['removeData'] = (index: number) => {
       props.options.data.splice(index, 1);
+      // TODO：update分页
+      props.options.dataSource.total -= 1;
       $vxeGrid.value.loadData(props.options.data);
     };
 
@@ -388,8 +421,8 @@ export default defineComponent({
         getAllData,
         selectAll,
         selectInvert,
-        refresh
-        //reload: null,
+        refresh,
+        reload
         //validate: null,
         //validateRow: null,
       } as IVxeGridHandlers);
@@ -417,7 +450,8 @@ export default defineComponent({
       // handler
       addData,
       updateData,
-      refresh
+      refresh,
+      reload
     };
   }
 });

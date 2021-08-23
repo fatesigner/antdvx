@@ -6,7 +6,7 @@
         <div class="tw-flex tw-items-center tw-space-x-2">
           <div class="tw-flex-initial">筛选：</div>
           <AInput class="tw-w-72" :size="size" placeholder="搜索患者案例..." />
-          <XButton outline :size="size">搜索</XButton>
+          <XButton :size="size">搜索</XButton>
         </div>
       </div>
     </div>
@@ -26,7 +26,7 @@ export default defineComponent({
   },
   setup() {
     return {
-      sizes: ANTDVX_SIZES
+      sizes: ANTDVX_SIZES.filter((x) => x !== 'mini')
     };
   }
 });

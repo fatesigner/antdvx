@@ -19,6 +19,7 @@ export default {
       save: '保存',
       refresh: '刷新',
       upload: '上传',
+      search: '搜索',
       export: '导出',
       exporting: '正在导出',
       exportToPDF: '导出到PDF',

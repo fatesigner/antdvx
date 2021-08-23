@@ -18,12 +18,12 @@
  */
 import { defineComponent } from 'vue';
 
-import { env } from '@/env';
+import { ENV } from '@/app/constants';
 
 export default defineComponent({
   setup() {
     return {
-      title: env.APP_TITLE
+      title: ENV.APP_TITLE
     };
   }
 });
