@@ -1,3 +1,10 @@
+# [1.0.0-alpha.17](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2021-08-23)
+
+
+### Features
+
+* remove examples ([3da9399](https://github.com/fatesigner/antdvx/commit/3da9399fca6a2ced30e9d361f0a8b10d83aa7d41))
+
 # [1.0.0-alpha.16](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2021-08-16)
 
 
