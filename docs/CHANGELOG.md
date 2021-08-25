@@ -1,3 +1,10 @@
+# [1.0.0-alpha.18](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2021-08-25)
+
+
+### Features
+
+* update button style ([96298c4](https://github.com/fatesigner/antdvx/commit/96298c45dbe453f40f252fdb70e1a4270cba4408))
+
 # [1.0.0-alpha.17](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.16...v1.0.0-alpha.17) (2021-08-23)
 
 
