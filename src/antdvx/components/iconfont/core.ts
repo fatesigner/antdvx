@@ -3,8 +3,8 @@
  */
 
 import Icon from '@ant-design/icons-vue';
-import { Component } from '@vue/runtime-core';
 import { defineComponent, h } from 'vue';
+import { Component } from '@vue/runtime-core';
 
 import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, IAntdvxIconNames } from './config';

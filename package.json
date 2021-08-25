@@ -45,7 +45,7 @@
     "remixicon": "2.5.0"
   },
   "peerDependencies": {
-    "@fatesigner/file-chooser": "2.x",
+    "@fatesigner/file-chooser": "3.0.0-beta.1",
     "@fatesigner/i18n": "2.x",
     "@fatesigner/typed": "1.x",
     "@fatesigner/utils": "2.x",
@@ -60,6 +60,7 @@
     "element-resize-detector": "1.x",
     "exceljs": "4.x",
     "inversify": "5.x",
+    "jspdf": "2.x",
     "lodash-es": "4.x",
     "reflect-metadata": "0.x",
     "rx-event-hub": "1.x",

@@ -150,7 +150,7 @@ export interface IDataSourceSchema<TModel extends Record<string, any>, TParams e
   /**
    * 在使用服务器响应之前执行，用来解析或预处理服务器响应
    */
-  parse: IDataSourceResponse;
+  parse?: IDataSourceResponse;
   /**
    * 指定服务端响应中包含数据项的字段，可以设置为一个函数，该函数将被调用以返回响应的数据项
    * @param response

@@ -16,7 +16,7 @@
           <AMenuDivider />
           <AMenuItem @click="logout">
             <div class="tw-flex tw-items-center tw-space-x-1">
-              <IconLogoutBoxLine name="logout-box-line" />
+              <IconLogoutBoxLine />
               <span>{{ $t(i18nMessages.app.navbar.logOut) }}</span>
             </div>
           </AMenuItem>
@@ -30,8 +30,8 @@
 import { useI18n } from 'vue-i18n';
 import { Subscription } from 'rxjs';
 import { Dropdown, Menu, message } from 'ant-design-vue';
-import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { IconLogoutBoxLine, IconTShirtLine } from 'antdvx';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 
 import { IUser } from '@/types/user';
 import { i18nMessages } from '@/i18n';

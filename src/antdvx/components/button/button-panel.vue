@@ -1,5 +1,5 @@
 <template>
-  <div class="action-panel" @click="trigger" :title="title">
+  <div :class="$style.panel" @click="trigger" :title="title">
     <slot />
     <div class="loading" v-if="loading">
       <IconRefreshLine spin />
@@ -50,8 +50,8 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.action-panel {
+<style lang="scss" module>
+.panel {
   position: relative;
   display: inline-block;
   padding: 10px;
@@ -85,8 +85,8 @@ export default defineComponent({
 
     .fa-icon {
       width: 30px;
-      height: 30px;
       max-width: 50%;
+      height: 30px;
       max-height: 50px;
       color: #f27272;
     }

@@ -7,7 +7,7 @@
         </template>
         <template #actions="{ record }">
           <div class="tw-space-x-2">
-            <XButton size="small"><icon-id-badge />授权</XButton>
+            <XButton size="small"><IconUserSharedLine />授权</XButton>
             <XButtonEdit pure mode="icon" type="link" size="small" :handler="edit" />
             <XButtonDelete confirmed pure mode="icon" color="danger" type="link" size="small" :handler="del(record)" />
           </div>
@@ -20,8 +20,7 @@
 <script lang="ts">
 import { message } from 'ant-design-vue';
 import { defineComponent, reactive } from 'vue';
-import { PoweroffOutlined } from '@ant-design/icons-vue';
-import { IXTableColumnProps, ScrollView, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XTable } from 'antdvx';
+import { IXTableColumnProps, IconUserSharedLine, ScrollView, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XTable } from 'antdvx';
 
 import { Api } from '@/mocks';
 import { IRole } from '@/types/role';
@@ -31,10 +30,10 @@ export default defineComponent({
     XTable,
     XButton,
     ScrollView,
+    IconUserSharedLine,
     XButtonEdit,
     XButtonDelete,
-    XButtonRefresh,
-    PoweroffOutlined
+    XButtonRefresh
   },
   setup() {
     const rowKey = 'userid';

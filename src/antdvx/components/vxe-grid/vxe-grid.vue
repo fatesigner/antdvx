@@ -178,6 +178,7 @@ export default defineComponent({
 
         dataOverall = [];
         let _res: any;
+        let _err: any;
 
         if (isFunction(props?.options?.dataSource.transport?.read)) {
           let [err, res] = await to<any>(
@@ -190,7 +191,7 @@ export default defineComponent({
             )
           );
           if (err) {
-            notification.error({ message: '', description: err.message });
+            _err = err;
           } else {
             _res = res;
           }
@@ -215,46 +216,52 @@ export default defineComponent({
 
           let [err, res] = await to<any>(AntdHttpAdapter(requestOptions));
           if (err) {
-            let errMsg = err.message;
-            if (isString(props?.options?.dataSource?.schema?.errors)) {
-              errMsg = res[props.options.dataSource.schema.errors];
-            } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
-              errMsg = props.options.dataSource.schema.errors(res);
-            }
-            notification.error({ message: '', description: errMsg });
+            _err = err;
           } else {
             _res = res;
           }
         }
 
-        // 服务端分页
-        if (props?.options?.dataSource?.serverPaging) {
-          // parse
-          if (props?.options?.dataSource?.schema?.parse) {
-            _res = props?.options?.dataSource?.schema?.parse(_res);
-          }
-
-          // total
-          if (isString(props?.options?.dataSource?.schema?.total)) {
-            props.options.dataSource.total = _res[props.options.dataSource.schema.total];
-          } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
-            props.options.dataSource.total = props.options.dataSource.schema.total(_res);
-          }
-
-          // data
-          if (isString(props?.options?.dataSource?.schema?.data)) {
-            dataOverall = _res[props.options.dataSource.schema.data];
-          } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
-            dataOverall = props.options.dataSource.schema.data(_res);
+        if (_err) {
+          let errMsg;
+          if (isString(props?.options?.dataSource?.schema?.errors)) {
+            errMsg = _res[props.options.dataSource.schema.errors];
+          } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
+            errMsg = props.options.dataSource.schema.errors(_res);
           } else {
+            errMsg = _err.message;
+          }
+          notification.error({ message: '', description: errMsg });
+        } else {
+          // 服务端分页
+          if (props?.options?.dataSource?.serverPaging) {
+            // parse
+            if (props?.options?.dataSource?.schema?.parse) {
+              _res = props?.options?.dataSource?.schema?.parse(_res);
+            }
+
+            // total
+            if (isString(props?.options?.dataSource?.schema?.total)) {
+              props.options.dataSource.total = _res[props.options.dataSource.schema.total];
+            } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
+              props.options.dataSource.total = props.options.dataSource.schema.total(_res);
+            }
+
+            // data
+            if (isString(props?.options?.dataSource?.schema?.data)) {
+              dataOverall = _res[props.options.dataSource.schema.data];
+            } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
+              dataOverall = props.options.dataSource.schema.data(_res);
+            } else {
+              dataOverall = _res;
+            }
+          } else {
+            // 客户端分页
             dataOverall = _res;
           }
-        } else {
-          // 客户端分页
-          dataOverall = _res;
-        }
 
-        paging();
+          paging();
+        }
 
         props.options.loading = false;
 
@@ -531,12 +538,12 @@ export default defineComponent({
       }
 
       &.border--full {
-        .vxe-header--column {
-          border-right: 1px solid #f0f0f0;
+        > .vxe-table--border-line {
+          border-width: 1px 0 1px 1px;
         }
 
-        .vxe-table--border-line {
-          border-right: 0;
+        .vxe-header--column {
+          border-right: 1px solid #f0f0f0;
         }
 
         .vxe-body--column,

@@ -29,12 +29,8 @@ import { addClass, removeClass } from '@fatesigner/utils/document';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, useCssModule, watch } from 'vue';
-import { AppstoreOutlined, DesktopOutlined, InboxOutlined, MailOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PieChartOutlined } from '@ant-design/icons-vue';
+import { Iconfont, ScrollView, getEventArgs } from 'antdvx';
 import { Layout, Menu } from 'ant-design-vue';
-import { useRoute } from 'vue-router';
-import { getEventArgs } from 'antdvx/utils';
-import { Iconfont } from 'antdvx/components/iconfont';
-import { ScrollView } from 'antdvx/components/scroll-view';
 
 import { i18nMessages } from '@/i18n';
 import { ENV } from '@/app/constants';
@@ -51,14 +47,7 @@ export default defineComponent({
     [Menu.name]: Menu,
     [Menu.Item.name]: Menu.Item,
     [Menu.SubMenu.name]: Menu.SubMenu,
-    [Layout.Sider.name]: Layout.Sider,
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    PieChartOutlined,
-    MailOutlined,
-    DesktopOutlined,
-    InboxOutlined,
-    AppstoreOutlined
+    [Layout.Sider.name]: Layout.Sider
   },
   setup() {
     const $style = useCssModule();

@@ -8,7 +8,7 @@
           <div class="tw-text-sm tw-p-2">Colors</div>
           <div class="tw-flex tw-flex-wrap">
             <div class="tw-p-2">
-              <XButton :type="type">normal</XButton>
+              <XButton color="default" :type="type">normal</XButton>
             </div>
             <div class="tw-p-2" v-for="color in colors">
               <XButton :color="color" :type="type">{{ color }}</XButton>
@@ -18,6 +18,9 @@
             </div>
             <div class="tw-p-2">
               <XButton disabled :type="type">disabled</XButton>
+            </div>
+            <div class="tw-p-2">
+              <XButton disabled color="primary" :type="type">disabled</XButton>
             </div>
           </div>
           <div class="tw-p-2">
@@ -41,7 +44,7 @@
               </template>
               <XButton :type="type">
                 Actions
-                <DownOutlined />
+                <IconArrowDownSLine />
               </XButton>
             </ADropdown>
           </div>
@@ -52,6 +55,16 @@
           <div class="tw-p-2 tw-text-gray-500 tw-text-xxs">
             用于需要异步操作的按钮，提供一个异步函数 handler，函数执行阶段，将自动添加 loading，结束后，若该函数抛出异常，则自动显示 notification。
           </div>
+          <div class="tw-flex tw-flex-wrap tw-p-2 tw-border tw-border-gray-300">
+            <div class="tw-p-2" v-for="type in types">
+              <XButtonUpload :type="type" :handler="upload(3000)" />
+            </div>
+          </div>
+          <div class="tw-flex tw-flex-wrap tw-p-2 tw-border tw-border-gray-300">
+            <div class="tw-p-2" v-for="type in types">
+              <XButtonExport :type="type" :options="exportOptions" />
+            </div>
+          </div>
           <div class="tw-flex tw-flex-wrap">
             <div class="tw-p-2">
               <XButtonAdd notify type="outline" :handler="load(3000, true)" />
@@ -60,7 +73,7 @@
               <XButtonEdit notify type="outline" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
-              <XButtonSave notifytype="outline" :handler="load(3000, true)" />
+              <XButtonSave notify type="outline" :handler="load(3000, true)" />
             </div>
             <div class="tw-p-2">
               <XButtonDelete confirmed notify type="outline" :handler="load(3000, true)" />
@@ -70,6 +83,12 @@
             </div>
             <div class="tw-p-2">
               <XButtonUpload notify type="outline" :handler="upload(3000)" />
+            </div>
+            <div class="tw-p-2">
+              <XButtonUpload autosize :show-icon="false" type="outline" :handler="upload(3000)">
+                <div>AAA</div>
+                <div>zzz</div>
+              </XButtonUpload>
             </div>
           </div>
           <div class="tw-flex tw-flex-wrap">
@@ -142,16 +161,18 @@
 import { timer } from 'rxjs';
 import { defineComponent } from 'vue';
 import { Dropdown, Menu } from 'ant-design-vue';
-import { DownOutlined } from '@ant-design/icons-vue';
 import {
   ANTDVX_BUTTON_TYPES,
   ANTDVX_COLORS,
   ANTDVX_SIZES,
+  IXButtonExportOptions,
+  IconArrowDownSLine,
   ScrollView,
   XButton,
   XButtonAdd,
   XButtonDelete,
   XButtonEdit,
+  XButtonExport,
   XButtonRefresh,
   XButtonSave,
   XButtonUpload,
@@ -168,15 +189,46 @@ export default defineComponent({
     XButtonSave,
     XButtonDelete,
     XButtonRefresh,
+    XButtonExport,
     XButtonUpload,
+    IconArrowDownSLine,
     ScrollView,
     // Antd
-    DownOutlined,
     [Menu.name]: Menu,
     [Menu.Item.name]: Menu.Item,
     [Dropdown.name]: Dropdown
   },
   setup() {
+    const exportOptions: IXButtonExportOptions = {
+      image: {
+        filename: 'dasdas',
+        target: document.body
+      },
+      excel: {
+        filename: 'excel',
+        data: [
+          {
+            title: 'title 1',
+            desc: 'desc 1'
+          },
+          {
+            title: 'title 2',
+            desc: 'desc 2'
+          }
+        ],
+        columns: [
+          {
+            header: '标题',
+            key: 'title'
+          },
+          {
+            header: '描述',
+            key: 'desc'
+          }
+        ]
+      }
+    };
+
     // 加载数据
     const load = (duration?: number, error?: boolean) => {
       return async () => {
@@ -219,7 +271,7 @@ export default defineComponent({
       };
     };
 
-    return { sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
+    return { exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
   }
 });
 </script>

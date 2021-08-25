@@ -4,14 +4,14 @@
 
 .set-btn-color(@type, @color, @background, @border) {
   // default type
-  .ant-btn-default.ant-color-@{type}:not([disabled]) {
-    &:hover,
-    &:focus {
+  .ant-btn-default.ant-color-@{type} {
+    &:not([disabled]):hover,
+    &:not([disabled]):focus {
       .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
     }
 
-    &:active,
-    &.active {
+    &:not([disabled]):active,
+    &:not([disabled]).active {
       .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
     }
   }
@@ -23,14 +23,24 @@
     text-shadow: @btn-text-shadow;
     box-shadow: @btn-primary-shadow;
 
-    &:hover,
-    &:focus {
+    &:not([disabled]):hover,
+    &:not([disabled]):focus {
       .button-color(@color; ~`colorPalette('@{background}', 5)`; ~`colorPalette('@{background}', 5)`);
     }
 
-    &:active,
-    &.active {
+    &:not([disabled]):active,
+    &:not([disabled]).active {
       .button-color(@color; ~`colorPalette('@{background}', 7)`; ~`colorPalette('@{background}', 7)`);
+    }
+
+    &[disabled] {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        .button-color(@color; @background; @background);
+        opacity: 0.7;
+      }
     }
 
     .ant-btn-group {
@@ -66,13 +76,13 @@
 
   // dashed type
   .ant-btn-dashed.ant-color-@{type} {
-    &:hover,
-    &:focus {
+    &:not([disabled]):hover,
+    &:not([disabled]):focus {
       .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
     }
 
-    &:active,
-    &.active {
+    &:not([disabled]):active,
+    &:not([disabled]).active {
       .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
     }
   }
@@ -81,14 +91,24 @@
   .ant-btn-link.ant-color-@{type} {
     color: @background;
 
-    &:hover,
-    &:focus {
+    &:not([disabled]):hover,
+    &:not([disabled]):focus {
       .button-color(~`colorPalette('@{background}', 5)`; transparent; transparent);
     }
 
-    &:active,
-    &.active {
+    &:not([disabled]):active,
+    &:not([disabled]).active {
       .button-color(~`colorPalette('@{background}', 7)`; transparent; transparent);
+    }
+
+    &[disabled] {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: @background;
+        opacity: 0.7;
+      }
     }
   }
 
@@ -96,29 +116,49 @@
   .ant-btn-text.ant-color-@{type} {
     color: @background;
 
-    &:hover,
-    &:focus {
+    &:not([disabled]):hover,
+    &:not([disabled]):focus {
       color: ~`colorPalette("@{background}", 5) `;
     }
 
-    &:active,
-    &.active {
+    &:not([disabled]):active,
+    &:not([disabled]).active {
       color: ~`colorPalette("@{background}", 7) `;
+    }
+
+    &[disabled] {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: @background;
+        opacity: 0.7;
+      }
     }
   }
 
   // outline type
-  .ant-btn-outline.ant-color-@{type}:not(.ant-btn-primary):not(.ant-btn-danger):not([disabled]) {
+  .ant-btn-outline.ant-color-@{type}:not(.ant-btn-primary):not(.ant-btn-danger) {
     .button-color(@background; #fff; @background);
 
-    &:hover,
-    &:focus {
+    &:not([disabled]):hover,
+    &:not([disabled]):focus {
       .button-color(~`colorPalette('@{background}', 5)`; #fff; ~`colorPalette('@{background}', 5)`);
     }
 
-    &:active,
-    &.active {
+    &:not([disabled]):active,
+    &:not([disabled]).active {
       .button-color(~`colorPalette('@{background}', 7)`; #fff; ~`colorPalette('@{background}', 7)`);
+    }
+
+    &[disabled] {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        .button-color(@background; #fff; @background);
+        opacity: 0.7;
+      }
     }
   }
 
@@ -129,15 +169,29 @@
     border-color: ~`colorPalette('@{background}', 6.2) `;
     box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 ~`colorPalette('@{background}', 6.7) `;
 
-    &:hover {
+    &:not([disabled]):hover {
+      color: #fff;
       border-color: ~`colorPalette('@{background}', 6.2) `;
       box-shadow: 0 4px 6px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 ~`colorPalette('@{background}', 6.7) `;
     }
 
-    &:active {
+    &:not([disabled]):active {
       color: #fff;
       border-color: transparent;
       box-shadow: inset 0 3px 7px ~`colorPalette('@{background}', 7) `;
+    }
+
+    &[disabled] {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: #fff;
+        background: radial-gradient(100% 100% at 100% 0%, @background 0%, @background 100%);
+        border-color: ~`colorPalette('@{background}', 6.2) `;
+        box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 ~`colorPalette('@{background}', 6.7) `;
+        opacity: 0.7;
+      }
     }
   }
 }
@@ -154,6 +208,15 @@
   &:active,
   &.active {
     .button-color(#333; #fff; #666);
+  }
+
+  &[disabled] {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: #fff;
+    }
   }
 }
 
@@ -172,15 +235,13 @@
 
   &:hover,
   &:focus {
-    .button-color(@color; #f1f1f1; #ddd);
+    .button-color(@color; #f8f8f8; #ddd);
   }
 
   &:active,
   &.active {
-    .button-color(@color; #ddd; #ccc);
+    .button-color(@color; #ededed; #ccc);
   }
-
-  .button-disabled();
 
   .ant-btn-group {
     &:not(:first-child):not(:last-child) {
@@ -215,14 +276,23 @@
 
 // dashed type normal
 .ant-btn.ant-btn-dashed {
-  &:hover,
-  &:focus {
+  &:not([disabled]):hover,
+  &:not([disabled]):focus {
     .button-color(~`colorPalette('#666', 2)`; #fff; ~`colorPalette('#666', 2)`);
   }
 
-  &:active,
-  &.active {
+  &:not([disabled]):active,
+  &:not([disabled]).active {
     .button-color(~`colorPalette('#666', 5)`; #fff; ~`colorPalette('#666', 5)`);
+  }
+
+  &[disabled] {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: #fff;
+    }
   }
 }
 
@@ -230,14 +300,23 @@
 .ant-btn.ant-btn-link {
   color: rgba(0, 0, 0, 0.85);
 
-  &:hover,
-  &:focus {
+  &:not([disabled]):hover,
+  &:not([disabled]):focus {
     .button-color(~`colorPalette('#666', 2)`; transparent; transparent);
   }
 
-  &:active,
-  &.active {
+  &:not([disabled]):active,
+  &:not([disabled]).active {
     .button-color(~`colorPalette('#666', 5)`; transparent; transparent);
+  }
+
+  &[disabled] {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      color: rgba(0, 0, 0, 0.85);
+    }
   }
 }
 
@@ -245,43 +324,60 @@
 .ant-btn.ant-btn-outline {
   @color: rgba(0, 0, 0, 1);
 
-  &:hover,
-  &:focus {
+  &:not([disabled]):hover,
+  &:not([disabled]):focus {
     .button-color(@color; #fff; #999);
   }
 
-  &:active,
-  &.active {
+  &:not([disabled]):active,
+  &:not([disabled]).active {
     .button-color(#333; #fff; #666);
+  }
+
+  &[disabled] {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: #fff;
+    }
   }
 }
 
 // 3d type normal
 .ant-btn.ant-btn-3d {
-  background: #fcfcfd;
-
-  /* box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -3px rgba(45, 35, 66, 0.3), inset 0 -3px 0 #d6d6e7; */
-  box-shadow: 0 2px 4px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #d6d6e7;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(171, 171, 171, 0.4), 0 7px 13px -14px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #ececec;
   transition: box-shadow 0.15s ease, transform 0.15s ease;
   will-change: box-shadow, transform;
 
-  &:hover {
+  &:not([disabled]):hover {
     color: inherit;
     border-color: #d9d9d9;
-    box-shadow: 0 4px 6px rgba(45, 35, 66, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #d6d6e7;
+    box-shadow: 0 4px 6px rgba(171, 171, 171, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #ececec;
     transform: translateY(-1px);
   }
 
   &:not([disabled]):active {
     color: inherit;
     border-color: #ddd;
-    box-shadow: inset 0 3px 7px #d6d6e7;
+    box-shadow: inset 0 3px 7px #cfcfcf;
     transform: translateY(1px);
   }
 
   &:focus {
     color: inherit;
     border-color: #d9d9d9;
+  }
+
+  &[disabled] {
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(171, 171, 171, 0.4), 0 7px 13px -14px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #ececec;
+    }
   }
 }
 
@@ -297,6 +393,12 @@
   pointer-events: none;
   opacity: 0.35;
   transition: none;
+}
+
+.ant-btn-upload {
+  &.ant-btn-autosize {
+    height: auto;
+  }
 }
 
 each(@colors, {

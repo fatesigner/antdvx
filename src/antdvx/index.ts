@@ -5,6 +5,7 @@
 export * from './config';
 export * from './constants';
 export * from './symbols';
+export * from './utils';
 
 // components
 export * from './components/async-section';

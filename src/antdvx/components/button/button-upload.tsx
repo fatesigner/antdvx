@@ -1,22 +1,25 @@
 import { notification } from 'ant-design-vue';
+import { getGUID } from '@fatesigner/utils/random';
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
+import { IFileChooserOptions, createFileChooser } from '@fatesigner/file-chooser';
 
 import { i18nMessages } from '../../i18n/messages';
 import { IconFileUploadLine, IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
-import { IFileChooserOptions } from '@fatesigner/file-chooser/types';
-import { getGUID } from '@fatesigner/utils/random';
-import { createFileChooser } from '@fatesigner/file-chooser';
 
 export const XButtonUpload = defineComponent({
   name: 'x-button-upload',
   props: {
     ...XButtonProps,
-    onlyIcon: {
+    autosize: {
       type: Boolean,
       default: false
+    },
+    showIcon: {
+      type: Boolean,
+      default: true
     },
     name: {
       type: String,
@@ -44,7 +47,7 @@ export const XButtonUpload = defineComponent({
       default: 10 * 1024
     }
   },
-  setup(props: any, { emit }) {
+  setup(props: any) {
     const $btnRef = ref();
     const loading_ = ref(false);
 
@@ -60,7 +63,7 @@ export const XButtonUpload = defineComponent({
     const getFileChooserOptions = (): IFileChooserOptions => {
       return {
         id: getGUID(12),
-        clickable: !loading_.value,
+        clickable: false,
         accept: accept.value,
         multiple: props.multiple,
         maxCount: props.maxCount,
@@ -84,8 +87,8 @@ export const XButtonUpload = defineComponent({
     );
 
     const trigger = () => {
-      if (fileChooser) {
-        fileChooser.trigger();
+      if (!loading_.value) {
+        fileChooser?.trigger();
       }
     };
 
@@ -127,13 +130,14 @@ export const XButtonUpload = defineComponent({
   render(ctx) {
     return (
       <XButton
+        class={['ant-btn-upload', ctx.autosize ? 'ant-btn-autosize' : '']}
         ref={'btnRef'}
         block={ctx.block}
         disabled={ctx.disabled}
         ghost={ctx.ghost}
         href={ctx.href}
         htmlType={ctx.htmlType}
-        loading={ctx.loading}
+        loading={ctx.loading_}
         shape={ctx.shape}
         size={ctx.size}
         target={ctx.target}
@@ -143,11 +147,11 @@ export const XButtonUpload = defineComponent({
         //handler={ctx.handler}
         //notify={ctx.notify}
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.upload)}
-        //onClick={ctx.trigger}
+        onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconFileUploadLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
+            ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconFileUploadLine /> : '',
+            ctx.$slots?.default ? ctx.$slots?.default() : <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
           ]
         }}
       />
