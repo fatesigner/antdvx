@@ -1,3 +1,10 @@
+# [1.0.0-alpha.19](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.18...v1.0.0-alpha.19) (2021-08-27)
+
+
+### Features
+
+* 更新 XTable ([a7ca295](https://github.com/fatesigner/antdvx/commit/a7ca29537e59544c0f9ad30910808326fd8f670c))
+
 # [1.0.0-alpha.18](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.17...v1.0.0-alpha.18) (2021-08-25)
 
 
