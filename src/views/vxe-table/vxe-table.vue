@@ -4,7 +4,6 @@
       <VxeG v-bind="gridRef">
         <template #title="{ loading, refresh }">
           <div class="tw-flex tw-items-center tw-space-x-4">
-            <div class="tw-flex-initial">筛选：</div>
             <AInput class="tw-w-72" placeholder="搜索患者案例..." />
             <XButtonSearch type="primary" :handler="gridRef.handler.refresh">搜索</XButtonSearch>
             <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="refresh" />
@@ -68,7 +67,7 @@ export default defineComponent({
           },
           {
             title: '性别',
-            field: 'isMale',
+            field: 'sex',
             minWidth: 60,
             formatter({ cellValue }) {
               return cellValue ? '男' : '女';
@@ -118,7 +117,7 @@ export default defineComponent({
           transport: {
             read(query) {
               if (gridRef.options.dataSource.serverPaging) {
-                return Api.getUsersWithPage({ pageNo: query.pageNo, pageSize: query.pageSize }).then((res) => {
+                return Api.getUsers({ pageNo: query.pageNo, pageSize: query.pageSize }).then((res) => {
                   return res;
                 });
               }

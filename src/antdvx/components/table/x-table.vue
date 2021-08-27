@@ -1,13 +1,13 @@
 <template>
   <ATable
     class="ant-table-x"
-    ref="tableEl"
+    ref="antTableRef"
     v-bind="$attrs"
     :bordered="options.bordered"
     :children-column-name="options.childrenColumnName"
-    :columns="options.columns"
+    :columns="columns_"
     :components="options.components"
-    :data-source="options.dataSource"
+    :data-source="options.dataSource.data"
     :default-expand-all-rows="options.defaultExpandAllRows"
     :default-expanded-row-keys="options.defaultExpandedRowKeys"
     :expanded-row-keys="options.expandedRowKeys"
@@ -42,66 +42,68 @@
     :size="options.size"
     :custom-header-row="options.customHeaderRow"
     :custom-row="options.customRow"
+    @change="onChange"
+    @expandedRowsChange="onExpandedRowsChange"
+    @expand="onExpand"
   >
     <template v-for="(_, name) in $slots" #[name]="slotData">
       <template v-if="name === 'title'">
         <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1">
           <div class="tw-flex-1 tw-p-2">
-            <slot :name="name" v-bind="{ ...slotData, loading: options.loading, addItem, updateItem, refresh, handleRecordChange }" />
+            <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
           </div>
           <div
             class="tw-flex-initial tw-p-2"
             v-if="
+              options.dataSource.data.length &&
               options.pagination &&
-              options.pagination.pageSize &&
-              (options.pagination.placement === 'all' || options.pagination.placement === 'top') &&
-              options.pagination.total
+              options.dataSource.pageSize &&
+              (options.pagination.position === 'both' || options.pagination.position === 'top')
             "
           >
             <APagination
-              size="small"
+              :size="options.pagination.size"
+              :page-size-options="options.pagination.pageSizeOptions"
+              :show-quick-jumper="options.pagination.showQuickJumper"
+              :show-size-changer="options.pagination.showSizeChanger"
               :show-total="
                 (total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)
               "
-              :total="options.pagination.total"
-              v-model:current="options.pagination.current"
-              v-model:page-size="options.pagination.pageSize"
+              :total="options.dataSource.total"
+              v-model:current="options.dataSource.pageNo"
+              v-model:page-size="options.dataSource.pageSize"
               @change="onPageChange"
-              @showSizeChange="onPageChange"
+              @showSizeChange="onPageSizeChange"
             />
           </div>
         </div>
       </template>
-      <template v-else-if="name === 'expandedRowRender'">
-        <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-2">
-          <div class="tw-flex-initial tw-p-2"></div>
-          <div class="tw-flex-1 tw-p-2">
-            <slot :name="name" v-bind="{ ...slotData, loading: options.loading, addItem, updateItem, refresh, handleRecordChange }" />
-          </div>
-        </div>
-      </template>
       <template v-else>
-        <slot :name="name" v-bind="{ ...slotData, loading: options.loading, refresh, handleRecordChange }" />
+        <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
       </template>
     </template>
   </ATable>
   <div
     v-if="
+      options.dataSource.data.length &&
       options.pagination &&
-      options.pagination.pageSize &&
-      (options.pagination.placement === 'all' || options.pagination.placement === 'bottom') &&
-      options.pagination.total
+      options.dataSource.pageSize &&
+      (options.pagination.position === 'both' || options.pagination.position === 'bottom')
     "
-    class="tw-flex tw-justify-end"
+    class="tw-flex tw-justify-end tw-mt-4 tw-transition-opacity"
+    :class="{ ' tw-pointer-events-none tw-opacity-50': options.loading }"
   >
     <APagination
-      size="small"
+      :size="options.pagination.size"
+      :page-size-options="options.pagination.pageSizeOptions"
+      :show-quick-jumper="options.pagination.showQuickJumper"
+      :show-size-changer="options.pagination.showSizeChanger"
       :show-total="(total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)"
-      :total="options.pagination.total"
-      v-model:current="options.pagination.current"
-      v-model:page-size="options.pagination.pageSize"
+      :total="options.dataSource.total"
+      v-model:current="options.dataSource.pageNo"
+      v-model:page-size="options.dataSource.pageSize"
       @change="onPageChange"
-      @showSizeChange="onPageChange"
+      @showSizeChange="onPageSizeChange"
     />
   </div>
 </template>
@@ -109,17 +111,16 @@
 <script lang="ts">
 import to from 'await-to-js';
 import { debounce } from '@fatesigner/utils';
-import { isFunction, isString } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { isArray, isFunction, isString } from '@fatesigner/utils/type-check';
+import { PropType, defineComponent, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { Pagination, Table, notification } from 'ant-design-vue';
 
 import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
-import { IXTableHandlers, IXTableListenersType, IXTablePropsType } from './types';
+import { IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableSorter } from './types';
 import { defaultXTableProps } from './table';
-import { timer } from 'rxjs';
 
 const elementResizeDetectorMaker = require('element-resize-detector');
 const erd = elementResizeDetectorMaker();
@@ -135,74 +136,46 @@ export default defineComponent({
         return defaultXTableProps;
       }
     },
-    // listeners
-    listeners: {
-      type: Object as PropType<IXTableListenersType>,
-      default: null
+    // params
+    params: {
+      type: Object
+    },
+    // methods
+    methods: {
+      type: Object
     },
     // handler
     handler: {
-      type: Object as PropType<IXTableHandlers>,
-      default: null
+      type: Object as PropType<IXTableHandlers>
     }
   },
   setup(props: any) {
-    const $table = ref(null);
+    const antTableRef = ref();
 
+    // 列
+    const columns_ = reactive([]);
+
+    // 所有数据项
+    let dataOverall = [];
+
+    // 当前选中的数据项
     let selectedRows = [];
-    let dataSource = [];
 
-    // RowSelection 事件
-    const onRowSelect = (record: any, selected: boolean, _selectedRows, nativeEvent) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
-      }
-      if (props?.listeners?.onRowSelect) {
-        props?.listeners?.onRowSelect(record, selected, _selectedRows, nativeEvent);
-      }
-    };
-    const onRowSelectChange = (selectedRowKeys, _selectedRows) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
-        if (props.options.rowSelection?.selectedRowKeys) {
-          props.options.rowSelection.selectedRowKeys = selectedRowKeys;
-        }
-      }
-      if (props?.listeners?.onRowSelectChange) {
-        props?.listeners?.onRowSelectChange(selectedRowKeys, _selectedRows);
-      }
-    };
-    const onRowSelectAll = (selected: boolean, _selectedRows: any[], changeRows: any[]) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
-        if (props.options.rowSelection?.selectedRowKeys) {
-          props.options.rowSelection.selectedRowKeys = _selectedRows.map((record, index) => getRowKey(record, index));
-        }
-      }
-      if (props?.listeners?.onRowSelectAll) {
-        props?.listeners?.onRowSelectAll(selected, _selectedRows, changeRows);
-      }
-    };
-    const onRowSelectInvert = (_selectedRows: any[]) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
-      }
-      if (props?.listeners?.onRowSelectInvert) {
-        props?.listeners?.onRowSelectInvert(_selectedRows);
-      }
-    };
+    // 当前选中的过滤、筛选条件
+    let filters: IXTableFilters;
+    let sorter: IXTableSorter;
 
     // 重绘 fixed 行高度，以解决 fixed 错位的渲染问题
     const resizeFixedRows = debounce(() => {
-      if (!$table.value?.$el) {
+      if (!antTableRef.value?.$el) {
         return;
       }
       // const rf = this.$el.offsetHeight;
       // this.$refs.tableRef.saveRowRef();
-      const main = Array.from($table.value.$el.querySelectorAll('.ant-table-body .ant-table-row')).map((el: HTMLElement) => el.offsetHeight);
+      const main = Array.from(antTableRef.value.$el.querySelectorAll('.ant-table-body .ant-table-row')).map((el: HTMLElement) => el.offsetHeight);
 
-      const fixedL = Array.from($table.value.$el.querySelectorAll('.ant-table-fixed-left .ant-table-row'));
-      const fixedR = Array.from($table.value.$el.querySelectorAll('.ant-table-fixed-right .ant-table-row'));
+      const fixedL = Array.from(antTableRef.value.$el.querySelectorAll('.ant-table-fixed-left .ant-table-row'));
+      const fixedR = Array.from(antTableRef.value.$el.querySelectorAll('.ant-table-fixed-right .ant-table-row'));
 
       // 将 styles 一次性重绘
       window.requestAnimationFrame(() => {
@@ -229,44 +202,96 @@ export default defineComponent({
       return index;
     };
 
-    // 客户端分页
-    const paging = (data: any[]) => {
-      // 客户端分页
-      if (props.options.pagination?.pageSize) {
-        props?.options?.dataSource.splice(
-          0,
-          props.options.dataSource.length,
-          ...data.slice(
-            (props.options.pagination.current - 1) * props.options.pagination.pageSize,
-            props.options.pagination.current * props.options.pagination.pageSize
-          )
-        );
-      } else {
-        props.options.dataSource.splice(0, props.options.dataSource.length, ...data);
+    // 处理数据，过滤、分页、筛选
+    const processData = () => {
+      props.options.loading = true;
+      let data = dataOverall.slice(0, dataOverall.length);
+
+      if (!props?.options?.dataSource?.serverPaging) {
+        // 客户端过滤
+        if (filters) {
+          const filterKeys = Object.keys(filters);
+          if (filterKeys?.length) {
+            data = data.filter((x) => filterKeys.every((y) => filters[y].includes(x[y])));
+          }
+        }
+        // 客户端排序
+        if (sorter?.columnKey) {
+          const column = props.options.columns.find((x) => x.dataIndex === sorter.columnKey);
+          if (isFunction(column?.sorter)) {
+            if (sorter.order === 'ascend') {
+              data = data.sort((a, b) => {
+                return column.sorter(a, b);
+              });
+            } else if (sorter.order === 'descend') {
+              data = data.sort((a, b) => {
+                return column.sorter(b, a);
+              });
+            }
+          } else {
+            if (sorter.order === 'ascend') {
+              data = data.sort((a, b) => {
+                return a[sorter.columnKey] - b[sorter.columnKey];
+              });
+            } else if (sorter.order === 'descend') {
+              data = data.sort((a, b) => {
+                return b[sorter.columnKey] - a[sorter.columnKey];
+              });
+            }
+          }
+        }
       }
+
+      if (props?.options?.pagination) {
+        if (props?.options?.dataSource?.serverPaging) {
+          // 服务端分页
+          props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...data);
+        } else {
+          // 客户端分页
+          props.options.dataSource.total = data.length;
+          if (props.options.dataSource?.pageSize) {
+            props.options.dataSource.data.splice(
+              0,
+              props.options.dataSource.data.length,
+              ...data.slice(
+                (props.options.dataSource.pageNo - 1) * props.options.dataSource.pageSize,
+                props.options.dataSource.pageNo * props.options.dataSource.pageSize
+              )
+            );
+          } else {
+            props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...data);
+          }
+        }
+      }
+
+      props.options.loading = false;
     };
 
-    const refresh = async () => {
-      if (props?.options?.transport?.get) {
+    // 请求数据
+    const loadData = async () => {
+      if (props?.options?.dataSource.transport?.read) {
         props.options.loading = true;
 
-        dataSource = [];
-        let data = [];
+        dataOverall = [];
+        let _res: any;
+        let _err: any;
 
-        if (isFunction(props?.options?.transport?.get)) {
+        if (isFunction(props?.options?.dataSource.transport?.read)) {
           let [err, res] = await to<any>(
-            (props.options.transport.get as any)(
+            props.options.dataSource.transport.read(
               {
-                pageNo: props.options.pagination.current,
-                pageSize: props.options.pagination.pageSize
+                pageNo: props.options.dataSource.pageNo,
+                pageSize: props.options.dataSource.pageSize
               },
-              props?.options?.params
+              props.params,
+              filters,
+              sorter
             )
           );
           if (err) {
-            notification.error({ message: '', description: err.message });
+            _err = err;
           } else {
-            data = res;
+            _res = res;
           }
         } else {
           let requestOptions: IDataSourceRequestOptions = {
@@ -275,41 +300,68 @@ export default defineComponent({
             contentType: HttpContentType.JSON,
             dataType: 'json',
             params: {
-              ...props?.options?.params,
-              pageNo: props.options.pagination.current,
-              pageSize: props.options.pagination.pageSize
+              ...props?.params,
+              pageNo: props.options.dataSource.pageNo,
+              pageSize: props.options.dataSource.pageSize
             }
           };
 
-          if (isString(props.options.transport.get)) {
-            requestOptions.url = props.options.transport.get as string;
+          if (isString(props.options.dataSource.transport.read)) {
+            requestOptions.url = props.options.dataSource.transport.read;
           } else {
-            Object.assign(requestOptions, props.options.transport.get);
+            Object.assign(requestOptions, props.options.dataSource.transport.read);
           }
 
           let [err, res] = await to<any>(AntdHttpAdapter(requestOptions));
           if (err) {
-            notification.error({ message: '', description: err.message });
+            _err = err;
           } else {
-            data = res;
+            _res = res;
           }
         }
 
-        /*if (props.options.schema && props.options.schema.total) {
-            props.options.total = props.options.schema.total.call(this.getContext(), res);
+        if (_err) {
+          let errMsg;
+          if (isString(props?.options?.dataSource?.schema?.errors)) {
+            errMsg = _res[props.options.dataSource.schema.errors];
+          } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
+            errMsg = props.options.dataSource.schema.errors(_res);
           } else {
-            props.options.total = data.total;
-          }*/
+            errMsg = _err.message;
+          }
+          notification.error({ message: '', description: errMsg });
+        } else {
+          // 服务端分页
+          if (props?.options?.dataSource?.serverPaging) {
+            if (isFunction(props?.options?.dataSource?.transport?.read)) {
+              dataOverall = _res.data;
+              props.options.dataSource.total = _res?.total ?? dataOverall.length;
+            } else {
+              // parse
+              if (props?.options?.dataSource?.schema?.parse) {
+                _res = props?.options?.dataSource?.schema?.parse(_res);
+              }
 
-        if (props?.options?.pagination) {
-          props.options.pagination.total = data.length;
+              // total
+              if (isString(props?.options?.dataSource?.schema?.total)) {
+                props.options.dataSource.total = _res[props.options.dataSource.schema.total];
+              } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
+                props.options.dataSource.total = props.options.dataSource.schema.total(_res);
+              }
 
-          if (props?.options?.transport?.serverPaging) {
-            // 服务端分页
-            props.options.dataSource.splice(0, props.options.dataSource.length, ...data);
+              // data
+              if (isString(props?.options?.dataSource?.schema?.data)) {
+                dataOverall = _res[props.options.dataSource.schema.data];
+              } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
+                dataOverall = props.options.dataSource.schema.data(_res);
+              } else {
+                dataOverall = _res;
+              }
+            }
           } else {
-            dataSource = data;
-            paging(data);
+            // 客户端分页
+            dataOverall = _res.data;
+            props.options.dataSource.total = _res?.total ?? dataOverall.length;
           }
         }
 
@@ -317,20 +369,16 @@ export default defineComponent({
       }
     };
 
-    // 切换 pageIndex 和 pageSize
-    const onPageChange = () => {
-      if (props?.options?.transport?.serverPaging) {
-        // 服务端分页
-        refresh();
-      } else {
-        props.options.loading = true;
-        paging(dataSource);
-        timer(500)
-          .toPromise()
-          .then(() => {
-            props.options.loading = false;
-          });
-      }
+    // 刷新数据
+    const refresh = async () => {
+      await loadData();
+      processData();
+    };
+
+    // 刷新数据，将会重置分页
+    const reload = async () => {
+      props.options.dataSource.pageNo = 1;
+      return refresh();
     };
 
     // 全选
@@ -339,11 +387,9 @@ export default defineComponent({
         props.options.rowSelection.selectedRowKeys.splice(
           0,
           props.options.rowSelection.selectedRowKeys.length,
-          ...props.options.dataSource.map((record, index) => getRowKey(record, index))
+          ...props.options.dataSource.data.map((record, index) => getRowKey(record, index))
         );
-        if (props?.listeners?.onRowSelectAll) {
-          props?.listeners?.onRowSelectAll(true, [], []);
-        }
+        props?.options?.listeners?.rowSelectAll?.(true, [], []);
       }
     };
 
@@ -353,87 +399,208 @@ export default defineComponent({
         props.options.rowSelection.selectedRowKeys.splice(
           0,
           props.options.rowSelection.selectedRowKeys.length,
-          ...props.options.dataSource
+          ...props.options.dataSource.data
             .map((record, index) => getRowKey(record, index))
             .filter((key) => props.options.rowSelection.selectedRowKeys.indexOf(key) < 0)
         );
-        if (props?.listeners?.onRowSelectInvert) {
-          props?.listeners?.onRowSelectInvert(props.options.rowSelection.selectedRowKeys);
-        }
+        props?.options?.listeners?.rowSelectInvert?.(props.options.rowSelection.selectedRowKeys);
       }
     };
 
-    // Handle record change
+    // 数据项更新后，触发事件
     const handleRecordChange = (e) => {
       // Emit record-change
       // emit('recordChange', e);
-      if (props?.listeners?.recordChange) {
-        props.listeners.recordChange(e);
-      }
+      props?.options?.listeners?.recordChange?.(e);
     };
 
-    const addItem: IXTableHandlers['addItem'] = async (record, options) => {
-      props.options.dataSource.splice(options?.index ?? 0, 0, record);
+    // 获取 Ant table ref
+    const getAntTableRef: IXTableHandlers['getAntTableRef'] = () => {
+      return antTableRef.value;
     };
 
-    const updateItem: IXTableHandlers['updateItem'] = async (key, record) => {
-      let index = props.options.dataSource.findIndex((x, i) => getRowKey(x, i) === key);
-      if (index > -1) {
-        props.options.dataSource.splice(index, 1, record);
+    const addData: IXTableHandlers['addData'] = (start: number, data: Record<string, any> | Record<string, any>[]) => {
+      if (isArray(data)) {
+        props.options.dataSource.data.splice(start, 0, ...(data as any[]));
       } else {
-        throw new Error(`Can not find the record with key is: "${key}"`);
+        props.options.dataSource.data.splice(start, 0, ...[data]);
       }
+    };
+
+    const updateData: IXTableHandlers['updateData'] = (index: number, data: Record<string, any>) => {
+      props.options.dataSource.data.splice(index, 1, data);
+    };
+
+    const removeData: IXTableHandlers['removeData'] = (index: number) => {
+      props.options.dataSource.data.splice(index, 1);
+      // TODO：update分页
+      //props.options.dataSource.total -= 1;
+    };
+
+    const getSelectedData: IXTableHandlers['getSelectedData'] = () => {
+      return selectedRows;
+    };
+
+    const getAllData: IXTableHandlers['getAllData'] = () => {
+      return dataOverall;
     };
 
     // update handlers
     if (props.handler) {
       Object.assign(props.handler, {
-        refresh,
-        //reload,
-        //validate,
-        //validateRow,
-        addItem,
-        updateItem,
+        getAntTableRef,
+        addData,
+        updateData,
+        removeData,
+        getSelectedData,
+        getAllData,
         selectAll,
         selectInvert,
-        getAllData() {
-          return dataSource;
-        },
-        getSelectedRows() {
-          return selectedRows;
-        }
+        refresh,
+        reload
+        //validate: null,
+        //validateRow: null
       } as IXTableHandlers);
     }
+
+    // 监控 columns 变化
+    watch(
+      () => props.options.columns,
+      (val) => {
+        columns_.splice(
+          0,
+          columns_.length,
+          ...val
+            .filter((x) => !x.hidden)
+            .map((x) => {
+              return {
+                ...x,
+                sorter: !!x.sorter
+              };
+            })
+        );
+      },
+      {
+        immediate: true,
+        deep: false
+      }
+    );
+
+    // 切换 pageIndex
+    const onPageChange = () => {
+      if (props?.options?.dataSource?.serverPaging) {
+        // 服务端分页
+        refresh();
+      } else {
+        processData();
+      }
+    };
+
+    // 切换 pageSize
+    const onPageSizeChange = () => {
+      nextTick(function () {
+        props.options.loading = true;
+        setTimeout(function () {
+          props.options.dataSource.pageNo = 1;
+          if (props?.options?.dataSource?.serverPaging) {
+            // 服务端分页，重新加载数据
+            refresh();
+          } else {
+            processData();
+          }
+        }, 500);
+      });
+    };
+
+    const onChange = (pagination, filters_: any, sorter_: any, currentDataSource) => {
+      // 筛选
+      filters = filters_;
+      // 过滤
+      sorter = sorter_;
+
+      reload();
+
+      props?.options?.listeners?.change?.(pagination, filters, sorter, currentDataSource);
+    };
+    const onExpandedRowsChange = (expandedRows) => {
+      props?.options?.listeners?.expandedRowsChange?.(expandedRows);
+    };
+    const onExpand = (expanded, record) => {
+      props?.options?.listeners?.expand?.(expanded, record);
+    };
+
+    // RowSelection 事件
+    const onRowSelect = (record: any, selected: boolean, _selectedRows, nativeEvent) => {
+      if (props?.options?.rowSelection) {
+        selectedRows = _selectedRows;
+      }
+      props?.options?.listeners?.rowSelect?.(record, selected, _selectedRows, nativeEvent);
+    };
+    const onRowSelectChange = (selectedRowKeys, _selectedRows) => {
+      if (props?.options?.rowSelection) {
+        selectedRows = _selectedRows;
+        if (props.options.rowSelection?.selectedRowKeys) {
+          props.options.rowSelection.selectedRowKeys = selectedRowKeys;
+        }
+      }
+      props?.options?.listeners?.rowSelectChange?.(selectedRowKeys, _selectedRows);
+    };
+    const onRowSelectAll = (selected: boolean, _selectedRows: any[], changeRows: any[]) => {
+      if (props?.options?.rowSelection) {
+        selectedRows = _selectedRows;
+        if (props.options.rowSelection?.selectedRowKeys) {
+          props.options.rowSelection.selectedRowKeys = _selectedRows.map((record, index) => getRowKey(record, index));
+        }
+      }
+      props?.options?.listeners?.rowSelectAll?.(selected, _selectedRows, changeRows);
+    };
+    const onRowSelectInvert = (_selectedRows: any[]) => {
+      if (props?.options?.rowSelection) {
+        selectedRows = _selectedRows;
+      }
+      props?.options?.listeners?.rowSelectInvert?.(_selectedRows);
+    };
 
     onMounted(() => {
       refresh();
 
       // 监听窗口尺寸变化
-      if ($table.value?.$el) {
-        erd.listenTo($table.value.$el, resizeFixedRows);
+      if (antTableRef.value?.$el) {
+        erd.listenTo(antTableRef.value.$el, resizeFixedRows);
       }
     });
 
     onUnmounted(() => {
       // 移除窗口尺寸的监听
-      if ($table.value?.$el) {
-        erd.removeListener($table.value.value, resizeFixedRows);
+      if (antTableRef.value?.$el) {
+        erd.removeListener(antTableRef.value.value, resizeFixedRows);
       }
     });
 
     return {
       i18nMessages,
-      tableEl: $table,
+      antTableRef,
+      columns_,
       onPageChange,
+      onPageSizeChange,
       onRowSelect,
       onRowSelectChange,
       onRowSelectAll,
       onRowSelectInvert,
       handleRecordChange,
       getRowKey,
-      addItem,
-      updateItem,
-      refresh
+
+      // events
+      onChange,
+      onExpandedRowsChange,
+      onExpand,
+
+      // handler
+      addData,
+      updateData,
+      removeData,
+      refresh,
+      reload
     };
   }
 });

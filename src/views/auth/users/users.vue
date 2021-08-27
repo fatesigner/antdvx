@@ -26,6 +26,7 @@ import { IconShieldUserLine, ScrollView, XButtonAdd, XButtonDelete, XButtonEdit,
 
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';
+import { MASTER_DATA_SEX } from '@/app/constants';
 
 export default defineComponent({
   components: {
@@ -54,7 +55,7 @@ export default defineComponent({
       }
     );
 
-    const tableRef = createXTable<IUser<any>>({
+    const tableRef = createXTable({
       rowKey: 'userid',
       bordered: true,
       rowSelection: {
@@ -75,10 +76,14 @@ export default defineComponent({
         },
         {
           title: '性别',
-          dataIndex: 'isMale',
+          dataIndex: 'sex',
           width: 60,
+          filters: MASTER_DATA_SEX.arr.map((x) => ({
+            value: x.value,
+            text: x.text
+          })),
           customRender({ text }) {
-            return text ? '男' : '女';
+            return MASTER_DATA_SEX.desc[text];
           }
         },
         {
@@ -107,9 +112,11 @@ export default defineComponent({
           slots: { customRender: 'actions' }
         }
       ],
-      transport: {
-        get() {
-          return Api.getUsers();
+      dataSource: {
+        transport: {
+          read() {
+            return Api.getUsers();
+          }
         }
       }
     });
@@ -123,17 +130,17 @@ export default defineComponent({
     };
 
     const add = async () => {
-      return tableRef.handler.addItem({
+      return tableRef.handler.addData(0, {
         userid: '',
         username: ''
-      } as any);
+      });
     };
 
     const edit = async () => {};
 
     const del = (record) => {
       return async () => {
-        return Api.deleteUser(record.userid, tableRef.options.dataSource);
+        return Api.deleteUser(record.userid, tableRef.options.dataSource.data);
       };
     };
 

@@ -6,13 +6,20 @@ import { reactive } from 'vue';
 import { merge } from 'lodash-es';
 import { bindLazyFunc } from '@fatesigner/utils';
 
-import { IXTableHandlers, IXTableListenersType, IXTablePropsType, IXTableRefType } from './types';
+import { IXTableHandlers, IXTablePropsType, IXTableRefType } from './types';
 
 export const defaultXTableProps: IXTablePropsType = {
   loading: false,
-  dataSource: [],
-  rowDirtyClass: 'x-table-row-dirty',
   scroll: { x: true },
+  dataSource: {
+    data: [],
+    pageNo: 1,
+    pageSize: 10,
+    schema: {
+      data: 'data',
+      total: 'total'
+    }
+  },
 
   // 展开行
   expandRowByClick: false,
@@ -20,34 +27,43 @@ export const defaultXTableProps: IXTablePropsType = {
   defaultExpandedRowKeys: [],
 
   pagination: {
-    total: 0,
-    current: 1,
-    pageSize: 10,
-    placement: 'top'
+    size: 'small',
+    position: 'both',
+    showQuickJumper: true,
+    showSizeChanger: true,
+    pageSizeOptions: ['5', '10', '20', '30', '50', '100']
   }
 };
 
-export function createXTable<
-  TModel extends Record<string, any> = Record<string, any>,
-  TParams extends Record<string, any> = Record<string, any>,
-  TMethods extends Record<string, (...args: any[]) => any> = Record<string, (...args: any[]) => any>
->(props: IXTablePropsType<TModel, TParams>, listeners?: IXTableListenersType, methods?: TMethods): IXTableRefType<TModel, TParams, TMethods> {
+export function createXTable<TModel extends Record<string, any>, TParams extends Record<string, any>, TMethods extends Record<string, (...args: any[]) => any>>(
+  props: IXTablePropsType<TModel, TParams>,
+  params?: TParams,
+  methods?: TMethods
+): IXTableRefType<TModel, TParams, TMethods> {
   const handler: IXTableHandlers<TModel> = {
+    getAntTableRef: null,
+    addData: null,
+    updateData: null,
+    removeData: null,
+    getSelectedData: null,
+    getAllData: null,
+    selectAll: null,
+    selectInvert: null,
     refresh: null,
     reload: null,
     validate: null,
-    validateRow: null,
-    addItem: null,
-    selectAll: null,
-    selectInvert: null
+    validateRow: null
   };
 
-  bindLazyFunc(handler, Object.keys(handler));
+  // 代理异步函数
+  const bindProperties: Array<keyof IXTableHandlers> = ['refresh', 'reload', 'validate', 'validateRow'];
+
+  bindLazyFunc(handler, bindProperties);
 
   return {
     options: reactive(merge({}, defaultXTableProps, props) as any),
-    listeners,
     handler,
+    params: reactive(Object.assign({}, params) as any),
     methods
   };
 }

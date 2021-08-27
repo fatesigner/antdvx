@@ -66,3 +66,29 @@ export const ROLES = convertModelArrToEnum([
     }
   }
 ]);
+
+export const MASTER_DATA_STATUS = convertModelArrToEnum([
+  {
+    value: 'enabled',
+    text: '启用',
+    name: 'enabled'
+  },
+  {
+    value: 'disabled',
+    text: '禁用',
+    name: 'disabled'
+  }
+] as const);
+
+export const MASTER_DATA_SEX = convertModelArrToEnum([
+  {
+    value: 'male',
+    text: '男',
+    name: 'male'
+  },
+  {
+    value: 'female',
+    text: '女',
+    name: 'female'
+  }
+] as const);

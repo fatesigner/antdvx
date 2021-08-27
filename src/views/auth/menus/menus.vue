@@ -51,7 +51,7 @@ export default defineComponent({
       },
       {
         title: '性别',
-        dataIndex: 'isMale',
+        dataIndex: 'sex',
         width: 60,
         customRender({ text }) {
           return text ? '男' : '女';

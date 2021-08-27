@@ -20,7 +20,7 @@ export interface IUser<TRole extends readonly string[]> {
   menus?: IMenu[];
   address?: string;
   email?: string;
-  isMale?: boolean;
+  sex?: boolean;
   createTime?: string;
   // 用户可访问的链接
   permissions: string[];
