@@ -1,3 +1,10 @@
+# [1.0.0-alpha.21](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2021-08-28)
+
+
+### Features
+
+* update async-section component ([7042b7e](https://github.com/fatesigner/antdvx/commit/7042b7ec88ad2174806436ce7ccc49bd8fdb8c70))
+
 # [1.0.0-alpha.20](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.19...v1.0.0-alpha.20) (2021-08-28)
 
 
