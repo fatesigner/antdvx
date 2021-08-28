@@ -8,7 +8,7 @@ import { bindLazyFunc } from '@fatesigner/utils';
 
 import { IXTableHandlers, IXTablePropsType, IXTableRefType } from './types';
 
-export const defaultXTableProps: IXTablePropsType = {
+export const defaultXTableProps: IXTablePropsType<any, any> = {
   loading: false,
   scroll: { x: true },
   dataSource: {
@@ -23,6 +23,7 @@ export const defaultXTableProps: IXTablePropsType = {
 
   // 展开行
   expandRowByClick: false,
+  expandedRowKeys: [],
   defaultExpandAllRows: false,
   defaultExpandedRowKeys: [],
 
@@ -56,7 +57,7 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
   };
 
   // 代理异步函数
-  const bindProperties: Array<keyof IXTableHandlers> = ['refresh', 'reload', 'validate', 'validateRow'];
+  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow'];
 
   bindLazyFunc(handler, bindProperties);
 

@@ -1,117 +1,117 @@
 <template>
-  <ATable
-    class="ant-table-x"
-    ref="antTableRef"
-    v-bind="$attrs"
-    :bordered="options.bordered"
-    :children-column-name="options.childrenColumnName"
-    :columns="columns_"
-    :components="options.components"
-    :data-source="options.dataSource.data"
-    :default-expand-all-rows="options.defaultExpandAllRows"
-    :default-expanded-row-keys="options.defaultExpandedRowKeys"
-    :expanded-row-keys="options.expandedRowKeys"
-    :expand-row-by-click="options.expandRowByClick"
-    :expand-icon-column-index="options.expandIconColumnIndex"
-    :indent-size="options.indentSize"
-    :loading="options.loading"
-    :locale="options.locale"
-    :pagination="false"
-    :row-class-name="options.rowClassName"
-    :row-key="getRowKey"
-    :row-selection="
-      options.rowSelection
-        ? {
-            columnWidth: options.rowSelection.columnWidth,
-            columnTitle: options.rowSelection.columnTitle,
-            //fixed: options.rowSelection.fixed,
-            getCheckboxProps: options.rowSelection.getCheckboxProps,
-            hideDefaultSelections: options.rowSelection.hideDefaultSelections,
-            selectedRowKeys: options.rowSelection.selectedRowKeys,
-            selections: options.rowSelection.selections,
-            type: options.rowSelection.type,
-            onSelect: onRowSelect,
-            onChange: onRowSelectChange,
-            onSelectAll: onRowSelectAll,
-            onSelectInvert: onRowSelectInvert
-          }
-        : null
-    "
-    :scroll="options.scroll"
-    :show-header="options.showHeader"
-    :size="options.size"
-    :custom-header-row="options.customHeaderRow"
-    :custom-row="options.customRow"
-    @change="onChange"
-    @expandedRowsChange="onExpandedRowsChange"
-    @expand="onExpand"
-  >
-    <template v-for="(_, name) in $slots" #[name]="slotData">
-      <template v-if="name === 'title'">
-        <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1">
-          <div class="tw-flex-1 tw-p-2">
-            <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
-          </div>
-          <div
-            class="tw-flex-initial tw-p-2"
-            v-if="
-              options.dataSource.data.length &&
-              options.pagination &&
-              options.dataSource.pageSize &&
-              (options.pagination.position === 'both' || options.pagination.position === 'top')
-            "
-          >
-            <APagination
-              :size="options.pagination.size"
-              :page-size-options="options.pagination.pageSizeOptions"
-              :show-quick-jumper="options.pagination.showQuickJumper"
-              :show-size-changer="options.pagination.showSizeChanger"
-              :show-total="
-                (total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)
+  <div class="ant-table-x" v-bind="$attrs">
+    <ATable
+      ref="antTableRef"
+      :bordered="options.bordered"
+      :children-column-name="options.childrenColumnName"
+      :columns="columns_"
+      :components="options.components"
+      :data-source="options.dataSource.data"
+      :default-expand-all-rows="options.defaultExpandAllRows"
+      :default-expanded-row-keys="options.defaultExpandedRowKeys"
+      :expanded-row-keys="options.expandedRowKeys"
+      :expand-row-by-click="options.expandRowByClick"
+      :expand-icon-column-index="options.expandIconColumnIndex"
+      :indent-size="options.indentSize"
+      :loading="options.loading"
+      :locale="options.locale"
+      :pagination="false"
+      :row-class-name="options.rowClassName"
+      :row-key="getRowKey"
+      :row-selection="
+        options.rowSelection
+          ? {
+              columnWidth: options.rowSelection.columnWidth,
+              columnTitle: options.rowSelection.columnTitle,
+              //fixed: options.rowSelection.fixed,
+              getCheckboxProps: options.rowSelection.getCheckboxProps,
+              hideDefaultSelections: options.rowSelection.hideDefaultSelections,
+              selectedRowKeys: options.rowSelection.selectedRowKeys,
+              selections: options.rowSelection.selections,
+              type: options.rowSelection.type,
+              onSelect: onRowSelect,
+              onChange: onRowSelectChange,
+              onSelectAll: onRowSelectAll,
+              onSelectInvert: onRowSelectInvert
+            }
+          : null
+      "
+      :scroll="options.scroll"
+      :show-header="options.showHeader"
+      :size="options.size"
+      :custom-header-row="options.customHeaderRow"
+      :custom-row="options.customRow"
+      @change="onChange"
+      @expandedRowsChange="onExpandedRowsChange"
+      @expand="onExpand"
+    >
+      <template v-for="(_, name) in $slots" #[name]="slotData">
+        <template v-if="name === 'title'">
+          <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1">
+            <div class="tw-flex-1 tw-p-2">
+              <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
+            </div>
+            <div
+              class="tw-flex-initial tw-p-2"
+              v-if="
+                options.dataSource.data.length &&
+                options.pagination &&
+                options.dataSource.pageSize &&
+                (options.pagination.position === 'both' || options.pagination.position === 'top')
               "
-              :total="options.dataSource.total"
-              v-model:current="options.dataSource.pageNo"
-              v-model:page-size="options.dataSource.pageSize"
-              @change="onPageChange"
-              @showSizeChange="onPageSizeChange"
-            />
+            >
+              <APagination
+                :size="options.pagination.size"
+                :page-size-options="options.pagination.pageSizeOptions"
+                :show-quick-jumper="options.pagination.showQuickJumper"
+                :show-size-changer="options.pagination.showSizeChanger"
+                :show-total="
+                  (total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)
+                "
+                :total="options.dataSource.total"
+                v-model:current="options.dataSource.pageNo"
+                v-model:page-size="options.dataSource.pageSize"
+                @change="onPageChange"
+                @showSizeChange="onPageSizeChange"
+              />
+            </div>
           </div>
-        </div>
+        </template>
+        <template v-else>
+          <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
+        </template>
       </template>
-      <template v-else>
-        <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
-      </template>
-    </template>
-  </ATable>
-  <div
-    v-if="
-      options.dataSource.data.length &&
-      options.pagination &&
-      options.dataSource.pageSize &&
-      (options.pagination.position === 'both' || options.pagination.position === 'bottom')
-    "
-    class="tw-flex tw-justify-end tw-mt-4 tw-transition-opacity"
-    :class="{ ' tw-pointer-events-none tw-opacity-50': options.loading }"
-  >
-    <APagination
-      :size="options.pagination.size"
-      :page-size-options="options.pagination.pageSizeOptions"
-      :show-quick-jumper="options.pagination.showQuickJumper"
-      :show-size-changer="options.pagination.showSizeChanger"
-      :show-total="(total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)"
-      :total="options.dataSource.total"
-      v-model:current="options.dataSource.pageNo"
-      v-model:page-size="options.dataSource.pageSize"
-      @change="onPageChange"
-      @showSizeChange="onPageSizeChange"
-    />
+    </ATable>
+    <div
+      v-if="
+        options.dataSource.data.length &&
+        options.pagination &&
+        options.dataSource.pageSize &&
+        (options.pagination.position === 'both' || options.pagination.position === 'bottom')
+      "
+      class="tw-flex tw-justify-end tw-mt-4 tw-transition-opacity"
+      :class="{ ' tw-pointer-events-none tw-opacity-50': options.loading }"
+    >
+      <APagination
+        :size="options.pagination.size"
+        :page-size-options="options.pagination.pageSizeOptions"
+        :show-quick-jumper="options.pagination.showQuickJumper"
+        :show-size-changer="options.pagination.showSizeChanger"
+        :show-total="(total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)"
+        :total="options.dataSource.total"
+        v-model:current="options.dataSource.pageNo"
+        v-model:page-size="options.dataSource.pageSize"
+        @change="onPageChange"
+        @showSizeChange="onPageSizeChange"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import to from 'await-to-js';
 import { debounce } from '@fatesigner/utils';
-import { isArray, isFunction, isString } from '@fatesigner/utils/type-check';
+import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 import { Pagination, Table, notification } from 'ant-design-vue';
 
@@ -131,7 +131,7 @@ export default defineComponent({
   emits: [],
   props: {
     options: {
-      type: Object as PropType<IXTablePropsType>,
+      type: Object as PropType<IXTablePropsType<any, any>>,
       default() {
         return defaultXTableProps;
       }
@@ -146,7 +146,7 @@ export default defineComponent({
     },
     // handler
     handler: {
-      type: Object as PropType<IXTableHandlers>
+      type: Object as PropType<IXTableHandlers<any>>
     }
   },
   setup(props: any) {
@@ -162,8 +162,8 @@ export default defineComponent({
     let selectedRows = [];
 
     // 当前选中的过滤、筛选条件
-    let filters: IXTableFilters;
-    let sorter: IXTableSorter;
+    let filters: IXTableFilters<any>;
+    let sorter: IXTableSorter<any> = {} as any;
 
     // 重绘 fixed 行高度，以解决 fixed 错位的渲染问题
     const resizeFixedRows = debounce(() => {
@@ -189,22 +189,30 @@ export default defineComponent({
     }, 100);
 
     // Get record key
-    const getRowKey = (record: Record<string, any>, index: number) => {
-      if (isFunction(props.options.rowKey)) {
-        return (props.options.rowKey as Function)(record, index);
-      } else if (isString(props.options.rowKey)) {
+    const getRowKey = (record: Record<string, any>, index?: number) => {
+      if (isString(props.options.rowKey)) {
         if (Object.prototype.hasOwnProperty.call(record, props.options.rowKey)) {
           if (record[props.options.rowKey as string]) {
             return record[props.options.rowKey as string];
           }
         }
       }
+
+      if (isNullOrUndefined(index)) {
+        index = props.options.dataSource.data.findIndex((x) => x === record);
+      }
+
+      if (isFunction(props.options.rowKey)) {
+        return (props.options.rowKey as Function)(record, index);
+      }
+
       return index;
     };
 
     // 处理数据，过滤、分页、筛选
     const processData = () => {
       props.options.loading = true;
+
       let data = dataOverall.slice(0, dataOverall.length);
 
       if (!props?.options?.dataSource?.serverPaging) {
@@ -264,18 +272,30 @@ export default defineComponent({
         }
       }
 
+      // 重置 rowSlections
+      if (props?.options?.rowSelection) {
+        props.options.rowSelection.selectedRowKeys = [];
+      }
+
+      // 重置 rowSlections
+      if (props?.options?.rowSelection) {
+        props.options.rowSelection.selectedRowKeys = [];
+      }
+      // 重置 expandedRowKeys
+      props.options.expandedRowKeys = [];
+
       props.options.loading = false;
     };
 
     // 请求数据
     const loadData = async () => {
+      props.options.loading = true;
+
+      dataOverall = [];
+      let _res: any;
+      let _err: any;
+
       if (props?.options?.dataSource.transport?.read) {
-        props.options.loading = true;
-
-        dataOverall = [];
-        let _res: any;
-        let _err: any;
-
         if (isFunction(props?.options?.dataSource.transport?.read)) {
           let [err, res] = await to<any>(
             props.options.dataSource.transport.read(
@@ -319,54 +339,57 @@ export default defineComponent({
             _res = res;
           }
         }
+      } else {
+        // 静态数据
+        dataOverall = props?.options?.dataSource?.data ?? [];
+      }
 
-        if (_err) {
-          let errMsg;
-          if (isString(props?.options?.dataSource?.schema?.errors)) {
-            errMsg = _res[props.options.dataSource.schema.errors];
-          } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
-            errMsg = props.options.dataSource.schema.errors(_res);
-          } else {
-            errMsg = _err.message;
-          }
-          notification.error({ message: '', description: errMsg });
+      if (_err) {
+        let errMsg;
+        if (isString(props?.options?.dataSource?.schema?.errors)) {
+          errMsg = _res[props.options.dataSource.schema.errors];
+        } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
+          errMsg = props.options.dataSource.schema.errors(_res);
         } else {
-          // 服务端分页
-          if (props?.options?.dataSource?.serverPaging) {
-            if (isFunction(props?.options?.dataSource?.transport?.read)) {
-              dataOverall = _res.data;
-              props.options.dataSource.total = _res?.total ?? dataOverall.length;
-            } else {
-              // parse
-              if (props?.options?.dataSource?.schema?.parse) {
-                _res = props?.options?.dataSource?.schema?.parse(_res);
-              }
-
-              // total
-              if (isString(props?.options?.dataSource?.schema?.total)) {
-                props.options.dataSource.total = _res[props.options.dataSource.schema.total];
-              } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
-                props.options.dataSource.total = props.options.dataSource.schema.total(_res);
-              }
-
-              // data
-              if (isString(props?.options?.dataSource?.schema?.data)) {
-                dataOverall = _res[props.options.dataSource.schema.data];
-              } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
-                dataOverall = props.options.dataSource.schema.data(_res);
-              } else {
-                dataOverall = _res;
-              }
-            }
-          } else {
-            // 客户端分页
+          errMsg = _err.message;
+        }
+        notification.error({ message: '', description: errMsg });
+      } else {
+        // 服务端分页
+        if (props?.options?.dataSource?.serverPaging) {
+          if (isFunction(props?.options?.dataSource?.transport?.read)) {
             dataOverall = _res.data;
             props.options.dataSource.total = _res?.total ?? dataOverall.length;
-          }
-        }
+          } else {
+            // parse
+            if (props?.options?.dataSource?.schema?.parse) {
+              _res = props?.options?.dataSource?.schema?.parse(_res);
+            }
 
-        props.options.loading = false;
+            // total
+            if (isString(props?.options?.dataSource?.schema?.total)) {
+              props.options.dataSource.total = _res[props.options.dataSource.schema.total];
+            } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
+              props.options.dataSource.total = props.options.dataSource.schema.total(_res);
+            }
+
+            // data
+            if (isString(props?.options?.dataSource?.schema?.data)) {
+              dataOverall = _res[props.options.dataSource.schema.data];
+            } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
+              dataOverall = props.options.dataSource.schema.data(_res);
+            } else {
+              dataOverall = _res;
+            }
+          }
+        } else {
+          // 客户端分页
+          dataOverall = _res.data;
+          props.options.dataSource.total = _res?.total ?? dataOverall.length;
+        }
       }
+
+      props.options.loading = false;
     };
 
     // 刷新数据
@@ -415,11 +438,11 @@ export default defineComponent({
     };
 
     // 获取 Ant table ref
-    const getAntTableRef: IXTableHandlers['getAntTableRef'] = () => {
+    const getAntTableRef: IXTableHandlers<any>['getAntTableRef'] = () => {
       return antTableRef.value;
     };
 
-    const addData: IXTableHandlers['addData'] = (start: number, data: Record<string, any> | Record<string, any>[]) => {
+    const addData: IXTableHandlers<any>['addData'] = (start: number, data: Record<string, any> | Record<string, any>[]) => {
       if (isArray(data)) {
         props.options.dataSource.data.splice(start, 0, ...(data as any[]));
       } else {
@@ -427,21 +450,21 @@ export default defineComponent({
       }
     };
 
-    const updateData: IXTableHandlers['updateData'] = (index: number, data: Record<string, any>) => {
+    const updateData: IXTableHandlers<any>['updateData'] = (index: number, data: Record<string, any>) => {
       props.options.dataSource.data.splice(index, 1, data);
     };
 
-    const removeData: IXTableHandlers['removeData'] = (index: number) => {
+    const removeData: IXTableHandlers<any>['removeData'] = (index: number) => {
       props.options.dataSource.data.splice(index, 1);
       // TODO：update分页
       //props.options.dataSource.total -= 1;
     };
 
-    const getSelectedData: IXTableHandlers['getSelectedData'] = () => {
+    const getSelectedData: IXTableHandlers<any>['getSelectedData'] = () => {
       return selectedRows;
     };
 
-    const getAllData: IXTableHandlers['getAllData'] = () => {
+    const getAllData: IXTableHandlers<any>['getAllData'] = () => {
       return dataOverall;
     };
 
@@ -460,7 +483,7 @@ export default defineComponent({
         reload
         //validate: null,
         //validateRow: null
-      } as IXTableHandlers);
+      } as IXTableHandlers<any>);
     }
 
     // 监控 columns 变化
@@ -473,10 +496,18 @@ export default defineComponent({
           ...val
             .filter((x) => !x.hidden)
             .map((x) => {
-              return {
-                ...x,
-                sorter: !!x.sorter
-              };
+              let x_ = Object.assign({}, x);
+              if (x.sorter) {
+                x_.sorter = true;
+                // 默认排序
+                if (x.defaultSortOrder) {
+                  sorter.column = x_;
+                  sorter.columnKey = x_.dataIndex;
+                  sorter.field = x_.dataIndex;
+                  sorter.order = x.defaultSortOrder;
+                }
+              }
+              return x_;
             })
         );
       },
@@ -526,6 +557,12 @@ export default defineComponent({
       props?.options?.listeners?.expandedRowsChange?.(expandedRows);
     };
     const onExpand = (expanded, record) => {
+      let key = getRowKey(record);
+      if (expanded) {
+        props.options.expandedRowKeys.push(key);
+      } else {
+        props.options.expandedRowKeys = props.options.expandedRowKeys.filter((x) => x !== key);
+      }
       props?.options?.listeners?.expand?.(expanded, record);
     };
 
@@ -608,6 +645,8 @@ export default defineComponent({
 
 <style lang="scss">
 .ant-table-x {
+  background-color: #fff;
+
   .ant-table-title {
     padding: 0 !important;
   }

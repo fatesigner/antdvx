@@ -56,12 +56,7 @@ module.exports = {
         message: 'chore(🤖):${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
       }
     ],
-    [
-      '@semantic-release/github',
-      {
-        // assets: 'dist/!*.tgz'
-      }
-    ],
+    ['@semantic-release/github'],
     [
       '@semantic-release/npm',
       {

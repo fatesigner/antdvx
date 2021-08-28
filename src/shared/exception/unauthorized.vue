@@ -698,7 +698,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IconArrowLeftLine, XButton } from '@/antdvx';
+import { IconArrowLeftLine, XButton } from 'antdvx';
 
 import { i18nMessages } from '@/i18n';
 import { authService } from '@/app/services';

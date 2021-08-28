@@ -1,5 +1,3 @@
-import { IXTableFilters } from '@/antdvx';
-
 /**
  * 定义关于 dataSource 的一些通用类型
  */
@@ -33,7 +31,7 @@ export enum HttpContentType {
   PDF = 'application/pdf'
 }
 
-export interface IQueryParams {
+export interface IPaginationParams {
   pageNo: number;
   pageSize: number;
 }
@@ -58,10 +56,11 @@ export type IDatasourceTransportReadMethod<
   TFilters extends Record<string, any[]> = Record<string, any[]>,
   TSorter extends Record<string, any> = Record<string, any>
 > = (
-  pagination: IQueryParams,
+  pagination: IPaginationParams,
   params: TParams,
   filters: TFilters,
-  sorter: TSorter
+  sorter: TSorter,
+  model: TModel
 ) => Promise<{
   data: TModel[];
   total?: number;
@@ -70,22 +69,22 @@ export type IDatasourceTransportReadMethod<
 export type IDatasourceTransportPostMethod<
   TModel extends Record<string, any> = Record<string, any>,
   TParams extends Record<string, any> = Record<string, any>
-> = (record: TModel, query: IQueryParams, params: TParams) => Promise<TModel>;
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
 export type IDatasourceTransportPutMethod<
   TModel extends Record<string, any> = Record<string, any>,
   TParams extends Record<string, any> = Record<string, any>
-> = (record: TModel, query: IQueryParams, params: TParams) => Promise<TModel>;
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
 export type IDatasourceTransportDeleteMethod<
   TModel extends Record<string, any> = Record<string, any>,
   TParams extends Record<string, any> = Record<string, any>
-> = (record: TModel, query: IQueryParams, params: TParams) => Promise<TModel>;
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
 export type IDatasourceTransportDownloadExcelMethod<
   TModel extends Record<string, any> = Record<string, any>,
   TParams extends Record<string, any> = Record<string, any>
-> = (record: TModel, query: IQueryParams, params: TParams) => Promise<TModel>;
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
 /**
  * 用于加载和保存数据项的配置，根据数据源检索数据项的方式，数据是远程加载的还是本地加载
@@ -104,7 +103,7 @@ export interface IDataSourceTransport<
    * 如果指定为字符串，则数据源使用此字符串作为远程服务的 URL 并执行 ajax 请求
    * 如果指定为函数，则数据源调用该函数而不是 ajax
    */
-  read: string | IDataSourceRequestOptions<TParams> | IDatasourceTransportReadMethod<TModel, TParams, TFilters, TSorter>;
+  read: IDatasourceTransportReadMethod<TModel, TParams, TFilters, TSorter>;
   /*getParameterMap?: TGetMap;
   postParameterMap?: TPostMap;
   putParameterMap?: TPutMap;

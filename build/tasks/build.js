@@ -9,10 +9,11 @@ const gulp = require('gulp');
 
 require('./clean');
 require('./build-esm');
+require('./build-icons');
 
 gulp.task(
   'build',
-  gulp.series('clean', 'build-esm', async function () {
+  gulp.series('clean', 'build-icons', 'build-esm', async function () {
     const { ROOT_PATH, OUTPUT_PATH } = require('../constants');
 
     // Copy npm publish files to output

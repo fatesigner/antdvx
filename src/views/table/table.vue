@@ -135,7 +135,8 @@ export default defineComponent({
             width: 100,
             sorter(a, b) {
               return new Date(a['createTime']).getTime() - new Date(b['createTime']).getTime();
-            }
+            },
+            defaultSortOrder: 'descend'
           },
           {
             title: '操作',
@@ -145,17 +146,6 @@ export default defineComponent({
         ],
         dataSource: {
           serverPaging: false,
-          schema: {
-            parse(res) {
-              return res;
-            },
-            data(res) {
-              return res.data;
-            },
-            total(res) {
-              return res.total;
-            }
-          },
           transport: {
             read({ pageNo, pageSize }, { keywords }, filters, sorter) {
               if (tableRef.options.dataSource.serverPaging) {

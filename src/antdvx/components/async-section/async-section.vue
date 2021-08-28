@@ -27,7 +27,7 @@
 <script lang="ts">
 import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
-import { defineComponent, nextTick, onMounted, ref } from 'vue';
+import { defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 
 import { XButton } from '../button';
 import { SpinnerLoading } from '../loading';
@@ -84,6 +84,16 @@ export default defineComponent({
           });
         });
     }, true);
+
+    // 监控 columns 变化
+    watch(
+      () => props.initialize,
+      (val) => {
+        if (val) {
+          refresh();
+        }
+      }
+    );
 
     onMounted(async () => {
       if (props.immediate) {

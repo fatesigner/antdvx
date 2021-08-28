@@ -16,21 +16,21 @@ export type IXTableModelExtend<T extends Record<string, any>> = Partial<T> & {
    */
   _inlineEditing?: boolean;
   /**
-   * 展开行的引用，用于子表
+   * 展开行的引用，用于表格嵌套场景
    */
   _expandedRef?: any;
 } & Record<string, any>;
 
-export type IXTableFilters<TModel extends Record<string, any> = Record<string, any>> = Record<keyof TModel, string[]>;
+export type IXTableFilters<TModel extends Record<string, any>> = Record<keyof TModel, string[]>;
 
-export interface IXTableSorter {
-  column: IXTableColumnProps;
-  columnKey: string;
-  field: string;
+export interface IXTableSorter<TModel extends Record<string, any>> {
+  column: IXTableColumnProps<TModel>;
+  columnKey: keyof TModel;
+  field: keyof TModel;
   order: 'ascend' | 'descend' | false;
 }
 
-export type IXTableColumnProps<TModel extends Record<string, any> = Record<string, any>> = Omit<ColumnProps, 'filters'> & {
+export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'dataIndex' | 'filters'> & {
   dataIndex?: keyof TModel;
   filters?: {
     text: string;
@@ -46,7 +46,7 @@ export type IXTableColumnProps<TModel extends Record<string, any> = Record<strin
   hidden?: boolean;
 };
 
-export interface IXTableHandlers<TModel extends Record<string, any> = Record<string, any>> {
+export interface IXTableHandlers<TModel extends Record<string, any>> {
   /**
    * 获取 Ant Table 实例
    */
@@ -114,7 +114,7 @@ export interface IXTableHandlers<TModel extends Record<string, any> = Record<str
   validateRow?: (row: TModel) => Promise<boolean>;
 }
 
-export interface IXTablePropsType<TModel extends Record<string, any> = Record<string, any>, TParams extends Record<string, any> = Record<string, any>>
+export interface IXTablePropsType<TModel extends Record<string, any>, TParams extends Record<string, any>>
   extends Omit<TableProps, 'columns' | 'dataSource' | 'rowKey' | 'scroll'> {
   // Override Antd
   columns?: IXTableColumnProps<TModel>[];
@@ -124,7 +124,7 @@ export interface IXTablePropsType<TModel extends Record<string, any> = Record<st
   /**
    * 数据源配置
    */
-  dataSource?: IDataSource<TModel, TParams, IXTableFilters, IXTableSorter>;
+  dataSource?: IDataSource<Partial<TModel>, TParams, IXTableFilters<TModel>, IXTableSorter<TModel>>;
 
   /**
    * 分页器配置
@@ -146,7 +146,7 @@ export interface IXTablePropsType<TModel extends Record<string, any> = Record<st
   listeners?: IXTableListenersType<TModel>;
 }
 
-export interface IXTableListenersType<TModel extends Record<string, any> = Record<string, any>> {
+export interface IXTableListenersType<TModel extends Record<string, any>> {
   // Ant table events
   /**
    * 分页、排序、筛选变化时触发
@@ -190,9 +190,9 @@ export interface IXTableListenersType<TModel extends Record<string, any> = Recor
 }
 
 export interface IXTableRefType<
-  TModel extends Record<string, any> = Record<string, any>,
-  TParams extends Record<string, any> = Record<string, any>,
-  TMethods extends Record<string, (...args: any[]) => any> = Record<string, (...args: any[]) => any>
+  TModel extends Record<string, any>,
+  TParams extends Record<string, any>,
+  TMethods extends Record<string, (...args: any[]) => any>
 > {
   options: IXTablePropsType<TModel, TParams>;
   handler: IXTableHandlers<TModel>;

@@ -66,7 +66,22 @@ export const Api = new (class {
     return Promise.resolve();
   }
 
-  async getUsers(params?: { userid?: string; sex?: string; keywords?: string; pageNo?: number; pageSize?: number; filters?; sorter? }) {
+  async getUsers(params?: { userid?: string; sex?: string; keywords?: string; pageNo?: number; pageSize?: number; filters?; sorter? }): Promise<{
+    total: number;
+    data: {
+      userid: string;
+      username: string;
+      nickname: string;
+      phone: string;
+      age: number;
+      address: string;
+      email: string;
+      sex: string;
+      status: string;
+      createTime: string;
+      avatar: string;
+    }[];
+  }> {
     await timer(1000).toPromise();
 
     let data = await import('./users.json').then(({ default: res }) => {
