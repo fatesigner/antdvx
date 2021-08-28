@@ -52,7 +52,7 @@
 <script lang="ts">
 import to from 'await-to-js';
 import { useI18n } from 'vue-i18n';
-import { SlideCaptcha, XButton } from 'antdvx';
+import { SlideCaptcha, XButton } from '@/antdvx';
 import { useRoute, useRouter } from 'vue-router';
 import { computed, defineComponent, onDeactivated, reactive, ref } from 'vue';
 import { Alert, Button, Form, Input, message, notification } from 'ant-design-vue';

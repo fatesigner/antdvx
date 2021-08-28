@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import to from 'await-to-js';
-import { IXButtonExportOptions } from 'antdvx';
+import { timer } from 'rxjs';
 import { isFunction } from '@fatesigner/utils/type-check';
 import { Dropdown, Menu, notification } from 'ant-design-vue';
 import { convertHtmlToCanvas } from '@fatesigner/utils/html-canvas';
@@ -43,8 +43,7 @@ import { i18nMessages } from '../../i18n/messages';
 import { IconFileDownloadLine, IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
-import { XButtonProps } from './types';
-import { timer } from 'rxjs';
+import { IXButtonExportOptions, XButtonProps } from './types';
 
 export default defineComponent({
   name: 'x-button-export',

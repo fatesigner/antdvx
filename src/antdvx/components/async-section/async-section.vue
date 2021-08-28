@@ -8,33 +8,34 @@
     </slot>
     <slot v-else name="error" v-bind="{ error }" :refresh="refresh">
       <AAlert type="error" show-icon>
+        <template #message>{{ $t(i18nMessages.antd.asyncAction.error) }}</template>
         <template #description>
           {{ error }}
-          <XButton :handler="refresh" size="small" />
+          <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="refresh" />
         </template>
       </AAlert>
     </slot>
   </div>
 
   <template v-else>
-    <slot v-bind="{ loading, data, refresh }" />
-    <!--<a-button v-if="refreshable" class="btn-reload" type="link" @click="refresh" title="刷新">
-      <sync-outlined name="sync" scale=".9" :spin="reloading" />
-    </a-button>-->
+    <slot v-bind="{ loading, data, refresh: load }" />
   </template>
 </template>
 
 <script lang="ts">
 import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
-import { defineComponent, nextTick, onMounted, ref, watch } from 'vue';
+import { defineComponent, nextTick, onMounted, ref } from 'vue';
 
-import { XButton } from '../button';
+import { i18nMessages } from '../../i18n/messages';
+
+import { XButtonRefresh } from '../button';
 import { SpinnerLoading } from '../loading';
 
 export default defineComponent({
+  name: 'async-action',
   components: {
-    XButton,
+    XButtonRefresh,
     SpinnerLoading,
     [Alert.name]: Alert
   },
@@ -57,56 +58,49 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const error = ref('');
-    const initialized = ref(false);
     const loading = ref(true);
     const reloading = ref(false);
     const data = ref(false);
 
-    const refresh = bindPromiseQueue(() => {
-      loading.value = true;
-      initialized.value = false;
+    const load = bindPromiseQueue(() => {
       return props
         .initialize()
         .then((res: any) => {
           data.value = res;
           error.value = null;
-          initialized.value = true;
           return res;
         })
         .catch((err: Error) => {
           error.value = err.message;
-          initialized.value = false;
         })
         .finally(() => {
-          loading.value = false;
           nextTick(() => {
             emit('initialized', data.value);
           });
         });
     }, true);
 
-    // 监控 columns 变化
-    watch(
-      () => props.initialize,
-      (val) => {
-        if (val) {
-          refresh();
-        }
-      }
-    );
+    const refresh = async () => {
+      loading.value = true;
+      await load();
+      loading.value = false;
+    };
 
-    onMounted(async () => {
+    onMounted(() => {
       if (props.immediate) {
-        await nextTick();
-        return refresh();
+        nextTick().then(() => {
+          refresh();
+        });
       }
     });
 
     return {
+      i18nMessages,
       data,
       error,
       loading,
       reloading,
+      load,
       refresh
     };
   }

@@ -2,7 +2,7 @@
  * router
  */
 
-import { getAccessPermission } from 'antdvx';
+import { getAccessPermission } from '@/antdvx';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { authService } from '@/app/services';

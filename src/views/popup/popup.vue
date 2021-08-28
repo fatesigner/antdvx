@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent } from 'vue';
-import { ScrollView, XButton, createXDrawer, createXModal } from 'antdvx';
+import { ScrollView, XButton, createXDrawer, createXModal } from '@/antdvx';
 
 export default defineComponent({
   components: {

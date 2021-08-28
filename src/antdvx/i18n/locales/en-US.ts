@@ -26,6 +26,9 @@ export default {
       exportToImage: 'Export to image',
       exportToExcel: 'Export to excel'
     },
+    asyncAction: {
+      error: 'Error'
+    },
     pagination: {
       of: 'of',
       items: 'items'

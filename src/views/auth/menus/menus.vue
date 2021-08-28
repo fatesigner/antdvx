@@ -21,7 +21,7 @@
 import { message } from 'ant-design-vue';
 import { defineComponent, reactive } from 'vue';
 import { ColumnProps } from 'ant-design-vue/es/table/interface';
-import { IconUser2Line, ScrollView, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XTable } from 'antdvx';
+import { IconUser2Line, ScrollView, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XTable } from '@/antdvx';
 
 import { Api } from '@/mocks';
 

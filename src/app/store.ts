@@ -3,7 +3,7 @@
  */
 
 import { merge } from 'lodash-es';
-import { createStore } from 'antdvx';
+import { createStore } from '@/antdvx';
 
 import { LanguageType, i18n } from '@/i18n';
 import { localStorageService } from '@/app/services';

@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { IconGlobalLine } from 'antdvx';
+import { IconGlobalLine } from '@/antdvx';
 import { computed, defineComponent } from 'vue';
 import { Dropdown, Menu } from 'ant-design-vue';
 

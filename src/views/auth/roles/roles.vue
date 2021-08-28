@@ -20,7 +20,7 @@
 <script lang="ts">
 import { message } from 'ant-design-vue';
 import { defineComponent, reactive } from 'vue';
-import { IXTableColumnProps, IconUserSharedLine, ScrollView, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XTable } from 'antdvx';
+import { IXTableColumnProps, IconUserSharedLine, ScrollView, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XTable } from '@/antdvx';
 
 import { Api } from '@/mocks';
 import { IRole } from '@/types/role';

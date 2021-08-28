@@ -30,7 +30,7 @@
 import { useI18n } from 'vue-i18n';
 import { Subscription } from 'rxjs';
 import { Dropdown, Menu, message } from 'ant-design-vue';
-import { IconLogoutBoxLine, IconTShirtLine } from 'antdvx';
+import { IconLogoutBoxLine, IconTShirtLine } from '@/antdvx';
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 
 import { IUser } from '@/types/user';

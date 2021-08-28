@@ -18,7 +18,7 @@ import {
   SessionService,
   SessionServiceConfig,
   StorageService
-} from 'antdvx';
+} from '@/antdvx';
 
 import { IUser } from '@/types/user';
 import { RouteMeta } from '@/types/route';

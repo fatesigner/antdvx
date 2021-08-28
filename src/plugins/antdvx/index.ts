@@ -5,7 +5,7 @@
 import { merge } from 'lodash-es';
 import { defineAsyncComponent } from 'vue';
 import { message, notification } from 'ant-design-vue';
-import { registerIcon, setRequestAdapter } from 'antdvx';
+import { registerIcon, setRequestAdapter } from '@/antdvx';
 
 // VxeTable
 import 'xe-utils';
@@ -17,8 +17,8 @@ import { httpService } from '@/app/services';
 
 // 因为涉及到样式覆盖，所以这里不做按需加载，直接导入所有样式
 import 'ant-design-vue/dist/antd.less';
-import 'antdvx/components/iconfont/css/iconfont.css';
-import 'antdvx/styles/classic.less';
+import '@/antdvx/components/iconfont/css/iconfont.css';
+import '@/antdvx/styles/classic.less';
 
 export const Antdvx = {
   install(app) {
@@ -71,11 +71,11 @@ export const Antdvx = {
     const loadLang = async (lang) => {
       // 导入 language，非中文环境统一使用英文
       if (lang === 'zh-CN') {
-        return import('antdvx/i18n/locales/zh-CN').then((res) => {
+        return import('@/antdvx/i18n/locales/zh-CN').then((res) => {
           return res.default;
         });
       } else {
-        return import('antdvx/i18n/locales/en-US').then((res) => {
+        return import('@/antdvx/i18n/locales/en-US').then((res) => {
           return res.default;
         });
       }

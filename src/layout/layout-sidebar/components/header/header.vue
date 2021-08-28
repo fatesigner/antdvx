@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { IconMenuLine } from 'antdvx';
+import { IconMenuLine } from '@/antdvx';
 
 import { Language } from '@/shared/language';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';

@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { Iconfont } from 'antdvx';
+import { Iconfont } from '@/antdvx';
 import { Menu } from 'ant-design-vue';
 import { PropType, defineComponent } from 'vue';
 

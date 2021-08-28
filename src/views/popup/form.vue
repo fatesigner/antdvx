@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ScrollView, XButton } from 'antdvx';
+import { ScrollView, XButton } from '@/antdvx';
 
 export default defineComponent({
   components: { XButton, ScrollView },

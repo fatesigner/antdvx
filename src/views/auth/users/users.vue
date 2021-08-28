@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { IconShieldUserLine, ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XTable, createXDrawer, createXTable } from 'antdvx';
+import { IconShieldUserLine, ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XTable, createXDrawer, createXTable } from '@/antdvx';
 
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';

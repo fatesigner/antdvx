@@ -49,7 +49,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Checkbox, Input, Modal, Tag } from 'ant-design-vue';
-import { ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, XTable, createXTable } from 'antdvx';
+import { ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, XTable, createXTable } from '@/antdvx';
 
 import { Api } from '@/mocks';
 import { MASTER_DATA_SEX, MASTER_DATA_STATUS } from '@/app/constants';

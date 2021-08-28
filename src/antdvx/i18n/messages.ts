@@ -26,6 +26,9 @@ export const i18nMessages = createLocaleMessages({
       exportToImage: '',
       exportToExcel: ''
     },
+    asyncAction: {
+      error: ''
+    },
     pagination: {
       of: '',
       items: ''

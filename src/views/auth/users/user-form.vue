@@ -36,7 +36,7 @@
 <script lang="ts">
 import to from 'await-to-js';
 import { defineComponent } from 'vue';
-import { SlideCaptcha, XButton } from 'antdvx';
+import { SlideCaptcha, XButton } from '@/antdvx';
 import { Alert, Button, Form, Input, message, notification } from 'ant-design-vue';
 
 import { Api } from '@/mocks';

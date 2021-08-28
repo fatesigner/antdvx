@@ -38,7 +38,7 @@
 <script lang="ts">
 import { Empty, Spin } from 'ant-design-vue';
 import { PropType, defineComponent, ref } from 'vue';
-import { EChartsOption, EChartsOptionPromise, EChartsType, VEcharts, XButtonExport, XButtonRefresh } from 'antdvx';
+import { EChartsOption, EChartsOptionPromise, EChartsType, VEcharts, XButtonExport, XButtonRefresh } from '@/antdvx';
 
 export default defineComponent({
   components: {

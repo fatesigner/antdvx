@@ -25,7 +25,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Checkbox, Input } from 'ant-design-vue';
-import { ScrollView, VxeG, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, createVxeGrid } from 'antdvx';
+import { ScrollView, VxeG, XButton, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, createVxeGrid } from '@/antdvx';
 
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';

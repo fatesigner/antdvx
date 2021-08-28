@@ -29,7 +29,7 @@ import { addClass, removeClass } from '@fatesigner/utils/document';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
 import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, useCssModule, watch } from 'vue';
-import { Iconfont, ScrollView, getEventArgs } from 'antdvx';
+import { Iconfont, ScrollView, getEventArgs } from '@/antdvx';
 import { Layout, Menu } from 'ant-design-vue';
 
 import { i18nMessages } from '@/i18n';

@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ScrollView, XButton } from 'antdvx';
+import { ScrollView, XButton } from '@/antdvx';
 import { Form, Input, Modal, Transfer } from 'ant-design-vue';
 
 export default defineComponent({

@@ -26,6 +26,9 @@ export default {
       exportToImage: '导出到图片',
       exportToExcel: '导出到Excel'
     },
+    asyncAction: {
+      error: '错误'
+    },
     pagination: {
       of: '',
       items: '项'

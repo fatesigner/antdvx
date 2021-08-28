@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts">
-import { TransitionRouter } from 'antdvx';
+import { TransitionRouter } from '@/antdvx';
 import { computed, defineComponent } from 'vue';
 
 import { Language } from '@/shared/language';

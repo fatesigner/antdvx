@@ -151,6 +151,22 @@
               <XButtonUpload only-icon color="secondary" size="mini" type="link" :handler="upload(3000, true)" />
             </div>
           </div>
+          <div class="tw-p-2 tw-border tw-border-gray-300">
+            <AsyncSection :initialize="asyncSectionLoad(3000, true)">
+              <template #default="{ data, refresh }">
+                <span>{{ data.text }}</span>
+                <XButtonRefresh color="primary" size="small" type="link" :handler="refresh" />
+              </template>
+            </AsyncSection>
+          </div>
+          <div class="tw-mt-4 tw-p-2 tw-border tw-border-gray-300">
+            <AsyncSection :initialize="asyncSectionLoad(3000)">
+              <template #default="{ data, refresh }">
+                <span>{{ data.text }}</span>
+                <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="refresh" />
+              </template>
+            </AsyncSection>
+          </div>
         </div>
       </div>
     </div>
@@ -165,6 +181,7 @@ import {
   ANTDVX_BUTTON_TYPES,
   ANTDVX_COLORS,
   ANTDVX_SIZES,
+  AsyncSection,
   IXButtonExportOptions,
   IconArrowDownSLine,
   ScrollView,
@@ -177,7 +194,7 @@ import {
   XButtonSave,
   XButtonUpload,
   createXModal
-} from 'antdvx';
+} from '@/antdvx';
 
 import { getBase64FromFile } from '@/utils';
 
@@ -191,6 +208,7 @@ export default defineComponent({
     XButtonRefresh,
     XButtonExport,
     XButtonUpload,
+    AsyncSection,
     IconArrowDownSLine,
     ScrollView,
     // Antd
@@ -271,7 +289,23 @@ export default defineComponent({
       };
     };
 
-    return { exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
+    const asyncSectionLoad = (duration?: number, error?: boolean) => {
+      return async () => {
+        return timer(duration ?? 2000)
+          .toPromise()
+          .then(() => {
+            if (error) {
+              throw new Error('Load failed, please try again.');
+            } else {
+              return {
+                text: 'zzzzzzzzzzzzzzzzzzz'
+              };
+            }
+          });
+      };
+    };
+
+    return { exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload, asyncSectionLoad };
   }
 });
 </script>

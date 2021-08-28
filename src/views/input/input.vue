@@ -16,7 +16,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Input } from 'ant-design-vue';
-import { ANTDVX_SIZES, ScrollView, XButton } from 'antdvx';
+import { ANTDVX_SIZES, ScrollView, XButton } from '@/antdvx';
 
 export default defineComponent({
   components: {
