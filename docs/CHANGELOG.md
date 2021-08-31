@@ -1,3 +1,10 @@
+# [1.0.0-alpha.22](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.21...v1.0.0-alpha.22) (2021-08-31)
+
+
+### Features
+
+* some component ([c95ef1f](https://github.com/fatesigner/antdvx/commit/c95ef1f2d5d285f5ed6eaca9ffacde33e1ecd35d))
+
 # [1.0.0-alpha.21](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.20...v1.0.0-alpha.21) (2021-08-28)
 
 
