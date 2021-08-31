@@ -1,14 +1,22 @@
 <template>
-  <div :class="[$style.wrap, fill ? $style['fill-' + fill] : '', scroll ? $style['scroll-' + scroll] : '']">
+  <div :class="[$style.wrap, fill ? $style['fill-' + fill] : '', native ? '' : $style['hide-scrollbar'], scroll ? $style['scroll-' + scroll] : '']">
     <div :class="$style.view" ref="viewEl" @scroll="onScroll">
       <div :class="$style.content" ref="contentEl">
         <slot />
       </div>
     </div>
-    <div v-if="scroll === 'x' || scroll === 'xy'" :class="[$style.bar, $style.horizontal, autohide ? $style.hidden : null]" @click="horBarClick($event)">
+    <div
+      v-if="(!native && scroll === 'x') || scroll === 'xy'"
+      :class="[$style.bar, $style.horizontal, autohide ? $style.hidden : null]"
+      @click="horBarClick($event)"
+    >
       <div :class="$style.thumb" ref="horThumbEl" />
     </div>
-    <div v-if="scroll === 'y' || scroll === 'xy'" :class="[$style.bar, $style.vertical, autohide ? $style.hidden : null]" @click="verBarClick($event)">
+    <div
+      v-if="(!native && scroll === 'y') || scroll === 'xy'"
+      :class="[$style.bar, $style.vertical, autohide ? $style.hidden : null]"
+      @click="verBarClick($event)"
+    >
       <div :class="$style.thumb" ref="verThumbEl" />
     </div>
   </div>
@@ -408,18 +416,23 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   overflow: hidden;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .content {
   width: auto;
   min-width: 100%;
   min-height: 100%;
+}
+
+.hide-scrollbar {
+  .view {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 
 .fill-x {
@@ -448,7 +461,7 @@ export default defineComponent({
   right: 0;
   bottom: 0;
   left: 0;
-  height: 15px;
+  height: 12px;
 
   > .thumb {
     position: absolute;

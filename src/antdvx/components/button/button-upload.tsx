@@ -47,7 +47,8 @@ export const XButtonUpload = defineComponent({
       default: 10 * 1024
     }
   },
-  setup(props: any) {
+  emits: ['change'],
+  setup(props: any, { emit }) {
     const $btnRef = ref();
     const loading_ = ref(false);
 
@@ -111,6 +112,7 @@ export const XButtonUpload = defineComponent({
                   loading_.value = false;
                 });
             }
+            emit('change', props.multiple ? res.files : res?.files[0]);
           },
           (err) => {
             notification.error({ message: '', description: err.message });
@@ -151,7 +153,7 @@ export const XButtonUpload = defineComponent({
         v-slots={{
           default: () => [
             ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconFileUploadLine /> : '',
-            ctx.$slots?.default ? ctx.$slots?.default() : <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
+            ctx.$slots?.default ? ctx.$slots?.default({ loading: ctx.loading_ }) : <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
           ]
         }}
       />

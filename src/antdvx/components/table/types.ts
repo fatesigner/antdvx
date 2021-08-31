@@ -30,7 +30,8 @@ export interface IXTableSorter<TModel extends Record<string, any>> {
   order: 'ascend' | 'descend' | false;
 }
 
-export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'dataIndex' | 'filters'> & {
+export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'title' | 'dataIndex' | 'filters'> & {
+  title: string;
   dataIndex?: keyof TModel;
   filters?: {
     text: string;
@@ -51,6 +52,13 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
    * 获取 Ant Table 实例
    */
   getAntTableRef?: () => any;
+
+  /**
+   * 手动设置数据
+   * @param index 数据所在数组中的序号
+   * @param data 待更新的数据
+   */
+  setData?: (data: IXTableModelExtend<TModel>[]) => void;
 
   /**
    * 添加数据
@@ -111,7 +119,7 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
    * 校验表格指定的行数据
    * @param row
    */
-  validateRow?: (row: TModel) => Promise<boolean>;
+  validateRow?: (row: IXTableModelExtend<TModel>) => Promise<boolean>;
 }
 
 export interface IXTablePropsType<TModel extends Record<string, any>, TParams extends Record<string, any>>
@@ -124,7 +132,7 @@ export interface IXTablePropsType<TModel extends Record<string, any>, TParams ex
   /**
    * 数据源配置
    */
-  dataSource?: IDataSource<Partial<TModel>, TParams, IXTableFilters<TModel>, IXTableSorter<TModel>>;
+  dataSource?: IDataSource<Partial<IXTableModelExtend<TModel>>, TParams, IXTableFilters<TModel>, IXTableSorter<TModel>>;
 
   /**
    * 分页器配置
@@ -170,23 +178,23 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
   /**
    * 数据项更新后触发
    */
-  readonly recordChange?: (record: TModel) => void;
+  readonly recordChange?: (record: IXTableModelExtend<TModel>) => void;
   /**
    * 用户手动选择/取消选择某行的回调
    */
-  readonly rowSelect?: (record: TModel, selected: boolean, selectedRows, nativeEvent) => void;
+  readonly rowSelect?: (record: IXTableModelExtend<TModel>, selected: boolean, selectedRows, nativeEvent) => void;
   /**
    * 选中项发生变化时的回调
    */
-  readonly rowSelectChange?: (selectedRowKeys: ColumnProps['key'][], selectedRows: TModel[]) => void;
+  readonly rowSelectChange?: (selectedRowKeys: ColumnProps['key'][], selectedRows: IXTableModelExtend<TModel>[]) => void;
   /**
    * 用户全选所有行的回调
    */
-  readonly rowSelectAll?: (selected: boolean, selectedRows: TModel[], changeRows: TModel[]) => void;
+  readonly rowSelectAll?: (selected: boolean, selectedRows: IXTableModelExtend<TModel>[], changeRows: IXTableModelExtend<TModel>[]) => void;
   /**
    * 用户手动选择反选的回调
    */
-  readonly rowSelectInvert?: (selectedRows: TModel[]) => void;
+  readonly rowSelectInvert?: (selectedRows: IXTableModelExtend<TModel>[]) => void;
 }
 
 export interface IXTableRefType<

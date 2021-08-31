@@ -211,11 +211,12 @@ export default defineComponent({
 
     // 处理数据，过滤、分页、筛选
     const processData = () => {
-      props.options.loading = true;
+      if (props?.options?.dataSource?.serverPaging) {
+        // 服务端分页
+        props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...dataOverall);
+      } else {
+        let data = dataOverall.slice(0, dataOverall.length);
 
-      let data = dataOverall.slice(0, dataOverall.length);
-
-      if (!props?.options?.dataSource?.serverPaging) {
         // 客户端过滤
         if (filters) {
           const filterKeys = Object.keys(filters);
@@ -223,6 +224,7 @@ export default defineComponent({
             data = data.filter((x) => filterKeys.every((y) => filters[y].includes(x[y])));
           }
         }
+
         // 客户端排序
         if (sorter?.columnKey) {
           const column = props.options.columns.find((x) => x.dataIndex === sorter.columnKey);
@@ -248,27 +250,20 @@ export default defineComponent({
             }
           }
         }
-      }
 
-      if (props?.options?.pagination) {
-        if (props?.options?.dataSource?.serverPaging) {
-          // 服务端分页
-          props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...data);
+        // 客户端分页
+        props.options.dataSource.total = data.length;
+        if (props?.options?.pagination && props.options.dataSource?.pageSize) {
+          props.options.dataSource.data.splice(
+            0,
+            props.options.dataSource.data.length,
+            ...data.slice(
+              (props.options.dataSource.pageNo - 1) * props.options.dataSource.pageSize,
+              props.options.dataSource.pageNo * props.options.dataSource.pageSize
+            )
+          );
         } else {
-          // 客户端分页
-          props.options.dataSource.total = data.length;
-          if (props.options.dataSource?.pageSize) {
-            props.options.dataSource.data.splice(
-              0,
-              props.options.dataSource.data.length,
-              ...data.slice(
-                (props.options.dataSource.pageNo - 1) * props.options.dataSource.pageSize,
-                props.options.dataSource.pageNo * props.options.dataSource.pageSize
-              )
-            );
-          } else {
-            props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...data);
-          }
+          props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...data);
         }
       }
 
@@ -283,19 +278,18 @@ export default defineComponent({
       }
       // 重置 expandedRowKeys
       props.options.expandedRowKeys = [];
-
-      props.options.loading = false;
     };
 
     // 请求数据
     const loadData = async () => {
-      props.options.loading = true;
-
       dataOverall = [];
-      let _res: any;
-      let _err: any;
 
       if (props?.options?.dataSource.transport?.read) {
+        props.options.loading = true;
+
+        let _res: any;
+        let _err: any;
+
         if (isFunction(props?.options?.dataSource.transport?.read)) {
           let [err, res] = await to<any>(
             props.options.dataSource.transport.read(
@@ -339,63 +333,68 @@ export default defineComponent({
             _res = res;
           }
         }
-      } else {
-        // 静态数据
-        dataOverall = props?.options?.dataSource?.data ?? [];
-      }
 
-      if (_err) {
-        let errMsg;
-        if (isString(props?.options?.dataSource?.schema?.errors)) {
-          errMsg = _res[props.options.dataSource.schema.errors];
-        } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
-          errMsg = props.options.dataSource.schema.errors(_res);
+        if (_err) {
+          let errMsg;
+          if (isString(props?.options?.dataSource?.schema?.errors)) {
+            errMsg = _res[props.options.dataSource.schema.errors];
+          } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
+            errMsg = props.options.dataSource.schema.errors(_res);
+          } else {
+            errMsg = _err.message;
+          }
+          notification.error({ message: '', description: errMsg });
         } else {
-          errMsg = _err.message;
-        }
-        notification.error({ message: '', description: errMsg });
-      } else {
-        // 服务端分页
-        if (props?.options?.dataSource?.serverPaging) {
-          if (isFunction(props?.options?.dataSource?.transport?.read)) {
+          // 服务端分页
+          if (props?.options?.dataSource?.serverPaging) {
+            if (isFunction(props?.options?.dataSource?.transport?.read)) {
+              dataOverall = _res.data;
+              props.options.dataSource.total = _res?.total ?? dataOverall.length;
+            } else {
+              // parse
+              if (props?.options?.dataSource?.schema?.parse) {
+                _res = props?.options?.dataSource?.schema?.parse(_res);
+              }
+
+              // total
+              if (isString(props?.options?.dataSource?.schema?.total)) {
+                props.options.dataSource.total = _res[props.options.dataSource.schema.total];
+              } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
+                props.options.dataSource.total = props.options.dataSource.schema.total(_res);
+              }
+
+              // data
+              if (isString(props?.options?.dataSource?.schema?.data)) {
+                dataOverall = _res[props.options.dataSource.schema.data];
+              } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
+                dataOverall = props.options.dataSource.schema.data(_res);
+              } else {
+                dataOverall = _res;
+              }
+            }
+          } else {
+            // 客户端分页
             dataOverall = _res.data;
             props.options.dataSource.total = _res?.total ?? dataOverall.length;
-          } else {
-            // parse
-            if (props?.options?.dataSource?.schema?.parse) {
-              _res = props?.options?.dataSource?.schema?.parse(_res);
-            }
-
-            // total
-            if (isString(props?.options?.dataSource?.schema?.total)) {
-              props.options.dataSource.total = _res[props.options.dataSource.schema.total];
-            } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
-              props.options.dataSource.total = props.options.dataSource.schema.total(_res);
-            }
-
-            // data
-            if (isString(props?.options?.dataSource?.schema?.data)) {
-              dataOverall = _res[props.options.dataSource.schema.data];
-            } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
-              dataOverall = props.options.dataSource.schema.data(_res);
-            } else {
-              dataOverall = _res;
-            }
           }
-        } else {
-          // 客户端分页
-          dataOverall = _res.data;
-          props.options.dataSource.total = _res?.total ?? dataOverall.length;
+        }
+
+        props.options.loading = false;
+      } else {
+        // 静态数据
+        if (props?.options?.dataSource?.data) {
+          dataOverall = props.options.dataSource.data.slice(0, props.options.dataSource.data.length);
+          props.options.dataSource.total = dataOverall.length;
         }
       }
-
-      props.options.loading = false;
     };
 
     // 刷新数据
     const refresh = async () => {
+      props.options.loading = true;
       await loadData();
       processData();
+      props.options.loading = false;
     };
 
     // 刷新数据，将会重置分页
@@ -442,6 +441,11 @@ export default defineComponent({
       return antTableRef.value;
     };
 
+    const setData: IXTableHandlers<any>['setData'] = (data: Record<string, any>[]) => {
+      dataOverall = data;
+      processData();
+    };
+
     const addData: IXTableHandlers<any>['addData'] = (start: number, data: Record<string, any> | Record<string, any>[]) => {
       if (isArray(data)) {
         props.options.dataSource.data.splice(start, 0, ...(data as any[]));
@@ -472,6 +476,7 @@ export default defineComponent({
     if (props.handler) {
       Object.assign(props.handler, {
         getAntTableRef,
+        setData,
         addData,
         updateData,
         removeData,
@@ -518,27 +523,30 @@ export default defineComponent({
     );
 
     // 切换 pageIndex
-    const onPageChange = () => {
+    const onPageChange = async () => {
+      props.options.loading = true;
       if (props?.options?.dataSource?.serverPaging) {
         // 服务端分页
-        refresh();
+        await refresh();
       } else {
         processData();
       }
+      props.options.loading = false;
     };
 
     // 切换 pageSize
     const onPageSizeChange = () => {
       nextTick(function () {
         props.options.loading = true;
-        setTimeout(function () {
+        setTimeout(async function () {
           props.options.dataSource.pageNo = 1;
           if (props?.options?.dataSource?.serverPaging) {
             // 服务端分页，重新加载数据
-            refresh();
+            await refresh();
           } else {
             processData();
           }
+          props.options.loading = false;
         }, 500);
       });
     };
@@ -599,7 +607,9 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      refresh();
+      loadData().then(() => {
+        processData();
+      });
 
       // 监听窗口尺寸变化
       if (antTableRef.value?.$el) {

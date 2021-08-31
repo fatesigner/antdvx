@@ -49,7 +49,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Checkbox, Input, Modal, Tag } from 'ant-design-vue';
-import { ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, XTable, createXTable } from '@/antdvx';
+import { IXButtonExportOptions, ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, XTable, createXTable } from '@/antdvx';
 
 import { Api } from '@/mocks';
 import { MASTER_DATA_SEX, MASTER_DATA_STATUS } from '@/app/constants';
@@ -87,24 +87,24 @@ export default defineComponent({
           {
             title: '用户名',
             dataIndex: 'username',
-            width: 100
+            width: 200
           },
           {
             title: '手机号',
             dataIndex: 'phone',
-            width: 80,
+            width: 180,
             sorter: true
           },
           {
             title: '邮箱',
             dataIndex: 'email',
-            width: 100,
+            width: 200,
             sorter: true
           },
           {
             title: '地址',
             dataIndex: 'address',
-            width: 120,
+            width: 220,
             sorter: true
           },
           {
@@ -122,7 +122,7 @@ export default defineComponent({
           {
             title: '状态',
             dataIndex: 'status',
-            width: 80,
+            width: 180,
             filters: [
               { text: '启用', value: 'enabled' },
               { text: '禁用', value: 'disabled' }
@@ -259,7 +259,33 @@ export default defineComponent({
         }
       },
       {
-        keywords: null
+        keywords: null,
+        exportOptions: {
+          image: {
+            filename: 'dasdas',
+            target: document.body
+          },
+          async excel() {
+            return {
+              filename: 'excel',
+              columns: tableRef.options.columns.map((x) => ({
+                header: x.title,
+                key: x.dataIndex,
+                template: x?.slots?.customRender
+              })),
+              data: [
+                {
+                  title: 'title 1',
+                  desc: 'desc 1'
+                },
+                {
+                  title: 'title 2',
+                  desc: 'desc 2'
+                }
+              ]
+            };
+          }
+        } as IXButtonExportOptions
       },
       {
         add() {
