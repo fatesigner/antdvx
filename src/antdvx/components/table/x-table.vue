@@ -576,9 +576,6 @@ export default defineComponent({
 
     // RowSelection 事件
     const onRowSelect = (record: any, selected: boolean, _selectedRows, nativeEvent) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
-      }
       props?.options?.listeners?.rowSelect?.(record, selected, _selectedRows, nativeEvent);
     };
     const onRowSelectChange = (selectedRowKeys, _selectedRows) => {
@@ -591,18 +588,9 @@ export default defineComponent({
       props?.options?.listeners?.rowSelectChange?.(selectedRowKeys, _selectedRows);
     };
     const onRowSelectAll = (selected: boolean, _selectedRows: any[], changeRows: any[]) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
-        if (props.options.rowSelection?.selectedRowKeys) {
-          props.options.rowSelection.selectedRowKeys = _selectedRows.map((record, index) => getRowKey(record, index));
-        }
-      }
       props?.options?.listeners?.rowSelectAll?.(selected, _selectedRows, changeRows);
     };
     const onRowSelectInvert = (_selectedRows: any[]) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
-      }
       props?.options?.listeners?.rowSelectInvert?.(_selectedRows);
     };
 
