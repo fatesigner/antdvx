@@ -1,3 +1,10 @@
+# [1.0.0-alpha.23](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.22...v1.0.0-alpha.23) (2021-09-02)
+
+
+### Bug Fixes
+
+* update RowSelection ([df2850c](https://github.com/fatesigner/antdvx/commit/df2850c72cf52116d0c9db10a0bad3bf6555356d))
+
 # [1.0.0-alpha.22](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.21...v1.0.0-alpha.22) (2021-08-31)
 
 
