@@ -11,7 +11,7 @@ export default {
       unfold: 'unfold'
     },
     route: {
-      error: {
+      exception: {
         notFound: {
           name: 'notfound',
           title: 'Page Not Found',
@@ -29,9 +29,10 @@ export default {
         }
       },
       passport: {
-        login: 'Login'
+        login: 'login',
+        register: 'register',
+        findPwd: 'findPwd'
       },
-      button: 'button',
       menus: 'menus auth',
       dashboard: 'dashboard',
       table: 'table',
@@ -64,7 +65,8 @@ export default {
     },
     http: {
       noResponse: 'The server does not respond, please check your network Settings',
-      unauthorized: 'Your session has timed out. Please log in again',
+      unauthenticated: 'Your session has timed out. Please log in again',
+      unauthorized: 'Unauthorized request',
       requestFailed: 'Request failed, please contact administrator',
       requestTimeout: 'Your session has timed out. Please log in again',
       connectionAbort: 'Connect the server timeout, check your network Settings'

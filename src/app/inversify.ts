@@ -23,8 +23,8 @@ import {
 import { IUser } from '@/types/user';
 import { RouteMeta } from '@/types/route';
 import { i18n, i18nMessages } from '@/i18n';
-import { login$, logout$, roleChanged$ } from '@/app/events';
 import { ENV, ROLES } from '@/app/constants';
+import { login$, logout$, roleChanged$ } from '@/app/events';
 
 // 定义服务类型
 export type SessionServiceType = ISessionService<IUser<typeof ROLES.keys>, typeof ROLES.keys>;
@@ -95,14 +95,14 @@ const antdvxModule = new ContainerModule((bind) => {
       withCredentials: false,
       addXMLHttpRequestHeader: true,
       transformResponse(res) {
-        // Do your own parsing here if needed ie JSON.parse(res);
+        // 如果需要，可在此解析 response
         return res;
       },
       configure(defaultConfig, interceptors) {
         // 为请求 添加 access-token
         interceptors.request.use(
           function (config) {
-            // 在此可设置请求的默认 header 头
+            // 可在此设置请求的默认 header
             if (!config.headers.token) {
               config.headers.ApiToken = ENV.APP_NAME;
               config.headers.authorization = sessionService.user.accessToken;
@@ -149,7 +149,13 @@ const antdvxModule = new ContainerModule((bind) => {
                 break;
               }
               case 401: {
-                // unauthorized 未授权，登出账户
+                // unauthenticated 当前用户未认证，登出账户
+                message = i18n._.global.tc(i18nMessages.app.http.unauthenticated);
+                sessionService.logout();
+                break;
+              }
+              case 403: {
+                // unauthorized 未授权
                 message = i18n._.global.tc(i18nMessages.app.http.unauthorized);
                 sessionService.logout();
                 break;

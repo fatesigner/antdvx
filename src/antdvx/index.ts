@@ -20,6 +20,7 @@ export * from './components/loading';
 export * from './components/modal';
 export * from './components/scroll-view';
 export * from './components/slide-captcha';
+export * from './components/sticky-section';
 export * from './components/table';
 export * from './components/tabs';
 export * from './components/transitions';

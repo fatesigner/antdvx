@@ -9,6 +9,9 @@ import { IMenu } from '@/types/menu';
 import { IRouteConfig } from '@/types/route';
 
 export function getColumns(res) {
+  if (!res.length) {
+    return;
+  }
   const obj = res[0];
   const columns = [];
   let template = '';

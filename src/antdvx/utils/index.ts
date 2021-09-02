@@ -75,61 +75,6 @@ export function mergeProps(
   return props;
 }
 
-/**
- * 将容器滚动到指定位置
- * @param containerEl 容器元素
- * @param left
- * @param top
- * @param duration 间隔时间，默认为 0，即无动画效果
- * @returns {Promise}
- */
-export function scrollTo(containerEl: HTMLElement, left: number, top: number, duration = 0): Promise<void> {
-  if (isNullOrUndefined(left) && isNullOrUndefined(top)) {
-    return Promise.resolve();
-  }
-
-  const initialX = containerEl.scrollLeft;
-  const initialY = containerEl.scrollTop;
-
-  const baseX = (initialX + left ?? 0) * 0.5;
-  const baseY = (initialY + top ?? 0) * 0.5;
-  const differenceX = initialX - baseX;
-  const differenceY = initialY - baseY;
-
-  const startTime = performance.now();
-
-  return new Promise((resolve) => {
-    const _scrollTo = isNullOrUndefined(left)
-      ? function (normalizedTime) {
-          containerEl.scrollTo(initialX, baseY + differenceY * Math.cos(normalizedTime * Math.PI));
-        }
-      : isNullOrUndefined(top)
-      ? function (normalizedTime) {
-          containerEl.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), initialY);
-        }
-      : function (normalizedTime) {
-          containerEl.scrollTo(baseX + differenceX * Math.cos(normalizedTime * Math.PI), baseY + differenceY * Math.cos(normalizedTime * Math.PI));
-        };
-
-    const step = function () {
-      let normalizedTime = (performance.now() - startTime) / duration;
-      if (normalizedTime > 1) {
-        normalizedTime = 1;
-      }
-
-      _scrollTo(normalizedTime);
-
-      if (normalizedTime < 1) {
-        requestAnimationFrame(step);
-      } else {
-        resolve();
-      }
-    };
-
-    requestAnimationFrame(step);
-  });
-}
-
 export function waitTransitionend(el: HTMLElement): Promise<void> {
   return new Promise((resolve) => {
     const callback = () => {

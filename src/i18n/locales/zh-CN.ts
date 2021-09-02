@@ -11,7 +11,7 @@ export default {
       unfold: '展开'
     },
     route: {
-      error: {
+      exception: {
         notFound: {
           name: '未找到页面',
           title: '页面丢失',
@@ -29,9 +29,10 @@ export default {
         }
       },
       passport: {
-        login: '登录'
+        login: '登录',
+        register: '注册',
+        findPwd: '找回密码'
       },
-      button: '按钮',
       menus: '菜单授权',
       dashboard: '首页',
       table: '表格',
@@ -64,7 +65,8 @@ export default {
     },
     http: {
       noResponse: '服务器没有响应，请检查您的网络设置',
-      unauthorized: '您的会话已超时，请重新登录',
+      unauthenticated: '您的会话已超时，请重新登录',
+      unauthorized: '未经授权的请求',
       requestFailed: '请求失败，请联系管理员',
       requestTimeout: '您的会话已结束，请重新登录',
       connectionAbort: '连接服务器超时，检查您的网络设置'

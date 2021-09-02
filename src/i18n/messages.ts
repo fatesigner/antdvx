@@ -6,8 +6,12 @@ import { createLocaleMessages } from '@fatesigner/i18n';
 
 export const i18nMessages = createLocaleMessages({
   app: {
+    sidebar: {
+      shrink: '',
+      unfold: ''
+    },
     route: {
-      error: {
+      exception: {
         notFound: {
           name: '',
           title: '',
@@ -25,9 +29,10 @@ export const i18nMessages = createLocaleMessages({
         }
       },
       passport: {
-        login: ''
+        login: '',
+        register: '',
+        findPwd: ''
       },
-      button: '',
       menus: '',
       dashboard: '',
       table: '',
@@ -60,6 +65,7 @@ export const i18nMessages = createLocaleMessages({
     },
     http: {
       noResponse: '',
+      unauthenticated: '',
       unauthorized: '',
       requestFailed: '',
       requestTimeout: '',

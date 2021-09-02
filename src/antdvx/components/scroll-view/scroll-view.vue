@@ -23,12 +23,12 @@
 </template>
 
 <script lang="ts">
-import { addClass, hasClass, removeClass } from '@fatesigner/utils/document';
+import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, useCssModule } from 'vue';
 
-import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle, scrollTo as scrollTo_ } from '../../utils';
+import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle } from '../../utils';
 
 const elementResizeDetectorMaker = require('element-resize-detector');
 
