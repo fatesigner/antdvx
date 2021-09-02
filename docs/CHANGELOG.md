@@ -1,3 +1,10 @@
+# [1.0.0-alpha.24](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.23...v1.0.0-alpha.24) (2021-09-02)
+
+
+### Features
+
+* 新增 sticky-section 组件 ([d0b9279](https://github.com/fatesigner/antdvx/commit/d0b927930f26a8f75f6891cd307fbef13dbeb5d3))
+
 # [1.0.0-alpha.23](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.22...v1.0.0-alpha.23) (2021-09-02)
 
 
