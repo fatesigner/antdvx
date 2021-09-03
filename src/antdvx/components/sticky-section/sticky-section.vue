@@ -49,7 +49,6 @@ export default defineComponent({
       parentEl = getScrollParent(targetRef.value);
       observer = new IntersectionObserver(
         ([e]) => {
-          console.log('trigger', e.intersectionRatio < 1);
           if (e.intersectionRatio === 0) {
             sticky.value = true;
             targetRef.value.classList.add(...props.className);
