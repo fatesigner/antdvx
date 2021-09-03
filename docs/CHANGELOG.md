@@ -1,3 +1,10 @@
+# [1.0.0-alpha.25](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.24...v1.0.0-alpha.25) (2021-09-03)
+
+
+### Bug Fixes
+
+* remove console.log ([b64bf7e](https://github.com/fatesigner/antdvx/commit/b64bf7e1b6c251684a3944a79c1c59c7385ed888))
+
 # [1.0.0-alpha.24](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.23...v1.0.0-alpha.24) (2021-09-02)
 
 
