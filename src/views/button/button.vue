@@ -218,6 +218,10 @@ export default defineComponent({
   },
   setup() {
     const exportOptions: IXButtonExportOptions = {
+      json: {
+        filename: 'zadsad',
+        content: JSON.stringify({ a: '1', b: '2' })
+      },
       image: {
         filename: 'dasdas',
         target: document.body

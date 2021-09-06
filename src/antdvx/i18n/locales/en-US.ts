@@ -22,9 +22,10 @@ export default {
       search: 'Search',
       export: 'Export',
       exporting: 'Exporting',
-      exportToPDF: 'Export to pdf',
-      exportToImage: 'Export to image',
-      exportToExcel: 'Export to excel'
+      exportToJSON: 'Export to JSON',
+      exportToPDF: 'Export to PDF',
+      exportToImage: 'Export to Image',
+      exportToExcel: 'Export to Excel'
     },
     asyncAction: {
       error: 'Error'

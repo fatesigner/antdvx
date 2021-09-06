@@ -23,6 +23,7 @@
     </XButton>
     <template #overlay>
       <AMenu @click="onActionClick">
+        <AMenuItem v-if="jsonVisible" key="json">{{ $t(i18nMessages.antd.action.exportToJSON) }}</AMenuItem>
         <AMenuItem v-if="pdfVisible" key="pdf">{{ $t(i18nMessages.antd.action.exportToPDF) }}</AMenuItem>
         <AMenuItem v-if="imageVisible" key="image">{{ $t(i18nMessages.antd.action.exportToImage) }}</AMenuItem>
         <AMenuItem v-if="excelVisible" key="excel">{{ $t(i18nMessages.antd.action.exportToExcel) }}</AMenuItem>
@@ -77,6 +78,10 @@ export default defineComponent({
       pdf: null
     });
 
+    const jsonVisible = computed(() => {
+      return !!props?.options?.json;
+    });
+
     const pdfVisible = computed(() => {
       return !!props?.options?.pdf;
     });
@@ -121,7 +126,27 @@ export default defineComponent({
 
       await timer(300).toPromise();
 
-      if (e.key === 'excel') {
+      if (e.key === 'json') {
+        options_.json = await loadOptions(props?.options?.json, options_.json);
+        let opt = options_?.json as any;
+        if (opt?.content) {
+          if (typeof window.navigator.msSaveBlob !== 'undefined') {
+            window.navigator.msSaveBlob(new Blob([opt.content]), opt.filename);
+          } else {
+            const url = window.URL.createObjectURL(new Blob([opt.content], { type: 'data:application/json;charset=utf-8' }));
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            link.href = url;
+            link.setAttribute('download', `${opt.filename || new Date().getTime()}.json`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+          }
+        } else {
+          throw new Error('The json content can not be empty.');
+        }
+      } else if (e.key === 'excel') {
         options_.excel = await loadOptions(props?.options?.excel, options_.excel);
         let opt = options_?.excel as any;
         if (opt) {
@@ -239,6 +264,7 @@ export default defineComponent({
       i18nMessages,
       loading_,
       options_,
+      jsonVisible,
       pdfVisible,
       imageVisible,
       excelVisible,

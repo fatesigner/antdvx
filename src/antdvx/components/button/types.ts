@@ -142,6 +142,15 @@ export interface IXButtonExportOptions<TModel extends Record<string, any> = Reco
         filename: string;
         target: HTMLElement;
       }>;
+  json?:
+    | {
+        filename: string;
+        content: string;
+      }
+    | IXButtonExportOptionsPromise<{
+        filename: string;
+        content: string;
+      }>;
   pdf?:
     | {
         filename: string;

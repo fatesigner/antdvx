@@ -22,6 +22,7 @@ export default {
       search: '搜索',
       export: '导出',
       exporting: '正在导出',
+      exportToJSON: '导出到JSON',
       exportToPDF: '导出到PDF',
       exportToImage: '导出到图片',
       exportToExcel: '导出到Excel'
