@@ -25,7 +25,7 @@
 <script lang="ts">
 import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
-import { defineComponent, nextTick, onMounted, ref } from 'vue';
+import { PropType, defineComponent, nextTick, onMounted, ref } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
 
@@ -54,13 +54,12 @@ export default defineComponent({
       default: true
     },
     refreshable: Boolean,
-    initialize: Function
+    initialize: Function as PropType<() => Promise<any>>
   },
   setup(props, { emit }) {
+    const data = ref();
     const error = ref('');
     const loading = ref(true);
-    const reloading = ref(false);
-    const data = ref(false);
 
     const load = bindPromiseQueue(() => {
       return props
@@ -99,7 +98,6 @@ export default defineComponent({
       data,
       error,
       loading,
-      reloading,
       load,
       refresh
     };

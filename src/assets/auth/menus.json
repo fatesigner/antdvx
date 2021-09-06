@@ -15,6 +15,15 @@
     "icon": "code-box-line",
     "children": [
       {
+        "id": "zf96690e69zd",
+        "label": "可滚动视图",
+        "name": "scroll-view",
+        "url": "/scroll-view",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "b796690e69zd",
         "label": "按钮",
         "name": "button",

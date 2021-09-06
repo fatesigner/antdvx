@@ -14,7 +14,7 @@ export default {
       path: '',
       component: () => import('./input.vue'),
       meta: {
-        label: i18nMessages.app.route.button,
+        label: i18nMessages.app.route.dashboard,
         keepAlive: true
       }
     }

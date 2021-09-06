@@ -6,13 +6,13 @@ import { i18nMessages } from '@/i18n';
 import { IRouteConfig } from '@/types/route';
 
 export default {
-  path: '/icons',
+  path: '/scroll-view',
   component: () => import('@/layout/layout-sidebar/layout-sidebar.vue'),
   children: [
     {
-      name: 'icons',
+      name: 'scroll-view',
       path: '',
-      component: () => import('./icons.vue'),
+      component: () => import('./scroll-view.vue'),
       meta: {
         label: i18nMessages.app.route.dashboard,
         keepAlive: true

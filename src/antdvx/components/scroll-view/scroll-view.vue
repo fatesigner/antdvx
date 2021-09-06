@@ -1,34 +1,67 @@
 <template>
   <div :class="[$style.wrap, fill ? $style['fill-' + fill] : '', native ? '' : $style['hide-scrollbar'], scroll ? $style['scroll-' + scroll] : '']">
-    <div :class="$style.view" ref="viewEl" @scroll="onScroll">
-      <div :class="$style.content" ref="contentEl">
-        <slot />
+    <transition-group name="scroll-view-transition">
+      <div class="scroll-view-transition" key="loading" v-if="loading.show">
+        <slot name="loading">
+          <div :class="$style.loading">
+            <div class="tw-space-y-2">
+              <div class="tw-text-center"><SpinnerLoading :size="loading.size" /></div>
+              <div v-if="loading.text" class="tw-mt-5">{{ loading.text }}</div>
+            </div>
+          </div>
+        </slot>
       </div>
-    </div>
-    <div
-      v-if="(!native && scroll === 'x') || scroll === 'xy'"
-      :class="[$style.bar, $style.horizontal, autohide ? $style.hidden : null]"
-      @click="horBarClick($event)"
-    >
-      <div :class="$style.thumb" ref="horThumbEl" />
-    </div>
-    <div
-      v-if="(!native && scroll === 'y') || scroll === 'xy'"
-      :class="[$style.bar, $style.vertical, autohide ? $style.hidden : null]"
-      @click="verBarClick($event)"
-    >
-      <div :class="$style.thumb" ref="verThumbEl" />
-    </div>
+      <div class="scroll-view-transition" key="error" v-else-if="error">
+        <slot name="error" v-bind="{ error, reload }">
+          <div :class="$style.error">
+            <AAlert type="error" show-icon>
+              <template #message>{{ $t(i18nMessages.antd.asyncAction.error) }}</template>
+              <template #description>
+                {{ error }}
+                <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />
+              </template>
+            </AAlert>
+          </div>
+        </slot>
+      </div>
+      <div v-else :class="$style.view" ref="viewEl" @scroll="onScroll">
+        <div :class="$style.content" ref="contentEl" v-if="!loading.show && !error">
+          <slot />
+        </div>
+        <div
+          v-if="(!native && scroll === 'x') || scroll === 'xy'"
+          :class="[$style.bar, $style.horizontal, autohide ? $style.hidden : null]"
+          @click="horBarClick($event)"
+        >
+          <div :class="$style.thumb" ref="horThumbEl" />
+        </div>
+        <div
+          v-if="(!native && scroll === 'y') || scroll === 'xy'"
+          :class="[$style.bar, $style.vertical, autohide ? $style.hidden : null]"
+          @click="verBarClick($event)"
+        >
+          <div :class="$style.thumb" ref="verThumbEl" />
+        </div>
+      </div>
+    </transition-group>
   </div>
 </template>
 
 <script lang="ts">
-import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
+import { Alert } from 'ant-design-vue';
+import { bindPromiseQueue, mergeProps } from '@fatesigner/utils';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, useCssModule } from 'vue';
+import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
+import { PropType, defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, useCssModule } from 'vue';
 
+import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle } from '../../utils';
+
+import { SpinnerLoading } from '../loading';
+import { XButtonRefresh } from '../button';
+
+import { IScrollViewOptions } from './scroll-view';
 
 const elementResizeDetectorMaker = require('element-resize-detector');
 
@@ -37,6 +70,11 @@ const erd = elementResizeDetectorMaker({
 });
 
 export default defineComponent({
+  components: {
+    SpinnerLoading,
+    XButtonRefresh,
+    [Alert.name]: Alert
+  },
   props: {
     native: {
       type: Boolean,
@@ -46,30 +84,46 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
-    fill: {
-      type: String as () => 'x' | 'y' | 'xy',
-      default: 'y'
-    },
-    scroll: {
-      type: String as () => 'x' | 'y' | 'xy',
-      default: 'y'
-    },
-    wrapStyle: {},
-    wrapClass: {},
-    viewClass: {},
-    viewStyle: {},
     // 如果 container 尺寸不会发生变化，最好设置为 false 以优化性能
     autoresize: {
       type: Boolean,
       default: true
     },
-    tag: {
-      type: String,
-      default: 'div'
+    fill: {
+      type: String as PropType<IScrollViewOptions['fill']>,
+      default: 'y'
+    },
+    scroll: {
+      type: String as PropType<IScrollViewOptions['scroll']>,
+      default: 'y'
+    },
+    loading: {
+      type: Object as PropType<IScrollViewOptions['loading']>,
+      default() {
+        return {};
+      }
+    },
+    initialize: {
+      type: Function as PropType<() => Promise<any>>
     }
   },
-  setup(props, { emit }) {
+  emits: ['initialized', 'scroll'],
+  setup(props: any, { emit }) {
     const $style = useCssModule();
+
+    const error = ref();
+    const loading_ = ref(!!props.initialize);
+
+    mergeProps(
+      {
+        size: 'large'
+      },
+      props.loading
+    );
+
+    if (props.initialize) {
+      props.loading.show = true;
+    }
 
     // 最外层 element
     const $view = ref<HTMLElement>(null);
@@ -295,6 +349,7 @@ export default defineComponent({
                   dragMoving = true;
                 }
               : () => {
+                  console.log('move');
                   let style = getTranslate3dStyle($thumb);
                   dragArgs.initialPos.top = style[1];
                   dragMoving = true;
@@ -329,35 +384,77 @@ export default defineComponent({
         .pipe(subscribeOn(animationFrameScheduler));
     };
 
-    onMounted(() => {
-      nextTick(() => {
+    const initializeLayout = () => {
+      resizeLayout();
+
+      if (horDrag$) {
+        horDrag$.unsubscribe();
+      }
+
+      if (verDrag$) {
+        verDrag$.unsubscribe();
+      }
+
+      if ($horThumb.value) {
+        horDrag$ = getDrag$($horThumb.value, 'x').subscribe((pos) => {
+          pos = getBoundaryPosition(pos, scrollLimit.left.min, scrollLimit.left.max);
+          updateHorThumbStyle(pos);
+          updateHorScroll(pos);
+        });
+      }
+
+      if ($verThumb.value) {
+        verDrag$ = getDrag$($verThumb.value, 'y').subscribe((pos) => {
+          pos = getBoundaryPosition(pos, scrollLimit.top.min, scrollLimit.top.max);
+          updateVerThumbStyle(pos);
+          updateVerScroll(pos);
+        });
+      }
+
+      // 监听窗口尺寸变化，重新设置滑块尺寸
+      if (props.autoresize) {
+        if ($content.value) {
+          erd.listenTo($content.value, resizeLayout);
+        }
+      }
+    };
+
+    const load = bindPromiseQueue(() => {
+      return props
+        ?.initialize()
+        .then((res) => {
+          error.value = null;
+          emit('initialized', res);
+        })
+        .catch((err: Error) => {
+          error.value = err.message;
+        })
+        .finally(() => {
+          props.loading.show = false;
+        });
+    }, true);
+
+    const reload = async () => {
+      props.loading.show = true;
+      await load();
+      props.loading.show = false;
+      nextTick().then(() => {
         if (!props.native) {
-          resizeLayout();
-
-          if ($horThumb.value) {
-            horDrag$ = getDrag$($horThumb.value, 'x').subscribe((pos) => {
-              pos = getBoundaryPosition(pos, scrollLimit.left.min, scrollLimit.left.max);
-              updateHorThumbStyle(pos);
-              updateHorScroll(pos);
-            });
-          }
-
-          if ($verThumb.value) {
-            verDrag$ = getDrag$($verThumb.value, 'y').subscribe((pos) => {
-              pos = getBoundaryPosition(pos, scrollLimit.top.min, scrollLimit.top.max);
-              updateVerThumbStyle(pos);
-              updateVerScroll(pos);
-            });
-          }
-
-          // 监听窗口尺寸变化，重新设置滑块尺寸
-          if (props.autoresize) {
-            if ($content.value) {
-              erd.listenTo($content.value, resizeLayout);
-            }
-          }
+          initializeLayout();
         }
       });
+    };
+
+    onMounted(() => {
+      if (props?.initialize) {
+        reload();
+      } else {
+        nextTick(() => {
+          if (!props.native) {
+            initializeLayout();
+          }
+        });
+      }
     });
 
     onBeforeUnmount(() => {
@@ -393,10 +490,14 @@ export default defineComponent({
     });
 
     return {
+      error,
+      loading_,
+      i18nMessages,
       viewEl: $view,
       contentEl: $content,
       horThumbEl: $horThumb,
       verThumbEl: $verThumb,
+      reload,
       scrollTo,
       onScroll,
       horBarClick,
@@ -409,6 +510,24 @@ export default defineComponent({
 <style lang="scss" module>
 .wrap {
   position: relative;
+  overflow: hidden;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
 }
 
@@ -547,6 +666,37 @@ export default defineComponent({
 
   .vertical {
     bottom: 5px;
+  }
+}
+</style>
+
+<style lang="scss">
+.scroll-view-transition {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate3d(-50%, -50%, 0);
+
+  &.scroll-view-transition-enter-from {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.7);
+  }
+
+  &.scroll-view-transition-enter-to {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+
+  &.scroll-view-transition-leave-to {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.6);
+  }
+
+  &.scroll-view-transition-enter-active,
+  &.scroll-view-transition-leave-active {
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
   }
 }
 </style>
