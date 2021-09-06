@@ -1,3 +1,11 @@
+# [1.0.0-alpha.26](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.25...v1.0.0-alpha.26) (2021-09-06)
+
+
+### Features
+
+* 新增: scrollview 组件添加 loading 层 ([f9f357b](https://github.com/fatesigner/antdvx/commit/f9f357b2e16da1e49f268f7a6426980c2b6a544a))
+* 新增: XButtonExport 添加 json 导出 ([754bcb7](https://github.com/fatesigner/antdvx/commit/754bcb774c730f6768439a16e1fb0c0c12ca5c06))
+
 # [1.0.0-alpha.25](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.24...v1.0.0-alpha.25) (2021-09-03)
 
 
