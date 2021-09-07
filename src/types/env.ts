@@ -7,8 +7,6 @@ export interface IENV {
   APP_DEBUG: string;
   // 语言
   APP_LANG: string;
-  // 主题色
-  APP_PRIMARY_COLOR: string;
   // 应用名称，唯一 key
   APP_NAME: string;
   // 应用标题（描述）

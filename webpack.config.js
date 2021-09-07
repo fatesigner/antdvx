@@ -20,8 +20,8 @@ module.exports = webpackConfig({
     lessOptions: {
       strictMath: false,
       noIeCompat: true,
-      javascriptEnabled: true,
-      modifyVars: require(path.join(SRC_PATH, 'theme/antdv.theme'))
+      javascriptEnabled: true
+      // modifyVars: require(path.join(SRC_PATH, 'theme/antdv.theme'))
     }
   },
   sass: {

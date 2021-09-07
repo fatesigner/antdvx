@@ -4,8 +4,6 @@ import { defineAsyncComponent, defineComponent } from 'vue';
 import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, ANTDVX_ICON_NAMES } from './config';
 
-import './iconfont.scss';
-
 export const Iconfont = defineComponent({
   name: 'iconfont',
   props: IconfontProps,

@@ -33,4 +33,13 @@ export const ANTDVX_COLORS = [
 export const ANTDVX_SIZES = ['default', 'large', 'small', 'mini'];
 
 // 按钮类型
-export const ANTDVX_BUTTON_TYPES = ['default', 'primary', 'dashed', 'link', 'text', 'outline', '3d'];
+export const ANTDVX_BUTTON_TYPES = [
+  'default',
+  'primary',
+  //'ghost',
+  'dashed',
+  'link',
+  'text',
+  'outline',
+  '3d'
+];

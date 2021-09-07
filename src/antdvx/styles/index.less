@@ -1,9 +1,23 @@
-@import "~ant-design-vue/lib/style/themes/default";
 @import '../themes/default';
+
+@colorArr:
+  primary  @primary-color,
+  secondary  @secondary-color,
+  tertiary  @tertiary-color,
+  success  @success-color,
+  warning  @warning-color,
+  danger  @danger-color,
+  red  @red-color,
+  orange  @orange-color,
+  yellow  @yellow-color,
+  green  @green-color,
+  cyan  @cyan-color,
+  blue  @blue-color,
+  purple  @purple-color;
 
 // Set font color
 // ---------------------------------------------------
-each(@colors, {
+each(@colorArr, {
   .antdvx-color-@{key} {
     color: @value;
   }

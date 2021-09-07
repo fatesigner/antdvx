@@ -4,13 +4,11 @@ import { Drawer, Spin } from 'ant-design-vue';
 import { bindLazyFunc } from '@fatesigner/utils';
 import { getGUID } from '@fatesigner/utils/random';
 import { createApp, h, nextTick, onMounted, reactive, ref } from 'vue';
-import { AsyncComponentLoader, AsyncComponentOptions, Component, ComponentPublicInstance } from '@vue/runtime-core';
+import { Component, ComponentPublicInstance } from '@vue/runtime-core';
 
 import { Iconfont } from '../iconfont';
 
 import { IXDrawerPropsType, IXDrawerRef } from './types';
-
-import './drawer.scss';
 
 const SYMBOLS = {
   BASE_CLASS: 'ant-drawer-x',

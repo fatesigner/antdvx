@@ -12,7 +12,7 @@ module.exports = {
         xxs: '.65rem'
       },
       colors: {
-        primary: process.env.APP_PRIMARY_COLOR
+        primary: '#8262ff'
       },
       screens: {
         // min-width

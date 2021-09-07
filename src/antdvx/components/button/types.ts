@@ -1,6 +1,6 @@
 import { PropType } from 'vue';
 
-import { ANTDVX_COLORS, ANTDVX_SIZES } from '../../constants';
+import { ANTDVX_BUTTON_TYPES, ANTDVX_COLORS, ANTDVX_SIZES } from '../../constants';
 
 /**
  * XButton component props type
@@ -83,8 +83,8 @@ export const XButtonProps = {
    * 设置按钮类型，新增 outline、3d 类型
    */
   type: {
-    type: String as PropType<'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'outline' | '3d'>,
-    default: 'default'
+    type: String as PropType<typeof ANTDVX_BUTTON_TYPES[number]>,
+    default: 'normal'
   },
 
   // Custom

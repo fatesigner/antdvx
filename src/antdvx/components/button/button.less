@@ -1,6 +1,21 @@
-@import "~ant-design-vue/lib/style/themes/default";
 @import "~ant-design-vue/es/button/style/mixin";
 @import "../../themes/default";
+
+@colorArr: {
+  primary: @primary-color;
+  secondary: @secondary-color;
+  tertiary: @tertiary-color;
+  success: @success-color;
+  warning: @warning-color;
+  danger: @danger-color;
+  red: @red-color;
+  orange: @orange-color;
+  yellow: @yellow-color;
+  green: @green-color;
+  cyan: @cyan-color;
+  blue: @blue-color;
+  purple: @purple-color;
+}
 
 .set-btn-color(@type, @color, @background, @border) {
   // default type
@@ -30,7 +45,7 @@
 
     &:not([disabled]):active,
     &:not([disabled]).active {
-      .button-color(@color; ~`colorPalette('@{background}', 7)`; ~`colorPalette('@{background}', 7)`);
+      .button-color(@color; ~`colorPalette('@{background}', 6)`; ~`colorPalette('@{background}', 6)`);
     }
 
     &[disabled] {
@@ -38,8 +53,8 @@
       &:hover,
       &:focus,
       &:active {
-        .button-color(@color; @background; @background);
         opacity: 0.7;
+        .button-color(@color; @background; @background);
       }
     }
 
@@ -89,7 +104,9 @@
 
   // link type
   .ant-btn-link.ant-color-@{type} {
-    color: @background;
+    &:not([disabled]) {
+      color: @background;
+    }
 
     &:not([disabled]):hover,
     &:not([disabled]):focus {
@@ -156,8 +173,8 @@
       &:hover,
       &:focus,
       &:active {
-        .button-color(@background; #fff; @background);
         opacity: 0.7;
+        .button-color(@background; #fff; @background);
       }
     }
   }
@@ -198,15 +215,13 @@
 
 // default type normal
 .ant-btn.ant-btn-default {
-  @color: rgba(0, 0, 0, 1);
-
-  &:hover,
-  &:focus {
-    .button-color(@color; #fff; #999);
+  &:not([disabled]):hover,
+  &:not([disabled]):focus {
+    .button-color(#333; #fff; #999);
   }
 
-  &:active,
-  &.active {
+  &:not([disabled]):active,
+  &:not([disabled]).active {
     .button-color(#333; #fff; #666);
   }
 
@@ -278,12 +293,12 @@
 .ant-btn.ant-btn-dashed {
   &:not([disabled]):hover,
   &:not([disabled]):focus {
-    .button-color(~`colorPalette('#666', 2)`; #fff; ~`colorPalette('#666', 2)`);
+    .button-color(~`colorPalette('#444', 3)`; #fff; ~`colorPalette('#444', 3)`);
   }
 
   &:not([disabled]):active,
   &:not([disabled]).active {
-    .button-color(~`colorPalette('#666', 5)`; #fff; ~`colorPalette('#666', 5)`);
+    .button-color(~`colorPalette('#444', 5)`; #fff; ~`colorPalette('#444', 5)`);
   }
 
   &[disabled] {
@@ -298,25 +313,18 @@
 
 // link type normal
 .ant-btn.ant-btn-link {
-  color: rgba(0, 0, 0, 0.85);
+  &:not([disabled]) {
+    color: rgba(0, 0, 0, 0.85);
+  }
 
   &:not([disabled]):hover,
   &:not([disabled]):focus {
-    .button-color(~`colorPalette('#666', 2)`; transparent; transparent);
+    .button-color(~`colorPalette('#444', 3)`; transparent; transparent);
   }
 
   &:not([disabled]):active,
   &:not([disabled]).active {
-    .button-color(~`colorPalette('#666', 5)`; transparent; transparent);
-  }
-
-  &[disabled] {
-    &,
-    &:hover,
-    &:focus,
-    &:active {
-      color: rgba(0, 0, 0, 0.85);
-    }
+    .button-color(~`colorPalette('#444', 5)`; transparent; transparent);
   }
 }
 
@@ -401,6 +409,6 @@
   }
 }
 
-each(@colors, {
+each(@colorArr, {
   .set-btn-color(@key, #fff, @value, @green-5);
 });

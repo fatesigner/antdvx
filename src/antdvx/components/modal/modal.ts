@@ -10,7 +10,7 @@ import { IconCloseLine } from '../iconfont';
 
 import { IXModalPropsType, IXModalRef } from './types';
 
-import './modal.scss';
+import './modal.less';
 
 const SYMBOLS = {
   BASE_CLASS: 'ant-modal-x',

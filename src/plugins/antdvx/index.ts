@@ -3,49 +3,16 @@
  */
 
 import { merge } from 'lodash-es';
-import { defineAsyncComponent } from 'vue';
 import { message, notification } from 'ant-design-vue';
-import { registerIcon, setRequestAdapter } from '@/antdvx';
-
-// VxeTable
-import 'xe-utils';
-import VXETable from 'vxe-table';
-import 'vxe-table/lib/style.css';
+import { setRequestAdapter } from '@/antdvx';
 
 import { i18n } from '@/i18n';
 import { httpService } from '@/app/services';
 
-// 因为涉及到样式覆盖，所以这里不做按需加载，直接导入所有样式
-import 'ant-design-vue/dist/antd.less';
-import '@/antdvx/components/iconfont/css/iconfont.css';
-import '@/antdvx/styles/classic.less';
+import './theme.less';
 
 export const Antdvx = {
-  install(app) {
-    app.use(VXETable);
-
-    // 注册 icons
-    registerIcon(
-      'database',
-      defineAsyncComponent(() => import('./icons/database'))
-    );
-    registerIcon(
-      'file-edit',
-      defineAsyncComponent(() => import('./icons/file-edit'))
-    );
-    registerIcon(
-      'health-book',
-      defineAsyncComponent(() => import('./icons/health-book'))
-    );
-    registerIcon(
-      'home',
-      defineAsyncComponent(() => import('./icons/home'))
-    );
-    registerIcon(
-      'user-settings',
-      defineAsyncComponent(() => import('./icons/user-settings'))
-    );
-
+  install() {
     // 设置 Http 适配器
     setRequestAdapter((options) => {
       return httpService.request(options);

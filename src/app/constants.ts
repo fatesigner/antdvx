@@ -17,8 +17,7 @@ export const ENV: IENV = {
   APP_NAME: process.env.APP_NAME,
   APP_TITLE: process.env.APP_TITLE,
   APP_WEBHOST: process.env.APP_WEBHOST,
-  APP_APIHOST: process.env.APP_APIHOST,
-  APP_PRIMARY_COLOR: process.env.APP_PRIMARY_COLOR
+  APP_APIHOST: process.env.APP_APIHOST
 };
 
 // 定义可用的 ApiHost 集合，用于动态切换服务端环境

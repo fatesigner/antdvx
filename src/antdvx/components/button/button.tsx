@@ -3,8 +3,6 @@ import { Button, notification } from 'ant-design-vue';
 
 import { XButtonProps } from './types';
 
-import './button.less';
-
 export const XButton = defineComponent({
   name: 'x-button',
   props: XButtonProps,

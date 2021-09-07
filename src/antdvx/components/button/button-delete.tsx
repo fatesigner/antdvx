@@ -22,7 +22,7 @@ export const XButtonDelete = defineComponent({
       default: false
     }
   },
-  setup(props: any, { emit, slots }) {
+  setup(props: any) {
     const { t } = useI18n();
     const loading_ = ref(false);
 
