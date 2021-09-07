@@ -3,7 +3,8 @@
  */
 
 import { cloneDeep } from 'lodash-es';
-import { isNullOrUndefined, isObject } from '@fatesigner/utils/type-check';
+import { isObject } from '@fatesigner/utils/type-check';
+import { addEventListener } from '@fatesigner/utils/document';
 
 // 验证是否外部地址
 export function isExternal(path: string) {
@@ -127,4 +128,68 @@ export function getEventArgs(e: MouseEvent | TouchEvent) {
       points: [[(e as MouseEvent).clientX, (e as MouseEvent).clientY]]
     };
   }
+}
+
+/**
+ * 折叠节点, 以 height 过渡
+ * @param el
+ * @param callback
+ */
+export function collapseSection(el: HTMLElement, callback?: (el: HTMLElement) => void) {
+  return new Promise<void>((resolve) => {
+    if (el && el.offsetHeight) {
+      const sectionHeight = el.scrollHeight;
+
+      const elementTransition = el.style.transition;
+      el.style.transition = '';
+
+      const listener = function () {
+        el.removeEventListener('transitionend', listener);
+        if (callback) {
+          callback(el);
+        }
+        resolve();
+      };
+
+      el.addEventListener('transitionend', listener, false);
+
+      requestAnimationFrame(function () {
+        el.style.height = sectionHeight + 'px';
+        el.style.transition = elementTransition;
+
+        requestAnimationFrame(function () {
+          el.style.height = 0 + 'px';
+        });
+      });
+    } else {
+      resolve();
+    }
+  });
+}
+
+/**
+ * 展开节点, 以 height 过渡
+ * @param el
+ * @param callback
+ */
+export function expandSection(el: HTMLElement, callback?: (el: HTMLElement) => void) {
+  return new Promise<void>((resolve) => {
+    if (el && !el.offsetHeight) {
+      el.addEventListener('transitionend', function listener() {
+        //el.removeEventListener('transitionend', arguments.callee);
+        el.removeEventListener('transitionend', listener);
+        if (callback) {
+          callback(el);
+        }
+        el.style.height = null;
+        resolve();
+      });
+
+      const sectionHeight = el.scrollHeight;
+
+      el.style.height = sectionHeight + 'px';
+    } else {
+      resolve();
+    }
+  });
 }

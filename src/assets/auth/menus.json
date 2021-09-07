@@ -24,6 +24,15 @@
         "children": []
       },
       {
+        "id": "sh96690e69zd",
+        "label": "异步加载区域",
+        "name": "async-section",
+        "url": "/async-section",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "b796690e69zd",
         "label": "按钮",
         "name": "button",

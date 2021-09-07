@@ -1,5 +1,5 @@
 <template>
-  <div class="spinner-loading" :class="[size ? 'spinner-loading-' + size : '']" :style="styles" />
+  <div :class="[$style['spinner-loading'], size ? $style[size] : null]" :style="styles" />
 </template>
 
 <script lang="ts">
@@ -31,7 +31,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" module>
 @keyframes spin {
   0% {
     transform: rotate(0);
@@ -78,7 +78,7 @@ export default defineComponent({
     animation: spin 1.5s linear infinite;
   }
 
-  &.spinner-loading-small {
+  &.small {
     width: 42px;
     height: 42px;
     border-width: 2px;
@@ -100,7 +100,7 @@ export default defineComponent({
     }
   }
 
-  &.spinner-loading-mini {
+  &.mini {
     width: 24px;
     height: 24px;
     border-width: 2px;
@@ -122,7 +122,7 @@ export default defineComponent({
     }
   }
 
-  &.spinner-loading-large {
+  &.large {
     width: 92px;
     height: 92px;
     border-width: 3px;
