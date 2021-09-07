@@ -86,8 +86,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" module>
-@import '@/theme/default.theme';
-
 .dropdown {
   display: flex;
   align-items: center;
@@ -115,15 +113,5 @@ export default defineComponent({
   text-overflow: ellipsis;
   text-shadow: 1px 1px #ececec;
   white-space: nowrap;
-}
-
-.logout {
-  float: right;
-  margin-right: 10px;
-  color: map-get($colors, primary);
-
-  &:hover {
-    color: map-get($colors, primary);
-  }
 }
 </style>

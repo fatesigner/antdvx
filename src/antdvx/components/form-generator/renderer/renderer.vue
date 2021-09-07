@@ -123,7 +123,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .label {
 }
 </style>

@@ -30,10 +30,10 @@
 </template>
 
 <script lang="ts">
+import { getGUID } from '@fatesigner/utils/random';
 import { defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 
 import { ScrollView } from '../scroll-view';
-import { getGUID } from '@fatesigner/utils/random';
 
 export default defineComponent({
   components: {
@@ -174,7 +174,7 @@ export default defineComponent({
 </script>
 
 <style lang="less" module>
-@import '~ant-design-vue/lib/style/themes/default';
+@import '../../themes/default.less';
 
 .tabs-scollable {
   width: max-content;

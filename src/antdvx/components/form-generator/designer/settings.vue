@@ -159,7 +159,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .title {
   font-size: 14px;
   color: #333;
@@ -187,7 +187,7 @@ export default defineComponent({
 }
 </style>
 
-<style lang="scss">
+<style lang="less">
 .form-designer-collapse {
   margin-bottom: 166px;
   background-color: transparent;

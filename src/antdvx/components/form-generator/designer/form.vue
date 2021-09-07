@@ -159,7 +159,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .title {
   font-size: 14px;
   color: #333;

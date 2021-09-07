@@ -641,7 +641,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 .ant-table-x {
   background-color: #fff;
 

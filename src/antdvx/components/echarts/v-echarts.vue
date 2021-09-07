@@ -24,7 +24,7 @@
 import to from 'await-to-js';
 import { debounce } from '@fatesigner/utils';
 import { isFunction } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
+import { PropType, computed, defineComponent, onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { EChartsOption, EChartsOptionPromise, EChartsType, LocaleOption, RendererType, createEcharts } from './echarts';
 
@@ -97,6 +97,20 @@ export default defineComponent({
     const error = ref<Error>(null);
 
     let instance;
+
+    const styles = computed(() => {
+      if (props.aspectRatio) {
+        return {
+          width: '100%',
+          'padding-bottom': 100 / (props.aspectRatio as any) + '%'
+        };
+      } else {
+        return {
+          width: props.width ? props.width + 'px' : null,
+          height: props.height ? props.height + 'px' : null
+        };
+      }
+    });
 
     const touchstart = (e) => {
       emit('touchstart', e);
@@ -231,26 +245,11 @@ export default defineComponent({
       getChartElement,
       touchstart
     };
-  },
-  computed: {
-    styles() {
-      if (this.aspectRatio) {
-        return {
-          width: '100%',
-          'padding-bottom': 100 / this.aspectRatio + '%'
-        };
-      } else {
-        return {
-          width: this.width ? this.width + 'px' : null,
-          height: this.height ? this.height + 'px' : null
-        };
-      }
-    }
   }
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .wrap {
   position: relative;
 }
@@ -274,7 +273,7 @@ export default defineComponent({
 }
 </style>
 
-<style>
+<style lang="less">
 .v-echarts-transition-enter-from {
   opacity: 0;
   transform: translate3d(-50%, -50%, 0) scale(0.7);

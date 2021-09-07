@@ -113,7 +113,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .item {
   padding: 10px 0;
   border-top: 1px solid #ddd;

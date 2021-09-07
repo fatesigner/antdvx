@@ -35,7 +35,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .wrap {
   display: flex;
   align-items: center;

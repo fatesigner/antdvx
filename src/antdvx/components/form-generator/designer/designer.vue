@@ -88,7 +88,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .center {
   border-right: 1px solid #e0e0e0;
   border-left: 1px solid #e0e0e0;

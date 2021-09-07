@@ -10,8 +10,6 @@ import { IconCloseLine } from '../iconfont';
 
 import { IXModalPropsType, IXModalRef } from './types';
 
-import './modal.less';
-
 const SYMBOLS = {
   BASE_CLASS: 'ant-modal-x',
   FULLSCREEN_CLASS: 'ant-modal-x-fullscreen',

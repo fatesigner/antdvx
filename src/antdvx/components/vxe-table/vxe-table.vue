@@ -496,7 +496,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 .antd-vxe-table-transition-wrap {
   height: 100px;
   max-height: 0;

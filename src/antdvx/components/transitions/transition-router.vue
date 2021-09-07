@@ -18,7 +18,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 .fade-transform-leave-active {
   opacity: 1;
   transition-timing-function: ease-in;

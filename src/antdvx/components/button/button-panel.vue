@@ -50,7 +50,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .panel {
   position: relative;
   display: inline-block;

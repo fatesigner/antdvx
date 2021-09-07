@@ -76,7 +76,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .sticky-section-top {
   min-width: 1px;
   min-height: 1px;

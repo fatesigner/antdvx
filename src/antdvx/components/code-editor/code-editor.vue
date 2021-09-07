@@ -70,7 +70,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .editor {
   width: 100%;
   min-height: 350px;

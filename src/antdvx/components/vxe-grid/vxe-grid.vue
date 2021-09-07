@@ -464,7 +464,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 .antd-vxe-grid-transition-wrap {
   min-height: 100px;
 }
