@@ -1,5 +1,14 @@
 <template>
-  <div :class="[$style.wrap, fill ? $style['fill-' + fill] : '', native ? '' : $style['hide-scrollbar'], scroll ? $style['scroll-' + scroll] : '']">
+  <div
+    :class="[
+      $style['scroll-wrap'],
+      fillX ? $style['fill-x'] : null,
+      fillY ? $style['fill-y'] : null,
+      scrollX ? $style['scroll-x'] : null,
+      scrollY ? $style['scroll-y'] : null,
+      native ? null : $style['hide-scrollbar']
+    ]"
+  >
     <transition-group name="scroll-view-transition">
       <div class="scroll-view-transition" key="loading" v-if="loading_">
         <slot name="loading">
@@ -24,24 +33,21 @@
           </div>
         </slot>
       </div>
-      <div v-else :class="$style.view" ref="viewEl" @scroll="onScroll">
-        <div :class="$style.content" ref="contentEl" v-if="!loading_ && !error">
+      <div v-else :class="$style['scroll-view']" ref="viewRef" @scroll="onScroll">
+        <template v-if="native">
           <slot v-bind="{ loading: loading_, reload: load }" />
-        </div>
-        <div
-          v-if="(!native && scroll === 'x') || scroll === 'xy'"
-          :class="[$style.bar, $style.horizontal, autohide ? $style.hidden : null]"
-          @click="horBarClick($event)"
-        >
-          <div :class="$style.thumb" ref="horThumbEl" />
-        </div>
-        <div
-          v-if="(!native && scroll === 'y') || scroll === 'xy'"
-          :class="[$style.bar, $style.vertical, autohide ? $style.hidden : null]"
-          @click="verBarClick($event)"
-        >
-          <div :class="$style.thumb" ref="verThumbEl" />
-        </div>
+        </template>
+        <template v-else>
+          <div :class="$style['scroll-content']" ref="contentRef" v-if="!loading_ && !error">
+            <slot v-bind="{ loading: loading_, reload: load }" />
+          </div>
+          <div v-if="scrollX" :class="[$style.bar, $style.horizontal, autohide ? $style.hidden : null]" @click="horBarClick($event)">
+            <div :class="$style.thumb" ref="horThumbRef" />
+          </div>
+          <div v-if="scrollY" :class="[$style.bar, $style.vertical, autohide ? $style.hidden : null]" @click="verBarClick($event)">
+            <div :class="$style.thumb" ref="verThumbRef" />
+          </div>
+        </template>
       </div>
     </transition-group>
   </div>
@@ -89,13 +95,21 @@ export default defineComponent({
       type: Boolean,
       default: true
     },
-    fill: {
-      type: String as PropType<IScrollViewOptions['fill']>,
-      default: 'y'
+    fillX: {
+      type: Boolean,
+      default: false
     },
-    scroll: {
-      type: String as PropType<IScrollViewOptions['scroll']>,
-      default: 'y'
+    fillY: {
+      type: Boolean,
+      default: false
+    },
+    scrollX: {
+      type: Boolean,
+      default: false
+    },
+    scrollY: {
+      type: Boolean,
+      default: false
     },
     loading: {
       type: Boolean,
@@ -136,13 +150,13 @@ export default defineComponent({
     );
 
     // 最外层 element
-    const $view = ref<HTMLElement>(null);
+    const viewRef = ref<HTMLElement>(null);
     // 内容 element
-    const $content = ref<HTMLElement>(null);
+    const contentRef = ref<HTMLElement>(null);
     // 水平滚动条 element
-    const $horThumb = ref<HTMLElement>(null);
+    const horThumbRef = ref<HTMLElement>(null);
     // 垂直滚动条 element
-    const $verThumb = ref<HTMLElement>(null);
+    const verThumbRef = ref<HTMLElement>(null);
 
     let horDrag$: Subscription;
     let verDrag$: Subscription;
@@ -172,97 +186,97 @@ export default defineComponent({
 
     const updateThumbSize = (xBarWidth: number, yBarHeight: number) => {
       return requestAnimationFrame(() => {
-        if ($horThumb.value) {
-          $horThumb.value.style.width = xBarWidth + '%';
-          $horThumb.value.style.height = xBarWidth ? '' : '0';
+        if (horThumbRef.value) {
+          horThumbRef.value.style.width = xBarWidth + '%';
+          horThumbRef.value.style.height = xBarWidth ? '' : '0';
           if (xBarWidth) {
-            addClass($horThumb.value.parentElement, $style.scrollable);
+            addClass(horThumbRef.value.parentElement, $style.scrollable);
           } else {
-            removeClass($horThumb.value.parentElement, $style.scrollable);
+            removeClass(horThumbRef.value.parentElement, $style.scrollable);
           }
           // 更新 limit
-          scrollLimit.left.max = $horThumb.value.parentElement.offsetWidth - $horThumb.value.offsetWidth;
+          scrollLimit.left.max = horThumbRef.value.parentElement.offsetWidth - horThumbRef.value.offsetWidth;
         }
 
-        if ($verThumb.value) {
-          $verThumb.value.style.width = yBarHeight ? '' : '0';
-          $verThumb.value.style.height = yBarHeight + '%';
+        if (verThumbRef.value) {
+          verThumbRef.value.style.width = yBarHeight ? '' : '0';
+          verThumbRef.value.style.height = yBarHeight + '%';
           if (yBarHeight) {
-            addClass($verThumb.value.parentElement, $style.scrollable);
+            addClass(verThumbRef.value.parentElement, $style.scrollable);
           } else {
-            removeClass($verThumb.value.parentElement, $style.scrollable);
+            removeClass(verThumbRef.value.parentElement, $style.scrollable);
           }
           // 更新 limit
-          scrollLimit.top.max = $verThumb.value.parentElement.offsetHeight - $verThumb.value.offsetHeight;
+          scrollLimit.top.max = verThumbRef.value.parentElement.offsetHeight - verThumbRef.value.offsetHeight;
         }
       });
     };
 
     const updateHorThumbStyle = (xMove: number) => {
-      if ($horThumb.value) {
+      if (horThumbRef.value) {
         let transform = `translate3d(${xMove}px, 0, 0)`;
-        $horThumb.value.style.transform = transform;
-        $horThumb.value.style['msTransform'] = transform;
-        $horThumb.value.style['webkitTransform'] = transform;
+        horThumbRef.value.style.transform = transform;
+        horThumbRef.value.style['msTransform'] = transform;
+        horThumbRef.value.style['webkitTransform'] = transform;
       }
     };
 
     const updateVerThumbStyle = (yMove: number) => {
-      if ($verThumb.value) {
+      if (verThumbRef.value) {
         let transform = `translate3d(0, ${yMove}px, 0)`;
-        $verThumb.value.style.transform = transform;
-        $verThumb.value.style['msTransform'] = transform;
-        $verThumb.value.style['webkitTransform'] = transform;
+        verThumbRef.value.style.transform = transform;
+        verThumbRef.value.style['msTransform'] = transform;
+        verThumbRef.value.style['webkitTransform'] = transform;
       }
     };
 
     const scrollTo = async (left: number, top: number, duration = 0) => {
-      if ($view.value) {
+      if (viewRef.value) {
         if (duration) {
-          await scrollTo_($view.value, left, top, duration ?? 0);
+          await scrollTo_(viewRef.value, left, top, duration ?? 0);
         } else {
-          $view.value.scrollLeft = left;
-          $view.value.scrollTop = top;
+          viewRef.value.scrollLeft = left;
+          viewRef.value.scrollTop = top;
         }
       }
     };
 
     const updateHorScroll = (xMove: number, transition = false) => {
-      if ($view.value) {
-        let scrollLeft = ($content.value.offsetWidth / $view.value.clientWidth) * xMove;
+      if (viewRef.value) {
+        let scrollLeft = (contentRef.value.offsetWidth / viewRef.value.clientWidth) * xMove;
         if (transition) {
-          scrollTo_($view.value, scrollLeft, null, transition ? scrollDuration : 0);
+          scrollTo_(viewRef.value, scrollLeft, null, transition ? scrollDuration : 0);
         } else {
-          $view.value.scrollLeft = scrollLeft;
+          viewRef.value.scrollLeft = scrollLeft;
         }
       }
     };
 
     const updateVerScroll = (yMove: number, transition = false) => {
-      if ($view.value) {
-        let scrollTop = ($content.value.offsetHeight / $view.value.clientHeight) * yMove;
+      if (viewRef.value) {
+        let scrollTop = (contentRef.value.offsetHeight / viewRef.value.clientHeight) * yMove;
         if (transition) {
-          scrollTo_($view.value, null, scrollTop, transition ? scrollDuration : 0);
+          scrollTo_(viewRef.value, null, scrollTop, transition ? scrollDuration : 0);
         } else {
-          $view.value.scrollTop = scrollTop;
+          viewRef.value.scrollTop = scrollTop;
         }
       }
     };
 
     const resizeLayout = () => {
-      if (!$content.value) {
+      if (!contentRef.value) {
         return;
       }
 
       let xBarWidth = 0;
       let yBarHeight = 0;
 
-      if ($content.value.offsetWidth > $view.value.clientWidth) {
-        xBarWidth = (($view.value.clientWidth * 100) / $content.value.offsetWidth).toFixed(1) as any;
+      if (contentRef.value.offsetWidth > viewRef.value.clientWidth) {
+        xBarWidth = ((viewRef.value.clientWidth * 100) / contentRef.value.offsetWidth).toFixed(1) as any;
       }
 
-      if ($content.value.offsetHeight > $view.value.clientHeight) {
-        yBarHeight = (($view.value.clientHeight * 100) / $content.value.offsetHeight).toFixed(1) as any;
+      if (contentRef.value.offsetHeight > viewRef.value.clientHeight) {
+        yBarHeight = ((viewRef.value.clientHeight * 100) / contentRef.value.offsetHeight).toFixed(1) as any;
       }
 
       updateThumbSize(xBarWidth, yBarHeight);
@@ -271,12 +285,12 @@ export default defineComponent({
     // 外部操作（滚轮、触控）触发滚动
     const onScroll = (e) => {
       emit('scroll', e);
-      if (!$content.value || dragMoving) {
+      if (!contentRef.value || dragMoving) {
         return;
       }
 
-      let xMove = ($view.value.scrollLeft * $view.value.clientWidth) / $content.value.offsetWidth;
-      let yMove = ($view.value.scrollTop * $view.value.clientHeight) / $content.value.offsetHeight;
+      let xMove = (viewRef.value.scrollLeft * viewRef.value.clientWidth) / contentRef.value.offsetWidth;
+      let yMove = (viewRef.value.scrollTop * viewRef.value.clientHeight) / contentRef.value.offsetHeight;
 
       updateHorThumbStyle(xMove);
       updateVerThumbStyle(yMove);
@@ -288,7 +302,7 @@ export default defineComponent({
       const eventArgs = getEventArgs(e);
       if (hasClass(target, $style.bar)) {
         const rect = target.getBoundingClientRect();
-        const rectThumb = $horThumb.value.getBoundingClientRect();
+        const rectThumb = horThumbRef.value.getBoundingClientRect();
         if (eventArgs.points[0][0] < rectThumb.left) {
           let _xMove = eventArgs.points[0][0] - rect.left;
           if (_xMove < scrollThreshold) {
@@ -296,9 +310,9 @@ export default defineComponent({
           }
           updateHorScroll(_xMove, true);
         } else if (eventArgs.points[0][0] > rectThumb.left) {
-          let _xMove = eventArgs.points[0][0] - rect.left - $horThumb.value.offsetWidth;
-          if (_xMove > target.offsetWidth - $horThumb.value.offsetWidth - scrollThreshold) {
-            _xMove = target.offsetWidth - $horThumb.value.offsetWidth;
+          let _xMove = eventArgs.points[0][0] - rect.left - horThumbRef.value.offsetWidth;
+          if (_xMove > target.offsetWidth - horThumbRef.value.offsetWidth - scrollThreshold) {
+            _xMove = target.offsetWidth - horThumbRef.value.offsetWidth;
           }
           updateHorScroll(_xMove, true);
         }
@@ -310,7 +324,7 @@ export default defineComponent({
       const eventArgs = getEventArgs(e);
       if (hasClass(target, $style.bar)) {
         const rect = target.getBoundingClientRect();
-        const rectThumb = $verThumb.value.getBoundingClientRect();
+        const rectThumb = verThumbRef.value.getBoundingClientRect();
         if (eventArgs.points[0][1] < rectThumb.top) {
           let _yMove = eventArgs.points[0][1] - rect.top;
           if (_yMove < scrollThreshold) {
@@ -318,9 +332,9 @@ export default defineComponent({
           }
           updateVerScroll(_yMove, true);
         } else if (eventArgs.points[0][1] > rectThumb.top) {
-          let _yMove = eventArgs.points[0][1] - rect.top - $verThumb.value.offsetHeight;
-          if (_yMove > target.offsetHeight - $verThumb.value.offsetHeight - scrollThreshold) {
-            _yMove = target.offsetHeight - $verThumb.value.offsetHeight;
+          let _yMove = eventArgs.points[0][1] - rect.top - verThumbRef.value.offsetHeight;
+          if (_yMove > target.offsetHeight - verThumbRef.value.offsetHeight - scrollThreshold) {
+            _yMove = target.offsetHeight - verThumbRef.value.offsetHeight;
           }
           updateVerScroll(_yMove, true);
         }
@@ -395,6 +409,10 @@ export default defineComponent({
     };
 
     const initializeLayout = () => {
+      if (props.native) {
+        return;
+      }
+
       resizeLayout();
 
       if (horDrag$) {
@@ -405,16 +423,16 @@ export default defineComponent({
         verDrag$.unsubscribe();
       }
 
-      if ($horThumb.value) {
-        horDrag$ = getDrag$($horThumb.value, 'x').subscribe((pos) => {
+      if (horThumbRef.value) {
+        horDrag$ = getDrag$(horThumbRef.value, 'x').subscribe((pos) => {
           pos = getBoundaryPosition(pos, scrollLimit.left.min, scrollLimit.left.max);
           updateHorThumbStyle(pos);
           updateHorScroll(pos);
         });
       }
 
-      if ($verThumb.value) {
-        verDrag$ = getDrag$($verThumb.value, 'y').subscribe((pos) => {
+      if (verThumbRef.value) {
+        verDrag$ = getDrag$(verThumbRef.value, 'y').subscribe((pos) => {
           pos = getBoundaryPosition(pos, scrollLimit.top.min, scrollLimit.top.max);
           updateVerThumbStyle(pos);
           updateVerScroll(pos);
@@ -423,8 +441,8 @@ export default defineComponent({
 
       // 监听窗口尺寸变化，重新设置滑块尺寸
       if (props.autoresize) {
-        if ($content.value) {
-          erd.listenTo($content.value, resizeLayout);
+        if (contentRef.value) {
+          erd.listenTo(contentRef.value, resizeLayout);
         }
       }
     };
@@ -449,9 +467,7 @@ export default defineComponent({
       await load();
       loading_.value = false;
       nextTick().then(() => {
-        if (!props.native) {
-          initializeLayout();
-        }
+        initializeLayout();
       });
     };
 
@@ -464,9 +480,7 @@ export default defineComponent({
         }
       } else {
         nextTick(() => {
-          if (!props.native) {
-            initializeLayout();
-          }
+          initializeLayout();
         });
       }
     });
@@ -482,24 +496,24 @@ export default defineComponent({
 
     onActivated(() => {
       // 还原上次的滚动条位置
-      if ($view.value) {
-        $view.value.scrollTop = scrollPos.top;
-        $view.value.scrollLeft = scrollPos.left;
+      if (viewRef.value) {
+        viewRef.value.scrollTop = scrollPos.top;
+        viewRef.value.scrollLeft = scrollPos.left;
       }
     });
 
     onDeactivated(() => {
       // 记录滚动条位置
-      if ($view.value) {
-        scrollPos.top = $view.value.scrollTop;
-        scrollPos.left = $view.value.scrollLeft;
+      if (viewRef.value) {
+        scrollPos.top = viewRef.value.scrollTop;
+        scrollPos.left = viewRef.value.scrollLeft;
       }
     });
 
     onUnmounted(() => {
       // 移除窗口尺寸的监听
-      if ($content.value) {
-        erd.removeListener($content.value, resizeLayout);
+      if (contentRef.value) {
+        erd.removeListener(contentRef.value, resizeLayout);
       }
     });
 
@@ -507,10 +521,10 @@ export default defineComponent({
       error,
       loading_,
       i18nMessages,
-      viewEl: $view,
-      contentEl: $content,
-      horThumbEl: $horThumb,
-      verThumbEl: $verThumb,
+      viewRef,
+      contentRef,
+      horThumbRef,
+      verThumbRef,
       load,
       reload,
       scrollTo,
@@ -523,9 +537,21 @@ export default defineComponent({
 </script>
 
 <style lang="less" module>
-.wrap {
+.scroll-wrap {
   position: relative;
   overflow: hidden;
+}
+
+.scroll-view {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.scroll-content {
+  width: auto;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 .loading {
@@ -546,20 +572,8 @@ export default defineComponent({
   overflow: hidden;
 }
 
-.view {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.content {
-  width: auto;
-  min-width: 100%;
-  min-height: 100%;
-}
-
 .hide-scrollbar {
-  .view {
+  .scroll-view {
     -ms-overflow-style: none;
     scrollbar-width: none;
 
@@ -656,21 +670,21 @@ export default defineComponent({
 }
 
 .scroll-x {
-  > .view {
+  > .scroll-view {
     overflow-x: auto;
     overflow-y: hidden;
   }
 }
 
 .scroll-y {
-  > .view {
+  > .scroll-view {
     overflow-x: hidden;
     overflow-y: auto;
   }
 }
 
 .scroll-xy {
-  > .view {
+  > .scroll-view {
     overflow-x: auto;
     overflow-y: auto;
   }

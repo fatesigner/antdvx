@@ -1,7 +1,7 @@
 import { ANTDVX_SIZES } from '../../constants';
 
 /**
- * 可滚动视图选项
+ * 可滚动视图区域, 用于区域滚动
  */
 export interface IScrollViewOptions {
   /**
@@ -20,14 +20,24 @@ export interface IScrollViewOptions {
   autoresize?: boolean;
 
   /**
-   * 自适应外部容器尺寸, x: width: 100%, y: height: 100%, xy: width: 100%; height: 100%; 默认为 y
+   * 自适应父容器宽度 width: 100%, 默认为 false
    */
-  fill?: 'x' | 'y' | 'xy';
+  fillX?: boolean;
 
   /**
-   * 设置可滚动的方向, x: 水平, y: 垂直, xy: 所有方向均可滚动, 默认为 y
+   * 自适应父容器高度 height: 100%, 默认为 false
    */
-  scroll?: 'x' | 'y' | 'xy';
+  fillY?: boolean;
+
+  /**
+   * 允许横向滚动, 默认为 false
+   */
+  scrollX?: boolean;
+
+  /**
+   * 允许纵向滚动, 默认为 false
+   */
+  scrollY?: boolean;
 
   /**
    * 显示 loading 层

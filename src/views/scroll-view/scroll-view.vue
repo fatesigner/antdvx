@@ -1,11 +1,22 @@
 <template>
-  <div class="tw-h-full tw-p-4">
-    <div class="tw-h-full tw-border tw-border-red-400">
-      <ScrollView ref="scrollViewRef" loading-text="Loading project..." :initialize="loadData(3000, true)">
+  <div class="tw-flex tw-h-full tw-p-4 tw-space-x-2">
+    <div class="tw-flex-1 tw-border tw-border-red-400">
+      <ScrollView ref="scrollViewRef" fill-y scroll-y loading-text="Loading project..." :initialize="loadData(3000)">
         <XButtonAdd />
         <div v-for="item in 200">
           <button @click="reload">reload</button>
           <div class="tw-p-2">{{ item }}</div>
+        </div>
+      </ScrollView>
+    </div>
+    <div class="tw-flex-1 tw-border tw-border-red-400">
+      <ScrollView ref="scrollViewRef" fill-y native loading-text="Loading project..." :initialize="loadData(3000)">
+        <div class="tw-h-full">
+          <XButtonAdd />
+          <div v-for="item in 200">
+            <button @click="reload">reload</button>
+            <div class="tw-p-2">{{ item }}</div>
+          </div>
         </div>
       </ScrollView>
     </div>
