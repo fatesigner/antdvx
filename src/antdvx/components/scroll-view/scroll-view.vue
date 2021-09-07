@@ -1,12 +1,12 @@
 <template>
   <div :class="[$style.wrap, fill ? $style['fill-' + fill] : '', native ? '' : $style['hide-scrollbar'], scroll ? $style['scroll-' + scroll] : '']">
     <transition-group name="scroll-view-transition">
-      <div class="scroll-view-transition" key="loading" v-if="loading.show">
+      <div class="scroll-view-transition" key="loading" v-if="loading_">
         <slot name="loading">
           <div :class="$style.loading">
             <div class="tw-space-y-2">
-              <div class="tw-text-center"><SpinnerLoading :size="loading.size" /></div>
-              <div v-if="loading.text" class="tw-mt-5">{{ loading.text }}</div>
+              <div class="tw-text-center"><SpinnerLoading :size="loadingSize" /></div>
+              <div v-if="loadingText" class="tw-mt-5">{{ loadingText }}</div>
             </div>
           </div>
         </slot>
@@ -25,8 +25,8 @@
         </slot>
       </div>
       <div v-else :class="$style.view" ref="viewEl" @scroll="onScroll">
-        <div :class="$style.content" ref="contentEl" v-if="!loading.show && !error">
-          <slot />
+        <div :class="$style.content" ref="contentEl" v-if="!loading_ && !error">
+          <slot v-bind="{ loading: loading_, reload: load }" />
         </div>
         <div
           v-if="(!native && scroll === 'x') || scroll === 'xy'"
@@ -49,11 +49,11 @@
 
 <script lang="ts">
 import { Alert } from 'ant-design-vue';
-import { bindPromiseQueue, mergeProps } from '@fatesigner/utils';
+import { bindPromiseQueue } from '@fatesigner/utils';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
-import { PropType, defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, useCssModule } from 'vue';
+import { PropType, defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, useCssModule, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle } from '../../utils';
@@ -98,10 +98,18 @@ export default defineComponent({
       default: 'y'
     },
     loading: {
-      type: Object as PropType<IScrollViewOptions['loading']>,
-      default() {
-        return {};
-      }
+      type: Boolean,
+      default: false
+    },
+    loadingText: {
+      type: String
+    },
+    loadingSize: {
+      type: String as PropType<IScrollViewOptions['loadingSize']>
+    },
+    immediate: {
+      type: Boolean,
+      default: true
     },
     initialize: {
       type: Function as PropType<() => Promise<any>>
@@ -114,16 +122,18 @@ export default defineComponent({
     const error = ref();
     const loading_ = ref(!!props.initialize);
 
-    mergeProps(
-      {
-        size: 'large'
-      },
-      props.loading
-    );
-
-    if (props.initialize) {
-      props.loading.show = true;
+    if (props.loading) {
+      loading_.value = true;
     }
+
+    watch(
+      () => props.loading,
+      (val) => {
+        if (loading_.value !== val) {
+          loading_.value = val;
+        }
+      }
+    );
 
     // 最外层 element
     const $view = ref<HTMLElement>(null);
@@ -430,14 +440,14 @@ export default defineComponent({
           error.value = err.message;
         })
         .finally(() => {
-          props.loading.show = false;
+          loading_.value = false;
         });
     }, true);
 
     const reload = async () => {
-      props.loading.show = true;
+      loading_.value = true;
       await load();
-      props.loading.show = false;
+      loading_.value = false;
       nextTick().then(() => {
         if (!props.native) {
           initializeLayout();
@@ -447,7 +457,11 @@ export default defineComponent({
 
     onMounted(() => {
       if (props?.initialize) {
-        reload();
+        if (props.immediate) {
+          nextTick().then(() => {
+            reload();
+          });
+        }
       } else {
         nextTick(() => {
           if (!props.native) {
@@ -497,6 +511,7 @@ export default defineComponent({
       contentEl: $content,
       horThumbEl: $horThumb,
       verThumbEl: $verThumb,
+      load,
       reload,
       scrollTo,
       onScroll,
@@ -507,7 +522,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .wrap {
   position: relative;
   overflow: hidden;
@@ -670,7 +685,7 @@ export default defineComponent({
 }
 </style>
 
-<style lang="scss">
+<style lang="less">
 .scroll-view-transition {
   position: absolute;
   top: 50%;
@@ -697,6 +712,7 @@ export default defineComponent({
   &.scroll-view-transition-leave-active {
     transition-timing-function: ease-in-out;
     transition-duration: 0.2s;
+    transition-property: opacity, transform;
   }
 }
 </style>

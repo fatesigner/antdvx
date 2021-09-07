@@ -32,11 +32,22 @@ export interface IScrollViewOptions {
   /**
    * 显示 loading 层
    */
-  loading?: {
-    show: boolean;
-    size?: typeof ANTDVX_SIZES[number];
-    text?: string;
-  };
+  loading?: boolean;
+
+  /**
+   * loading 文字
+   */
+  loadingText?: string;
+
+  /**
+   * loading 图标尺寸
+   */
+  loadingSize?: typeof ANTDVX_SIZES[number];
+
+  /**
+   * 是否立即执行初始化函数, 默认为 true
+   */
+  immediate: boolean;
 
   /**
    * 初始化函数, 若设置该值, 将会在 onMounted 事件中执行，该函数执行期间, 将会持续显示 loading 层
