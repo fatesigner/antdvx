@@ -29,7 +29,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .wrap {
   position: fixed;
   top: 0;

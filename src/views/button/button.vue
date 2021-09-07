@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <div class="tw-p-4 tw-space-y-4">
       <div class="tw-text-lg">基础</div>
       <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4">

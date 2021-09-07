@@ -83,8 +83,7 @@ export const XButtonProps = {
    * 设置按钮类型，新增 outline、3d 类型
    */
   type: {
-    type: String as PropType<typeof ANTDVX_BUTTON_TYPES[number]>,
-    default: 'normal'
+    type: String as PropType<typeof ANTDVX_BUTTON_TYPES[number]>
   },
 
   // Custom

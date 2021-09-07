@@ -21,7 +21,7 @@ import MenuItem from './menu-item.vue';
 export default defineComponent({
   components: {
     MenuItem,
-    // Antd
+
     [Menu.name]: Menu
   },
   setup() {
@@ -86,7 +86,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style lang="less">
 .sidebar-menu {
   .ant-menu-item {
     height: 32px !important;
@@ -112,7 +112,7 @@ export default defineComponent({
   &.ant-menu-vertical-right .ant-menu-submenu-title,
   &.ant-menu-inline .ant-menu-submenu-title {
     margin-top: 0;
-    margin-bottom: 8px;
+    margin-bottom: 0 !important;
   }
 
   .ant-menu-item:last-child {

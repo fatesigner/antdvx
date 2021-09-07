@@ -71,9 +71,7 @@ import { IScrollViewOptions } from './scroll-view';
 
 const elementResizeDetectorMaker = require('element-resize-detector');
 
-const erd = elementResizeDetectorMaker({
-  strategy: 'scroll'
-});
+let erd;
 
 export default defineComponent({
   components: {
@@ -442,6 +440,11 @@ export default defineComponent({
       // 监听窗口尺寸变化，重新设置滑块尺寸
       if (props.autoresize) {
         if (contentRef.value) {
+          if (!erd) {
+            erd = elementResizeDetectorMaker({
+              strategy: 'scroll'
+            });
+          }
           erd.listenTo(contentRef.value, resizeLayout);
         }
       }
@@ -495,7 +498,7 @@ export default defineComponent({
     });
 
     onActivated(() => {
-      // 还原上次的滚动条位置
+      // 还原之前记录的滚动条位置
       if (viewRef.value) {
         viewRef.value.scrollTop = scrollPos.top;
         viewRef.value.scrollLeft = scrollPos.left;
@@ -511,20 +514,22 @@ export default defineComponent({
     });
 
     onUnmounted(() => {
-      // 移除窗口尺寸的监听
+      // 移除视窗区域尺寸的监听
       if (contentRef.value) {
-        erd.removeListener(contentRef.value, resizeLayout);
+        if (erd) {
+          erd.removeListener(contentRef.value, resizeLayout);
+        }
       }
     });
 
     return {
-      error,
-      loading_,
       i18nMessages,
       viewRef,
       contentRef,
       horThumbRef,
       verThumbRef,
+      error,
+      loading_,
       load,
       reload,
       scrollTo,

@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <div class="tw-p-4">
       <XTable v-bind="tableRef">
         <template #title="{ options, params, handler, methods }">
@@ -86,8 +86,7 @@ export default defineComponent({
           },
           {
             title: '用户名',
-            dataIndex: 'username',
-            width: 200
+            dataIndex: 'username'
           },
           {
             title: '手机号',
@@ -110,7 +109,7 @@ export default defineComponent({
           {
             title: '性别',
             dataIndex: 'sex',
-            width: 60,
+            width: 80,
             filters: MASTER_DATA_SEX.arr.map((x) => ({
               value: x.value,
               text: x.text
@@ -122,7 +121,7 @@ export default defineComponent({
           {
             title: '状态',
             dataIndex: 'status',
-            width: 180,
+            width: 100,
             filters: [
               { text: '启用', value: 'enabled' },
               { text: '禁用', value: 'disabled' }

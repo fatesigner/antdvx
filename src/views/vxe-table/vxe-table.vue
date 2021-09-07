@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <div class="tw-p-4">
       <VxeG v-bind="gridRef">
         <template #title="{ loading, refresh }">

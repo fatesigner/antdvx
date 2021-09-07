@@ -8,7 +8,7 @@
       </XTabs>
     </div>
     <div class="tw-flex-1 tw-overflow-hidden">
-      <ScrollView v-show="activeKey === 'field'">
+      <ScrollView fill-y scroll-y v-show="activeKey === 'field'">
         <ACollapse class="form-designer-collapse" v-model:activeKey="collapseKey" :bordered="false">
           <ACollapsePanel v-for="group in attributesGrouped" :key="group.label" :header="group.label">
             <AForm class="tw-space-y-4" layout="vertical">
@@ -26,7 +26,7 @@
           </AForm>
         </div>-->
       </ScrollView>
-      <ScrollView v-show="activeKey === 'form'">
+      <ScrollView fill-y scroll-y v-show="activeKey === 'form'">
         <div class="tw-pt-2 tw-pr-4 tw-pb-2 tw-pl-2">
           <AForm layout="vertical">
             <AFormItem label="标题">

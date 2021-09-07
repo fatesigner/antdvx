@@ -14,12 +14,12 @@
     </template>
 
     <template #error="{ error }">
-      <div :class="$style.error">{{ error }}<XButtonRefresh :handler="refresh" size="small" /></div>
+      <div :class="$style.error">{{ error }}<XButtonRefresh class="tw-ml-2" :handler="refresh" only-icon color="primary" size="small" type="link" /></div>
     </template>
 
     <template #empty>
       <div :class="$style.empty">
-        <AEmpty />
+        <Empty />
       </div>
     </template>
 
@@ -28,8 +28,8 @@
         <img width="100" height="50" src="@/assets/img/logo.png" alt="" title="" />
       </div>
       <div :class="$style.actions">
-        <XButtonRefresh v-if="refreshable" :disabled="loading" class="tw-mr-2" size="small" :handler="refresh" />
-        <XButtonExport :disabled="loading" size="small" placement="bottomRight" filename="Selected Alpha Group" :target="getTarget" />
+        <XButtonRefresh v-if="refreshable" :disabled="loading" class="tw-mr-2" color="primary" only-icon size="mini" type="link" :handler="refresh" />
+        <XButtonExport :disabled="loading" size="small" placement="bottomRight" :options="exportOptions" />
       </div>
     </template>
   </VEcharts>
@@ -38,7 +38,7 @@
 <script lang="ts">
 import { Empty, Spin } from 'ant-design-vue';
 import { PropType, defineComponent, ref } from 'vue';
-import { EChartsOption, EChartsOptionPromise, EChartsType, VEcharts, XButtonExport, XButtonRefresh } from '@/antdvx';
+import { EChartsOption, EChartsOptionPromise, EChartsType, IXButtonExportOptions, VEcharts, XButtonExport, XButtonRefresh } from '@/antdvx';
 
 export default defineComponent({
   components: {
@@ -60,6 +60,9 @@ export default defineComponent({
     options: {
       type: [Object, Function] as PropType<EChartsOption | EChartsOptionPromise>,
       default: () => []
+    },
+    filename: {
+      type: String
     },
     aspectRatio: {
       type: [Number, String],
@@ -86,11 +89,16 @@ export default defineComponent({
       default: true
     }
   },
-  setup() {
+  setup(props) {
     const $chart = ref(null);
 
-    const getTarget = (): HTMLElement => {
-      return $chart.value.getChartElement();
+    const exportOptions: IXButtonExportOptions = {
+      async image() {
+        return {
+          filename: props.filename,
+          target: $chart.value?.getChartElement()
+        };
+      }
     };
 
     const refresh = async () => {
@@ -101,14 +109,14 @@ export default defineComponent({
 
     return {
       chart: $chart,
-      getTarget,
+      exportOptions,
       refresh
     };
   }
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .loading {
   position: absolute;
   top: 50%;
@@ -144,7 +152,7 @@ export default defineComponent({
 }
 </style>
 
-<style lang="scss">
+<style lang="less">
 .chart-empty-enter-active,
 .chart-empty-leave-to {
   opacity: 0;

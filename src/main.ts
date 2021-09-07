@@ -11,7 +11,7 @@ import { Dayjs } from '@/plugins/dayjs';
 import { VeeValidate } from '@/plugins/vee-validate';
 
 // Styles
-import './main.scss';
+import './main.less';
 
 // App
 import App from '@/app/App.vue';

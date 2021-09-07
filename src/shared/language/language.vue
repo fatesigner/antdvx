@@ -1,7 +1,7 @@
 <template>
   <ADropdown>
     <div :class="$style.dropdown">
-      <IconGlobalLine class="tw-mr-1" /><span :class="$style.text">{{ currentLang }}</span>
+      <IconGlobalLine class="tw-mr-1" /><span :class="['tw-text-xs', $style.text]">{{ currentLang }}</span>
     </div>
     <template #overlay>
       <AMenu v-model:selectedKeys="selectedKeys" @click="langSelected">
@@ -20,7 +20,12 @@ import { Languages } from '@/i18n';
 import { AppStore } from '@/app/store';
 
 export default defineComponent({
-  components: { IconGlobalLine, [Dropdown.name]: Dropdown, [Menu.name]: Menu, [Menu.Item.name]: Menu.Item },
+  components: {
+    IconGlobalLine,
+    [Menu.name]: Menu,
+    [Menu.Item.name]: Menu.Item,
+    [Dropdown.name]: Dropdown
+  },
   setup() {
     const langs = Languages.arr;
 
@@ -51,9 +56,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
-@import '@/theme/default.theme';
-
+<style lang="less" module>
 .dropdown {
   display: flex;
   align-items: center;
@@ -71,7 +74,6 @@ export default defineComponent({
   width: 20px;
   margin-top: 1px;
   overflow: hidden;
-  font-size: 12px;
   text-overflow: ellipsis;
 }
 </style>

@@ -1,51 +1,49 @@
 <template>
-  <div class="tw-h-full">
-    <ScrollView ref="scrollViewRef">
-      <AForm
-        :layout="binds.settings.layout"
-        :labelAlign="binds.settings.labelAlign"
-        :labelCol="binds.settings.labelCol"
-        :hideRequiredMark="binds.settings.hideRequiredMark"
+  <ScrollView ref="scrollViewRef" fill-y scroll-y>
+    <AForm
+      :layout="binds.settings.layout"
+      :labelAlign="binds.settings.labelAlign"
+      :labelCol="binds.settings.labelCol"
+      :hideRequiredMark="binds.settings.hideRequiredMark"
+    >
+      <Draggable
+        class="tw-p-2 tw-space-y-2"
+        ref="draggableRef"
+        item-key="key"
+        :ghostClass="$style.ghost"
+        :animation="200"
+        :group="{ name: group }"
+        :list="binds.widgets"
+        @change="onDragChange"
       >
-        <Draggable
-          class="tw-p-2 tw-space-y-2"
-          ref="draggableRef"
-          item-key="key"
-          :ghostClass="$style.ghost"
-          :animation="200"
-          :group="{ name: group }"
-          :list="binds.widgets"
-          @change="onDragChange"
-        >
-          <template #item="{ element, index }">
-            <TransitionGroup name="fade" tag="div">
-              <div
-                :class="[
-                  $style.widget,
-                  activatedKey === element.key ? $style.activated : null,
-                  isRequired(element.field) ? $style.required : null,
-                  element.field.hidden ? $style.hidden : null
-                ]"
-                :key="element.key || index"
-                @click="itemClick(element)"
-              >
-                <AFormItem>
-                  <template #label>
-                    <div :class="$style.label">{{ element.field.label }}</div>
-                  </template>
-                  <Component :is="getComp(element.component)" :field="element.field" />
-                </AFormItem>
-                <div :class="$style.actions">
-                  <XButton class="tw-mr-1" size="small" type="default" title="复制" @click="copy(element, index)"><IconFileCopyLine /></XButton>
-                  <XButton size="small" type="default" title="删除" @click="remove(element, index)"><IconDeleteBinLine /></XButton>
-                </div>
+        <template #item="{ element, index }">
+          <TransitionGroup name="fade" tag="div">
+            <div
+              :class="[
+                $style.widget,
+                activatedKey === element.key ? $style.activated : null,
+                isRequired(element.field) ? $style.required : null,
+                element.field.hidden ? $style.hidden : null
+              ]"
+              :key="element.key || index"
+              @click="itemClick(element)"
+            >
+              <AFormItem>
+                <template #label>
+                  <div :class="$style.label">{{ element.field.label }}</div>
+                </template>
+                <Component :is="getComp(element.component)" :field="element.field" />
+              </AFormItem>
+              <div :class="$style.actions">
+                <XButton class="tw-mr-1" size="small" type="default" title="复制" @click="copy(element, index)"><IconFileCopyLine /></XButton>
+                <XButton size="small" type="default" title="删除" @click="remove(element, index)"><IconDeleteBinLine /></XButton>
               </div>
-            </TransitionGroup>
-          </template>
-        </Draggable>
-      </AForm>
-    </ScrollView>
-  </div>
+            </div>
+          </TransitionGroup>
+        </template>
+      </Draggable>
+    </AForm>
+  </ScrollView>
 </template>
 
 <script lang="ts">

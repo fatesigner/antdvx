@@ -3,8 +3,8 @@
  */
 
 import { merge } from 'lodash-es';
-import { message, notification } from 'ant-design-vue';
 import { setRequestAdapter } from '@/antdvx';
+import { message, notification } from 'ant-design-vue';
 
 import { i18n } from '@/i18n';
 import { httpService } from '@/app/services';

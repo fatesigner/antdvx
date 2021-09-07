@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <ASpin v-if="loading" />
     <VeeForm :initialValues="form.state" :validation-schema="form.schema" ref="formRef">
       <AForm

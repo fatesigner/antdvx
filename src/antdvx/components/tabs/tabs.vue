@@ -1,5 +1,5 @@
 <template>
-  <ScrollView @scroll="onScroll" ref="scrollViewRef">
+  <ScrollView fill-y scroll-y @scroll="onScroll" ref="scrollViewRef">
     <!--<view class="tabs-border-top-shadow" v-if="border === 'top'" />-->
     <ul
       ref="tabsEl"

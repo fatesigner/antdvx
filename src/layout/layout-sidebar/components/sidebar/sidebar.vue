@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="tw-flex-1 tw-overflow-hidden tw-relative">
-        <ScrollView @scroll="onScroll">
+        <ScrollView fill-y scroll-y @scroll="onScroll">
           <Menus />
         </ScrollView>
       </div>
@@ -186,7 +186,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .header {
   position: relative;
   display: flex;
@@ -272,7 +272,7 @@ export default defineComponent({
 }
 </style>
 
-<style lang="scss">
+<style lang="less">
 .sidebar-menu {
   .ant-menu-item {
     height: 32px !important;

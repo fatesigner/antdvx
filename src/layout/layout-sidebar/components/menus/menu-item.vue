@@ -27,10 +27,10 @@
 <script lang="ts">
 import { Iconfont } from '@/antdvx';
 import { Menu } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
 import { PropType, defineComponent } from 'vue';
 
 import { IMenu } from '@/types/menu';
-import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'menu-item',

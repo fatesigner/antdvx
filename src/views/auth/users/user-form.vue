@@ -86,7 +86,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="scss" module>
-@import '@/theme/default.theme';
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <ACollapse class="ant-collapse-pure" v-model:activeKey="collapseKey" :bordered="false">
       <ACollapsePanel v-for="item in widgetsGrouped" :key="item.label" :header="item.label">
         <Draggable

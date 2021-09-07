@@ -14,7 +14,7 @@ export const WIDGET_SIZE_OPTIONS: { label: string; value: IWidgetSize }[] = [
 // 布局方式
 export const LAYOUT_OPTIONS = [
   { label: '水平', value: 'horizontal' },
-  { label: '垂直', value: 'vertical' },
+  { label: '纵向', value: 'vertical' },
   { label: '内联', value: 'inline' }
 ];
 

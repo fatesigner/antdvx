@@ -85,7 +85,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
+<style lang="less" module>
 .dropdown {
   display: flex;
   align-items: center;

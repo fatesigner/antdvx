@@ -9,7 +9,7 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 
 import { i18n } from '@/i18n';
 
-import './vee-validate.scss';
+import './vee-validate.less';
 
 export const VeeValidate = {
   install(app) {

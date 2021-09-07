@@ -1,6 +1,6 @@
 <template>
   <div class="tw-h-full">
-    <ScrollView>
+    <ScrollView fill-y scroll-y>
       <VeeForm>
         <div class="tw-p-4">
           表单 {{ id }}

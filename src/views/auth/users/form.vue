@@ -1,6 +1,6 @@
 <template>
   <div class="tw-flex-1 tw-h-full">
-    <ScrollView>
+    <ScrollView fill-y scroll-y>
       <AForm>
         <AFormItem label="表单名">
           <AInput />

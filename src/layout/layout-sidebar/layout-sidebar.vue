@@ -69,9 +69,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
-@import '@/theme/default.theme';
-
+<style lang="less" module>
 .wrap {
   height: 100%;
 }

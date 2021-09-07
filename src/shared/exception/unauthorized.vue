@@ -736,7 +736,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="less">
 .http401-container {
   display: flex;
   align-items: center;

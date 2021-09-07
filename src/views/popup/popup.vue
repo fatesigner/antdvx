@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <div class="tw-flex tw-flex-wrap tw-p-2">
       <div class="tw-p-2">
         <XButton outline :handler="openModal()">打开 Modal</XButton>

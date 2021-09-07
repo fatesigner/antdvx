@@ -4,7 +4,7 @@
       <div :class="$style.loading">
         <div class="tw-space-y-2">
           <div class="tw-text-center"><SpinnerLoading :size="loadingSize" /></div>
-          <div v-if="loadingText" class="tw-mt-5">{{ loadingText }}</div>
+          <div class="tw-text-center tw-mt-5" v-if="loadingText">{{ loadingText }}</div>
         </div>
       </div>
     </slot>

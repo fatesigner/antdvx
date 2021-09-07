@@ -10,7 +10,7 @@ import { IXTableHandlers, IXTablePropsType, IXTableRefType } from './types';
 
 export const defaultXTableProps: IXTablePropsType<any, any> = {
   loading: false,
-  scroll: { x: true },
+  // scroll: { x: true },
   dataSource: {
     data: [],
     pageNo: 1,

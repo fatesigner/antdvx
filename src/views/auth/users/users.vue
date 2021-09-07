@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <div class="tw-p-4">
       <XTable v-bind="tableRef">
         <template #title="{ loading, refresh }">

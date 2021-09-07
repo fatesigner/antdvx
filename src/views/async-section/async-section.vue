@@ -1,10 +1,10 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <div class="tw-p-4 tw-space-y-4">
       <div class="tw-text-lg">Async Section</div>
 
       <div class="tw-p-2 tw-border tw-border-gray-300">
-        <AsyncSection :initialize="asyncSectionLoad(3000, true)">
+        <AsyncSection loading-text="Loading project..." :initialize="asyncSectionLoad(3000, true)">
           <template #default="{ data, reload }">
             <span>{{ data.text }}</span>
             <XButtonRefresh color="primary" size="small" type="link" :handler="reload" />

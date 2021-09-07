@@ -3,62 +3,10 @@
  */
 
 import { StructureTree } from '@fatesigner/utils/structure-tree';
-import { isBoolean, isNullOrUndefined, isObject } from '@fatesigner/utils/type-check';
+import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 import { IMenu } from '@/types/menu';
 import { IRouteConfig } from '@/types/route';
-
-export function getColumns(res) {
-  if (!res.length) {
-    return;
-  }
-  const obj = res[0];
-  const columns = [];
-  let template = '';
-  Object.keys(obj)
-    .filter(
-      (x) =>
-        !['isUpdated', 'apiToken', 'errorMessage', 'updateTime', 'updateBy', 'infoJasonValues', 'returnInfoType', 'inputInfoType'].includes(x) &&
-        !isObject(obj[x])
-    )
-    .forEach((x) => {
-      if (x === 'title') {
-        columns.push({
-          title: 'title_',
-          dataIndex: 'title_',
-          width: 150
-        });
-        template += `
-         <template #title_="{ record, handleRecordChange }">
-            <AInput v-model:value="record.title_" style="width: 150px" @change="handleRecordChange(record)" />
-          </template>
-        `;
-      } else {
-        columns.push({
-          title: x.replace(/_/g, ' '),
-          dataIndex: x,
-          width: 150
-        });
-        if (isBoolean(obj[x])) {
-          template += `
-         <template #${x}="{ record, handleRecordChange }">
-            <a-checkbox v-model:checked="record.${x}" @change="handleRecordChange(record)" />
-          </template>
-        `;
-        } else {
-          template += `
-         <template #${x}="{ record, handleRecordChange }">
-            <AInput v-model:value="record.${x}" style="width: 150px" @change="handleRecordChange(record)" />
-          </template>
-        `;
-        }
-      }
-    });
-
-  console.log('columns', JSON.stringify(columns));
-  console.log('columns slot', JSON.stringify(columns.map((x) => ({ ...x, slots: { customRender: x.dataIndex } }))));
-  console.log('template', template);
-}
 
 /**
  * 高亮搜索关键字

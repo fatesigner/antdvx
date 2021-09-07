@@ -16,7 +16,7 @@
     "children": [
       {
         "id": "zf96690e69zd",
-        "label": "可滚动视图",
+        "label": "可滚动视图区域",
         "name": "scroll-view",
         "url": "/scroll-view",
         "target": null,

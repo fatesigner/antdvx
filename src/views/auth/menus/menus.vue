@@ -1,5 +1,5 @@
 <template>
-  <ScrollView>
+  <ScrollView fill-y scroll-y>
     <div class="tw-p-4">
       <XTable :columns="columns" :row-key="rowKey" :load-data="loadData" :data-source="users">
         <template #title="{ loading, refresh }">

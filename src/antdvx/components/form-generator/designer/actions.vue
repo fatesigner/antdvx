@@ -34,17 +34,17 @@
 
     <AModal v-model:visible="uploadedJson.visible" title="导入JSON" :width="800" @ok="onUpload">
       <AAlert class="tw-mb-4" type="info" message="覆盖此处代码点击确定即可" />
-      <ScrollView style="height: 600px"><CodeEditor language="json" v-model:value="uploadedJson.text" /></ScrollView>
+      <ScrollView scroll-y style="height: 600px"><CodeEditor language="json" v-model:value="uploadedJson.text" /></ScrollView>
     </AModal>
 
     <AModal v-model:visible="generatedJson.visible" title="生成JSON" okText="复制到剪切板" :width="800" @ok="onCopy(generatedJson.text)">
-      <ScrollView style="height: 600px">
+      <ScrollView scroll-y style="height: 600px">
         <CodeEditor language="json" v-model:value="generatedJson.text" />
       </ScrollView>
     </AModal>
 
     <AModal v-model:visible="previewed.visible" title="预览" :width="800">
-      <ScrollView style="height: 600px">
+      <ScrollView scroll-y style="height: 600px">
         <FormRenderer :data="previewed.data" ref="formRef"></FormRenderer>
       </ScrollView>
       <template #footer>

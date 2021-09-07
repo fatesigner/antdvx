@@ -19,8 +19,8 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import NotFound from '@/shared/exception/not-found.vue';
-import Language from '@/shared/language/language.vue';
+import { Language } from '@/shared/language';
+import { NotFound } from '@/shared/exception';
 
 export default defineComponent({
   components: {
@@ -35,9 +35,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
-@import '@/theme/default.theme';
-
+<style lang="less" module>
 .language {
   position: fixed;
   top: 10px;

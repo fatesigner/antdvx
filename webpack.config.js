@@ -21,12 +21,13 @@ module.exports = webpackConfig({
       strictMath: false,
       noIeCompat: true,
       javascriptEnabled: true
+      // additionalData: '@import "~@/plugins/antdvx/theme.less";'
       // modifyVars: require(path.join(SRC_PATH, 'theme/antdv.theme'))
     }
   },
   sass: {
-    implementation: require('sass'),
-    additionalData: '@import "~@/theme/default.theme.scss";'
+    implementation: require('sass')
+    // additionalData: '@import "~@/theme/default.theme.scss";'
   },
   devServer: {
     // host: '0.0.0.0',

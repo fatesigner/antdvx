@@ -16,8 +16,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
 import { IconMenuLine } from '@/antdvx';
+import { computed, defineComponent } from 'vue';
 
 import { Language } from '@/shared/language';
 import { LayoutSidebarStore } from '@/layout/layout-sidebar/store';
@@ -53,9 +53,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" module>
-@import '@/theme/default.theme';
-
+<style lang="less" module>
 .header {
   &::after {
     position: absolute;
