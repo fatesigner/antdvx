@@ -236,6 +236,7 @@ export default defineComponent({
     return {
       wrap: $wrap,
       chart: $chart,
+      styles,
       options_: options,
       loading,
       initialized,
