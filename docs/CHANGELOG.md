@@ -1,3 +1,11 @@
+# [1.0.0-alpha.28](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.27...v1.0.0-alpha.28) (2021-09-08)
+
+
+### Features
+
+* 更新 ScrollView 组件 API ([9cecb06](https://github.com/fatesigner/antdvx/commit/9cecb06eef0eb99037941736cf2ca74fcbaa2de1))
+* 移除 scss 预处理器 ([471328f](https://github.com/fatesigner/antdvx/commit/471328f6f73ac85a57053b58ebd8bb227435607e))
+
 # [1.0.0-alpha.27](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.26...v1.0.0-alpha.27) (2021-09-07)
 
 
