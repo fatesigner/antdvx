@@ -1,3 +1,10 @@
+# [1.0.0-alpha.29](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.28...v1.0.0-alpha.29) (2021-09-08)
+
+
+### Bug Fixes
+
+* 修复 VEcharts 组件 styles not defined 问题 ([84ea284](https://github.com/fatesigner/antdvx/commit/84ea284e657388363eb5fa0d6de3602c2a89868c))
+
 # [1.0.0-alpha.28](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.27...v1.0.0-alpha.28) (2021-09-08)
 
 
