@@ -1,3 +1,10 @@
+# [1.0.0-alpha.30](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.29...v1.0.0-alpha.30) (2021-09-09)
+
+
+### Features
+
+* 新增: Transition 组件, 将 TransitionRouter 更改为 TransitionSlide ([dee65b6](https://github.com/fatesigner/antdvx/commit/dee65b66e3780e9e8c7f4177cb15363ab6c7cd17))
+
 # [1.0.0-alpha.29](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.28...v1.0.0-alpha.29) (2021-09-08)
 
 
