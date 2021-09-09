@@ -60,6 +60,15 @@
         "children": []
       },
       {
+        "id": "df96690e69sc",
+        "label": "过渡（Transitions）",
+        "name": "transitions",
+        "url": "/transitions",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "b796690e6975",
         "label": "表格",
         "name": "table",

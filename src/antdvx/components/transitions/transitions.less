@@ -1,0 +1,109 @@
+// Slide
+//----------------------------------
+// slide down
+.slide-down-leave-active {
+  opacity: 1;
+  transition-timing-function: ease-in;
+  transition-duration: 0.1s;
+  transition-property: opacity, transform;
+  transform: translateY(0);
+}
+
+.slide-down-enter-active {
+  opacity: 0;
+  transition-timing-function: ease-out;
+  transition-duration: 0.2s;
+  transition-property: opacity, transform;
+  transform: translateY(10px);
+}
+
+.slide-down-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.slide-down-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+// slide up
+.slide-up-leave-active {
+  opacity: 1;
+  transition-timing-function: ease-in;
+  transition-duration: 0.1s;
+  transition-property: opacity, transform;
+  transform: translateY(0);
+}
+
+.slide-up-enter-active {
+  opacity: 0;
+  transition-timing-function: ease-out;
+  transition-duration: 0.2s;
+  transition-property: opacity, transform;
+  transform: translateY(-10px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.slide-up-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+// slide right
+.slide-right-leave-active {
+  opacity: 1;
+  transition-timing-function: ease-in;
+  transition-duration: 0.1s;
+  transition-property: opacity, transform;
+  transform: translateX(0);
+}
+
+.slide-right-enter-active {
+  opacity: 0;
+  transition-timing-function: ease-out;
+  transition-duration: 0.2s;
+  transition-property: opacity, transform;
+  transform: translateX(10px);
+}
+
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(10px);
+}
+
+.slide-right-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+// slide left
+.slide-left-leave-active {
+  opacity: 1;
+  transition-timing-function: ease-in;
+  transition-duration: 0.1s;
+  transition-property: opacity, transform;
+  transform: translateX(0);
+}
+
+.slide-left-enter-active {
+  opacity: 0;
+  transition-timing-function: ease-out;
+  transition-duration: 0.2s;
+  transition-property: opacity, transform;
+  transform: translateX(-10px);
+}
+
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.slide-left-enter-to {
+  opacity: 1;
+  transform: translateX(0);
+}

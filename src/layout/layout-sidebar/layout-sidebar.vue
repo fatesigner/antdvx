@@ -7,17 +7,17 @@
           <AppHeader />
         </div>
         <div class="tw-flex-1 tw-overflow-hidden tw-h-full">
-          <TransitionRouter>
+          <TransitionSlide>
             <Unauthorized v-if="status.code === 403" />
-          </TransitionRouter>
+          </TransitionSlide>
           <template v-if="status.code === 200">
             <RouterView v-slot="{ Component }">
-              <TransitionRouter>
+              <TransitionSlide>
                 <KeepAlive v-if="$route.meta && $route.meta.keepAlive">
                   <Component :is="Component" :key="$route.meta.key" />
                 </KeepAlive>
                 <Component :is="Component" v-else :key="$route.meta.key" />
-              </TransitionRouter>
+              </TransitionSlide>
             </RouterView>
           </template>
         </div>
@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts">
-import { TransitionRouter } from '@/antdvx';
+import { TransitionSlide } from '@/antdvx';
 import { computed, defineComponent } from 'vue';
 
 import { Language } from '@/shared/language';
@@ -47,7 +47,7 @@ export default defineComponent({
     AppHeader,
     User,
     Sidebar,
-    TransitionRouter
+    TransitionSlide
   },
   setup() {
     const theme = computed({

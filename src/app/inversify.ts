@@ -171,7 +171,7 @@ const antdvxModule = new ContainerModule((bind) => {
                   if (Object.prototype.toString.call(err) === '[object String]') {
                     message = err;
                   } else {
-                    message = err.msg || err.Message || i18n._.global.tc(i18nMessages.app.http.requestFailed);
+                    message = err.msg || err.message || err.Message || i18n._.global.tc(i18nMessages.app.http.requestFailed);
                   }
                 }
               }

@@ -5,7 +5,7 @@
 import AllRules from '@vee-validate/rules';
 import { configure, defineRule } from 'vee-validate';
 import { localize, setLocale } from '@vee-validate/i18n';
-import { ErrorMessage, Field, Form } from 'vee-validate';
+//import { ErrorMessage, Field, Form } from 'vee-validate';
 
 import { i18n } from '@/i18n';
 
@@ -26,9 +26,9 @@ export const VeeValidate = {
     });
 
     // Register global component
-    app.component('VeeForm', Form);
-    app.component('VeeField', Field);
-    app.component('VeeErrorMessage', ErrorMessage);
+    //app.component('VeeForm', Form);
+    //app.component('VeeField', Field);
+    //app.component('VeeErrorMessage', ErrorMessage);
 
     const loadLang = async (lang) => {
       // 导入 language，非中文环境统一使用英文

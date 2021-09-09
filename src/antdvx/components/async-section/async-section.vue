@@ -1,18 +1,18 @@
 <template>
-  <div :class="[$style.transition, $style.hidden]" ref="loadingRef">
-    <slot name="loading">
-      <div :class="$style.loading">
+  <TransitionCollapse>
+    <div v-if="loading_">
+      <slot name="loading">
         <div class="tw-space-y-2">
-          <div class="tw-text-center"><SpinnerLoading :size="loadingSize" /></div>
+          <div class="tw-text-center"><SpinnerLoading class="tw-align-top" :size="loadingSize" /></div>
           <div class="tw-text-center tw-mt-5" v-if="loadingText">{{ loadingText }}</div>
         </div>
-      </div>
-    </slot>
-  </div>
+      </slot>
+    </div>
+  </TransitionCollapse>
 
-  <div :class="[$style.transition, $style.hidden]" ref="errorRef">
-    <slot name="error" v-bind="{ error, reload }">
-      <div :class="$style.error">
+  <TransitionCollapse>
+    <div v-if="!loading_ && error">
+      <slot name="error" v-bind="{ error, reload }">
         <AAlert type="error" show-icon>
           <!--<template #message>{{ $t(i18nMessages.antd.asyncAction.error) }}</template>-->
           <template #description>
@@ -20,32 +20,36 @@
             <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />
           </template>
         </AAlert>
-      </div>
-    </slot>
-  </div>
+      </slot>
+    </div>
+  </TransitionCollapse>
 
-  <div v-if="initialized" :class="[$style.transition, $style.hidden]" ref="contentRef">
-    <slot v-bind="{ data, loading: loading_, reload: load }" />
-  </div>
+  <TransitionCollapse>
+    <div v-if="initialized">
+      <slot v-bind="{ data, loading: loading_, reload: load }" />
+    </div>
+  </TransitionCollapse>
 </template>
 
 <script lang="ts">
 import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
-import { PropType, defineComponent, nextTick, onMounted, ref, useCssModule, watch } from 'vue';
+import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { collapseSection, expandSection } from '../../utils';
 
 import { XButtonRefresh } from '../button';
 import { SpinnerLoading } from '../loading';
-import { IScrollViewOptions } from '../scroll-view';
+import { TransitionCollapse } from '../transitions';
+
+import { IAsAsyncSectionProps } from './types';
 
 export default defineComponent({
   name: 'async-action',
   components: {
     XButtonRefresh,
     SpinnerLoading,
+    TransitionCollapse,
     [Alert.name]: Alert
   },
   inheritAttrs: false,
@@ -58,7 +62,7 @@ export default defineComponent({
       type: String
     },
     loadingSize: {
-      type: String as PropType<IScrollViewOptions['loadingSize']>,
+      type: String as PropType<IAsAsyncSectionProps<any, any>['size']>,
       default: 'small'
     },
     immediate: {
@@ -70,12 +74,6 @@ export default defineComponent({
     }
   },
   setup(props: any, { emit }) {
-    const $style = useCssModule();
-
-    const errorRef = ref();
-    const loadingRef = ref();
-    const contentRef = ref();
-
     const data = ref();
     const error = ref('');
     const initialized = ref(false);
@@ -90,20 +88,6 @@ export default defineComponent({
       (val) => {
         if (loading_.value !== val) {
           loading_.value = val;
-          if (val) {
-            Promise.all([
-              expandSection(loadingRef.value, function (el) {
-                el.classList.remove($style.hidden);
-              }),
-              collapseSection(errorRef.value, function (el) {
-                el.classList.add($style.hidden);
-              })
-            ]);
-          } else {
-            collapseSection(loadingRef.value, function (el) {
-              el.classList.add($style.hidden);
-            });
-          }
         }
       }
     );
@@ -115,16 +99,9 @@ export default defineComponent({
           data.value = res;
           error.value = null;
           initialized.value = true;
-          collapseSection(errorRef.value, function (el) {
-            el.classList.add($style.hidden);
-          });
-          return res;
         })
         .catch((err: Error) => {
           error.value = err.message;
-          expandSection(errorRef.value, function (el) {
-            el.classList.remove($style.hidden);
-          });
         })
         .finally(() => {
           nextTick(() => {
@@ -135,37 +112,8 @@ export default defineComponent({
 
     const reload = async () => {
       loading_.value = true;
-      await nextTick();
-
-      await Promise.all([
-        expandSection(loadingRef.value, function (el) {
-          el.classList.remove($style.hidden);
-        }),
-        collapseSection(errorRef.value, function (el) {
-          el.classList.add($style.hidden);
-        })
-      ]);
-
       await load();
-
       loading_.value = false;
-      await nextTick();
-
-      let promises = [
-        collapseSection(loadingRef.value, function (el) {
-          el.classList.add($style.hidden);
-        })
-      ];
-
-      if (contentRef.value) {
-        promises.push(
-          expandSection(contentRef.value, function (el) {
-            el.classList.remove($style.hidden);
-          })
-        );
-      }
-
-      await Promise.all(promises);
     };
 
     onMounted(() => {
@@ -178,9 +126,6 @@ export default defineComponent({
 
     return {
       i18nMessages,
-      errorRef,
-      loadingRef,
-      contentRef,
       data,
       error,
       initialized,
@@ -191,16 +136,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="less" module>
-.transition {
-  overflow: hidden;
-  transition-timing-function: ease;
-  transition-duration: 0.2s;
-  transition-property: height;
-}
-
-.hidden {
-  height: 0;
-}
-</style>

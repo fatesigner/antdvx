@@ -2,6 +2,5 @@
  * index
  */
 
-import TransitionRouter from './transition-router.vue';
-
-export { TransitionRouter };
+export * from './transition-collapse';
+export * from './transition-slide';

@@ -6,8 +6,8 @@ import { getAccessPermission } from '@/antdvx';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import { authService } from '@/app/services';
-import { login$, logout$, roleChanged$ } from '@/app/events';
 import { addExceptionRoute } from '@/shared/exception';
+import { login$, logout$, roleChanged$ } from '@/app/events';
 
 // 基础路由表，可匿名访问
 const baseRoutes = [];

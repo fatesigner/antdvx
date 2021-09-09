@@ -4,7 +4,23 @@
 
 import { cloneDeep } from 'lodash-es';
 import { isObject } from '@fatesigner/utils/type-check';
-import { addEventListener } from '@fatesigner/utils/document';
+
+/**
+ * 获取元素内容高度，不包括 padding
+ * @param el
+ */
+export function getContentHeight(el: HTMLElement) {
+  const cs = getComputedStyle(el);
+
+  //const paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+  const paddingY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+
+  //const borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+  const borderY = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+
+  // elementWidth = element.offsetWidth - paddingX - borderX;
+  return el.offsetHeight - paddingY - borderY;
+}
 
 // 验证是否外部地址
 export function isExternal(path: string) {

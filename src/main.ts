@@ -6,8 +6,8 @@ import { createApp } from 'vue';
 
 // Plugins
 import { i18n } from '@/i18n';
-import { Antdvx } from '@/plugins/antdvx';
 import { Dayjs } from '@/plugins/dayjs';
+import { Antdvx } from '@/plugins/antdvx';
 import { VeeValidate } from '@/plugins/vee-validate';
 
 // Styles

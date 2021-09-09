@@ -1,6 +1,4 @@
-/**
- * interfaces
- */
+import { ANTDVX_SIZES } from '../../constants';
 
 export type IAsAsyncSectionHandler<TData> = {
   refresh: () => Promise<TData>;
@@ -9,7 +7,7 @@ export type IAsAsyncSectionHandler<TData> = {
 export type IAsAsyncSectionProps<TData, TContext> = {
   refreshable?: boolean;
   immediate?: boolean;
-  size?: 'small' | 'large';
+  size?: typeof ANTDVX_SIZES[number];
   error?: Error;
   data?: {
     [key in keyof TData]?: TData[key];

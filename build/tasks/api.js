@@ -7,6 +7,7 @@ const path = require('path');
 const gulp = require('gulp');
 const axios = require('axios');
 const https = require('https');
+const globby = require('globby');
 const { exec } = require('child_process');
 
 const { convertBridgeStrToHump } = require('../utils');
@@ -53,6 +54,9 @@ gulp.task('api', async function () {
           }
         );
 
+        // write URL shim
+        // writeUrlShim();
+
         resolve();
       });
     });
@@ -86,9 +90,8 @@ gulp.task('api', async function () {
   // write URL shim
   function writeUrlShim() {
     fs.writeFile(
-      path.join(outputPath, 'url-shim.js'),
-      `
-const URL = function (url, base) {
+      path.join(outputPath, 'url-shim.ts'),
+      `const URL = function (url, base) {
   return {
     hash: '',
     host: 'example.com',
@@ -102,10 +105,10 @@ const URL = function (url, base) {
     search: '',
     searchParams: {},
     username: ''
-  };
-};
+  } as any;
+} as any;
 
-const URLSearchParams = function (searchString) {};
+const URLSearchParams: any = function (searchString) {};
 
 URLSearchParams.prototype.toString = function () {
   return '';
@@ -118,6 +121,34 @@ export { URL, URLSearchParams };
       },
       function () {}
     );
+
+    globby.sync(path.join(outputPath, 'api/*.ts').replace(/\\/g, '/')).forEach((file) => {
+      // Replace api.ts and common.ts, Add import url.shim.ts
+      fs.readFile(
+        file,
+        {
+          encoding: 'utf-8'
+        },
+        function (err, data) {
+          if (err) {
+            console.log(err.stack);
+          }
+          const txt = data.replace(
+            /import/,
+            `import { URL, URLSearchParams } from '../url-shim';
+import`
+          );
+          fs.writeFile(
+            file,
+            txt,
+            {
+              encoding: 'utf-8'
+            },
+            function () {}
+          );
+        }
+      );
+    });
   }
 
   console.log(`==> Api Schema fetched ${API_SCHEMA}`);

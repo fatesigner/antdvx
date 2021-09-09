@@ -27,10 +27,13 @@ export const ANTDVX_COLORS = [
   'cyan',
   'blue',
   'purple'
-];
+] as const;
 
 // 尺寸
-export const ANTDVX_SIZES = ['default', 'large', 'small', 'mini'];
+export const ANTDVX_SIZES = ['default', 'large', 'small', 'mini'] as const;
+
+// 方向
+export const ANTDVX_DIRECTIONS = ['up', 'right', 'down', 'left'] as const;
 
 // 按钮类型
 export const ANTDVX_BUTTON_TYPES = [
@@ -42,4 +45,4 @@ export const ANTDVX_BUTTON_TYPES = [
   'text',
   'outline',
   '3d'
-];
+] as const;

@@ -13,13 +13,15 @@
         <template #description>{{ error }}</template>
       </AAlert>
 
-      <VeeForm :initialValues="form.state" :validation-schema="form.schema" v-slot="{ handleSubmit, isSubmitting }">
+      <form ref="formRef" class="tw-max-w-2xl tw-m-auto" @submit="onSubmit">
         <AForm layout="vertical">
           <AFormItem>
             <VeeField name="username" v-slot="{ field, handleChange }">
               <AInput type="text" size="large" :value="field.value" @change="handleChange" placeholder="Enter user name" />
             </VeeField>
-            <VeeErrorMessage class="invalid-message" name="username" />
+            <TransitionCollapse>
+              <VeeErrorMessage class="invalid-message" name="username" />
+            </TransitionCollapse>
           </AFormItem>
           <AFormItem>
             <VeeField name="password" v-slot="{ field, handleChange }">
@@ -29,22 +31,24 @@
                 visibilityToggle
                 :value="field.value"
                 @change="handleChange"
-                @keyup.enter="handleSubmit(onSubmit)"
+                @keyup.enter="submit"
                 placeholder="Enter user password"
               />
             </VeeField>
-            <VeeErrorMessage class="invalid-message" name="password" />
+            <TransitionCollapse>
+              <VeeErrorMessage class="invalid-message" name="password" />
+            </TransitionCollapse>
           </AFormItem>
           <AFormItem>
             <SlideCaptcha v-model:presented="captcha.presented" v-model:valid="captcha.valid" @update:valid="onSlideCaptchaValid" />
           </AFormItem>
           <AFormItem>
-            <XButton ref="submitBtnRef" block size="large" type="primary" :loading="isSubmitting" @click="handleSubmit(onSubmit)">
+            <XButton ref="submitBtnRef" block size="large" type="primary" :loading="isSubmitting" @click="submit">
               {{ $t(i18nMessages.app.passport.logIn) }}
             </XButton>
           </AFormItem>
         </AForm>
-      </VeeForm>
+      </form>
     </div>
   </div>
 </template>
@@ -52,10 +56,11 @@
 <script lang="ts">
 import to from 'await-to-js';
 import { useI18n } from 'vue-i18n';
-import { SlideCaptcha, XButton } from '@/antdvx';
 import { useRoute, useRouter } from 'vue-router';
+import { SlideCaptcha, TransitionCollapse, XButton } from '@/antdvx';
 import { computed, defineComponent, onDeactivated, reactive, ref } from 'vue';
 import { Alert, Button, Form, Input, message, notification } from 'ant-design-vue';
+import { ErrorMessage as VeeErrorMessage, Field as VeeField, useForm } from 'vee-validate';
 
 import { Api } from '@/mocks';
 import { i18nMessages } from '@/i18n';
@@ -64,8 +69,11 @@ import { authService, sessionService } from '@/app/services';
 
 export default defineComponent({
   components: {
+    VeeErrorMessage,
+    VeeField,
     XButton,
     SlideCaptcha,
+    TransitionCollapse,
     [Input.name]: Input,
     [Input.name]: Input,
     [Alert.name]: Alert,
@@ -79,6 +87,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
 
+    const formRef = ref<any>();
     const submitBtnRef = ref<any>();
 
     // get error message
@@ -92,29 +101,27 @@ export default defineComponent({
       presented: false
     });
 
-    let formState = {
-      username: '',
-      password: ''
-    };
-
-    if (process.env.APP_DEBUG === 'true') {
-      formState = {
-        username: 'admin',
-        password: '12345678'
-      };
-    }
-
-    // form validate
-    const form = {
-      state: formState,
-      schema: {
+    // form
+    const form = useForm({
+      validateOnMount: false,
+      initialValues: {
+        username: '',
+        password: ''
+      },
+      validationSchema: {
         username: 'required',
         password: 'required'
       }
-    };
+    });
 
-    // Save response user info
-    let loginResponse: any = null;
+    if (process.env.APP_DEBUG === 'true') {
+      form.resetForm({
+        values: {
+          username: 'admin',
+          password: '12345678'
+        }
+      });
+    }
 
     const onSlideCaptchaValid = (valid) => {
       if (valid) {
@@ -123,41 +130,8 @@ export default defineComponent({
       }
     };
 
-    // Login to session
-    const login = () => {
-      // 获取用户角色
-      const roles = loginResponse?.roles?.map((x) => x.RoleCode) ?? ['admin'];
-
-      // 菜单
-      let menus = loginResponse.privileges;
-
-      menus = authService.getAuthorizedMenus(menus, roles as any);
-
-      sessionService.login({
-        username: form.state.username,
-        password: form.state.password,
-        userid: form.state.username,
-        realname: form.state.username,
-        // 用户头像
-        avatar: require('@/assets/img/avatar_default.png'),
-        // accessToken 有效时间 24 天
-        tokenExpirationTime: new Date().getTime() + 24 * 60 * 60 * 1000,
-        accessToken: 'Bearer ' + (loginResponse.Token || ''),
-        roles: roles as any,
-        menus: menus as any,
-        permissions: []
-      });
-
-      // 跳转至 redirect 或者 主页
-      if (authService.config.redirectEnable && route.query.redirect) {
-        return router.replace({ path: route.query.redirect as string });
-      } else {
-        return router.replace({ name: authService.config.homePage });
-      }
-    };
-
     // On submit
-    const onSubmit = async (values) => {
+    const onSubmit = form.handleSubmit(async (values) => {
       if (process.env.APP_DEBUG !== 'true') {
         if (!captcha.valid) {
           // 弹出验证码控件
@@ -166,15 +140,48 @@ export default defineComponent({
         }
       }
 
-      const [err, data] = await to(Api.login(values));
+      const [err, res] = await to(Api.login(values));
 
       if (err) {
         notification.error({ message: '', description: err.message, duration: 1 });
       } else {
-        loginResponse = data;
-        await login();
+        // 获取用户角色
+        const roles = res?.roles?.map((x) => x) ?? ['admin'];
+
+        // 菜单
+        let menus = res.menus ?? [];
+
+        menus = authService.getAuthorizedMenus(menus, roles as any);
+
+        sessionService.login({
+          username: form.values.username,
+          password: form.values.password,
+          userid: form.values.username,
+          realname: form.values.username,
+          // 用户头像
+          avatar: require('@/assets/img/avatar_default.png'),
+          // accessToken 有效时间 24 天
+          tokenExpirationTime: new Date().getTime() + 24 * 60 * 60 * 1000,
+          accessToken: 'Bearer ' + (res.accessToken || ''),
+          roles: roles as any,
+          menus: menus as any,
+          permissions: []
+        });
+
         message.success(t(i18nMessages.app.notification.login));
+
+        // 跳转至 redirect 或者 主页
+        if (authService.config.redirectEnable && route.query.redirect) {
+          router.replace({ path: route.query.redirect as string });
+        } else {
+          router.replace({ name: authService.config.homePage });
+        }
       }
+    });
+
+    // 触发提交事件
+    const submit = () => {
+      formRef.value.dispatchEvent(new Event('submit'));
     };
 
     // Close error
@@ -187,16 +194,19 @@ export default defineComponent({
     });
 
     return {
-      submitBtnRef,
       i18nMessages,
-      captcha,
       title: ENV.APP_TITLE,
       error,
-      form,
+      captcha,
+      closeError,
       onSlideCaptchaValid,
-      login,
+
+      // form
+      formRef,
+      submitBtnRef,
+      isSubmitting: form.isSubmitting,
       onSubmit,
-      closeError
+      submit
     };
   }
 });

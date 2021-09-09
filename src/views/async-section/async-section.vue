@@ -4,10 +4,10 @@
       <div class="tw-text-lg">Async Section</div>
 
       <div class="tw-p-2 tw-border tw-border-gray-300">
-        <AsyncSection loading-text="Loading project..." :initialize="asyncSectionLoad(3000, true)">
+        <AsyncSection loading-text="Loading project..." :initialize="asyncSectionLoad(3000)">
           <template #default="{ data, reload }">
             <span>{{ data.text }}</span>
-            <XButtonRefresh color="primary" size="small" type="link" :handler="reload" />
+            <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />
           </template>
         </AsyncSection>
       </div>
@@ -18,7 +18,7 @@
       </div>
 
       <div class="tw-p-2 tw-border tw-border-gray-300">
-        <AsyncSection :initialize="asyncSectionLoad(2000)" :immediate="false" ref="asyncSectionRef">
+        <AsyncSection loading-text="Loading project..." :initialize="asyncSectionLoad(2000)" :immediate="false" ref="asyncSectionRef">
           <template #default="{ data, reload }">
             <div class="tw-flex tw-items-center tw-space-x-2" v-for="item in 20">
               <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />

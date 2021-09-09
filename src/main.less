@@ -12,10 +12,11 @@ body {
   overflow: hidden;
 }
 
-.box-shadow-top {
+.box-shadow-top,
+.child-box-shadow-top > div {
   position: relative;
 
-  &::after {
+  &::before {
     position: absolute;
     top: -3px;
     right: 0;
@@ -38,7 +39,8 @@ body {
   }
 }
 
-.box-shadow-bottom {
+.box-shadow-bottom,
+.child-box-shadow-bottom > div {
   position: relative;
 
   &::after {

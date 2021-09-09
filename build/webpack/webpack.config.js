@@ -235,15 +235,43 @@ module.exports = async function (options) {
   // The default target default is web
   config.target = isProd ? 'browserslist' : 'web';
 
+  // 匹配 css module 资源
+  const cssModuleRegex = {
+    include: [/\b.module.css\b/, /\b.module.scss\b/, /\b.module.less\b/],
+    resourceQuery: /module/
+  };
+
   // rules
   config.module = {
     rules: [
       {
         test: /\.css$/,
         oneOf: [
-          // 这里匹配 `<style module>`
           {
-            resourceQuery: /module/,
+            // 匹配 `.module.css`
+            include: cssModuleRegex.include,
+            use: [
+              isDevServer
+                ? {
+                    loader: 'style-loader'
+                  }
+                : {
+                    loader: MiniCssExtractPlugin.loader,
+                    options: loaders.cssExtract
+                  },
+              {
+                loader: 'css-loader',
+                options: loaders.css_modules
+              },
+              {
+                loader: 'postcss-loader',
+                options: loaders.postcss
+              }
+            ]
+          },
+          // 匹配 `<style module>`
+          {
+            resourceQuery: cssModuleRegex.resourceQuery,
             use: [
               isDevServer
                 ? {
@@ -288,9 +316,9 @@ module.exports = async function (options) {
       {
         test: /\.s[a|c]ss$/,
         oneOf: [
-          // 这里匹配 `<style module>`
+          // 匹配 `<style module>`
           {
-            resourceQuery: /module/,
+            resourceQuery: cssModuleRegex.resourceQuery,
             use: [
               isDevServer
                 ? {
@@ -343,9 +371,35 @@ module.exports = async function (options) {
       {
         test: /\.less$/,
         oneOf: [
-          // 这里匹配 `<style module>`
           {
-            resourceQuery: /module/,
+            // 匹配 `.module.css`
+            include: cssModuleRegex.include,
+            use: [
+              isDevServer
+                ? {
+                    loader: 'style-loader'
+                  }
+                : {
+                    loader: MiniCssExtractPlugin.loader,
+                    options: loaders.cssExtract
+                  },
+              {
+                loader: 'css-loader',
+                options: loaders.css_modules
+              },
+              {
+                loader: 'postcss-loader',
+                options: loaders.postcss
+              },
+              {
+                loader: 'less-loader',
+                options: loaders.less
+              }
+            ]
+          },
+          // 匹配 `<style module>`
+          {
+            resourceQuery: cssModuleRegex.resourceQuery,
             use: [
               isDevServer
                 ? {
