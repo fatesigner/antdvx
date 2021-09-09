@@ -13,8 +13,8 @@
   <TransitionCollapse>
     <div v-if="!loading_ && error">
       <slot name="error" v-bind="{ error, reload }">
-        <AAlert type="error" show-icon>
-          <!--<template #message>{{ $t(i18nMessages.antd.asyncAction.error) }}</template>-->
+        <AAlert type="error" closable>
+          <template #message>{{ error }}<XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" /></template>
           <template #description>
             {{ error }}
             <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />

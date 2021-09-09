@@ -24,8 +24,6 @@ each(@colorArr, {
 });
 
 body.antdvx-theme-classic {
-  overflow: hidden;
-
   // Scrollbar
   // ---------------------------------------------------
   * {
@@ -93,18 +91,8 @@ body.antdvx-theme-classic {
     letter-spacing: 0.14em;
   }
 
-  .ant-btn > .anticon {
-    line-height: 0;
-  }
-
-  // Menu
+  // Collapse
   // ---------------------------------------------------
-  .ant-menu.ant-menu-light {
-    .ant-menu-sub.ant-menu-inline {
-      background-color: transparent;
-    }
-  }
-
   .ant-collapse.ant-collapse-pure {
     background-color: transparent;
 
@@ -113,14 +101,12 @@ body.antdvx-theme-classic {
     }
   }
 
-  .ant-form-vertical.ant-form-pure {
-    .ant-form-item {
-      margin-bottom: 0;
-    }
-  }
-
   // Notification
   // ---------------------------------------------------
+  .ant-notification-notice-content {
+    min-height: 32px;
+  }
+
   .ant-notification-notice-with-icon {
     position: relative;
   }
@@ -172,97 +158,12 @@ body.antdvx-theme-classic {
         }
       }
     }
-  }
 
-  // Table
-  // ---------------------------------------------------
-  .ant-table {
-    .ant-table-body {
-      overflow-x: auto !important;
-    }
-
-    .ant-table-thead > tr > th {
-      padding-top: 10px;
-      padding-bottom: 10px;
-    }
-
-    &.ant-table-empty {
-      .ant-table-body {
-        overflow: hidden !important;
+    &.ant-form-vertical.ant-form-pure {
+      .ant-form-item {
+        margin-bottom: 0;
       }
     }
-
-    &.ant-table-small > .ant-table-content > .ant-table-body {
-      margin: 0;
-    }
-
-    .ant-table-fixed-left {
-      z-index: 1;
-    }
-
-    // table row 高亮
-    .ant-table-row.ant-table-row-dirty {
-      background-color: #e4efff;
-    }
-  }
-
-  // Empty
-  // ---------------------------------------------------
-  .ant-empty-normal {
-    margin: 0;
-  }
-
-  // Alert
-  // ---------------------------------------------------
-  .ant-alert-with-description {
-    display: flex;
-    align-items: center;
-  }
-
-  .ant-alert-with-description .ant-alert-message {
-    margin-bottom: 0;
-  }
-
-  .ant-alert-with-description.ant-alert-no-icon {
-    padding: 8px 15px;
-  }
-
-  .ant-alert {
-    &.ant-alert-mini {
-      padding: 5px 10px 5px 30px;
-
-      .ant-alert-icon {
-        top: 10px;
-        left: 10px;
-        font-size: 14px;
-      }
-
-      .ant-alert-description {
-        font-size: 12px;
-      }
-    }
-
-    &.ant-alert-closable {
-      .ant-alert-message,
-      .ant-alert-description {
-        margin-right: 25px;
-      }
-
-      .ant-alert-close-icon {
-        top: 10px;
-      }
-    }
-  }
-
-  // Input
-  // ---------------------------------------------------
-  .ant-input[disabled] {
-    color: #9c9c9c;
-    background-color: #f7f7f7;
-  }
-
-  .ant-input-group-wrapper {
-    width: initial;
   }
 
   // Dropdown
@@ -275,36 +176,20 @@ body.antdvx-theme-classic {
     }
   }
 
-  .ant-menu-submenu-popup {
-    .ant-menu-submenu-title {
-      max-width: 220px;
-      padding-right: 36px !important;
+  // Table
+  // ---------------------------------------------------
+  .ant-table {
+    &.ant-table-empty > .ant-table-content > .ant-table-body,
+    &.ant-table-empty > .ant-table-content > .ant-table-scroll > .ant-table-body {
+      overflow: hidden !important;
     }
   }
 
   // Tabs
   // ---------------------------------------------------
-  .ant-tabs-bar {
-    margin-bottom: 0;
-  }
-
-  .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab:not(.ant-tabs-tab-active) {
-    background: linear-gradient(135deg, #e7ecf7, #fff);
-  }
-
   .ant-tabs.ant-tabs-card .ant-tabs-card-bar .ant-tabs-tab-active {
     border-top-color: #d5d5d5;
     border-right-color: #d5d5d5;
     border-left-color: #d5d5d5;
-  }
-
-  // Tree
-  // ---------------------------------------------------
-  .ant-tree-switcher-icon {
-    vertical-align: middle;
-  }
-
-  .ant-notification-notice-content {
-    min-height: 32px;
   }
 }

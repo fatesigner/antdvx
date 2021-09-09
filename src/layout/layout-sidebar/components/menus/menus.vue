@@ -178,6 +178,10 @@ export default defineComponent({
       margin-bottom: 8px;
       margin-left: 16px;
 
+      &.ant-menu-inline {
+        background-color: transparent;
+      }
+
       &::after {
         position: absolute;
         top: 0;
