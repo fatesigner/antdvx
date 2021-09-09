@@ -1,3 +1,10 @@
+# [1.0.0-alpha.31](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.30...v1.0.0-alpha.31) (2021-09-09)
+
+
+### Features
+
+* 更新 styles ([86f076c](https://github.com/fatesigner/antdvx/commit/86f076cddd4491d081b3ebfc9e28ffc58b1d81ac))
+
 # [1.0.0-alpha.30](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.29...v1.0.0-alpha.30) (2021-09-09)
 
 
