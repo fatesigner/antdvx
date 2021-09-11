@@ -76,15 +76,6 @@
         "target": null,
         "icon": "",
         "children": []
-      },
-      {
-        "id": "b796690e697z",
-        "label": "表格（vxe-table）",
-        "name": "vxe-table",
-        "url": "/vxe-table",
-        "target": null,
-        "icon": "",
-        "children": []
       }
     ]
   },

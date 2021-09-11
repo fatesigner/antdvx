@@ -34,23 +34,57 @@ export function createIcon(
         Icon,
         {
           class: ['antdvx-icon', ctx.color ? `antdvx-color-${ctx.color}` : null],
-          style: Object.assign(
-            {},
-            ctx.scale
-              ? {
-                  fontSize: ctx.scale + 'em'
-                }
-              : null,
-            ctx.style
-          ),
+          style: ctx.style,
           spin: ctx.spin,
-          rotate: ctx.rotate,
+          rotate: ctx.rotate
           //twoToneColor: ctx.twoToneColor,
-          viewBox: options.viewBox
+          //viewBox: options.viewBox
           // class: 'fa-icon'
         },
         {
-          default() {
+          component() {
+            return h(
+              'svg',
+              {
+                name: name,
+                'aria-hidden': 'true',
+                focusable: 'false',
+                /* fill: 'currentColor',
+                width: '1em',
+                height: '1em', */
+                viewBox: options.viewBox,
+                style: Object.assign(
+                  {},
+                  ctx.scale
+                    ? {
+                        fontSize: ctx.scale + 'em'
+                      }
+                    : null,
+                  ctx.style
+                )
+              },
+              {
+                default() {
+                  if (options?.paths?.length) {
+                    return options.paths.map((x, index) => {
+                      return h('path', {
+                        d: x.d,
+                        fill: ctx?.colors?.[index] ?? x.fill ?? 'currentColor',
+                        'p-id': x.pid
+                      });
+                    });
+                  } else {
+                    return [
+                      h('path', {
+                        d: options.d
+                      })
+                    ];
+                  }
+                }
+              }
+            );
+          }
+          /*default() {
             if (options?.paths?.length) {
               return options.paths.map((x, index) => {
                 return h('path', {
@@ -66,7 +100,7 @@ export function createIcon(
                 })
               ];
             }
-          }
+          }*/
         }
       );
     }

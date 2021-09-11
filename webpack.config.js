@@ -2,7 +2,6 @@
  * webpack.config
  */
 
-const fs = require('fs');
 const path = require('path');
 
 const { EXAMPLE_PATH, SRC_PATH } = require('./build/constants');
@@ -33,12 +32,7 @@ module.exports = webpackConfig({
     // host: '0.0.0.0',
     host: 'localhost',
     port: 8080,
-    open: true,
-    https: {
-      key: fs.readFileSync('D:\\OneDrive\\ECS\\Windows\\localhost-key.pem'),
-      cert: fs.readFileSync('D:\\OneDrive\\ECS\\Windows\\localhost.crt'),
-      ca: fs.readFileSync('D:\\OneDrive\\ECS\\Windows\\localhost.pem')
-    }
+    open: true
     /* proxy: {
       '/api': {
         target: 'http://localhost:8081',

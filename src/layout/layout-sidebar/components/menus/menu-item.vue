@@ -1,15 +1,17 @@
 <template>
   <template v-if="visible">
     <ASubMenu v-if="data.children?.length" :key="data.id" v-bind="$attrs">
-      <template v-slot:title>
-        <Iconfont v-if="data.icon" :name="data.icon" />
-        <span>{{ data.label }}</span>
+      <template #icon v-if="data.icon">
+        <Iconfont :name="data.icon" scale="1.2" />
       </template>
+      <template #title>{{ data.label }}</template>
       <template v-for="item in data.children" :key="item.id">
         <template v-if="!item.children">
           <AMenuItem :key="item.name || item.id" @click="clickMenuItem(item)">
-            <Iconfont v-if="item.icon" :name="item.icon" />
-            <span>{{ item.label }}</span>
+            <template #icon v-if="item.icon">
+              <Iconfont :name="item.icon" scale="1.2" />
+            </template>
+            <template #title>{{ item.label }}</template>
           </AMenuItem>
         </template>
         <template v-else>
@@ -18,8 +20,10 @@
       </template>
     </ASubMenu>
     <AMenuItem v-else :key="data.name || data.id" @click="clickMenuItem(data)">
-      <Iconfont v-if="data.icon" :name="data.icon" />
-      <span>{{ data.label }}</span>
+      <template #icon v-if="data.icon">
+        <Iconfont :name="data.icon" scale="1.2" />
+      </template>
+      {{ data.label }}
     </AMenuItem>
   </template>
 </template>

@@ -9,8 +9,14 @@
       native ? null : $style['hide-scrollbar']
     ]"
   >
-    <transition-group name="scroll-view-transition">
-      <div class="scroll-view-transition" key="loading" v-if="loading_">
+    <transition-group
+      :enter-from-class="$style['transition-enter-from']"
+      :enter-to-class="$style['transition-enter-to']"
+      :leave-to-class="$style['transition-leave-to']"
+      :enter-active-class="$style['transition-enter-active']"
+      :leave-active-class="$style['transition-enter-active']"
+    >
+      <div :class="$style.transition" key="loading" v-if="loading_">
         <slot name="loading">
           <div :class="$style.loading">
             <div class="tw-space-y-2">
@@ -20,7 +26,8 @@
           </div>
         </slot>
       </div>
-      <div class="scroll-view-transition" key="error" v-else-if="error">
+
+      <div :class="$style.transition" key="error" v-else-if="error">
         <slot name="error" v-bind="{ error, reload }">
           <div :class="$style.error">
             <AAlert type="error" show-icon>
@@ -33,7 +40,8 @@
           </div>
         </slot>
       </div>
-      <div v-else :class="$style['scroll-view']" ref="viewRef" @scroll="onScroll">
+
+      <div :class="$style['scroll-view']" key="content" v-else ref="viewRef" @scroll="onScroll">
         <template v-if="native">
           <slot v-bind="{ loading: loading_, reload: load }" />
         </template>
@@ -459,9 +467,6 @@ export default defineComponent({
         })
         .catch((err: Error) => {
           error.value = err.message;
-        })
-        .finally(() => {
-          loading_.value = false;
         });
     }, true);
 
@@ -547,14 +552,59 @@ export default defineComponent({
   overflow: hidden;
 }
 
+.transition {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate3d(-50%, -50%, 0);
+
+  &.transition-enter-from {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.7);
+  }
+
+  &.transition-enter-to {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+
+  &.transition-leave-to {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.6);
+  }
+
+  &.transition-enter-active,
+  &.transition-leave-active {
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.2s;
+    transition-property: opacity, transform;
+  }
+}
+
 .scroll-view {
   width: 100%;
   height: 100%;
   overflow: hidden;
+
+  &.transition-enter-from,
+  &.transition-leave-to {
+    opacity: 0;
+  }
+
+  &.transition-enter-to {
+    opacity: 1;
+  }
+
+  &.transition-enter-active,
+  &.transition-leave-active {
+    transition-timing-function: ease-in-out;
+    transition-duration: 0.3s;
+    transition-property: opacity;
+  }
 }
 
 .scroll-content {
-  width: auto;
   min-width: 100%;
   min-height: 100%;
 }
@@ -643,7 +693,6 @@ export default defineComponent({
 .bar {
   position: absolute;
   z-index: 1;
-  border-radius: 3px;
   transition: background-color 0.2s linear, opacity 0.2s linear;
 }
 
@@ -677,61 +726,21 @@ export default defineComponent({
 .scroll-x {
   > .scroll-view {
     overflow-x: auto;
-    overflow-y: hidden;
+
+    > .scroll-content {
+      width: max-content;
+      padding-right: 12px;
+    }
   }
 }
 
 .scroll-y {
   > .scroll-view {
-    overflow-x: hidden;
     overflow-y: auto;
-  }
-}
 
-.scroll-xy {
-  > .scroll-view {
-    overflow-x: auto;
-    overflow-y: auto;
-  }
-
-  .horizontal {
-    right: 5px;
-  }
-
-  .vertical {
-    bottom: 5px;
-  }
-}
-</style>
-
-<style lang="less">
-.scroll-view-transition {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  transform: translate3d(-50%, -50%, 0);
-
-  &.scroll-view-transition-enter-from {
-    opacity: 0;
-    transform: translate3d(-50%, -50%, 0) scale(0.7);
-  }
-
-  &.scroll-view-transition-enter-to {
-    opacity: 1;
-    transform: translate3d(-50%, -50%, 0) scale(1);
-  }
-
-  &.scroll-view-transition-leave-to {
-    opacity: 0;
-    transform: translate3d(-50%, -50%, 0) scale(0.6);
-  }
-
-  &.scroll-view-transition-enter-active,
-  &.scroll-view-transition-leave-active {
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.2s;
-    transition-property: opacity, transform;
+    > .scroll-content {
+      padding-bottom: 12px;
+    }
   }
 }
 </style>

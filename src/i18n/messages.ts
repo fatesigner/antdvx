@@ -33,12 +33,12 @@ export const i18nMessages = createLocaleMessages({
         register: '',
         findPwd: ''
       },
-      menus: '',
+      system: {
+        menus: ''
+      },
       dashboard: '',
       table: '',
-      grid: '',
-      pc2is: '',
-      pc2i: ''
+      grid: ''
     },
     navbar: {
       logOut: '',

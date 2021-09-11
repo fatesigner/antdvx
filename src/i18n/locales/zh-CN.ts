@@ -33,12 +33,12 @@ export default {
         register: '注册',
         findPwd: '找回密码'
       },
-      menus: '菜单授权',
+      system: {
+        menus: '菜单设置'
+      },
       dashboard: '首页',
       table: '表格',
-      grid: 'kendo grid',
-      pc2is: 'pc2is',
-      pc2i: 'pc2i'
+      grid: 'kendo grid'
     },
     navbar: {
       logOut: '退出登录',

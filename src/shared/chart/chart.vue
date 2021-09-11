@@ -1,6 +1,6 @@
 <template>
   <VEcharts
-    ref="chart"
+    ref="chartRef"
     :instance="instance"
     :options="options"
     :aspect-ratio="aspectRatio"
@@ -19,7 +19,7 @@
 
     <template #empty>
       <div :class="$style.empty">
-        <Empty />
+        <AEmpty :image="simpleImage" />
       </div>
     </template>
 
@@ -45,8 +45,8 @@ export default defineComponent({
     VEcharts,
     XButtonExport,
     XButtonRefresh,
-    [Empty.name]: Empty,
-    [Spin.name]: Spin
+    [Spin.name]: Spin,
+    [Empty.displayName]: Empty
   },
   props: {
     logo: {
@@ -90,25 +90,26 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const $chart = ref(null);
+    const chartRef = ref(null);
 
     const exportOptions: IXButtonExportOptions = {
       async image() {
         return {
           filename: props.filename,
-          target: $chart.value?.getChartElement()
+          target: chartRef.value?.getChartElement()
         };
       }
     };
 
     const refresh = async () => {
-      if ($chart.value) {
-        return $chart.value.refresh();
+      if (chartRef.value) {
+        return chartRef.value.refresh();
       }
     };
 
     return {
-      chart: $chart,
+      chartRef,
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
       exportOptions,
       refresh
     };
@@ -145,7 +146,7 @@ export default defineComponent({
 
 .actions {
   position: absolute;
-  right: 0;
+  right: 20px;
   z-index: 2;
   display: flex;
   justify-content: flex-end;

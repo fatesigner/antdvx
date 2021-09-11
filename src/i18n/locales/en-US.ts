@@ -33,12 +33,12 @@ export default {
         register: 'register',
         findPwd: 'findPwd'
       },
-      menus: 'menus auth',
+      system: {
+        menus: 'menus auth'
+      },
       dashboard: 'dashboard',
       table: 'table',
-      grid: 'kendo grid',
-      pc2is: 'pc2is',
-      pc2i: 'pc2i'
+      grid: 'kendo grid'
     },
     navbar: {
       logOut: 'Log Out',
