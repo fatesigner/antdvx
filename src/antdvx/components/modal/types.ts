@@ -2,28 +2,30 @@
  * types
  */
 
+import { AsyncComponentLoader } from '@vue/runtime-core';
 import { ModalProps } from 'ant-design-vue/es/modal/modal';
 
 export interface IXModalHandlers<TArgs extends any[]> {
   present: (onDismissed?: (...args: TArgs) => void) => Promise<void>;
   dismiss: (...args: TArgs) => Promise<void>;
-  destroy: () => void;
+  loadComponent: (loader: AsyncComponentLoader) => Promise<void>;
 }
 
 export interface IXModalPropsType extends Omit<ModalProps, 'afterClose' | 'visible'> {
   // Custom
   /**
-   * 自动显示
+   * 允许横向滚动, 默认为 false
    */
-  autoOpened;
+  scrollX?: boolean;
+
+  /**
+   * 允许纵向滚动, 默认为 false
+   */
+  scrollY?: boolean;
   /**
    * 全屏显示
    */
   fullscreen?: boolean;
-  /**
-   * 保持组件处于活动状态，关闭后不销毁
-   */
-  keepAlive?: boolean;
 
   /**
    * Modal 弹出事件
@@ -34,18 +36,32 @@ export interface IXModalPropsType extends Omit<ModalProps, 'afterClose' | 'visib
    * Modal 关闭事件
    */
   onDismissed: () => void;
+
+  /**
+   * 点击确定回调
+   */
+  onCancel: (e: any) => void;
+
+  /**
+   * 点击确定回调
+   */
+  onOk: (e: any) => void;
 }
 
 /**
- * XModal 选项
+ * XModal 实例
  */
-export interface IXModalRef<CompProps extends Record<string, any>, Args extends any[]> extends IXModalHandlers<Args> {
+export interface IXModalRefType<TCompProps extends Record<string, any>, TArgs extends any[]> {
   /**
    * 待加载的组件的 props 选项
    */
-  compProps: Partial<CompProps>;
+  compProps: Partial<TCompProps>;
   /**
    * XModal 选项
    */
-  options: Partial<IXModalPropsType>;
+  options: IXModalPropsType;
+  /**
+   * XModal handlers
+   */
+  handler: IXModalHandlers<TArgs>;
 }

@@ -1,14 +1,14 @@
 <template>
   <div class="tw-flex tw-flex-col tw-h-full">
     <div class="tw-flex-1 tw-overflow-hidden">
-      <ScrollView fill-y scroll-x scroll-y>
+      <ScrollView fill-y scroll-y>
         <div class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-p-4 tw-space-y-4">
           <ATransfer
             :data-source="data"
             show-search
             :list-style="{
               width: '200px',
-              height: '200px'
+              height: '2000px'
             }"
             :filter-option="filter"
             :target-keys="targetKeys"

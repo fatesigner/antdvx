@@ -50,7 +50,7 @@ export default defineComponent({
             if (error) {
               throw new Error('Load failed, please try again.');
             } else {
-              list.value = Array.from(new Array(200)).map((x, index) => Array.from(new Array(100)).map((y, index2) => index + index2));
+              list.value = Array.from(new Array(100)).map((x, index) => Array.from(new Array(50)).map((y, index2) => index + index2));
             }
           });
       };

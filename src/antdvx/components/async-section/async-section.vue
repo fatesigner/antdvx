@@ -1,5 +1,5 @@
 <template>
-  <TransitionCollapse>
+  <TransitionCollapse :appear="false">
     <div v-if="loading_">
       <slot name="loading">
         <div class="tw-space-y-2">
@@ -10,21 +10,21 @@
     </div>
   </TransitionCollapse>
 
-  <TransitionCollapse>
+  <TransitionCollapse :appear="false">
     <div v-if="!loading_ && error">
       <slot name="error" v-bind="{ error, reload }">
         <AAlert type="error" closable>
           <template #message>{{ error }}<XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" /></template>
-          <template #description>
+          <!--<template #description>
             {{ error }}
             <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />
-          </template>
+          </template>-->
         </AAlert>
       </slot>
     </div>
   </TransitionCollapse>
 
-  <TransitionCollapse>
+  <TransitionCollapse :appear="false">
     <div v-if="initialized">
       <slot v-bind="{ data, loading: loading_, reload: load }" />
     </div>

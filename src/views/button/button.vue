@@ -154,6 +154,7 @@
         </div>
       </div>
     </div>
+    <XModal />
   </ScrollView>
 </template>
 
@@ -176,6 +177,7 @@ import {
   XButtonRefresh,
   XButtonSave,
   XButtonUpload,
+  XModal,
   createXModal
 } from '@/antdvx';
 
@@ -183,6 +185,7 @@ import { getBase64FromFile } from '@/utils';
 
 export default defineComponent({
   components: {
+    XModal,
     XButton,
     XButtonAdd,
     XButtonEdit,
@@ -193,12 +196,15 @@ export default defineComponent({
     XButtonUpload,
     IconArrowDownSLine,
     ScrollView,
-    // Antd
     [Menu.name]: Menu,
     [Menu.Item.name]: Menu.Item,
     [Dropdown.name]: Dropdown
   },
   setup() {
+    const popupRef = createXModal({
+      destroyOnClose: true
+    });
+
     const exportOptions: IXButtonExportOptions = {
       json: {
         filename: 'zadsad',
@@ -257,25 +263,23 @@ export default defineComponent({
             } else {
               // 获取图片预览地址
               getBase64FromFile(file).then((base64) => {
-                createXModal(
-                  defineComponent({
-                    render() {
-                      return <img src={base64} title='' alt='' />;
-                    }
-                  }),
-                  null,
-                  {
-                    autoOpened: true,
-                    destroyOnClose: true
-                  }
+                popupRef.handler.loadComponent(() =>
+                  Promise.resolve(
+                    defineComponent({
+                      render() {
+                        return <img src={base64} title='' alt='' />;
+                      }
+                    })
+                  )
                 );
+                popupRef.handler.present();
               });
             }
           });
       };
     };
 
-    return { exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
+    return { popupRef, exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
   }
 });
 </script>

@@ -1,3 +1,5 @@
+import { AsyncComponentLoader } from '@vue/runtime-core';
+
 /**
  * types
  */
@@ -5,7 +7,7 @@
 export interface IXDrawerHandlers<TArgs extends any[]> {
   present: (onDismissed?: (...args: TArgs) => void) => Promise<void>;
   dismiss: (...args: TArgs) => Promise<void>;
-  destroy: () => void;
+  loadComponent: (loader: AsyncComponentLoader) => Promise<void>;
 }
 
 export interface IXDrawerPropsType {
@@ -48,39 +50,40 @@ export interface IXDrawerPropsType {
 
   // Custom
   /**
-   * 自动显示
-   */
-  autoOpened;
-  /**
    * 全屏显示
    */
   fullscreen?: boolean;
-  /**
-   * 保持组件处于活动状态，关闭后不销毁
-   */
-  keepAlive?: boolean;
 
   /**
-   * Modal 弹出事件
+   * Drawer 弹出事件
    */
   onPresented: () => void;
 
   /**
-   * Modal 关闭事件
+   * Drawer 关闭事件
    */
   onDismissed: () => void;
+
+  /**
+   * 点击遮罩层或右上角叉或取消按钮的回调
+   */
+  onClose: (e: any) => void;
 }
 
 /**
  * XDrawer 选项
  */
-export interface IXDrawerRef<CompProps extends Record<string, any>, Args extends any[]> extends IXDrawerHandlers<Args> {
+export interface IXDrawerRefType<TCompProps extends Record<string, any>, TArgs extends any[]> {
   /**
    * 待加载的组件的 props 选项
    */
-  compProps: Partial<CompProps>;
+  compProps: Partial<TCompProps>;
   /**
-   * XModal 选项
+   * XDrawer 选项
    */
   options: Partial<IXDrawerPropsType>;
+  /**
+   * XDrawer handlers
+   */
+  handler: IXDrawerHandlers<TArgs>;
 }

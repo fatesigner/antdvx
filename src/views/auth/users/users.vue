@@ -41,17 +41,17 @@ export default defineComponent({
   setup() {
     // 授权 弹出层
     let authPopupRef = createXDrawer(
+      {
+        fullscreen: true,
+        onPresented() {}
+      },
       () => import('./auth.vue'),
       {
         data: null,
         onDone() {
           // 保存成功后，关闭弹出层
-          authPopupRef.dismiss();
+          authPopupRef.handler.dismiss();
         }
-      },
-      {
-        fullscreen: true,
-        onPresented() {}
       }
     );
 
@@ -125,7 +125,7 @@ export default defineComponent({
     const showAuthModal = (row) => {
       return async () => {
         authPopupRef.options.title = row?.name ?? 'zzz';
-        await authPopupRef.present();
+        await authPopupRef.handler.present();
       };
     };
 

@@ -14,71 +14,86 @@
         <XButton outline :handler="openDrawer(true)">打开 Drawer（全屏）</XButton>
       </div>
     </div>
+
+    <XModal v-bind="modalRef" />
+    <XDrawer v-bind="drawerRef" />
   </ScrollView>
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from 'vue';
-import { ScrollView, XButton, createXDrawer, createXModal } from '@/antdvx';
+import { defineComponent } from 'vue';
+import { ScrollView, XButton, XDrawer, XModal, createXDrawer, createXModal } from '@/antdvx';
+import { timer } from 'rxjs';
 
 export default defineComponent({
   components: {
     XButton,
+    XDrawer,
+    XModal,
     ScrollView
   },
   setup() {
     const modalRef = createXModal(
-      defineAsyncComponent(() => import('./form.vue')),
       {
-        id: null,
-        onDone(e) {
-          if (e) {
-            modalRef.dismiss();
-          }
-        }
+        title: 'modal 标题',
+        fullscreen: true,
+        footer: null,
+        destroyOnClose: true
+      },
+      async () => {
+        await timer(3000).toPromise();
+        //throw new Error('eeeeeeeee');
+        return import('./form.vue');
       },
       {
-        fullscreen: true
+        model: null,
+        onDone(e) {
+          // 保存成功后，关闭弹出层
+          modalRef.handler.dismiss();
+        }
       }
     );
 
     const drawerRef = createXDrawer(
-      () => import('./form.vue'),
       {
-        id: null,
-        onDone(e) {
-          if (e) {
-            modalRef.dismiss();
-          }
-        }
+        width: '66%',
+        title: 'drawer 标题',
+        fullscreen: true,
+        destroyOnClose: true
+      },
+      async () => {
+        await timer(3000).toPromise();
+        //throw new Error('eeeeeeeee');
+        return import('./form.vue');
       },
       {
-        title: 'drawer 标题',
-        width: '66%'
+        model: null,
+        onDone(e) {
+          // 保存成功后，关闭弹出层
+          drawerRef.handler.dismiss();
+        }
       }
     );
 
     const openModal = (fullscreen = false) => {
       return async () => {
-        modalRef.compProps.id = 'modal';
         modalRef.options.fullscreen = fullscreen;
-        modalRef.present().then((e) => {
-          console.log('modal presented:', e);
+        modalRef.handler.present().then((e) => {
+          //console.log('modal presented:', e);
         });
       };
     };
 
     const openDrawer = (fullscreen = false) => {
       return async () => {
-        drawerRef.compProps.id = 'drawer';
         drawerRef.options.fullscreen = fullscreen;
-        drawerRef.present().then((e) => {
+        drawerRef.handler.present().then((e) => {
           console.log('drawer presented:', e);
         });
       };
     };
 
-    return { openModal, openDrawer };
+    return { modalRef, drawerRef, openModal, openDrawer };
   }
 });
 </script>

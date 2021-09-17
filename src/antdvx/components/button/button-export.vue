@@ -112,6 +112,8 @@ export default defineComponent({
         if (err) {
           if (props.notify) {
             notification.error({ message: '', description: err.message });
+          } else {
+            throw err;
           }
         } else {
           return Object.assign({}, opt, res);

@@ -39,6 +39,8 @@ export const XButtonSave = defineComponent({
           .catch((err) => {
             if (props.notify) {
               notification.error({ message: '', description: err.message });
+            } else {
+              throw err;
             }
           })
           .finally(() => {

@@ -17,7 +17,8 @@
         </template>
         <template #actions="{ record, index, methods }">
           <div class="tw-space-x-2">
-            <XButtonEdit notify color="primary" only-icon type="link" size="mini" @click="methods.edit(record, index)" />
+            <XButton size="small" @click="methods.showAuthModal(record)"><IconUserSharedLine />授权</XButton>
+            <XButtonEdit notify size="mini" color="primary" only-icon type="link" :handler="methods.edit(record)" />
             <XButtonDelete confirmed size="mini" color="danger" only-icon type="link" :handler="methods.del(record, index)" />
           </div>
         </template>
@@ -43,21 +44,41 @@
         </template>
       </XTable>
     </div>
+    <XModal v-bind="authPopupRef" />
   </ScrollView>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Checkbox, Input, Modal, Tag } from 'ant-design-vue';
-import { IXButtonExportOptions, ScrollView, XButtonAdd, XButtonDelete, XButtonEdit, XButtonRefresh, XButtonSearch, XTable, createXTable } from '@/antdvx';
+import {
+  IXButtonExportOptions,
+  IconUserSharedLine,
+  ScrollView,
+  XButton,
+  XButtonAdd,
+  XButtonDelete,
+  XButtonEdit,
+  XButtonRefresh,
+  XButtonSearch,
+  XModal,
+  XTable,
+  createXModal,
+  createXTable
+} from '@/antdvx';
 
 import { Api } from '@/mocks';
+import { IUser } from '@/types/user';
 import { MASTER_DATA_SEX, MASTER_DATA_STATUS } from '@/app/constants';
+import { timer } from 'rxjs';
 
 export default defineComponent({
   components: {
     XTable,
+    XModal,
+    XButton,
     ScrollView,
+    IconUserSharedLine,
     XButtonAdd,
     XButtonEdit,
     XButtonDelete,
@@ -68,6 +89,27 @@ export default defineComponent({
     [Checkbox.name]: Checkbox
   },
   setup() {
+    // 授权 弹出层
+    const authPopupRef = createXModal(
+      {
+        width: '700px',
+        fullscreen: true,
+        footer: null,
+        destroyOnClose: true
+      },
+      async () => {
+        await timer(1000).toPromise();
+        return import('./auth-form.vue');
+      },
+      {
+        model: null,
+        onDone() {
+          // 保存成功后，关闭弹出层
+          authPopupRef.handler.dismiss();
+        }
+      }
+    );
+
     // 主表
     const tableRef = createXTable(
       {
@@ -287,6 +329,12 @@ export default defineComponent({
         } as IXButtonExportOptions
       },
       {
+        // 显示授权框
+        showAuthModal(row: IUser<any>) {
+          authPopupRef.options.title = `${row?.userid} - ${row?.username}`;
+          authPopupRef.compProps.model = row;
+          authPopupRef.handler.present();
+        },
         add() {
           return tableRef.handler.addData(0, {
             userid: '',
@@ -312,7 +360,7 @@ export default defineComponent({
       }
     );
 
-    return { MASTER_DATA_STATUS, tableRef };
+    return { MASTER_DATA_STATUS, tableRef, authPopupRef };
   }
 });
 </script>

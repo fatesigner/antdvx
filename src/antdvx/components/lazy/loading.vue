@@ -1,6 +1,6 @@
 <template>
   <div :class="$style.wrap" ref="wrap">
-    <SpinnerLoading size="large" />
+    <SpinnerLoading />
   </div>
 </template>
 

@@ -32,7 +32,7 @@
 import { Iconfont } from '@/antdvx';
 import { Menu } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-import { PropType, defineComponent } from 'vue';
+import { PropType, defineComponent, nextTick } from 'vue';
 
 import { IMenu } from '@/types/menu';
 
@@ -59,7 +59,9 @@ export default defineComponent({
 
     // 点击菜单
     const clickMenuItem = (item) => {
-      router.push({ name: item.name });
+      nextTick(function () {
+        router.push({ name: item.name });
+      });
     };
 
     return { clickMenuItem };

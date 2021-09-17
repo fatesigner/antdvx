@@ -5,18 +5,27 @@ import { getContentHeight } from '../../utils';
 import styles from './transition-collapse.module.less';
 
 /**
- * 折叠/展开过渡
+ * 折叠/展开过渡，避免具有百分比高度的元素
  */
 export const TransitionCollapse = defineComponent({
   name: 'transition-collapse',
-  setup() {
+  props: {
+    appear: {
+      type: Boolean,
+      default: true
+    },
+    height: {
+      type: String
+    }
+  },
+  setup(props) {
     const onBeforeEnter = (el: HTMLElement) => {
       el.dataset.oldHeight = el.style.height;
       el.dataset.oldPaddingTop = el.style.paddingTop;
       el.dataset.oldPaddingBottom = el.style.paddingBottom;
       el.dataset.oldOverflow = el.style.overflow;
 
-      if (!el.dataset.oldHeight) {
+      if (!el.dataset.oldHeight && !props.height) {
         // 设置绝对定位, 获取实际高度
         const el_: any = el.cloneNode(true);
         el_.classList.add(styles.visibility);
@@ -42,10 +51,10 @@ export const TransitionCollapse = defineComponent({
 
         if (el.dataset.oldHeight) {
           el.style.height = el.dataset.oldHeight;
-        } else {
-          if (el.dataset.height) {
-            el.style.height = el.dataset.height;
-          }
+        } else if (props.height) {
+          el.style.height = props.height;
+        } else if (el.dataset.height) {
+          el.style.height = el.dataset.height;
         }
         el.style.paddingTop = el.dataset.oldPaddingTop ?? '';
         el.style.paddingBottom = el.dataset.oldPaddingBottom ?? '';
@@ -120,6 +129,7 @@ export const TransitionCollapse = defineComponent({
   render(ctx) {
     return (
       <Transition
+        appear={ctx.appear}
         onBeforeEnter={ctx.onBeforeEnter}
         onEnter={ctx.onEnter}
         onAfterEnter={ctx.onAfterEnter}

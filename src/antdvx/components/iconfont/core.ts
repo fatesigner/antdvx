@@ -8,6 +8,7 @@ import { Component } from '@vue/runtime-core';
 
 import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, IAntdvxIconNames } from './config';
+import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 /**
  * 创建 icon
@@ -34,9 +35,9 @@ export function createIcon(
         Icon,
         {
           class: ['antdvx-icon', ctx.color ? `antdvx-color-${ctx.color}` : null],
-          style: ctx.style,
-          spin: ctx.spin,
-          rotate: ctx.rotate
+          style: ctx.style
+          //spin: ctx.spin,
+          //rotate: ctx.rotate
           //twoToneColor: ctx.twoToneColor,
           //viewBox: options.viewBox
           // class: 'fa-icon'
@@ -46,6 +47,7 @@ export function createIcon(
             return h(
               'svg',
               {
+                class: [ctx.spin ? 'anticon-spin' : undefined],
                 name: name,
                 'aria-hidden': 'true',
                 focusable: 'false',
@@ -55,9 +57,14 @@ export function createIcon(
                 viewBox: options.viewBox,
                 style: Object.assign(
                   {},
-                  ctx.scale
+                  !isNullOrUndefined(ctx.scale)
                     ? {
                         fontSize: ctx.scale + 'em'
+                      }
+                    : null,
+                  !isNullOrUndefined(ctx.rotate)
+                    ? {
+                        transform: `rotate(${ctx.rotate}deg)`
                       }
                     : null,
                   ctx.style

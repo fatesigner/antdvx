@@ -5,8 +5,7 @@
       fillX ? $style['fill-x'] : null,
       fillY ? $style['fill-y'] : null,
       scrollX ? $style['scroll-x'] : null,
-      scrollY ? $style['scroll-y'] : null,
-      native ? null : $style['hide-scrollbar']
+      scrollY ? $style['scroll-y'] : null
     ]"
   >
     <transition-group
@@ -41,7 +40,7 @@
         </slot>
       </div>
 
-      <div :class="$style['scroll-view']" key="content" v-else ref="viewRef" @scroll="onScroll">
+      <div :class="[$style['scroll-view'], native ? null : $style['hide-scrollbar']]" key="content" v-else ref="viewRef" @scroll="onScroll">
         <template v-if="native">
           <slot v-bind="{ loading: loading_, reload: load }" />
         </template>
@@ -196,9 +195,9 @@ export default defineComponent({
           horThumbRef.value.style.width = xBarWidth + '%';
           horThumbRef.value.style.height = xBarWidth ? '' : '0';
           if (xBarWidth) {
-            addClass(horThumbRef.value.parentElement, $style.scrollable);
+            addClass(viewRef.value, $style['scrollable-x']);
           } else {
-            removeClass(horThumbRef.value.parentElement, $style.scrollable);
+            removeClass(viewRef.value, $style['scrollable-x']);
           }
           // 更新 limit
           scrollLimit.left.max = horThumbRef.value.parentElement.offsetWidth - horThumbRef.value.offsetWidth;
@@ -208,9 +207,9 @@ export default defineComponent({
           verThumbRef.value.style.width = yBarHeight ? '' : '0';
           verThumbRef.value.style.height = yBarHeight + '%';
           if (yBarHeight) {
-            addClass(verThumbRef.value.parentElement, $style.scrollable);
+            addClass(viewRef.value, $style['scrollable-y']);
           } else {
-            removeClass(verThumbRef.value.parentElement, $style.scrollable);
+            removeClass(viewRef.value, $style['scrollable-y']);
           }
           // 更新 limit
           scrollLimit.top.max = verThumbRef.value.parentElement.offsetHeight - verThumbRef.value.offsetHeight;
@@ -456,6 +455,12 @@ export default defineComponent({
           erd.listenTo(contentRef.value, resizeLayout);
         }
       }
+
+      // 兼容过渡动画带来的高度影响
+      setTimeout(() => {
+        // 1s 后更新 layout
+        resizeLayout();
+      }, 1000);
     };
 
     const load = bindPromiseQueue(() => {
@@ -602,6 +607,15 @@ export default defineComponent({
     transition-duration: 0.3s;
     transition-property: opacity;
   }
+
+  &.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
 
 .scroll-content {
@@ -625,17 +639,6 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   overflow: hidden;
-}
-
-.hide-scrollbar {
-  .scroll-view {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
 }
 
 .fill-x {
@@ -694,29 +697,42 @@ export default defineComponent({
   position: absolute;
   z-index: 1;
   transition: background-color 0.2s linear, opacity 0.2s linear;
+
+  &.hidden {
+    opacity: 0;
+  }
 }
 
-.bar.scrollable {
-  &:active,
-  &:hover {
+.scroll-view.scrollable-x {
+  > .scroll-content {
+    /* margin-bottom: 12px; */
+  }
+
+  > .bar.horizontal:active,
+  > .bar.horizontal:hover {
     background-color: #f1f1f1;
 
-    .thumb {
-      background-color: rgba(129, 129, 128, 0.2);
-    }
-
-    &.horizontal > .thumb {
+    > .thumb {
       height: 12px;
-    }
-
-    &.vertical > .thumb {
-      width: 12px;
+      background-color: rgba(129, 129, 128, 0.2);
     }
   }
 }
 
-.bar.hidden {
-  opacity: 0;
+.scroll-view.scrollable-y {
+  > .scroll-content {
+    /* margin-right: 12px; */
+  }
+
+  > .bar.vertical:active,
+  > .bar.vertical:hover {
+    background-color: #f1f1f1;
+
+    > .thumb {
+      width: 12px;
+      background-color: rgba(129, 129, 128, 0.2);
+    }
+  }
 }
 
 .wrap:hover > .bar {
@@ -729,7 +745,6 @@ export default defineComponent({
 
     > .scroll-content {
       width: max-content;
-      padding-right: 12px;
     }
   }
 }
@@ -737,10 +752,6 @@ export default defineComponent({
 .scroll-y {
   > .scroll-view {
     overflow-y: auto;
-
-    > .scroll-content {
-      padding-bottom: 12px;
-    }
   }
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <ALayoutSider ref="wrapEl" :class="[$style.wrap, collapsed ? $style.collapsed : null]" :theme="theme" :width="width" v-model:collapsed="collapsed">
+  <ALayoutSider ref="wrapRef" :class="[$style.wrap, collapsed ? $style.collapsed : null]" :theme="theme" :width="width" v-model:collapsed="collapsed">
     <div class="tw-relative tw-flex tw-flex-col tw-h-full">
       <div class="tw-flex-initial">
-        <div :class="$style.header" ref="headerEl">
+        <div :class="$style.header" ref="headerRef">
           <RouterLink :to="{ name: 'dashboard' }" custom v-slot="{ href }">
             <a :class="$style.logo" :href="href">
               <img src="@/assets/img/logo.png" alt="" titlt="" />
@@ -17,7 +17,7 @@
         </ScrollView>
       </div>
 
-      <div :class="$style.border" ref="borderEl">
+      <div :class="$style.border" ref="borderRef">
         <div :class="$style.septal" />
       </div>
     </div>
@@ -30,7 +30,7 @@ import { ScrollView, getEventArgs } from '@/antdvx';
 import { addClass, removeClass } from '@fatesigner/utils/document';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
-import { computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, useCssModule, watch } from 'vue';
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref, useCssModule } from 'vue';
 
 import { i18nMessages } from '@/i18n';
 import { ENV } from '@/app/constants';
@@ -53,13 +53,9 @@ export default defineComponent({
     const width = ref(minWidth);
     let drag$: Subscription;
 
-    const $wrap = ref<any>(null);
-    const $header = ref<HTMLElement>(null);
-    const $border = ref<HTMLElement>(null);
-
-    let preOpenKeys = [];
-    const openKeys = reactive([]);
-    const selectedKeys = ref([]);
+    const wrapRef = ref<any>(null);
+    const headerRef = ref<HTMLElement>(null);
+    const borderRef = ref<HTMLElement>(null);
 
     const collapsed = computed({
       get: () => LayoutSidebarStore.state.collapsed,
@@ -81,9 +77,9 @@ export default defineComponent({
 
     const onScroll = (e) => {
       if (e.target.scrollTop > 1) {
-        addClass($header.value, $style.fixed);
+        addClass(headerRef.value, $style.fixed);
       } else {
-        removeClass($header.value, $style.fixed);
+        removeClass(headerRef.value, $style.fixed);
       }
     };
 
@@ -101,8 +97,8 @@ export default defineComponent({
         .pipe(
           filter(() => !collapsed.value),
           tap(() => {
-            addClass($wrap.value.$el, $style.notransition);
-            dragArgs.initialPos.left = $wrap.value.$el.offsetWidth;
+            addClass(wrapRef.value.$el, $style.notransition);
+            dragArgs.initialPos.left = wrapRef.value.$el.offsetWidth;
           }),
           switchMap((start: any) =>
             mousemove$.pipe(
@@ -126,8 +122,8 @@ export default defineComponent({
               takeUntil(
                 mouseup$.pipe(
                   tap(() => {
-                    width.value = $wrap.value.$el.offsetWidth;
-                    removeClass($wrap.value.$el, $style.notransition);
+                    width.value = wrapRef.value.$el.offsetWidth;
+                    removeClass(wrapRef.value.$el, $style.notransition);
                   })
                 )
               )
@@ -137,21 +133,11 @@ export default defineComponent({
         .pipe(subscribeOn(animationFrameScheduler));
     };
 
-    // 监听菜单收缩状态
-    watch(collapsed, (newVal) => {
-      if (newVal) {
-        preOpenKeys = openKeys.map((x) => x);
-        openKeys.splice(0, openKeys.length);
-      } else {
-        openKeys.splice(0, openKeys.length, ...preOpenKeys);
-      }
-    });
-
     onMounted(() => {
       setTimeout(() => {
-        if ($border.value) {
-          drag$ = getDrag$($border.value).subscribe((left) => {
-            $wrap.value.$el.style.width = left + 'px';
+        if (borderRef.value) {
+          drag$ = getDrag$(borderRef.value).subscribe((left) => {
+            wrapRef.value.$el.style.width = left + 'px';
           });
         }
       });
@@ -166,13 +152,11 @@ export default defineComponent({
     return {
       i18nMessages,
       title: ENV.APP_TITLE,
-      wrapEl: $wrap,
-      headerEl: $header,
-      borderEl: $border,
-      width,
-      openKeys,
-      selectedKeys,
+      wrapRef,
+      headerRef,
+      borderRef,
       collapsed,
+      width,
       theme,
       toggleCollapsed,
       onScroll

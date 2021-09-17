@@ -8,6 +8,10 @@ import { ANTDVX_DIRECTIONS } from '../../constants';
 export const TransitionSlide = defineComponent({
   name: 'transition-slide',
   props: {
+    appear: {
+      type: Boolean,
+      default: true
+    },
     direction: {
       // 'up', 'right', 'down', 'left'
       type: String as PropType<typeof ANTDVX_DIRECTIONS[number]>,
@@ -17,6 +21,7 @@ export const TransitionSlide = defineComponent({
   render(ctx) {
     return (
       <Transition
+        appear={ctx.appear}
         name={'slide-' + ctx.direction}
         mode='out-in'
         v-slots={{

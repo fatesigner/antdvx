@@ -51,6 +51,8 @@ export const XButtonDelete = defineComponent({
           .catch((err: Error) => {
             if (props.notify) {
               notification.error({ message: '', description: err.message });
+            } else {
+              throw err;
             }
           })
           .finally(() => {

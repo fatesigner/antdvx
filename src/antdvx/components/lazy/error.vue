@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.wrap" ref="wrap">
     <AAlert type="error" show-icon>
-      <template #description>{{ error }}</template>
+      <template #description>{{ error.message }}</template>
     </AAlert>
   </div>
 </template>
@@ -16,7 +16,7 @@ export default defineComponent({
     [Alert.name]: Alert
   },
   props: {
-    error: String
+    error: Object
   },
   setup() {
     const $wrap = ref(null);
