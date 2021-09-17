@@ -93,15 +93,34 @@ export const XModal = defineComponent({
       props?.options?.onDismissed?.();
     };
 
+    let loadComponentTimer;
     const loadComponent: IXModalHandlers<any>['loadComponent'] = async (loader) => {
-      loading.value = true;
+      if (loadComponentTimer) {
+        clearTimeout(loadComponentTimer);
+        loadComponentTimer = null;
+      }
+      if (component_.value) {
+        loadComponentTimer = setTimeout(function () {
+          loading.value = true;
+          loadComponentTimer = null;
+        }, 100);
+      } else {
+        loading.value = true;
+      }
       const [err, res] = await to(loader());
       if (err) {
         error.value = err.message;
       } else {
         component_.value = res.default;
       }
-      loading.value = false;
+      if (loadComponentTimer) {
+        clearTimeout(loadComponentTimer);
+        loadComponentTimer = null;
+      }
+      loadComponentTimer = setTimeout(function () {
+        loading.value = false;
+        loadComponentTimer = null;
+      }, 500);
       /*component_ = defineAsyncComponent({
         delay: 300,
         timeout: 30000,
@@ -189,9 +208,9 @@ export const XModal = defineComponent({
         : ''
       : ctx?.component
       ? [
-          <TransitionCollapse>{ctx.loading ? <XModalLoading /> : ''}</TransitionCollapse>,
-          <TransitionCollapse>{!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionCollapse>,
-          <TransitionCollapse>
+          <TransitionCollapse appear={false}>{ctx.loading ? <XModalLoading /> : ''}</TransitionCollapse>,
+          <TransitionCollapse appear={false}>{!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionCollapse>,
+          <TransitionCollapse appear={false}>
             {!ctx.loading && !ctx.error ? <div class='tw-w-full tw-h-full'>{ctx.component_ ? h(ctx.component_, ctx.compProps) : ''}</div> : ''}
           </TransitionCollapse>
         ]

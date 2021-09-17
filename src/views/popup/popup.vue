@@ -40,11 +40,7 @@ export default defineComponent({
         footer: null,
         destroyOnClose: true
       },
-      async () => {
-        await timer(3000).toPromise();
-        //throw new Error('eeeeeeeee');
-        return import('./form.vue');
-      },
+      () => import('./form.vue'),
       {
         model: null,
         onDone(e) {
@@ -61,11 +57,7 @@ export default defineComponent({
         fullscreen: true,
         destroyOnClose: true
       },
-      async () => {
-        await timer(3000).toPromise();
-        //throw new Error('eeeeeeeee');
-        return import('./form.vue');
-      },
+      () => import('./form.vue'),
       {
         model: null,
         onDone(e) {

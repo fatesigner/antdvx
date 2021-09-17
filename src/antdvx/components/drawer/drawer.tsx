@@ -94,15 +94,34 @@ export const XDrawer = defineComponent({
       }
     };
 
+    let loadComponentTimer;
     const loadComponent: IXDrawerHandlers<any>['loadComponent'] = async (loader) => {
-      loading.value = true;
+      if (loadComponentTimer) {
+        clearTimeout(loadComponentTimer);
+        loadComponentTimer = null;
+      }
+      if (component_.value) {
+        loadComponentTimer = setTimeout(function () {
+          loading.value = true;
+          loadComponentTimer = null;
+        }, 100);
+      } else {
+        loading.value = true;
+      }
       const [err, res] = await to(loader());
       if (err) {
         error.value = err.message;
       } else {
         component_.value = res.default;
       }
-      loading.value = false;
+      if (loadComponentTimer) {
+        clearTimeout(loadComponentTimer);
+        loadComponentTimer = null;
+      }
+      loadComponentTimer = setTimeout(function () {
+        loading.value = false;
+        loadComponentTimer = null;
+      }, 500);
       /*component_ = defineAsyncComponent({
         delay: 300,
         timeout: 30000,
