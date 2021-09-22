@@ -1,3 +1,10 @@
+# [1.0.0-alpha.35](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.34...v1.0.0-alpha.35) (2021-09-22)
+
+
+### Features
+
+* 添加 GridDragable 组件 ([73be1d7](https://github.com/fatesigner/antdvx/commit/73be1d7bc485eae825a76e77523a221c3f7c07a5))
+
 # [1.0.0-alpha.34](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.33...v1.0.0-alpha.34) (2021-09-17)
 
 
