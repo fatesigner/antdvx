@@ -232,16 +232,12 @@ export default defineComponent({
         let opt = options_?.image as any;
 
         if (opt?.target) {
-          const { top, left } = opt.target.getBoundingClientRect();
-
           await convertHtmlToCanvas(opt.target, {
             allowTaint: true,
             width: opt.target.offsetWidth,
             height: opt.target.offsetHeight,
             scrollX: opt.target.scrollLeft,
             scrollY: opt.target.scrollTop,
-            x: left + window.scrollX,
-            y: top + window.scrollY,
             ignoreElements: (e: any) => {
               if (e.tagName.toLowerCase() === 'iframe') {
                 return e;
@@ -249,7 +245,6 @@ export default defineComponent({
               return false;
             }
           }).then((canvas) => {
-            // document.body.appendChild(canvas);
             const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
             const a = document.createElement('a');
             a.setAttribute('download', `${opt.filename || new Date().getTime()}.png`);

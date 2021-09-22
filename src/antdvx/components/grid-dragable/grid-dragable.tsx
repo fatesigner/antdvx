@@ -77,7 +77,6 @@ export const GridDragable = defineComponent({
 
     const transitionTo = debounce(
       function (val: boolean, transitional: boolean) {
-        console.log('transitionTo: ', val);
         if (leftRef.value) {
           if (transitional) {
             gsap.to(leftRef.value, {
@@ -105,7 +104,6 @@ export const GridDragable = defineComponent({
 
     // 切换左侧栏展开状态
     const toggleCollapsed = (val?: boolean, transitional?: boolean) => {
-      console.log('toggleCollapsed');
       val = isBoolean(val) ? val : !collapsed_.value;
       transitional = transitional ?? props.transitional;
       transitionTo(val, transitional);
