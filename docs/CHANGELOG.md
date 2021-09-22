@@ -1,3 +1,10 @@
+# [1.0.0-alpha.36](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.35...v1.0.0-alpha.36) (2021-09-22)
+
+
+### Bug Fixes
+
+* 修复导出到图片的 BUG ([2e02402](https://github.com/fatesigner/antdvx/commit/2e024027561413b741f701283f0cf2242e52d494))
+
 # [1.0.0-alpha.35](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.34...v1.0.0-alpha.35) (2021-09-22)
 
 
