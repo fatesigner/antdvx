@@ -268,99 +268,95 @@ export default defineComponent({
       drawImage();
     };
 
-    const getDrag$ = () => {
-      if ($slider.value) {
-        const dragArgs = {
-          initialPos: {
-            left: 0
-          },
-          timeStart: 0
-        };
+    const getDrag$ = ($drag: HTMLElement) => {
+      const dragArgs = {
+        initialPos: {
+          left: 0
+        },
+        timeStart: 0
+      };
 
-        const mousedown$ = merge(
-          fromEvent($sliderBtn.value, 'mousedown', { capture: false, passive: false }),
-          fromEvent($sliderBtn.value, 'touchstart', { capture: false, passive: false })
-        );
-        const mousemove$ = merge(
-          fromEvent(document.body, 'mousemove', { capture: false, passive: false }),
-          fromEvent(document.body, 'touchmove', { capture: false, passive: false })
-        );
-        const mouseup$ = merge(
-          fromEvent(document.body, 'mouseup', { capture: false, passive: false }),
-          fromEvent(document.body, 'touchend', { capture: false, passive: false })
-        );
+      const mousedown$ = merge(
+        fromEvent($drag, 'mousedown', { capture: false, passive: false }),
+        fromEvent($drag, 'touchstart', { capture: false, passive: false })
+      );
+      const mousemove$ = merge(
+        fromEvent(document.body, 'mousemove', { capture: false, passive: false }),
+        fromEvent(document.body, 'touchmove', { capture: false, passive: false })
+      );
+      const mouseup$ = merge(
+        fromEvent(document.body, 'mouseup', { capture: false, passive: false }),
+        fromEvent(document.body, 'touchend', { capture: false, passive: false })
+      );
 
-        return mousedown$
-          .pipe(
-            tap(() => {
-              dragArgs.initialPos.left = parseInt(getComputedStyle($sliderBtn.value, null).getPropertyValue('left').replace('px', '')) ?? 0;
-              dragArgs.timeStart = Date.now();
-              addClass($slider.value, $style.hidden);
-            }),
-            switchMap((start: any) =>
-              mousemove$.pipe(
-                map((move: any) => {
-                  move.preventDefault();
-                  const startArgs = getEventArgs(start);
-                  const moveArgs = getEventArgs(move);
+      return mousedown$
+        .pipe(
+          tap(() => {
+            dragArgs.initialPos.left = parseInt(getComputedStyle($drag, null).getPropertyValue('left').replace('px', '')) ?? 0;
+            dragArgs.timeStart = Date.now();
+            addClass($drag, $style.hidden);
+          }),
+          switchMap((start: any) =>
+            mousemove$.pipe(
+              map((move: any) => {
+                move.preventDefault();
+                const startArgs = getEventArgs(start);
+                const moveArgs = getEventArgs(move);
 
-                  return {
-                    left: dragArgs.initialPos.left + moveArgs.points[0][0] - startArgs.points[0][0]
-                  };
-                }),
-                takeUntil(
-                  mouseup$.pipe(
-                    tap(async () => {
-                      dragSpendedTime.value = dayjs.duration(Date.now() - dragArgs.timeStart).asSeconds() + 's';
-                      // validate
-                      let _x = Math.round(
-                        (parseInt(getComputedStyle($sliderBtn.value, null).getPropertyValue('left').replace('px', '')) ?? 0) + coordinate.offset
-                      );
-                      removeClass($slider.value, $style.hidden);
-                      if (coordinate.x - errorLimit <= _x && _x <= coordinate.x + errorLimit) {
-                        // successful
-                        status.value = 'successful';
-                        removeClass($result.value, $style.failed);
-                        addClass($result.value, $style.successful);
-                        addClass($result.value, $style.result_show);
-                        waitTransitionend($result.value).then(() => {
-                          emit('successful', dragSpendedTime.value);
-                        });
-                      } else {
-                        // failed
-                        status.value = 'failed';
-                        removeClass($result.value, $style.successful);
-                        addClass($result.value, $style.failed);
-                        addClass($result.value, $style.result_show);
-                        waitTransitionend($result.value).then(() => {
-                          removeClass($result.value, $style.result_show);
-                        });
-                        addClass($canvasChunk.value, $style.back_left);
-                        waitTransitionend($canvasChunk.value).then(() => {
-                          $canvasChunk.value.style.left = '0';
-                          removeClass($canvasChunk.value, $style.back_left);
-                        });
-                        addClass($sliderBtn.value, $style.back_left);
-                        waitTransitionend($sliderBtn.value).then(() => {
-                          $sliderBtn.value.style.left = '0';
-                          removeClass($sliderBtn.value, $style.back_left);
-                        });
-                        emit('failed', dragSpendedTime.value);
-                      }
-                    })
-                  )
+                return {
+                  left: dragArgs.initialPos.left + moveArgs.points[0][0] - startArgs.points[0][0]
+                };
+              }),
+              takeUntil(
+                mouseup$.pipe(
+                  tap(async () => {
+                    dragSpendedTime.value = dayjs.duration(Date.now() - dragArgs.timeStart).asSeconds() + 's';
+                    // validate
+                    let _x = Math.round((parseInt(getComputedStyle($drag, null).getPropertyValue('left').replace('px', '')) ?? 0) + coordinate.offset);
+                    removeClass($slider.value, $style.hidden);
+                    if (coordinate.x - errorLimit <= _x && _x <= coordinate.x + errorLimit) {
+                      // successful
+                      status.value = 'successful';
+                      removeClass($result.value, $style.failed);
+                      addClass($result.value, $style.successful);
+                      addClass($result.value, $style.result_show);
+                      waitTransitionend($result.value).then(() => {
+                        emit('successful', dragSpendedTime.value);
+                      });
+                    } else {
+                      // failed
+                      status.value = 'failed';
+                      removeClass($result.value, $style.successful);
+                      addClass($result.value, $style.failed);
+                      addClass($result.value, $style.result_show);
+                      waitTransitionend($result.value).then(() => {
+                        removeClass($result.value, $style.result_show);
+                      });
+                      addClass($canvasChunk.value, $style.back_left);
+                      waitTransitionend($canvasChunk.value).then(() => {
+                        $canvasChunk.value.style.left = '0';
+                        removeClass($canvasChunk.value, $style.back_left);
+                      });
+                      addClass($drag, $style.back_left);
+                      waitTransitionend($drag).then(() => {
+                        $drag.style.left = '0';
+                        removeClass($drag, $style.back_left);
+                      });
+                      emit('failed', dragSpendedTime.value);
+                    }
+                  })
                 )
               )
             )
           )
-          .pipe(subscribeOn(animationFrameScheduler));
-      }
+        )
+        .pipe(subscribeOn(animationFrameScheduler));
     };
 
     onMounted(() => {
       drawImage();
 
-      drag$ = getDrag$().subscribe((pos) => {
+      drag$ = getDrag$($sliderBtn.value).subscribe((pos) => {
         let left = getBoundaryPosition(pos.left, 0, $slider.value.offsetWidth - $sliderBtn.value.offsetWidth);
         $sliderBtn.value.style.left = left + 'px';
         $canvasChunk.value.style.left = left + 'px';

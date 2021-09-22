@@ -124,7 +124,8 @@ export default defineComponent({
             title: '编号',
             dataIndex: 'userid',
             width: 100,
-            sorter: true
+            sorter: true,
+            sortDirections: ['descend']
           },
           {
             title: '用户名',

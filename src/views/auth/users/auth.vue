@@ -48,19 +48,23 @@ export default defineComponent({
     const data = reactive<any[]>([]);
     const targetKeys = reactive<string[]>([]);
 
+    watch(visible_, (val) => {
+      if (props.visible !== val) {
+        emit('update:visible', val);
+      }
+    });
+
     watch(
       () => props.visible,
       (val) => {
-        visible_.value = val;
+        if (visible_.value !== val) {
+          visible_.value = val;
+        }
       },
       {
         immediate: true
       }
     );
-
-    watch(visible_, (val) => {
-      emit('update:visible', val);
-    });
 
     // 过滤
     const filter = (inputValue, option) => {

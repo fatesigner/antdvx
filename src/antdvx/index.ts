@@ -14,6 +14,7 @@ export * from './components/code-editor';
 export * from './components/drawer';
 export * from './components/echarts';
 export * from './components/form-generator';
+export * from './components/grid-dragable';
 export * from './components/iconfont';
 export * from './components/lazy';
 export * from './components/loading';

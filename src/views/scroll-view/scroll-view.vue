@@ -11,9 +11,9 @@
       </ScrollView>
     </div>
     <div class="tw-flex-1 tw-overflow-hidden tw-border tw-border-red-400">
-      <ScrollView ref="scrollViewRef" fill-y native loading-text="Loading project..." :initialize="loadData(3000)">
+      <ScrollView ref="scrollViewRef2" fill-y native loading-text="Loading project..." :initialize="loadData(3000)">
         <div class="tw-h-full tw-overflow-x-auto tw-overflow-y-auto">
-          <XButtonRefresh @click="reload">reload</XButtonRefresh>
+          <XButtonRefresh @click="reload2">reload</XButtonRefresh>
           <div v-for="arr in list">
             <div class="tw-p-2">
               <span v-for="item in arr" class="tw-p-2">{{ item }}</span>
@@ -39,6 +39,7 @@ export default defineComponent({
   },
   setup() {
     const scrollViewRef = ref<any>();
+    const scrollViewRef2 = ref<any>();
 
     const list = ref([]);
 
@@ -60,11 +61,17 @@ export default defineComponent({
       scrollViewRef.value?.reload();
     };
 
+    const reload2 = () => {
+      scrollViewRef2.value?.reload();
+    };
+
     return {
       scrollViewRef,
+      scrollViewRef2,
       list,
       loadData,
-      reload
+      reload,
+      reload2
     };
   }
 });

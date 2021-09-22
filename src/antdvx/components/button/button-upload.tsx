@@ -135,7 +135,7 @@ export const XButtonUpload = defineComponent({
     return (
       <XButton
         class={['ant-btn-upload', ctx.autosize ? 'ant-btn-autosize' : '']}
-        ref={'btnRef'}
+        ref='btnRef'
         block={ctx.block}
         disabled={ctx.disabled}
         ghost={ctx.ghost}

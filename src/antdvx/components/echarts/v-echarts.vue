@@ -216,7 +216,6 @@ export default defineComponent({
       if ($chart.value && $chart.value.style.position === 'relative') {
         // Reload chart
         $chart.value.style.position = '';
-        console.log('initialize');
         initialize();
       }
     });

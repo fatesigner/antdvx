@@ -24,6 +24,15 @@
         "children": []
       },
       {
+        "id": "zf96690e69zd",
+        "label": "可拖拽两栏布局",
+        "name": "grid-dragable",
+        "url": "/grid-dragable",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "sh96690e69zd",
         "label": "异步加载区域",
         "name": "async-section",

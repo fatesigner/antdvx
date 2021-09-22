@@ -1,19 +1,18 @@
 @import '../themes/default';
 
-@colorArr:
-  primary  @primary-color,
-  secondary  @secondary-color,
-  tertiary  @tertiary-color,
-  success  @success-color,
-  warning  @warning-color,
-  danger  @danger-color,
-  red  @red-color,
-  orange  @orange-color,
-  yellow  @yellow-color,
-  green  @green-color,
-  cyan  @cyan-color,
-  blue  @blue-color,
-  purple  @purple-color;
+@colorArr: primary @primary-color,
+secondary @secondary-color,
+tertiary @tertiary-color,
+success @success-color,
+warning @warning-color,
+danger @danger-color,
+red @red-color,
+orange @orange-color,
+yellow @yellow-color,
+green @green-color,
+cyan @cyan-color,
+blue @blue-color,
+purple @purple-color;
 
 // Set font color
 // ---------------------------------------------------
@@ -183,6 +182,34 @@ body.antdvx-theme-classic {
     &.ant-table-empty > .ant-table-content > .ant-table-scroll > .ant-table-body {
       overflow: hidden !important;
     }
+  }
+
+  .ant-table-thead > tr > th .ant-table-header-column {
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner {
+    height: auto;
+    margin-top: 0;
+  }
+
+  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-up,
+  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-down {
+    height: auto;
+    line-height: 1;
+
+    > svg {
+      vertical-align: top;
+    }
+  }
+
+  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-up {
+    margin-bottom: -4.5px;
+  }
+
+  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-down {
+    margin-top: -4.5px;
   }
 
   // Tabs

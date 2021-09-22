@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import { Alert } from 'ant-design-vue';
-import { bindPromiseQueue } from '@fatesigner/utils';
+import { bindPromiseQueue, debounce } from '@fatesigner/utils';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
@@ -73,12 +73,9 @@ import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle 
 
 import { SpinnerLoading } from '../loading';
 import { XButtonRefresh } from '../button';
-
 import { IScrollViewOptions } from './scroll-view';
 
-const elementResizeDetectorMaker = require('element-resize-detector');
-
-let erd;
+//const elementResizeDetectorMaker = require('element-resize-detector');
 
 export default defineComponent({
   components: {
@@ -137,6 +134,7 @@ export default defineComponent({
   emits: ['initialized', 'scroll'],
   setup(props: any, { emit }) {
     const $style = useCssModule();
+    let resizeObs: ResizeObserver;
 
     const error = ref();
     const loading_ = ref(!!props.initialize);
@@ -268,24 +266,28 @@ export default defineComponent({
       }
     };
 
-    const resizeLayout = () => {
-      if (!contentRef.value) {
-        return;
-      }
+    const resizeLayout = debounce(
+      function () {
+        if (!contentRef.value) {
+          return;
+        }
 
-      let xBarWidth = 0;
-      let yBarHeight = 0;
+        let xBarWidth = 0;
+        let yBarHeight = 0;
 
-      if (contentRef.value.offsetWidth > viewRef.value.clientWidth) {
-        xBarWidth = ((viewRef.value.clientWidth * 100) / contentRef.value.offsetWidth).toFixed(1) as any;
-      }
+        if (contentRef.value.offsetWidth > viewRef.value.clientWidth) {
+          xBarWidth = ((viewRef.value.clientWidth * 100) / contentRef.value.offsetWidth).toFixed(1) as any;
+        }
 
-      if (contentRef.value.offsetHeight > viewRef.value.clientHeight) {
-        yBarHeight = ((viewRef.value.clientHeight * 100) / contentRef.value.offsetHeight).toFixed(1) as any;
-      }
+        if (contentRef.value.offsetHeight > viewRef.value.clientHeight) {
+          yBarHeight = ((viewRef.value.clientHeight * 100) / contentRef.value.offsetHeight).toFixed(1) as any;
+        }
 
-      updateThumbSize(xBarWidth, yBarHeight);
-    };
+        updateThumbSize(xBarWidth, yBarHeight);
+      },
+      300,
+      true
+    );
 
     // 外部操作（滚轮、触控）触发滚动
     const onScroll = (e) => {
@@ -378,7 +380,6 @@ export default defineComponent({
                   dragMoving = true;
                 }
               : () => {
-                  console.log('move');
                   let style = getTranslate3dStyle($thumb);
                   dragArgs.initialPos.top = style[1];
                   dragMoving = true;
@@ -447,12 +448,11 @@ export default defineComponent({
       // 监听窗口尺寸变化，重新设置滑块尺寸
       if (props.autoresize) {
         if (contentRef.value) {
-          if (!erd) {
-            erd = elementResizeDetectorMaker({
-              strategy: 'scroll'
-            });
+          if (!resizeObs) {
+            resizeObs = new ResizeObserver(resizeLayout);
           }
-          erd.listenTo(contentRef.value, resizeLayout);
+          resizeObs.observe(viewRef.value);
+          resizeObs.observe(contentRef.value);
         }
       }
 
@@ -526,8 +526,9 @@ export default defineComponent({
     onUnmounted(() => {
       // 移除视窗区域尺寸的监听
       if (contentRef.value) {
-        if (erd) {
-          erd.removeListener(contentRef.value, resizeLayout);
+        if (resizeObs) {
+          resizeObs.unobserve(viewRef.value);
+          resizeObs.unobserve(contentRef.value);
         }
       }
     });
@@ -581,7 +582,7 @@ export default defineComponent({
 
   &.transition-enter-active,
   &.transition-leave-active {
-    transition-timing-function: ease-in-out;
+    transition-timing-function: ease-out;
     transition-duration: 0.2s;
     transition-property: opacity, transform;
   }
@@ -603,8 +604,8 @@ export default defineComponent({
 
   &.transition-enter-active,
   &.transition-leave-active {
-    transition-timing-function: ease-in-out;
-    transition-duration: 0.3s;
+    transition-timing-function: ease-out;
+    transition-duration: 0.2s;
     transition-property: opacity;
   }
 
