@@ -380,11 +380,13 @@ export default defineComponent({
         }
 
         props.options.loading = false;
+        props.options?.listeners?.dataLoaded?.(dataOverall);
       } else {
         // 静态数据
         if (props?.options?.dataSource?.data) {
           dataOverall = props.options.dataSource.data.slice(0, props.options.dataSource.data.length);
           props.options.dataSource.total = dataOverall.length;
+          props.options?.listeners?.dataLoaded?.(dataOverall);
         }
       }
     };

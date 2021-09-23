@@ -113,6 +113,7 @@ export default defineComponent({
     // 主表
     const tableRef = createXTable(
       {
+        size: 'small',
         rowKey: 'userid',
         rowSelection: {
           type: 'checkbox',
@@ -202,6 +203,9 @@ export default defineComponent({
           }
         },
         listeners: {
+          dataLoaded(list) {
+            console.log(list);
+          },
           expand(expanded, parent) {
             if (expanded) {
               // 拓展行，创建子表

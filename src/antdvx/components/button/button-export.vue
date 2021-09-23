@@ -23,10 +23,22 @@
     </XButton>
     <template #overlay>
       <AMenu @click="onActionClick">
-        <AMenuItem v-if="jsonVisible" key="json">{{ $t(i18nMessages.antd.action.exportToJSON) }}</AMenuItem>
-        <AMenuItem v-if="pdfVisible" key="pdf">{{ $t(i18nMessages.antd.action.exportToPDF) }}</AMenuItem>
-        <AMenuItem v-if="imageVisible" key="image">{{ $t(i18nMessages.antd.action.exportToImage) }}</AMenuItem>
-        <AMenuItem v-if="excelVisible" key="excel">{{ $t(i18nMessages.antd.action.exportToExcel) }}</AMenuItem>
+        <AMenuItem v-if="jsonVisible" key="json">
+          <div class="tw-flex tw-items-center"><IconCodeView class="tw-mr-1" color="primary" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToJSON) }}</div>
+        </AMenuItem>
+        <AMenuItem v-if="pdfVisible" key="pdf">
+          <div class="tw-flex tw-items-center"><IconFilePdfLine class="tw-mr-1" color="green" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToPDF) }}</div>
+        </AMenuItem>
+        <AMenuItem v-if="imageVisible" key="image">
+          <div class="tw-flex tw-items-center">
+            <IconImageLine class="tw-mr-1" color="orange" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToImage) }}
+          </div>
+        </AMenuItem>
+        <AMenuItem v-if="excelVisible" key="excel">
+          <div class="tw-flex tw-items-center">
+            <IconFileExcelLine class="tw-mr-1" color="blue" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToExcel) }}
+          </div>
+        </AMenuItem>
       </AMenu>
     </template>
   </ADropdown>
@@ -41,7 +53,7 @@ import { convertHtmlToCanvas } from '@fatesigner/utils/html-canvas';
 import { PropType, computed, defineComponent, reactive, ref } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconFileDownloadLine, IconLoader5Line } from '../iconfont';
+import { IconCodeView, IconFileDownloadLine, IconFileExcelLine, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
 import { IXButtonExportOptions, XButtonProps } from './types';
@@ -50,11 +62,15 @@ export default defineComponent({
   name: 'x-button-export',
   components: {
     XButton,
+    IconCodeView,
+    IconImageLine,
     IconLoader5Line,
+    IconFilePdfLine,
+    IconFileExcelLine,
     IconFileDownloadLine,
-    [Menu.name]: Menu,
+    [Dropdown.name]: Dropdown,
     [Menu.Item.name]: Menu.Item,
-    [Dropdown.name]: Dropdown
+    [Menu.name]: Menu
   },
   props: {
     ...XButtonProps,
@@ -132,19 +148,15 @@ export default defineComponent({
         options_.json = await loadOptions(props?.options?.json, options_.json);
         let opt = options_?.json as any;
         if (opt?.content) {
-          if (typeof window.navigator.msSaveBlob !== 'undefined') {
-            window.navigator.msSaveBlob(new Blob([opt.content]), opt.filename);
-          } else {
-            const url = window.URL.createObjectURL(new Blob([opt.content], { type: 'data:application/json;charset=utf-8' }));
-            const link = document.createElement('a');
-            link.style.display = 'none';
-            link.href = url;
-            link.setAttribute('download', `${opt.filename || new Date().getTime()}.json`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-          }
+          const url = window.URL.createObjectURL(new Blob([opt.content], { type: 'data:application/json;charset=utf-8' }));
+          const link = document.createElement('a');
+          link.style.display = 'none';
+          link.href = url;
+          link.setAttribute('download', `${opt.filename || new Date().getTime()}.json`);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
         } else {
           throw new Error('The json content can not be empty.');
         }

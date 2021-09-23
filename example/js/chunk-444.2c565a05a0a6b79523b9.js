@@ -1,1 +1,0 @@
-'use strict';(self['webpackChunk']=self['webpackChunk']||[]).push([[444],{444:function(n,r,u){u.r(r),u.d(r,{default:function(){return f}});var t=u(62212),e={class:'tw-h-full'},a=(0,t.Wm)('div',{class:'tw-p-4'},'Dashboard',-1);function s(n,r,u,s,c,f){return(0,t.wg)(),(0,t.j4)('div',e,[a])}var c=(0,t.aZ)({setup:function(){return{}}});c.render=s;var f=c}}]);

@@ -218,21 +218,16 @@ export function importStreamFile(accept = '') {
 export function exportStreamFile(data: any, filename: string, contentType = 'application/octet-stream'): Promise<void> {
   return new Promise((resolve, reject) => {
     if (data) {
-      if (typeof window.navigator.msSaveBlob !== 'undefined') {
-        window.navigator.msSaveBlob(new Blob([data]), filename);
-        resolve();
-      } else {
-        const url = window.URL.createObjectURL(new Blob([data], { type: contentType }));
-        const link = document.createElement('a');
-        link.style.display = 'none';
-        link.href = url;
-        link.setAttribute('download', filename);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-        resolve();
-      }
+      const url = window.URL.createObjectURL(new Blob([data], { type: contentType }));
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      resolve();
     } else {
       reject(new Error('文件不存在'));
     }

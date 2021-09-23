@@ -160,10 +160,12 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
    * 分页、排序、筛选变化时触发
    */
   readonly change?: (pagination, filters, sorter, row: { currentDataSource }) => void;
+
   /**
    * 展开的行变化时触发
    */
   readonly expandedRowsChange?: (expandedRows: string[]) => void;
+
   /**
    * 点击展开图标时触发
    */
@@ -175,22 +177,32 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
    * 请求错误后触发
    */
   readonly failed?: (err: Error) => void;
+
   /**
-   * 数据项更新后触发
+   * 数据项更新后触发，用于行数据编辑
    */
   readonly recordChange?: (record: IXTableModelExtend<TModel>) => void;
+
+  /**
+   * 数据加载成功后触发, 当 dataSource 配置为远端数据时, 将会在每次请求后触发
+   */
+  readonly dataLoaded?: (data: IXTableModelExtend<TModel>[]) => void;
+
   /**
    * 用户手动选择/取消选择某行的回调
    */
   readonly rowSelect?: (record: IXTableModelExtend<TModel>, selected: boolean, selectedRows, nativeEvent) => void;
+
   /**
    * 选中项发生变化时的回调
    */
   readonly rowSelectChange?: (selectedRowKeys: ColumnProps['key'][], selectedRows: IXTableModelExtend<TModel>[]) => void;
+
   /**
    * 用户全选所有行的回调
    */
   readonly rowSelectAll?: (selected: boolean, selectedRows: IXTableModelExtend<TModel>[], changeRows: IXTableModelExtend<TModel>[]) => void;
+
   /**
    * 用户手动选择反选的回调
    */

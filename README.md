@@ -6,7 +6,7 @@
 
 [npm-image]: https://img.shields.io/npm/v/antdvx.svg?style=for-the-badge
 [npm-url]: https://npmjs.com/package/antdvx
-[download-image]: https://img.shields.io/npm/dw/antdvx.svg?style=for-the-badge&color=green
+[download-image]: https://img.shields.io/npm/dw/antdvx.svg?style=for-the-badge
 [download-url]: https://npmjs.com/package/antdvx
 [commitizen-image]: https://img.shields.io/badge/commitizen-friendly-green.svg?style=for-the-badge
 [commitizen-url]: http://commitizen.github.io/cz-cli/

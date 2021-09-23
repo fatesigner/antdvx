@@ -633,9 +633,9 @@ module.exports = async function (options) {
     new CopyWebpackPlugin(options?.plugins?.CopyWebpackPlugin),
     new WebpackHtmlEmbedSourcePlugin(options?.plugins?.WebpackHtmlEmbedSourcePlugin),
     // new WebpackExternalEntryPlugin(options?.plugins?.WebpackExternalEntryPlugin),
-    new WebpackCleanTerminalPlugin(),
+    // new WebpackCleanTerminalPlugin(),
     // 排除 moment.js 的 locale 文件，以减少生成的包体积
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.IgnorePlugin({ resourceRegExp: /^\.\/locale$/, contextRegExp: /moment$/ }),
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /zh-cn$/),
     // 使用 dayjs 替代  moment.js
     new AntdDayjsWebpackPlugin({
@@ -711,36 +711,37 @@ module.exports = async function (options) {
       {
         host: 'localhost',
         open: true,
-        hot: true,
-        quiet: true,
-        hotOnly: true,
+        hot: 'only',
         compress: true,
-        progress: false,
-        noInfo: true,
-        // stats: 'errors-only',
-        stats: {
-          colors: true,
-          errors: true,
-          errorDetails: true,
-          warnings: true,
-          hash: false,
-          version: false,
-          timings: false,
-          assets: false,
-          chunks: false,
-          modules: false,
-          reasons: false,
-          children: false,
-          source: false,
-          outputPath: false,
-          publicPath: false
+        allowedHosts: 'all',
+        devMiddleware: {
+          // stats: 'errors-only',
+          stats: {
+            colors: true,
+            errors: true,
+            errorDetails: true,
+            warnings: true,
+            hash: false,
+            version: false,
+            timings: false,
+            assets: false,
+            chunks: false,
+            modules: false,
+            reasons: false,
+            children: false,
+            source: false,
+            outputPath: false,
+            publicPath: false
+          }
         },
-        clientLogLevel: 'info',
-        // clientLogLevel: 'silent',
-        disableHostCheck: true,
-        overlay: {
-          warnings: false,
-          errors: true
+        client: {
+          // logging: 'silent',
+          logging: 'info',
+          progress: false,
+          overlay: {
+            warnings: false,
+            errors: true
+          }
         }
       },
       options.devServer,
