@@ -1,3 +1,10 @@
+# [1.0.0-alpha.37](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.36...v1.0.0-alpha.37) (2021-09-23)
+
+
+### Features
+
+* update packages version ([e79d935](https://github.com/fatesigner/antdvx/commit/e79d9350dbf5ad64c2f3e4aaece48039464e51a5))
+
 # [1.0.0-alpha.36](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.35...v1.0.0-alpha.36) (2021-09-22)
 
 
