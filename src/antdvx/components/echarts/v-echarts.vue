@@ -13,7 +13,7 @@
     </transition-group>
 
     <template v-if="initialized">
-      <slot name="default" v-bind="{ loading, refresh }" />
+      <slot name="default" v-bind="{ error, empty, loading, refresh }" />
     </template>
 
     <div ref="chart" :class="[$style.container, empty || !options_ ? $style.empty : '']" @touchstart="touchstart" />
