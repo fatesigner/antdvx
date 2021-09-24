@@ -1,3 +1,10 @@
+# [1.0.0-alpha.38](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.37...v1.0.0-alpha.38) (2021-09-24)
+
+
+### Features
+
+* 为 VEcharts 组件插槽添加 error、empty 属性 ([6f8c26b](https://github.com/fatesigner/antdvx/commit/6f8c26ba01046d71bb0605799d3093abf096715e))
+
 # [1.0.0-alpha.37](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.36...v1.0.0-alpha.37) (2021-09-23)
 
 
