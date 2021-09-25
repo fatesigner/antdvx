@@ -1,3 +1,10 @@
+# [1.0.0-alpha.40](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.39...v1.0.0-alpha.40) (2021-09-25)
+
+
+### Features
+
+* 为 Button 组件添加 emits click ([402fbec](https://github.com/fatesigner/antdvx/commit/402fbecd6417f0d248e9eb28b41a7fc62fb1c7b8))
+
 # [1.0.0-alpha.39](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.38...v1.0.0-alpha.39) (2021-09-25)
 
 
