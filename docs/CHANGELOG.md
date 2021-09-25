@@ -1,3 +1,10 @@
+# [1.0.0-alpha.39](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.38...v1.0.0-alpha.39) (2021-09-25)
+
+
+### Features
+
+* 更新 XTable 组件事件 ([8642b02](https://github.com/fatesigner/antdvx/commit/8642b02ae8af84520146f72b6a0ab3c2948acf1f))
+
 # [1.0.0-alpha.38](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.37...v1.0.0-alpha.38) (2021-09-24)
 
 
