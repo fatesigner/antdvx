@@ -22,6 +22,7 @@ export const XButtonDelete = defineComponent({
       default: false
     }
   },
+  emits: ['click'],
   setup(props: any) {
     const { t } = useI18n();
     const loading_ = ref(false);
@@ -58,8 +59,9 @@ export const XButtonDelete = defineComponent({
           .finally(() => {
             loading_.value = false;
           });
+      } else {
+        emit('click', e);
       }
-      return timer(1000).toPromise();
     };
 
     return { loading_, trigger };

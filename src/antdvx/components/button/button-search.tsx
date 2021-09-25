@@ -16,6 +16,7 @@ export const XButtonSearch = defineComponent({
       default: false
     }
   },
+  emits: ['click'],
   setup(props: any, { emit }) {
     const loading_ = ref(false);
 
