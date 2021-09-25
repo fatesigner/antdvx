@@ -6,7 +6,9 @@ import { TableProps } from 'ant-design-vue/es/table/interface';
 import { ColumnProps } from 'ant-design-vue/es/table/interface';
 import { PaginationProps } from 'ant-design-vue/es/pagination/Pagination';
 
-import { IDataSource } from '../../types/data-source';
+import { IDataSource, IPaginationParams } from '../../types/data-source';
+
+export type IXTableChangeType = 'filter' | 'sorter' | 'pagination';
 
 export type IXTableRowKeyFunc<TModel extends Record<string, any>> = (record: TModel, index: number) => string;
 
@@ -159,7 +161,23 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
   /**
    * 分页、排序、筛选变化时触发
    */
-  readonly change?: (pagination, filters, sorter, row: { currentDataSource }) => void;
+  readonly change?: (changer: {
+    /**
+     * 类型
+     */
+    type: IXTableChangeType;
+    pagination: IPaginationParams;
+    filters: IXTableFilters<TModel>;
+    sorter: IXTableSorter<TModel>;
+    /**
+     * 当前数据
+     */
+    currentData: IXTableModelExtend<TModel>[];
+    /**
+     * 所有数据
+     */
+    overallData: IXTableModelExtend<TModel>[];
+  }) => void;
 
   /**
    * 展开的行变化时触发
@@ -182,6 +200,11 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
    * 数据项更新后触发，用于行数据编辑
    */
   readonly recordChange?: (record: IXTableModelExtend<TModel>) => void;
+
+  /**
+   * 当前页数据更新后触发, 切换分页、过滤、筛选等
+   */
+  readonly dataChange?: (data: IXTableModelExtend<TModel>[]) => void;
 
   /**
    * 数据加载成功后触发, 当 dataSource 配置为远端数据时, 将会在每次请求后触发

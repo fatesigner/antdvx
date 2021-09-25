@@ -119,7 +119,7 @@ import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
-import { IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableSorter } from './types';
+import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableSorter } from './types';
 import { defaultXTableProps } from './table';
 
 const elementResizeDetectorMaker = require('element-resize-detector');
@@ -156,13 +156,13 @@ export default defineComponent({
     const columns_ = reactive([]);
 
     // 所有数据项
-    let dataOverall = [];
+    let overallData = [];
 
     // 当前选中的数据项
     let selectedRows = [];
 
     // 当前选中的过滤、筛选条件
-    let filters: IXTableFilters<any>;
+    let filters: IXTableFilters<any> = {} as any;
     let sorter: IXTableSorter<any> = {} as any;
 
     // 重绘 fixed 行高度，以解决 fixed 错位的渲染问题
@@ -213,9 +213,12 @@ export default defineComponent({
     const processData = () => {
       if (props?.options?.dataSource?.serverPaging) {
         // 服务端分页
-        props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...dataOverall);
+        props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...overallData);
+
+        // emit event
+        props.options?.listeners?.dataChange?.(props.options.dataSource.data);
       } else {
-        let data = dataOverall.slice(0, dataOverall.length);
+        let data = overallData.slice(0, overallData.length);
 
         // 客户端过滤
         if (filters) {
@@ -265,6 +268,9 @@ export default defineComponent({
         } else {
           props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...data);
         }
+
+        // emit event
+        props.options?.listeners?.dataChange?.(props.options.dataSource.data);
       }
 
       // 重置 rowSlections
@@ -282,7 +288,7 @@ export default defineComponent({
 
     // 请求数据
     const loadData = async () => {
-      dataOverall = [];
+      overallData = [];
 
       if (props?.options?.dataSource.transport?.read) {
         props.options.loading = true;
@@ -348,8 +354,8 @@ export default defineComponent({
           // 服务端分页
           if (props?.options?.dataSource?.serverPaging) {
             if (isFunction(props?.options?.dataSource?.transport?.read)) {
-              dataOverall = _res.data;
-              props.options.dataSource.total = _res?.total ?? dataOverall.length;
+              overallData = _res.data;
+              props.options.dataSource.total = _res?.total ?? overallData.length;
             } else {
               // parse
               if (props?.options?.dataSource?.schema?.parse) {
@@ -365,28 +371,31 @@ export default defineComponent({
 
               // data
               if (isString(props?.options?.dataSource?.schema?.data)) {
-                dataOverall = _res[props.options.dataSource.schema.data];
+                overallData = _res[props.options.dataSource.schema.data];
               } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
-                dataOverall = props.options.dataSource.schema.data(_res);
+                overallData = props.options.dataSource.schema.data(_res);
               } else {
-                dataOverall = _res;
+                overallData = _res;
               }
             }
           } else {
             // 客户端分页
-            dataOverall = _res.data;
-            props.options.dataSource.total = _res?.total ?? dataOverall.length;
+            overallData = _res.data;
+            props.options.dataSource.total = _res?.total ?? overallData.length;
           }
         }
 
         props.options.loading = false;
-        props.options?.listeners?.dataLoaded?.(dataOverall);
+        props.options?.listeners?.dataLoaded?.(overallData);
       } else {
         // 静态数据
         if (props?.options?.dataSource?.data) {
-          dataOverall = props.options.dataSource.data.slice(0, props.options.dataSource.data.length);
-          props.options.dataSource.total = dataOverall.length;
-          props.options?.listeners?.dataLoaded?.(dataOverall);
+          overallData = props.options.dataSource.data.slice(0, props.options.dataSource.data.length);
+          props.options.dataSource.total = overallData.length;
+
+          // emit events
+          props.options?.listeners?.dataLoaded?.(overallData);
+          props.options?.listeners?.dataChange?.(props.options.dataSource.data);
         }
       }
     };
@@ -444,7 +453,7 @@ export default defineComponent({
     };
 
     const setData: IXTableHandlers<any>['setData'] = (data: Record<string, any>[]) => {
-      dataOverall = data;
+      overallData = data;
       processData();
     };
 
@@ -471,7 +480,7 @@ export default defineComponent({
     };
 
     const getAllData: IXTableHandlers<any>['getAllData'] = () => {
-      return dataOverall;
+      return overallData;
     };
 
     // update handlers
@@ -520,25 +529,51 @@ export default defineComponent({
       },
       {
         immediate: true,
-        deep: false
+        deep: true
       }
     );
 
     // 切换 pageIndex
     const onPageChange = async () => {
+      props?.options?.listeners?.change?.({
+        type: 'pagination',
+        pagination: {
+          pageNo: props.options.dataSource.pageNo,
+          pageSize: props.options.dataSource.pageSize
+        },
+        filters,
+        sorter,
+        currentData: props.options.dataSource.data,
+        overallData
+      });
+
       props.options.loading = true;
+
       if (props?.options?.dataSource?.serverPaging) {
         // 服务端分页
         await refresh();
       } else {
         processData();
       }
+
       props.options.loading = false;
     };
 
     // 切换 pageSize
     const onPageSizeChange = () => {
       nextTick(function () {
+        props?.options?.listeners?.change?.({
+          type: 'pagination',
+          pagination: {
+            pageNo: props.options.dataSource.pageNo,
+            pageSize: props.options.dataSource.pageSize
+          },
+          filters,
+          sorter,
+          currentData: props.options.dataSource.data,
+          overallData
+        });
+
         props.options.loading = true;
         setTimeout(async function () {
           props.options.dataSource.pageNo = 1;
@@ -553,7 +588,18 @@ export default defineComponent({
       });
     };
 
-    const onChange = (pagination, filters_: any, sorter_: any, currentDataSource) => {
+    const onChange = (pagination, filters_: any, sorter_: any, { currentDataSource }) => {
+      let type: IXTableChangeType;
+
+      // 设置 change 类型
+      if (JSON.stringify(filters) !== JSON.stringify(filters_)) {
+        type = 'filter';
+      } else if (JSON.stringify(sorter) !== JSON.stringify(sorter_)) {
+        type = 'sorter';
+      } else {
+        type = 'pagination';
+      }
+
       // 筛选
       filters = filters_;
       // 过滤
@@ -561,7 +607,17 @@ export default defineComponent({
 
       reload();
 
-      props?.options?.listeners?.change?.(pagination, filters, sorter, currentDataSource);
+      props?.options?.listeners?.change?.({
+        type,
+        pagination: {
+          pageNo: props.options.dataSource.pageNo,
+          pageSize: props.options.dataSource.pageSize
+        },
+        filters,
+        sorter,
+        currentData: props.options.dataSource.data,
+        overallData
+      });
     };
     const onExpandedRowsChange = (expandedRows) => {
       props?.options?.listeners?.expandedRowsChange?.(expandedRows);

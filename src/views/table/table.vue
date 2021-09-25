@@ -1,7 +1,7 @@
 <template>
   <ScrollView fill-y scroll-y>
     <div class="tw-p-4">
-      <XTable v-bind="tableRef">
+      <XTable v-bind="tbRef">
         <template #title="{ options, params, handler, methods }">
           <div class="tw-flex tw-items-center tw-space-x-2">
             <AInput class="tw-w-44" allowClear v-model:value="params.keywords" placeholder="搜索用户名..." />
@@ -111,7 +111,7 @@ export default defineComponent({
     );
 
     // 主表
-    const tableRef = createXTable(
+    const tbRef = createXTable(
       {
         size: 'small',
         rowKey: 'userid',
@@ -191,7 +191,7 @@ export default defineComponent({
           serverPaging: false,
           transport: {
             read({ pageNo, pageSize }, { keywords }, filters, sorter) {
-              if (tableRef.options.dataSource.serverPaging) {
+              if (tbRef.options.dataSource.serverPaging) {
                 return Api.getUsers({ keywords, pageNo, pageSize, filters, sorter }).then((res) => {
                   return res;
                 });
@@ -203,8 +203,28 @@ export default defineComponent({
           }
         },
         listeners: {
-          dataLoaded(list) {
-            console.log(list);
+          change({ type, pagination, filters, sorter, currentData, overallData }) {
+            console.log(type);
+            /*tbRef.options.columns.unshift({
+              title: 'CCC',
+              width: 80,
+              customRender({ text }) {
+                return 'ccc';
+              }
+            });*/
+          },
+          dataChange(data) {
+            console.log(data);
+          },
+          dataLoaded(data) {
+            console.log(data);
+            tbRef.options.columns.unshift({
+              title: 'AAA',
+              width: 80,
+              customRender({ text }) {
+                return 'aaa';
+              }
+            });
           },
           expand(expanded, parent) {
             if (expanded) {
@@ -263,7 +283,7 @@ export default defineComponent({
                     },
                     transport: {
                       read({ pageNo, pageSize }) {
-                        if (tableRef.options.dataSource.serverPaging) {
+                        if (tbRef.options.dataSource.serverPaging) {
                           return Api.getChildren({ userid: parent.userid, pageNo, pageSize }).then((res) => {
                             return res;
                           });
@@ -314,7 +334,7 @@ export default defineComponent({
           async excel() {
             return {
               filename: 'excel',
-              columns: tableRef.options.columns.map((x) => ({
+              columns: tbRef.options.columns.map((x) => ({
                 header: x.title,
                 key: x.dataIndex,
                 template: x?.slots?.customRender
@@ -341,7 +361,7 @@ export default defineComponent({
           authPopupRef.handler.present();
         },
         add() {
-          return tableRef.handler.addData(0, {
+          return tbRef.handler.addData(0, {
             userid: '',
             username: ''
           });
@@ -353,19 +373,19 @@ export default defineComponent({
         },
         del(record) {
           return async () => {
-            return Api.deleteUser(record.userid, tableRef.options.dataSource.data);
+            return Api.deleteUser(record.userid, tbRef.options.dataSource.data);
           };
         },
         async delAll() {
           Modal.success({
             title: '已选中以下数据',
-            content: JSON.stringify(tableRef.options.rowSelection.selectedRowKeys, null, 2)
+            content: JSON.stringify(tbRef.options.rowSelection.selectedRowKeys, null, 2)
           });
         }
       }
     );
 
-    return { MASTER_DATA_STATUS, tableRef, authPopupRef };
+    return { MASTER_DATA_STATUS, tbRef, authPopupRef };
   }
 });
 </script>
