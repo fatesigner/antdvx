@@ -1,3 +1,10 @@
+# [1.0.0-alpha.41](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.40...v1.0.0-alpha.41) (2021-09-26)
+
+
+### Features
+
+* 新增 pipes 管道过滤器 ([e09a56c](https://github.com/fatesigner/antdvx/commit/e09a56cde1231f0ea28faf4d3b3da8f1e30fd25d))
+
 # [1.0.0-alpha.40](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.39...v1.0.0-alpha.40) (2021-09-25)
 
 
