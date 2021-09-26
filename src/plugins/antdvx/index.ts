@@ -3,8 +3,8 @@
  */
 
 import { merge } from 'lodash-es';
-import { setRequestAdapter } from '@/antdvx';
 import { message, notification } from 'ant-design-vue';
+import { setAntdvxPipesConfig, setRequestAdapter } from '@/antdvx';
 
 import { i18n } from '@/i18n';
 import { httpService } from '@/app/services';
@@ -16,6 +16,21 @@ export const Antdvx = {
     // 设置 Http 适配器
     setRequestAdapter((options) => {
       return httpService.request(options);
+    });
+
+    // 配置 pipes
+    setAntdvxPipesConfig({
+      dateFormat: 'YYYY',
+      fixed: {
+        digits: 3,
+        mode: 'normal'
+      },
+      currencyFormat: new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 3,
+        maximumFractionDigits: 3
+      })
     });
 
     notification.config({

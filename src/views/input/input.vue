@@ -9,15 +9,22 @@
           <XButton :size="size">搜索</XButton>
         </div>
       </div>
-      <AInputSearch class="tw-w-52" placeholder="input search text" enter-button />
+
+      <XButton @click="toggle">Toggle</XButton>
+
+      <div v-if="visible">
+        <AInputSearch class="tw-w-52" placeholder="input search text" enter-button v-focus="{ focus, selectors: 'input' }" />
+        <input class="tw-border-2" v-focus="{ onBlur, onFocus }" />
+      </div>
     </div>
   </ScrollView>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { Input, InputSearch } from 'ant-design-vue';
 import { ANTDVX_SIZES, ScrollView, XButton } from '@/antdvx';
+import { focus } from '@/antdvx/directives';
 
 export default defineComponent({
   components: {
@@ -26,9 +33,34 @@ export default defineComponent({
     [Input.name]: Input,
     [InputSearch.name]: InputSearch
   },
+  directives: {
+    focus
+  },
   setup() {
+    const focus = ref(true);
+    const visible = ref(false);
+
+    const onBlur = (e) => {
+      console.log('onBlur', e);
+      focus.value = true;
+    };
+
+    const onFocus = (e) => {
+      console.log('onFocus', e);
+      focus.value = false;
+    };
+
+    const toggle = () => {
+      visible.value = !visible.value;
+    };
+
     return {
-      sizes: ANTDVX_SIZES.filter((x) => x !== 'mini')
+      sizes: ANTDVX_SIZES.filter((x) => x !== 'mini'),
+      focus,
+      visible,
+      onBlur,
+      onFocus,
+      toggle
     };
   }
 });

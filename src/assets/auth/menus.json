@@ -78,6 +78,15 @@
         "children": []
       },
       {
+        "id": "hd96690e69sc",
+        "label": "管道过滤器（pipes）",
+        "name": "pipes",
+        "url": "/pipes",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "b796690e6975",
         "label": "表格",
         "name": "table",
