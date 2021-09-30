@@ -18,9 +18,6 @@ export const IconfontProps = {
       return [];
     }
   },
-  style: {
-    type: Object
-  },
   scale: {
     type: [Number, String]
   },
@@ -29,6 +26,6 @@ export const IconfontProps = {
     default: false
   },
   rotate: {
-    type: [Number]
+    type: [Number, String]
   }
 };

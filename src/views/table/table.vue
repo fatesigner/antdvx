@@ -129,8 +129,9 @@ export default defineComponent({
             sortDirections: ['descend']
           },
           {
-            title: '用户名',
-            dataIndex: 'username'
+            title: '用户名 & 账号',
+            dataIndex: 'username',
+            width: 80
           },
           {
             title: '手机号',

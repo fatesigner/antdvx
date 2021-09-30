@@ -1,7 +1,7 @@
 <template>
   <div :class="$style.panel" @click="trigger" :title="title">
     <slot />
-    <div class="loading" v-if="loading">
+    <div :class="$style.loading" v-if="loading">
       <IconRefreshLine spin />
     </div>
   </div>
@@ -13,6 +13,7 @@ import { defineComponent } from 'vue';
 import { IconRefreshLine } from '../iconfont';
 
 export default defineComponent({
+  name: 'button-spin',
   components: { IconRefreshLine },
   props: {
     title: {
@@ -71,25 +72,25 @@ export default defineComponent({
   &:active {
     background-color: #d6d6d6;
   }
+}
 
-  .loading {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.2);
+.loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
 
-    .fa-icon {
-      width: 30px;
-      max-width: 50%;
-      height: 30px;
-      max-height: 50px;
-      color: #f27272;
-    }
+  .fa-icon {
+    width: 30px;
+    max-width: 50%;
+    height: 30px;
+    max-height: 50px;
+    color: #f27272;
   }
 }
 </style>

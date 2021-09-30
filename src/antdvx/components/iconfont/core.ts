@@ -34,8 +34,7 @@ export function createIcon(
       return h(
         Icon,
         {
-          ...ctx.$attrs,
-          class: ['antdvx-icon', ctx.color ? `antdvx-color-${ctx.color}` : null]
+          class: ['antdvx-icon', ctx.color ? `antdvx-color-${ctx.color}` : undefined]
           //style: ctx.style
           //spin: ctx.spin,
           //rotate: ctx.rotate
@@ -56,20 +55,10 @@ export function createIcon(
                 width: '1em',
                 height: '1em', */
                 viewBox: options.viewBox,
-                style: Object.assign(
-                  {},
-                  !isNullOrUndefined(ctx.scale)
-                    ? {
-                        fontSize: ctx.scale + 'em'
-                      }
-                    : null,
-                  !isNullOrUndefined(ctx.rotate)
-                    ? {
-                        transform: `rotate(${ctx.rotate}deg)`
-                      }
-                    : null,
-                  ctx.style
-                )
+                style: {
+                  fontSize: !isNullOrUndefined(ctx.scale) ? ctx.scale + 'em' : undefined,
+                  transform: !isNullOrUndefined(ctx.rotate) ? `rotate(${ctx.rotate}deg)` : undefined
+                }
               },
               {
                 default() {
