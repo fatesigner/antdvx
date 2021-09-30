@@ -1,3 +1,11 @@
+# [1.0.0-alpha.42](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.41...v1.0.0-alpha.42) (2021-09-30)
+
+
+### Features
+
+* 为 Iconfont 组件 添加 $attrs ([acc8f4a](https://github.com/fatesigner/antdvx/commit/acc8f4af4e38eb211898765474cb807c038f2272))
+* 为 XButtonExport 添加手动触发的功能 ([d1a4a22](https://github.com/fatesigner/antdvx/commit/d1a4a2272a17732df18328363f933ff6788e413d))
+
 # [1.0.0-alpha.41](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.40...v1.0.0-alpha.41) (2021-09-26)
 
 
