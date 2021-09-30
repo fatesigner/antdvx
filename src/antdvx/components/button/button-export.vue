@@ -139,12 +139,13 @@ export default defineComponent({
       }
     };
 
-    const onActionClick = async (e) => {
+    // 触发 download
+    const trigger = async (key: keyof IXButtonExportOptions) => {
       loading_.value = true;
 
       await timer(300).toPromise();
 
-      if (e.key === 'json') {
+      if (key === 'json') {
         options_.json = await loadOptions(props?.options?.json, options_.json);
         let opt = options_?.json as any;
         if (opt?.content) {
@@ -160,7 +161,7 @@ export default defineComponent({
         } else {
           throw new Error('The json content can not be empty.');
         }
-      } else if (e.key === 'excel') {
+      } else if (key === 'excel') {
         options_.excel = await loadOptions(props?.options?.excel, options_.excel);
         let opt = options_?.excel as any;
         if (opt) {
@@ -216,7 +217,7 @@ export default defineComponent({
 
           await download(workbook, filename);
         }
-      } else if (e.key === 'pdf') {
+      } else if (key === 'pdf') {
         options_.pdf = await loadOptions(props?.options?.pdf, options_.pdf);
         let opt = options_?.pdf as any;
         if (opt?.target) {
@@ -225,7 +226,7 @@ export default defineComponent({
           // const doc = new jsPDF();
           await convertHtmlToCanvas(opt.target).then((image) => {});
         }
-      } else if (e.key === 'image') {
+      } else if (key === 'image') {
         options_.image = await loadOptions(props?.options?.image, options_.image);
         /* const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet();
@@ -269,6 +270,10 @@ export default defineComponent({
       loading_.value = false;
     };
 
+    const onActionClick = (e) => {
+      trigger(e.key);
+    };
+
     return {
       i18nMessages,
       loading_,
@@ -278,6 +283,7 @@ export default defineComponent({
       imageVisible,
       excelVisible,
       onActionClick,
+      trigger,
       download
     };
   }

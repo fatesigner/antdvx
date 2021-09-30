@@ -64,6 +64,11 @@
             <div class="tw-p-2" v-for="type in types">
               <XButtonExport :type="type" :options="exportOptions" />
             </div>
+            <div class="tw-p-2">
+              <XButtonExport type="3d" :options="exportOptions" ref="exportRef" />
+              <XButton size="small" type="link" @click="exportRef.trigger('json')">Export json</XButton>
+              <XButton size="small" type="link" @click="exportRef.trigger('image')">Export image</XButton>
+            </div>
           </div>
           <div class="tw-flex tw-flex-wrap">
             <div class="tw-p-2">
@@ -160,7 +165,7 @@
 
 <script lang="tsx">
 import { timer } from 'rxjs';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { Dropdown, Menu } from 'ant-design-vue';
 import {
   ANTDVX_BUTTON_TYPES,
@@ -201,6 +206,8 @@ export default defineComponent({
     [Dropdown.name]: Dropdown
   },
   setup() {
+    const exportRef = ref();
+
     const popupRef = createXModal({
       destroyOnClose: true
     });
@@ -279,7 +286,7 @@ export default defineComponent({
       };
     };
 
-    return { popupRef, exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
+    return { exportRef, popupRef, exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
   }
 });
 </script>
