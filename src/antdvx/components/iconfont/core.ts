@@ -34,8 +34,9 @@ export function createIcon(
       return h(
         Icon,
         {
-          class: ['antdvx-icon', ctx.color ? `antdvx-color-${ctx.color}` : null],
-          style: ctx.style
+          ...ctx.$attrs,
+          class: ['antdvx-icon', ctx.color ? `antdvx-color-${ctx.color}` : null]
+          //style: ctx.style
           //spin: ctx.spin,
           //rotate: ctx.rotate
           //twoToneColor: ctx.twoToneColor,

@@ -42,6 +42,15 @@
         "children": []
       },
       {
+        "id": "d796690e69zd",
+        "label": "图标",
+        "name": "iconfont",
+        "url": "/iconfont",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "b796690e69zd",
         "label": "按钮",
         "name": "button",
