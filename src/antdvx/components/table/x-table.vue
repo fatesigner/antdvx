@@ -224,7 +224,15 @@ export default defineComponent({
         if (filters) {
           const filterKeys = Object.keys(filters);
           if (filterKeys?.length) {
-            data = data.filter((x) => filterKeys.every((y) => filters[y].includes(x[y])));
+            data = data.filter((x) =>
+              filterKeys.every((y) => {
+                const column = props.options.columns.find((x) => x.dataIndex === y);
+                if (isFunction(column?.onFilter)) {
+                  return filters[y].every((z) => column.onFilter(z, x));
+                }
+                return filters[y].every((z) => x[y]?.toLowerCase().indexOf(z.toLowerCase()) > -1);
+              })
+            );
           }
         }
 
@@ -522,6 +530,9 @@ export default defineComponent({
                   sorter.field = x_.dataIndex;
                   sorter.order = x.defaultSortOrder;
                 }
+              }
+              if (x.onFilter) {
+                x_.onFilter = null;
               }
               return x_;
             })

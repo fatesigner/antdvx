@@ -36,13 +36,15 @@ function getElement(el: HTMLElement, value: IFocusDirectiveValueType) {
 function handleElement(el: HTMLElement, value: IFocusDirectiveValueType) {
   const $el = getElement(el, value);
 
-  $el.onblur = function (e) {
-    $el.dataset.focus = false;
-    value?.onBlur?.(e);
-  };
-  $el.onfocus = function (e) {
-    value?.onFocus?.(e);
-  };
+  if ($el) {
+    $el.onblur = function (e) {
+      $el.dataset.focus = false;
+      value?.onBlur?.(e);
+    };
+    $el.onfocus = function (e) {
+      value?.onFocus?.(e);
+    };
+  }
 
   return $el;
 }

@@ -48,11 +48,13 @@
   </ScrollView>
 </template>
 
-<script lang="ts">
+<script lang="tsx">
+import { timer } from 'rxjs';
 import { defineComponent } from 'vue';
 import { Checkbox, Input, Modal, Tag } from 'ant-design-vue';
 import {
   IXButtonExportOptions,
+  IconSearchLine,
   IconUserSharedLine,
   ScrollView,
   XButton,
@@ -70,7 +72,6 @@ import {
 import { Api } from '@/mocks';
 import { IUser } from '@/types/user';
 import { MASTER_DATA_SEX, MASTER_DATA_STATUS } from '@/app/constants';
-import { timer } from 'rxjs';
 
 export default defineComponent({
   components: {
@@ -131,7 +132,51 @@ export default defineComponent({
           {
             title: '用户名 & 账号',
             dataIndex: 'username',
-            width: 80
+            width: 80,
+            filterIcon(filtered) {
+              return (
+                <div class='tw-flex tw-items-center tw-justify-center'>
+                  <IconSearchLine color={filtered ? 'primary' : null} />
+                </div>
+              );
+            },
+            filterDropdown({ setSelectedKeys, selectedKeys, confirm, clearFilters, column }) {
+              return (
+                <div class='tw-p-2'>
+                  <Input
+                    class='tw-w-24'
+                    size='small'
+                    value={selectedKeys[0]}
+                    onChange={(e) => {
+                      setSelectedKeys(e.target.value ? [e.target.value] : []);
+                    }}
+                    onPressEnter={() => {
+                      confirm();
+                    }}
+                  />
+                  <div class='tw-mt-2 tw-space-x-2'>
+                    <XButtonSearch
+                      color='primary'
+                      type='primary'
+                      size='small'
+                      onClick={() => {
+                        confirm();
+                      }}
+                    />
+                    <XButton
+                      size='small'
+                      onClick={() => {
+                        clearFilters();
+                      }}>
+                      Reset
+                    </XButton>
+                  </div>
+                </div>
+              );
+            },
+            onFilter(value, record) {
+              return record.username.toLowerCase().includes(value.toLowerCase());
+            }
           },
           {
             title: '手机号',
@@ -219,13 +264,6 @@ export default defineComponent({
           },
           dataLoaded(data) {
             console.log(data);
-            tbRef.options.columns.unshift({
-              title: 'AAA',
-              width: 80,
-              customRender({ text }) {
-                return 'aaa';
-              }
-            });
           },
           expand(expanded, parent) {
             if (expanded) {
