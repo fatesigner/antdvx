@@ -1,3 +1,10 @@
+# [1.0.0-alpha.44](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.43...v1.0.0-alpha.44) (2021-10-08)
+
+
+### Features
+
+* 自定义筛选菜单 ([3a8d656](https://github.com/fatesigner/antdvx/commit/3a8d656d3f4093c829dab79741119d13d0ca0a7e))
+
 # [1.0.0-alpha.43](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.42...v1.0.0-alpha.43) (2021-10-08)
 
 
