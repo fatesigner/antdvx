@@ -409,6 +409,40 @@
   }
 }
 
+.ant-btn-spin {
+  position: relative;
+  display: inline-block;
+  padding: 10px;
+  text-align: center;
+  cursor: default;
+  border-radius: 2px;
+  transition: background-color 340ms ease-out;
+
+  &:not(.ant-btn-spin-disabled) {
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f3f2f2;
+    }
+
+    &:active {
+      background-color: #d6d6d6;
+    }
+  }
+}
+
+.ant-btn-spin-loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 each(@colorArr, {
   .set-btn-color(@key, #fff, @value, @green-5);
 });

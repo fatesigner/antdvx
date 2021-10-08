@@ -155,6 +155,12 @@
             <div class="tw-p-2">
               <XButtonUpload only-icon color="secondary" size="mini" type="link" :handler="upload(3000, true)" />
             </div>
+            <div class="tw-p-2">
+              <XButtonSpin title="AAAAAAAAA" :handler="upload(3000, true)"> XSDASDASD </XButtonSpin>
+            </div>
+            <div class="tw-p-2">
+              <XButtonSpin disabled :handler="upload(3000, true)"> XSDASDASD </XButtonSpin>
+            </div>
           </div>
         </div>
       </div>
@@ -181,6 +187,7 @@ import {
   XButtonExport,
   XButtonRefresh,
   XButtonSave,
+  XButtonSpin,
   XButtonUpload,
   XModal,
   createXModal
@@ -196,6 +203,7 @@ export default defineComponent({
     XButtonEdit,
     XButtonSave,
     XButtonDelete,
+    XButtonSpin,
     XButtonRefresh,
     XButtonExport,
     XButtonUpload,

@@ -10,7 +10,7 @@ export * from './button-edit';
 export * from './button-refresh';
 export * from './button-save';
 export * from './button-search';
+export * from './button-spin';
 export * from './button-upload';
 
 export { default as XButtonExport } from './button-export.vue';
-export { default as XButtonPanel } from './button-panel.vue';
