@@ -1,3 +1,11 @@
+# [1.0.0-alpha.43](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.42...v1.0.0-alpha.43) (2021-10-08)
+
+
+### Features
+
+* add XButtonSpin component ([349cc05](https://github.com/fatesigner/antdvx/commit/349cc0520050e22360a4370e338e9a80d119264a))
+* remove Iconfont's style prop ([2348336](https://github.com/fatesigner/antdvx/commit/2348336839938db012ca9b474ed02756bd1fc934))
+
 # [1.0.0-alpha.42](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.41...v1.0.0-alpha.42) (2021-09-30)
 
 
