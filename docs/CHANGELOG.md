@@ -1,3 +1,10 @@
+# [1.0.0-alpha.45](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.44...v1.0.0-alpha.45) (2021-10-09)
+
+
+### Features
+
+* 为 Transition 组件添加 disabled 属性 ([7b4454f](https://github.com/fatesigner/antdvx/commit/7b4454f5144bbf3e49533586458d3d4ec30cbe1a))
+
 # [1.0.0-alpha.44](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.43...v1.0.0-alpha.44) (2021-10-08)
 
 
