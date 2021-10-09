@@ -11,6 +11,10 @@ export const TransitionZoom = defineComponent({
       type: Boolean,
       default: true
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     scale: {
       type: [String, Number],
       default: 0.6
@@ -34,22 +38,39 @@ export const TransitionZoom = defineComponent({
     };
 
     const onEnter = (el: HTMLElement, done) => {
-      gsap.to(el, {
-        duration: 0.2,
-        ease: 'power4',
-        opacity: 1,
-        scale: 1,
-        onComplete: done
-      });
+      if (props.disabled) {
+        gsap.set(el, {
+          ease: 'power4',
+          opacity: 1,
+          scale: 1,
+          onComplete: done
+        });
+      } else {
+        gsap.to(el, {
+          duration: 0.2,
+          ease: 'power4',
+          opacity: 1,
+          scale: 1,
+          onComplete: done
+        });
+      }
     };
 
     const onLeave = (el: HTMLElement, done) => {
-      gsap.to(el, {
-        duration: 0.3,
-        opacity: 0,
-        scale: props.scale,
-        onComplete: done
-      });
+      if (props.disabled) {
+        gsap.set(el, {
+          opacity: 0,
+          scale: props.scale,
+          onComplete: done
+        });
+      } else {
+        gsap.to(el, {
+          duration: 0.3,
+          opacity: 0,
+          scale: props.scale,
+          onComplete: done
+        });
+      }
     };
 
     return {

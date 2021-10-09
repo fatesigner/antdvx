@@ -16,13 +16,17 @@ export const TransitionSlide = defineComponent({
       // 'up', 'right', 'down', 'left'
       type: String as PropType<typeof ANTDVX_DIRECTIONS[number]>,
       default: 'down'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   render(ctx) {
     return (
       <Transition
         appear={ctx.appear}
-        name={'slide-' + ctx.direction}
+        name={ctx.disabled ? undefined : 'slide-' + ctx.direction}
         mode='out-in'
         v-slots={{
           default: () => (ctx.$slots?.default ? ctx.$slots?.default() : '')

@@ -11,6 +11,10 @@ export const TransitionOpacity = defineComponent({
       type: Boolean,
       default: true
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     opacity: {
       type: [String, Number],
       default: 0.6
@@ -26,11 +30,18 @@ export const TransitionOpacity = defineComponent({
     };
 
     const onEnter = (el: HTMLElement, done) => {
-      gsap.to(el, {
-        duration: 0.2,
-        opacity: 1,
-        onComplete: done
-      });
+      if (props.disabled) {
+        gsap.set(el, {
+          opacity: 1,
+          onComplete: done
+        });
+      } else {
+        gsap.to(el, {
+          duration: 0.2,
+          opacity: 1,
+          onComplete: done
+        });
+      }
     };
 
     const onAfterEnter = (el: HTMLElement) => {
@@ -43,11 +54,18 @@ export const TransitionOpacity = defineComponent({
     };
 
     const onLeave = (el: HTMLElement, done) => {
-      gsap.to(el, {
-        duration: 0.2,
-        opacity: props.opacity,
-        onComplete: done
-      });
+      if (props.disabled) {
+        gsap.set(el, {
+          opacity: props.opacity,
+          onComplete: done
+        });
+      } else {
+        gsap.to(el, {
+          duration: 0.2,
+          opacity: props.opacity,
+          onComplete: done
+        });
+      }
     };
 
     return {

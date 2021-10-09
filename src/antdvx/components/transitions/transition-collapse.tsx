@@ -14,12 +14,20 @@ export const TransitionCollapse = defineComponent({
       type: Boolean,
       default: true
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     height: {
       type: String
     }
   },
   setup(props) {
     const onBeforeEnter = (el: HTMLElement) => {
+      if (props.disabled) {
+        return;
+      }
+
       el.dataset.oldHeight = el.style.height;
       el.dataset.oldPaddingTop = el.style.paddingTop;
       el.dataset.oldPaddingBottom = el.style.paddingBottom;
@@ -46,6 +54,10 @@ export const TransitionCollapse = defineComponent({
     };
 
     const onEnter = (el: HTMLElement) => {
+      if (props.disabled) {
+        return;
+      }
+
       if (el.offsetHeight === 0) {
         el.classList.add(styles.collapse);
 
@@ -62,6 +74,10 @@ export const TransitionCollapse = defineComponent({
     };
 
     const onAfterEnter = (el: HTMLElement) => {
+      if (props.disabled) {
+        return;
+      }
+
       el.classList.remove(styles.collapse);
 
       // 还原初始 style
@@ -76,6 +92,10 @@ export const TransitionCollapse = defineComponent({
     };
 
     const onBeforeLeave = (el: HTMLElement) => {
+      if (props.disabled) {
+        return;
+      }
+
       el.dataset.oldHeight = el.style.height;
       el.dataset.oldPaddingTop = el.style.paddingTop;
       el.dataset.oldPaddingBottom = el.style.paddingBottom;
@@ -92,6 +112,10 @@ export const TransitionCollapse = defineComponent({
     };
 
     const onLeave = (el: HTMLElement) => {
+      if (props.disabled) {
+        return;
+      }
+
       if (el.offsetHeight !== 0) {
         // for safari: add class after set height, or it will jump to zero height suddenly, weired
         el.classList.add(styles.collapse);
@@ -104,6 +128,10 @@ export const TransitionCollapse = defineComponent({
     };
 
     const onAfterLeave = (el: HTMLElement) => {
+      if (props.disabled) {
+        return;
+      }
+
       el.classList.remove(styles.collapse);
 
       // 还原初始 style
