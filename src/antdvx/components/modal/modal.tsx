@@ -100,10 +100,11 @@ export const XModal = defineComponent({
         loadComponentTimer = null;
       }
       if (component_.value) {
+        component_.value = null;
         loadComponentTimer = setTimeout(function () {
           loading.value = true;
           loadComponentTimer = null;
-        }, 100);
+        }, 300);
       } else {
         loading.value = true;
       }
@@ -121,20 +122,6 @@ export const XModal = defineComponent({
         loading.value = false;
         loadComponentTimer = null;
       }, 500);
-      /*component_ = defineAsyncComponent({
-        delay: 300,
-        timeout: 30000,
-        errorComponent: XModalError,
-        loadingComponent: XModalLoading,
-        loader: loader,
-        onError(error, retry, fail, attempts) {
-          if (attempts <= 3) {
-            retry();
-          } else {
-            fail();
-          }
-        }
-      });*/
     };
 
     const reload = async () => {

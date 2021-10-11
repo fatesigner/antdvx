@@ -12,6 +12,7 @@ export * from './utils';
 export * from './components/async-section';
 export * from './components/button';
 export * from './components/code-editor';
+export * from './components/component-view';
 export * from './components/drawer';
 export * from './components/echarts';
 export * from './components/form-generator';
@@ -26,7 +27,6 @@ export * from './components/sticky-section';
 export * from './components/table';
 export * from './components/tabs';
 export * from './components/transitions';
-export * from './components/vxe-grid';
 
 // services
 export * from './helpers';

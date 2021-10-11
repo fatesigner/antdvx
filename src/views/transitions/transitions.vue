@@ -81,6 +81,31 @@
           </TransitionOpacity>-->
         </div>
       </div>
+
+      <div class="tw-p-4 tw-border tw-border-gray-300 tw-space-y-4">
+        <div class="tw-text-lg">Opacity（透明）</div>
+
+        <div class="tw-space-x-2">
+          <label>切换：</label>
+          <ARadioGroup v-model:value="opacity">
+            <ARadio :value="true">显示</ARadio>
+            <ARadio :value="false">隐藏</ARadio>
+          </ARadioGroup>
+        </div>
+
+        <div class="tw-relative tw-h-64 tw-overflow-auto">
+          <TransitionOpacity mode="out-in">
+            <div v-if="opacity">
+              label 1
+              <div v-for="item in 10">{{ item }}</div>
+            </div>
+            <div v-else>
+              label 2
+              <div v-for="item in 15">{{ item }}</div>
+            </div>
+          </TransitionOpacity>
+        </div>
+      </div>
     </div>
   </ScrollView>
 </template>
@@ -110,12 +135,14 @@ export default defineComponent({
     const direction = ref<typeof ANTDVX_DIRECTIONS[number]>('down');
     const collapsed = ref(false);
     const zoom = ref(false);
+    const opacity = ref(false);
 
     return {
       activeKey,
       direction,
       collapsed,
       zoom,
+      opacity,
       directions: ANTDVX_DIRECTIONS,
       sizes: ANTDVX_SIZES.filter((x) => x !== 'mini')
     };

@@ -1,5 +1,1 @@
-/**
- * index
- */
-
-export { default as SpinnerLoading } from './spinner-loading.vue';
+export * from './spinner-loading';

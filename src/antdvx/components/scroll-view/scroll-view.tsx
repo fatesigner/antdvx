@@ -1,88 +1,89 @@
-<template>
-  <div
-    :class="[
-      $style['scroll-wrap'],
-      fillX ? $style['fill-x'] : null,
-      fillY ? $style['fill-y'] : null,
-      scrollX ? $style['scroll-x'] : null,
-      scrollY ? $style['scroll-y'] : null
-    ]"
-  >
-    <transition-group
-      :enter-from-class="$style['transition-enter-from']"
-      :enter-to-class="$style['transition-enter-to']"
-      :leave-to-class="$style['transition-leave-to']"
-      :enter-active-class="$style['transition-enter-active']"
-      :leave-active-class="$style['transition-enter-active']"
-    >
-      <div :class="$style.transition" key="loading" v-if="loading_">
-        <slot name="loading">
-          <div :class="$style.loading">
-            <div class="tw-space-y-2">
-              <div class="tw-text-center"><SpinnerLoading :size="loadingSize" /></div>
-              <div v-if="loadingText" class="tw-mt-5">{{ loadingText }}</div>
-            </div>
-          </div>
-        </slot>
-      </div>
-
-      <div :class="$style.transition" key="error" v-else-if="error">
-        <slot name="error" v-bind="{ error, reload }">
-          <div :class="$style.error">
-            <AAlert type="error" show-icon>
-              <template #message>{{ $t(i18nMessages.antd.asyncAction.error) }}</template>
-              <template #description>
-                {{ error }}
-                <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />
-              </template>
-            </AAlert>
-          </div>
-        </slot>
-      </div>
-
-      <div :class="[$style['scroll-view'], native ? null : $style['hide-scrollbar']]" key="content" v-else ref="viewRef" @scroll="onScroll">
-        <template v-if="native">
-          <slot v-bind="{ loading: loading_, reload: load }" />
-        </template>
-        <template v-else>
-          <div :class="$style['scroll-content']" ref="contentRef" v-if="!loading_ && !error">
-            <slot v-bind="{ loading: loading_, reload: load }" />
-          </div>
-          <div v-if="scrollX" :class="[$style.bar, $style.horizontal, autohide ? $style.hidden : null]" @click="horBarClick($event)">
-            <div :class="$style.thumb" ref="horThumbRef" />
-          </div>
-          <div v-if="scrollY" :class="[$style.bar, $style.vertical, autohide ? $style.hidden : null]" @click="verBarClick($event)">
-            <div :class="$style.thumb" ref="verThumbRef" />
-          </div>
-        </template>
-      </div>
-    </transition-group>
-  </div>
-</template>
-
-<script lang="ts">
 import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue, debounce } from '@fatesigner/utils';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
-import { PropType, defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, useCssModule, watch } from 'vue';
+import { PropType, TransitionGroup, defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
 
+import { ANTDVX_SIZES } from '../../constants';
 import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle } from '../../utils';
 
-import { SpinnerLoading } from '../loading';
 import { XButtonRefresh } from '../button';
-import { IScrollViewOptions } from './scroll-view';
+import { SpinnerLoading } from '../loading';
 
-//const elementResizeDetectorMaker = require('element-resize-detector');
+import styles from './scroll-view.module.less';
 
-export default defineComponent({
-  components: {
-    SpinnerLoading,
-    XButtonRefresh,
-    [Alert.name]: Alert
-  },
+/**
+ * 可滚动视图区域, 用于区域滚动
+ */
+export interface IScrollViewOptions {
+  /**
+   * 原生滚动模式, 默认为 false
+   */
+  native?: boolean;
+
+  /**
+   * 自动隐藏滚动条, 默认为 false
+   */
+  autohide?: boolean;
+
+  /**
+   * 页面内容发生变化后，自动调整容器尺寸（默认为 true), 如果内容不会发生变化, 最好设置为 false 以优化性能
+   */
+  autoresize?: boolean;
+
+  /**
+   * 自适应父容器宽度 width: 100%, 默认为 false
+   */
+  fillX?: boolean;
+
+  /**
+   * 自适应父容器高度 height: 100%, 默认为 false
+   */
+  fillY?: boolean;
+
+  /**
+   * 允许横向滚动, 默认为 false
+   */
+  scrollX?: boolean;
+
+  /**
+   * 允许纵向滚动, 默认为 false
+   */
+  scrollY?: boolean;
+
+  /**
+   * 显示 loading 层
+   */
+  loading?: boolean;
+
+  /**
+   * loading 文字
+   */
+  loadingText?: string;
+
+  /**
+   * loading 图标尺寸
+   */
+  loadingSize?: typeof ANTDVX_SIZES[number];
+
+  /**
+   * 是否立即执行初始化函数, 默认为 true
+   */
+  immediate: boolean;
+
+  /**
+   * 初始化函数, 若设置该值, 将会在 onMounted 事件中执行，该函数执行期间, 将会持续显示 loading 层
+   */
+  initialize?: () => Promise<any>;
+}
+
+/**
+ * 可滚动视图区域, 用于区域滚动
+ */
+export const ScrollView = defineComponent({
+  name: 'scroll-view',
   props: {
     native: {
       type: Boolean,
@@ -133,7 +134,6 @@ export default defineComponent({
   },
   emits: ['initialized', 'scroll'],
   setup(props: any, { emit }) {
-    const $style = useCssModule();
     let resizeObs: ResizeObserver;
 
     const error = ref();
@@ -166,8 +166,8 @@ export default defineComponent({
 
     let dragMoving = false;
 
-    let scrollDuration = 100;
-    let scrollThreshold = 20;
+    const scrollDuration = 100;
+    const scrollThreshold = 20;
 
     // 当前滚动条的位置
     const scrollPos = {
@@ -193,9 +193,9 @@ export default defineComponent({
           horThumbRef.value.style.width = xBarWidth + '%';
           horThumbRef.value.style.height = xBarWidth ? '' : '0';
           if (xBarWidth) {
-            addClass(viewRef.value, $style['scrollable-x']);
+            addClass(viewRef.value, styles['scrollable-x']);
           } else {
-            removeClass(viewRef.value, $style['scrollable-x']);
+            removeClass(viewRef.value, styles['scrollable-x']);
           }
           // 更新 limit
           scrollLimit.left.max = horThumbRef.value.parentElement.offsetWidth - horThumbRef.value.offsetWidth;
@@ -205,9 +205,9 @@ export default defineComponent({
           verThumbRef.value.style.width = yBarHeight ? '' : '0';
           verThumbRef.value.style.height = yBarHeight + '%';
           if (yBarHeight) {
-            addClass(viewRef.value, $style['scrollable-y']);
+            addClass(viewRef.value, styles['scrollable-y']);
           } else {
-            removeClass(viewRef.value, $style['scrollable-y']);
+            removeClass(viewRef.value, styles['scrollable-y']);
           }
           // 更新 limit
           scrollLimit.top.max = verThumbRef.value.parentElement.offsetHeight - verThumbRef.value.offsetHeight;
@@ -217,7 +217,7 @@ export default defineComponent({
 
     const updateHorThumbStyle = (xMove: number) => {
       if (horThumbRef.value) {
-        let transform = `translate3d(${xMove}px, 0, 0)`;
+        const transform = `translate3d(${xMove}px, 0, 0)`;
         horThumbRef.value.style.transform = transform;
         horThumbRef.value.style['msTransform'] = transform;
         horThumbRef.value.style['webkitTransform'] = transform;
@@ -226,7 +226,7 @@ export default defineComponent({
 
     const updateVerThumbStyle = (yMove: number) => {
       if (verThumbRef.value) {
-        let transform = `translate3d(0, ${yMove}px, 0)`;
+        const transform = `translate3d(0, ${yMove}px, 0)`;
         verThumbRef.value.style.transform = transform;
         verThumbRef.value.style['msTransform'] = transform;
         verThumbRef.value.style['webkitTransform'] = transform;
@@ -246,7 +246,7 @@ export default defineComponent({
 
     const updateHorScroll = (xMove: number, transition = false) => {
       if (viewRef.value) {
-        let scrollLeft = (contentRef.value.offsetWidth / viewRef.value.clientWidth) * xMove;
+        const scrollLeft = (contentRef.value.offsetWidth / viewRef.value.clientWidth) * xMove;
         if (transition) {
           scrollTo_(viewRef.value, scrollLeft, null, transition ? scrollDuration : 0);
         } else {
@@ -257,7 +257,7 @@ export default defineComponent({
 
     const updateVerScroll = (yMove: number, transition = false) => {
       if (viewRef.value) {
-        let scrollTop = (contentRef.value.offsetHeight / viewRef.value.clientHeight) * yMove;
+        const scrollTop = (contentRef.value.offsetHeight / viewRef.value.clientHeight) * yMove;
         if (transition) {
           scrollTo_(viewRef.value, null, scrollTop, transition ? scrollDuration : 0);
         } else {
@@ -296,8 +296,8 @@ export default defineComponent({
         return;
       }
 
-      let xMove = (viewRef.value.scrollLeft * viewRef.value.clientWidth) / contentRef.value.offsetWidth;
-      let yMove = (viewRef.value.scrollTop * viewRef.value.clientHeight) / contentRef.value.offsetHeight;
+      const xMove = (viewRef.value.scrollLeft * viewRef.value.clientWidth) / contentRef.value.offsetWidth;
+      const yMove = (viewRef.value.scrollTop * viewRef.value.clientHeight) / contentRef.value.offsetHeight;
 
       updateHorThumbStyle(xMove);
       updateVerThumbStyle(yMove);
@@ -307,7 +307,7 @@ export default defineComponent({
     const horBarClick = (e: any) => {
       const target: any = getEventTarget(e);
       const eventArgs = getEventArgs(e);
-      if (hasClass(target, $style.bar)) {
+      if (hasClass(target, styles.bar)) {
         const rect = target.getBoundingClientRect();
         const rectThumb = horThumbRef.value.getBoundingClientRect();
         if (eventArgs.points[0][0] < rectThumb.left) {
@@ -329,7 +329,7 @@ export default defineComponent({
     const verBarClick = (e: any) => {
       const target: any = getEventTarget(e);
       const eventArgs = getEventArgs(e);
-      if (hasClass(target, $style.bar)) {
+      if (hasClass(target, styles.bar)) {
         const rect = target.getBoundingClientRect();
         const rectThumb = verThumbRef.value.getBoundingClientRect();
         if (eventArgs.points[0][1] < rectThumb.top) {
@@ -375,12 +375,12 @@ export default defineComponent({
           tap(
             direction === 'x'
               ? () => {
-                  let style = getTranslate3dStyle($thumb);
+                  const style = getTranslate3dStyle($thumb);
                   dragArgs.initialPos.left = style[0];
                   dragMoving = true;
                 }
               : () => {
-                  let style = getTranslate3dStyle($thumb);
+                  const style = getTranslate3dStyle($thumb);
                   dragArgs.initialPos.top = style[1];
                   dragMoving = true;
                 }
@@ -548,211 +548,97 @@ export default defineComponent({
       horBarClick,
       verBarClick
     };
+  },
+  render(ctx) {
+    const solts = [];
+    if (ctx.loading_) {
+      solts.push(
+        <div class={styles.transition} key='loading'>
+          {ctx.$slots?.loading ? (
+            ctx.$slots?.loading()
+          ) : (
+            <div class={styles.loading}>
+              <div class='tw-space-y-2'>
+                <div class='tw-text-center'>
+                  <SpinnerLoading size={ctx.loadingSize} />
+                </div>
+                {ctx.loadingText ? <div class='tw-mt-5'>{ctx.loadingText}</div> : ''}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    } else if (ctx.error) {
+      solts.push(
+        <div class={styles.transition} key='error'>
+          {ctx.$slots?.error ? (
+            ctx.$slots?.error({ error: ctx.error, reload: ctx.reload })
+          ) : (
+            <div class={styles.error}>
+              <Alert
+                type='error'
+                show-icon
+                v-slots={{
+                  message: () => ctx.$t(i18nMessages.antd.asyncAction.error),
+                  description: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+                }}
+              />
+            </div>
+          )}
+        </div>
+      );
+    } else {
+      solts.push(
+        <div class={[styles['scroll-view'], ctx.native ? null : styles['hide-scrollbar']]} key='content' ref='viewRef' onScroll={ctx.onScroll}>
+          {ctx.native
+            ? ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })
+            : [
+                !ctx.loading_ && !ctx.error ? (
+                  <div class={styles['scroll-content']} ref='contentRef'>
+                    {ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })}
+                  </div>
+                ) : (
+                  ''
+                ),
+                ctx.scrollX ? (
+                  <div class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]} onClick={ctx.horBarClick}>
+                    <div class={styles.thumb} ref='horThumbRef' />
+                  </div>
+                ) : (
+                  ''
+                ),
+                ctx.scrollY ? (
+                  <div class={[styles.bar, styles.vertical, ctx.autohide ? styles.hidden : null]} onClick={ctx.verBarClick}>
+                    <div class={styles.thumb} ref='verThumbRef' />
+                  </div>
+                ) : (
+                  ''
+                )
+              ]}
+        </div>
+      );
+    }
+
+    return (
+      <div
+        class={[
+          styles['scroll-wrap'],
+          ctx.fillX ? styles['fill-x'] : null,
+          ctx.fillY ? styles['fill-y'] : null,
+          ctx.scrollX ? styles['scroll-x'] : null,
+          ctx.scrollY ? styles['scroll-y'] : null
+        ]}
+      >
+        <TransitionGroup
+          enterFromClass={styles['transition-enter-from']}
+          enterToClass={styles['transition-enter-to']}
+          leaveToClass={styles['transition-leave-to']}
+          enterActiveClass={styles['transition-enter-active']}
+          leaveActiveClass={styles['transition-enter-active']}
+        >
+          {solts}
+        </TransitionGroup>
+      </div>
+    );
   }
 });
-</script>
-
-<style lang="less" module>
-.scroll-wrap {
-  position: relative;
-  overflow: hidden;
-}
-
-.transition {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  transform: translate3d(-50%, -50%, 0);
-
-  &.transition-enter-from {
-    opacity: 0;
-    transform: translate3d(-50%, -50%, 0) scale(0.7);
-  }
-
-  &.transition-enter-to {
-    opacity: 1;
-    transform: translate3d(-50%, -50%, 0) scale(1);
-  }
-
-  &.transition-leave-to {
-    opacity: 0;
-    transform: translate3d(-50%, -50%, 0) scale(0.6);
-  }
-
-  &.transition-enter-active,
-  &.transition-leave-active {
-    transition-timing-function: ease-out;
-    transition-duration: 0.2s;
-    transition-property: opacity, transform;
-  }
-}
-
-.scroll-view {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-
-  &.transition-enter-from,
-  &.transition-leave-to {
-    opacity: 0;
-  }
-
-  &.transition-enter-to {
-    opacity: 1;
-  }
-
-  &.transition-enter-active,
-  &.transition-leave-active {
-    transition-timing-function: ease-out;
-    transition-duration: 0.2s;
-    transition-property: opacity;
-  }
-
-  &.hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-}
-
-.scroll-content {
-  min-width: 100%;
-  min-height: 100%;
-}
-
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.error {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.fill-x {
-  width: 100%;
-}
-
-.fill-y {
-  height: 100%;
-}
-
-.fill-xy {
-  width: 100%;
-  height: 100%;
-}
-
-.thumb {
-  cursor: pointer;
-  cursor: grab;
-  background-color: rgba(129, 129, 128, 0.1);
-  border-radius: 6px;
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-  transition: opacity 0.2s ease-out, background-color 0.3s;
-}
-
-.horizontal {
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 12px;
-
-  > .thumb {
-    position: absolute;
-    bottom: 0;
-    width: 0;
-    height: 5px;
-    transition: background-color 0.2s linear, height 0.2s ease-in-out;
-  }
-}
-
-.vertical {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 12px;
-
-  > .thumb {
-    position: absolute;
-    right: 0;
-    width: 5px;
-    height: 0;
-    transition: background-color 0.2s linear, width 0.2s ease-in-out;
-  }
-}
-
-.bar {
-  position: absolute;
-  z-index: 1;
-  transition: background-color 0.2s linear, opacity 0.2s linear;
-
-  &.hidden {
-    opacity: 0;
-  }
-}
-
-.scroll-view.scrollable-x {
-  > .scroll-content {
-    /* margin-bottom: 12px; */
-  }
-
-  > .bar.horizontal:active,
-  > .bar.horizontal:hover {
-    background-color: #f1f1f1;
-
-    > .thumb {
-      height: 12px;
-      background-color: rgba(129, 129, 128, 0.2);
-    }
-  }
-}
-
-.scroll-view.scrollable-y {
-  > .scroll-content {
-    /* margin-right: 12px; */
-  }
-
-  > .bar.vertical:active,
-  > .bar.vertical:hover {
-    background-color: #f1f1f1;
-
-    > .thumb {
-      width: 12px;
-      background-color: rgba(129, 129, 128, 0.2);
-    }
-  }
-}
-
-.wrap:hover > .bar {
-  opacity: 1;
-}
-
-.scroll-x {
-  > .scroll-view {
-    overflow-x: auto;
-
-    > .scroll-content {
-      width: max-content;
-    }
-  }
-}
-
-.scroll-y {
-  > .scroll-view {
-    overflow-y: auto;
-  }
-}
-</style>

@@ -1,1 +1,1 @@
-export { default as StickySection } from './sticky-section.vue';
+export * from './sticky-section';

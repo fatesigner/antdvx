@@ -1,4 +1,4 @@
-import { Transition, defineComponent } from 'vue';
+import { PropType, Transition, defineComponent } from 'vue';
 
 import { getContentHeight } from '../../utils';
 
@@ -13,6 +13,9 @@ export const TransitionCollapse = defineComponent({
     appear: {
       type: Boolean,
       default: true
+    },
+    mode: {
+      type: String as PropType<'in-out' | 'out-in'>
     },
     disabled: {
       type: Boolean,
@@ -158,6 +161,7 @@ export const TransitionCollapse = defineComponent({
     return (
       <Transition
         appear={ctx.appear}
+        mode={ctx.mode}
         onBeforeEnter={ctx.onBeforeEnter}
         onEnter={ctx.onEnter}
         onAfterEnter={ctx.onAfterEnter}

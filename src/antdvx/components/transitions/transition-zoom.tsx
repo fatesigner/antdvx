@@ -1,5 +1,5 @@
 import { gsap } from 'gsap';
-import { Transition, defineComponent } from 'vue';
+import { PropType, Transition, defineComponent } from 'vue';
 
 /**
  * 缩放
@@ -10,6 +10,9 @@ export const TransitionZoom = defineComponent({
     appear: {
       type: Boolean,
       default: true
+    },
+    mode: {
+      type: String as PropType<'in-out' | 'out-in'>
     },
     disabled: {
       type: Boolean,
@@ -84,6 +87,7 @@ export const TransitionZoom = defineComponent({
     return (
       <Transition
         appear={ctx.appear}
+        mode={ctx.mode}
         css={false}
         onBeforeEnter={ctx.onBeforeEnter}
         onEnter={ctx.onEnter}

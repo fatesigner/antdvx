@@ -6,15 +6,15 @@ import { i18nMessages } from '@/i18n';
 import { IRouteConfig } from '@/types/route';
 
 export default {
-  path: '/vxe-table',
+  path: '/echarts',
   component: () => import('@/layout/layout-sidebar/layout-sidebar.vue'),
   children: [
     {
-      name: 'vxe-table',
+      name: 'echarts',
       path: '',
-      component: () => import('./vxe-table.vue'),
+      component: () => import('./echarts.vue'),
       meta: {
-        label: i18nMessages.app.route.table,
+        label: i18nMessages.app.route.dashboard,
         keepAlive: true
       }
     }

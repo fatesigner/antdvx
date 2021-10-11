@@ -1,37 +1,3 @@
-<template>
-  <TransitionCollapse :appear="false">
-    <div v-if="loading_">
-      <slot name="loading">
-        <div class="tw-space-y-2">
-          <div class="tw-text-center"><SpinnerLoading class="tw-align-top" :size="loadingSize" /></div>
-          <div class="tw-text-center tw-mt-5" v-if="loadingText">{{ loadingText }}</div>
-        </div>
-      </slot>
-    </div>
-  </TransitionCollapse>
-
-  <TransitionCollapse :appear="false">
-    <div v-if="!loading_ && error">
-      <slot name="error" v-bind="{ error, reload }">
-        <AAlert type="error" closable>
-          <template #message>{{ error }}<XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" /></template>
-          <!--<template #description>
-            {{ error }}
-            <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />
-          </template>-->
-        </AAlert>
-      </slot>
-    </div>
-  </TransitionCollapse>
-
-  <TransitionCollapse :appear="false">
-    <div v-if="initialized">
-      <slot v-bind="{ data, loading: loading_, reload: load }" />
-    </div>
-  </TransitionCollapse>
-</template>
-
-<script lang="ts">
 import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
 import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
@@ -44,14 +10,11 @@ import { TransitionCollapse } from '../transitions';
 
 import { IAsAsyncSectionProps } from './types';
 
-export default defineComponent({
-  name: 'async-action',
-  components: {
-    XButtonRefresh,
-    SpinnerLoading,
-    TransitionCollapse,
-    [Alert.name]: Alert
-  },
+/**
+ * 用于显示异步加载状态的区域
+ */
+export const AsyncSection = defineComponent({
+  name: 'async-section',
   inheritAttrs: false,
   props: {
     loading: {
@@ -73,9 +36,10 @@ export default defineComponent({
       type: Function as PropType<() => Promise<any>>
     }
   },
+  emits: ['initialized'],
   setup(props: any, { emit }) {
     const data = ref();
-    const error = ref('');
+    const error = ref();
     const initialized = ref(false);
     const loading_ = ref(!!props.initialize);
 
@@ -133,6 +97,50 @@ export default defineComponent({
       load,
       reload
     };
+  },
+  render(ctx) {
+    return [
+      <TransitionCollapse appear={false}>
+        {ctx.loading_ ? (
+          <div>
+            {ctx.$slots.loading ? (
+              ctx.$slots.loading()
+            ) : (
+              <div class='tw-space-y-2'>
+                <div class='tw-text-center'>
+                  <SpinnerLoading class='tw-align-top' size={ctx.loadingSize} />
+                </div>
+                {ctx.loadingText ? <div class='tw-text-center tw-mt-5'>{ctx.loadingText}</div> : ''}
+              </div>
+            )}
+          </div>
+        ) : (
+          ''
+        )}
+      </TransitionCollapse>,
+      <TransitionCollapse appear={false}>
+        {!ctx.loading_ && ctx.error ? (
+          <div>
+            {ctx.$slots.error ? (
+              ctx.$slots.error({ error: ctx.error, reload: ctx.reload })
+            ) : (
+              <Alert
+                type='error'
+                closable
+                v-slots={{
+                  message: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+                }}
+              />
+            )}
+          </div>
+        ) : (
+          ''
+        )}
+      </TransitionCollapse>,
+
+      <TransitionCollapse appear={false}>
+        {ctx.initialized ? <div>{ctx.$slots.default?.({ data: ctx.data, loading: ctx.loading_, reload: ctx.load })}</div> : ''}
+      </TransitionCollapse>
+    ];
   }
 });
-</script>

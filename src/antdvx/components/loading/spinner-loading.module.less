@@ -1,37 +1,3 @@
-<template>
-  <div :class="[$style['spinner-loading'], size ? $style[size] : null]" :style="styles" />
-</template>
-
-<script lang="ts">
-import { PropType, computed, defineComponent } from 'vue';
-
-import { ANTDVX_SIZES } from '../../constants';
-
-export default defineComponent({
-  props: {
-    color: String,
-    width: Number,
-    height: Number,
-    size: {
-      type: String as PropType<typeof ANTDVX_SIZES[number]>
-    }
-  },
-  setup(props) {
-    const styles = computed(() => {
-      return {
-        width: props.width ? props.width + 'px' : null,
-        height: props.height ? props.height + 'px' : null
-      };
-    });
-
-    return {
-      styles
-    };
-  }
-});
-</script>
-
-<style lang="less" module>
 @keyframes spin {
   0% {
     transform: rotate(0);
@@ -144,4 +110,3 @@ export default defineComponent({
     }
   }
 }
-</style>

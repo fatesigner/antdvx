@@ -1,134 +1,93 @@
-<template>
-  <div class="ant-table-x" v-bind="$attrs">
-    <ATable
-      ref="antTableRef"
-      :bordered="options.bordered"
-      :children-column-name="options.childrenColumnName"
-      :columns="columns_"
-      :components="options.components"
-      :data-source="options.dataSource.data"
-      :default-expand-all-rows="options.defaultExpandAllRows"
-      :default-expanded-row-keys="options.defaultExpandedRowKeys"
-      :expanded-row-keys="options.expandedRowKeys"
-      :expand-row-by-click="options.expandRowByClick"
-      :expand-icon-column-index="options.expandIconColumnIndex"
-      :indent-size="options.indentSize"
-      :loading="options.loading"
-      :locale="options.locale"
-      :pagination="false"
-      :row-class-name="options.rowClassName"
-      :row-key="getRowKey"
-      :row-selection="
-        options.rowSelection
-          ? {
-              columnWidth: options.rowSelection.columnWidth,
-              columnTitle: options.rowSelection.columnTitle,
-              //fixed: options.rowSelection.fixed,
-              getCheckboxProps: options.rowSelection.getCheckboxProps,
-              hideDefaultSelections: options.rowSelection.hideDefaultSelections,
-              selectedRowKeys: options.rowSelection.selectedRowKeys,
-              selections: options.rowSelection.selections,
-              type: options.rowSelection.type,
-              onSelect: onRowSelect,
-              onChange: onRowSelectChange,
-              onSelectAll: onRowSelectAll,
-              onSelectInvert: onRowSelectInvert
-            }
-          : null
-      "
-      :scroll="options.scroll"
-      :show-header="options.showHeader"
-      :size="options.size"
-      :custom-header-row="options.customHeaderRow"
-      :custom-row="options.customRow"
-      @change="onChange"
-      @expandedRowsChange="onExpandedRowsChange"
-      @expand="onExpand"
-    >
-      <template v-for="(_, name) in $slots" #[name]="slotData">
-        <template v-if="name === 'title'">
-          <div class="tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1">
-            <div class="tw-flex-1 tw-p-2">
-              <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
-            </div>
-            <div
-              class="tw-flex-initial tw-p-2"
-              v-if="
-                options.dataSource.data.length &&
-                options.pagination &&
-                options.dataSource.pageSize &&
-                (options.pagination.position === 'both' || options.pagination.position === 'top')
-              "
-            >
-              <APagination
-                :size="options.pagination.size"
-                :page-size-options="options.pagination.pageSizeOptions"
-                :show-quick-jumper="options.pagination.showQuickJumper"
-                :show-size-changer="options.pagination.showSizeChanger"
-                :show-total="
-                  (total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)
-                "
-                :total="options.dataSource.total"
-                v-model:current="options.dataSource.pageNo"
-                v-model:page-size="options.dataSource.pageSize"
-                @change="onPageChange"
-                @showSizeChange="onPageSizeChange"
-              />
-            </div>
-          </div>
-        </template>
-        <template v-else>
-          <slot :name="name" v-bind="{ ...slotData, options, params, methods, handler, handleRecordChange }" />
-        </template>
-      </template>
-    </ATable>
-    <div
-      v-if="
-        options.dataSource.data.length &&
-        options.pagination &&
-        options.dataSource.pageSize &&
-        (options.pagination.position === 'both' || options.pagination.position === 'bottom')
-      "
-      class="tw-flex tw-justify-end tw-mt-4 tw-transition-opacity"
-      :class="{ ' tw-pointer-events-none tw-opacity-50': options.loading }"
-    >
-      <APagination
-        :size="options.pagination.size"
-        :page-size-options="options.pagination.pageSizeOptions"
-        :show-quick-jumper="options.pagination.showQuickJumper"
-        :show-size-changer="options.pagination.showSizeChanger"
-        :show-total="(total, range) => `${range[0]}-${range[1]} ` + $t(i18nMessages.antd.pagination.of) + ` ${total} ` + $t(i18nMessages.antd.pagination.items)"
-        :total="options.dataSource.total"
-        v-model:current="options.dataSource.pageNo"
-        v-model:page-size="options.dataSource.pageSize"
-        @change="onPageChange"
-        @showSizeChange="onPageSizeChange"
-      />
-    </div>
-  </div>
-</template>
+/**
+ * table
+ */
 
-<script lang="ts">
 import to from 'await-to-js';
-import { debounce } from '@fatesigner/utils';
-import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { merge } from 'lodash-es';
+import { bindLazyFunc, debounce } from '@fatesigner/utils';
 import { Pagination, Table, notification } from 'ant-design-vue';
+import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
+import { PropType, defineComponent, h, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
-import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableSorter } from './types';
-import { defaultXTableProps } from './table';
+import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
+import { TableProps } from 'ant-design-vue/es/table/interface';
 
-const elementResizeDetectorMaker = require('element-resize-detector');
-const erd = elementResizeDetectorMaker();
+export const defaultXTableProps: IXTablePropsType<any, any> = {
+  loading: false,
+  // scroll: { x: true },
+  dataSource: {
+    data: [],
+    pageNo: 1,
+    pageSize: 10,
+    schema: {
+      data: 'data',
+      total: 'total'
+    }
+  },
 
-export default defineComponent({
+  // 展开行
+  expandRowByClick: false,
+  expandedRowKeys: [],
+  defaultExpandAllRows: false,
+  defaultExpandedRowKeys: [],
+
+  pagination: {
+    size: 'small',
+    position: 'both',
+    showQuickJumper: true,
+    showSizeChanger: true,
+    pageSizeOptions: ['5', '10', '20', '30', '50', '100']
+  }
+};
+
+/**
+ *  创建 XTable 实例
+ * @param props
+ * @param params
+ * @param methods
+ */
+export function createXTable<TModel extends Record<string, any>, TParams extends Record<string, any>, TMethods extends Record<string, (...args: any[]) => any>>(
+  props: IXTablePropsType<TModel, TParams>,
+  params?: TParams,
+  methods?: TMethods
+): IXTableRefType<TModel, TParams, TMethods> {
+  const handler: IXTableHandlers<TModel> = {
+    getAntTableRef: null,
+    addData: null,
+    updateData: null,
+    removeData: null,
+    getSelectedData: null,
+    getAllData: null,
+    selectAll: null,
+    selectInvert: null,
+    refresh: null,
+    reload: null,
+    validate: null,
+    validateRow: null
+  };
+
+  // 代理异步函数
+  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow'];
+
+  bindLazyFunc(handler, bindProperties);
+
+  return {
+    options: reactive(merge({}, defaultXTableProps, props) as any),
+    handler,
+    params: reactive(Object.assign({}, params) as any),
+    methods
+  };
+}
+
+/**
+ * XTable 表格组件
+ */
+export const XTable = defineComponent({
   name: 'x-table',
-  components: { [Table.name]: Table, [Pagination.name]: Pagination },
-  emits: [],
   props: {
     options: {
       type: Object as PropType<IXTablePropsType<any, any>>,
@@ -149,7 +108,8 @@ export default defineComponent({
       type: Object as PropType<IXTableHandlers<any>>
     }
   },
-  setup(props: any) {
+  emits: ['click'],
+  setup(props: any, { emit }) {
     const antTableRef = ref();
 
     // 列
@@ -203,7 +163,7 @@ export default defineComponent({
       }
 
       if (isFunction(props.options.rowKey)) {
-        return (props.options.rowKey as Function)(record, index);
+        return (props.options.rowKey as any)(record, index);
       }
 
       return index;
@@ -305,7 +265,7 @@ export default defineComponent({
         let _err: any;
 
         if (isFunction(props?.options?.dataSource.transport?.read)) {
-          let [err, res] = await to<any>(
+          const [err, res] = await to<any>(
             props.options.dataSource.transport.read(
               {
                 pageNo: props.options.dataSource.pageNo,
@@ -322,7 +282,7 @@ export default defineComponent({
             _res = res;
           }
         } else {
-          let requestOptions: IDataSourceRequestOptions = {
+          const requestOptions: IDataSourceRequestOptions = {
             url: '',
             method: 'GET',
             contentType: HttpContentType.JSON,
@@ -340,7 +300,7 @@ export default defineComponent({
             Object.assign(requestOptions, props.options.dataSource.transport.read);
           }
 
-          let [err, res] = await to<any>(AntdHttpAdapter(requestOptions));
+          const [err, res] = await to<any>(AntdHttpAdapter(requestOptions));
           if (err) {
             _err = err;
           } else {
@@ -520,7 +480,7 @@ export default defineComponent({
           ...val
             .filter((x) => !x.hidden)
             .map((x) => {
-              let x_ = Object.assign({}, x);
+              const x_ = Object.assign({}, x);
               if (x.sorter) {
                 x_.sorter = true;
                 // 默认排序
@@ -634,7 +594,7 @@ export default defineComponent({
       props?.options?.listeners?.expandedRowsChange?.(expandedRows);
     };
     const onExpand = (expanded, record) => {
-      let key = getRowKey(record);
+      const key = getRowKey(record);
       if (expanded) {
         props.options.expandedRowKeys.push(key);
       } else {
@@ -663,6 +623,8 @@ export default defineComponent({
       props?.options?.listeners?.rowSelectInvert?.(_selectedRows);
     };
 
+    let resizeObs: ResizeObserver;
+
     onMounted(() => {
       loadData().then(() => {
         processData();
@@ -670,14 +632,19 @@ export default defineComponent({
 
       // 监听窗口尺寸变化
       if (antTableRef.value?.$el) {
-        erd.listenTo(antTableRef.value.$el, resizeFixedRows);
+        if (!resizeObs) {
+          resizeObs = new ResizeObserver(resizeFixedRows);
+        }
+        resizeObs.observe(antTableRef.value.$el);
       }
     });
 
     onUnmounted(() => {
       // 移除窗口尺寸的监听
       if (antTableRef.value?.$el) {
-        erd.removeListener(antTableRef.value.value, resizeFixedRows);
+        if (resizeObs) {
+          resizeObs.unobserve(antTableRef.value.value);
+        }
       }
     });
 
@@ -706,20 +673,150 @@ export default defineComponent({
       refresh,
       reload
     };
+  },
+  render(ctx) {
+    const solts = {};
+
+    for (const [name] of Object.entries(ctx.$slots)) {
+      solts[name] =
+        name === 'title'
+          ? function (slotData) {
+              return (
+                <div class='tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1'>
+                  <div class='tw-flex-1 tw-p-2'>
+                    {ctx.$slots?.[name]?.({
+                      ...slotData,
+                      options: ctx.options,
+                      params: ctx.params,
+                      methods: ctx.methods,
+                      handler: ctx.handler,
+                      handleRecordChange: ctx.handleRecordChange
+                    })}
+                  </div>
+                  {ctx.options.dataSource.data.length &&
+                  ctx.options.pagination &&
+                  ctx.options.dataSource.pageSize &&
+                  (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top') ? (
+                    <div class='tw-flex-initial tw-p-2'>
+                      <Pagination
+                        size={ctx.options.pagination.size}
+                        pageSizeOptions={ctx.options.pagination.pageSizeOptions}
+                        showQuickJumper={ctx.options.pagination.showQuickJumper}
+                        showSizeChanger={ctx.options.pagination.showSizeChanger}
+                        showTotal={(total, range) =>
+                          `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
+                        }
+                        total={ctx.options.dataSource.total}
+                        v-models={[
+                          [ctx.options.dataSource.pageNo, 'current'],
+                          [ctx.options.dataSource.pageSize, 'pageSize']
+                        ]}
+                        onChange={ctx.onPageChange}
+                        onShowSizeChange={ctx.onPageSizeChange}
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              );
+            }
+          : function (slotData) {
+              return ctx.$slots?.[name]?.({
+                ...slotData,
+                options: ctx.options,
+                params: ctx.params,
+                methods: ctx.methods,
+                handler: ctx.handler,
+                handleRecordChange: ctx.handleRecordChange
+              });
+            };
+    }
+
+    const props: TableProps = {
+      bordered: ctx.options.bordered,
+      childrenColumnName: ctx.options.childrenColumnName,
+      columns: ctx.columns_,
+      components: ctx.options.components,
+      dataSource: ctx.options.dataSource.data,
+      defaultExpandAllRows: ctx.options.defaultExpandAllRows,
+      defaultExpandedRowKeys: ctx.options.defaultExpandedRowKeys,
+      expandedRowKeys: ctx.options.expandedRowKeys,
+      expandRowByClick: ctx.options.expandRowByClick,
+      expandIconColumnIndex: ctx.options.expandIconColumnIndex,
+      indentSize: ctx.options.indentSize,
+      loading: ctx.options.loading,
+      locale: ctx.options.locale,
+      pagination: false,
+      rowClassName: ctx.options.rowClassName,
+      rowKey: ctx.getRowKey,
+      rowSelection: ctx.options.rowSelection
+        ? {
+            columnWidth: ctx.options.rowSelection.columnWidth,
+            columnTitle: ctx.options.rowSelection.columnTitle,
+            //fixed: ctx.options.rowSelection.fixed,
+            getCheckboxProps: ctx.options.rowSelection.getCheckboxProps,
+            hideDefaultSelections: ctx.options.rowSelection.hideDefaultSelections,
+            selectedRowKeys: ctx.options.rowSelection.selectedRowKeys,
+            selections: ctx.options.rowSelection.selections,
+            type: ctx.options.rowSelection.type,
+            onSelect: ctx.onRowSelect,
+            onChange: ctx.onRowSelectChange,
+            onSelectAll: ctx.onRowSelectAll,
+            onSelectInvert: ctx.onRowSelectInvert
+          }
+        : null,
+      showHeader: ctx.options.showHeader,
+      size: ctx.options.size,
+      customHeaderRow: ctx.options.customHeaderRow,
+      customRow: ctx.options.customRow,
+      onChange: ctx.onChange,
+      onExpandedRowsChange: ctx.onExpandedRowsChange,
+      onExpand: ctx.onExpand
+    };
+
+    if (ctx.options.scroll) {
+      props.scroll = ctx.options.scroll;
+    }
+
+    return (
+      <div class='ant-table-x'>
+        {[
+          h(
+            Table,
+            {
+              ref: 'antTableRef',
+              ...props
+            },
+            solts
+          ),
+          ctx.options.dataSource.data.length &&
+          ctx.options.pagination &&
+          ctx.options.dataSource.pageSize &&
+          (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
+            <div class={['tw-flex tw-justify-end tw-mt-4 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
+              <Pagination
+                size={ctx.options.pagination.size}
+                pageSizeOptions={ctx.options.pagination.pageSizeOptions}
+                showQuickJumper={ctx.options.pagination.showQuickJumper}
+                showSizeChanger={ctx.options.pagination.showSizeChanger}
+                showTotal={(total, range) =>
+                  `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
+                }
+                total={ctx.options.dataSource.total}
+                v-models={[
+                  [ctx.options.dataSource.pageNo, 'current'],
+                  [ctx.options.dataSource.pageSize, 'pageSize']
+                ]}
+                onChange={ctx.onPageChange}
+                onShowSizeChange={ctx.onPageSizeChange}
+              />
+            </div>
+          ) : (
+            ''
+          )
+        ]}
+      </div>
+    );
   }
 });
-</script>
-
-<style lang="less">
-.ant-table-x {
-  background-color: #fff;
-
-  .ant-table-title {
-    padding: 0 !important;
-  }
-
-  .ant-table.ant-table-bordered .ant-table-title {
-    border: none;
-  }
-}
-</style>

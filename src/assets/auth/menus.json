@@ -15,6 +15,15 @@
     "icon": "code-box-line",
     "children": [
       {
+        "id": "d796690e69zd",
+        "label": "图标",
+        "name": "iconfont",
+        "url": "/iconfont",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "zf96690e69zd",
         "label": "可滚动视图区域",
         "name": "scroll-view",
@@ -42,10 +51,10 @@
         "children": []
       },
       {
-        "id": "d796690e69zd",
-        "label": "图标",
-        "name": "iconfont",
-        "url": "/iconfont",
+        "id": "fh96690e69zd",
+        "label": "延迟加载",
+        "name": "lazy",
+        "url": "/lazy",
         "target": null,
         "icon": "",
         "children": []
@@ -91,6 +100,15 @@
         "label": "管道过滤器（pipes）",
         "name": "pipes",
         "url": "/pipes",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
+        "id": "F596690e6975",
+        "label": "图表（Echarts）",
+        "name": "echarts",
+        "url": "/echarts",
         "target": null,
         "icon": "",
         "children": []

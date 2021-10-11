@@ -1,15 +1,13 @@
-<template>
-  <div :class="$style['sticky-section-top']" ref="topRef" />
-  <div v-bind="$attrs" @click="goto" ref="targetRef">
-    <slot v-bind="{ sticky }" />
-  </div>
-</template>
-
-<script lang="ts">
 import { PropType, defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { getOffsetAwayFromDocument, scrollTo } from '@fatesigner/utils/document';
 
-export default defineComponent({
+import styles from './sticky-section.module.less';
+
+/**
+ * 粘性布局, position=sticky
+ */
+export const StickySection = defineComponent({
+  name: 'sticky-section',
   props: {
     className: {
       type: Array as PropType<string[]>
@@ -26,7 +24,7 @@ export default defineComponent({
 
     const goto = () => {
       if (sticky.value && parentEl) {
-        let top = getOffsetAwayFromDocument(topRef.value).top - getOffsetAwayFromDocument(parentEl).top + parentEl.scrollTop;
+        const top = getOffsetAwayFromDocument(topRef.value).top - getOffsetAwayFromDocument(parentEl).top + parentEl.scrollTop;
         scrollTo(parentEl, 0, top, 100);
       }
     };
@@ -72,14 +70,13 @@ export default defineComponent({
     });
 
     return { topRef, targetRef, sticky, goto };
+  },
+  render(ctx) {
+    return [
+      <div class={styles['sticky-section-top']} ref='topRef' />,
+      <div v-bind={ctx.$attrs} onClick={ctx.goto} ref='targetRef'>
+        {ctx.$slots.default?.({ sticky: ctx.sticky })}
+      </div>
+    ];
   }
 });
-</script>
-
-<style lang="less" module>
-.sticky-section-top {
-  min-width: 1px;
-  min-height: 1px;
-  background-color: transparent;
-}
-</style>

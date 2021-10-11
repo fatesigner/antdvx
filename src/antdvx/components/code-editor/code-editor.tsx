@@ -1,18 +1,13 @@
-<template>
-  <div :class="$style.editor" ref="aceRef" />
-</template>
-
-<script lang="ts">
 import ace from 'ace-builds';
-import 'ace-builds/webpack-resolver';
-import 'ace-builds/src-noconflict/mode-json';
-import 'ace-builds/src-noconflict/mode-javascript';
-import 'ace-builds/src-noconflict/theme-textmate';
-//import 'ace-builds/src-noconflict/theme-solarized_light';
 import { defineComponent, onMounted, ref, watch } from 'vue';
 
-export default defineComponent({
-  name: 'CodeEditor',
+import styles from './code-editor.module.less';
+
+/**
+ * Code 编辑器
+ */
+export const CodeEditor = defineComponent({
+  name: 'code-editor',
   props: {
     value: {
       type: String,
@@ -32,7 +27,7 @@ export default defineComponent({
     }
   },
   emits: ['update:value'],
-  setup(props, context) {
+  setup(props, { emit }) {
     const aceRef = ref<HTMLElement>(null);
 
     let editor = null;
@@ -48,7 +43,7 @@ export default defineComponent({
         fontSize: 12,
         tabSize: 2
       });
-      editor.on('change', () => context.emit('update:value', editor?.getValue()));
+      editor.on('change', () => emit('update:value', editor?.getValue()));
     });
 
     watch(
@@ -66,13 +61,8 @@ export default defineComponent({
     return {
       aceRef
     };
+  },
+  render() {
+    return <div class={styles.editor} ref='aceRef' />;
   }
 });
-</script>
-
-<style lang="less" module>
-.editor {
-  width: 100%;
-  min-height: 350px;
-}
-</style>

@@ -1,77 +1,22 @@
-<template>
-  <ADropdown :disabled="disabled || loading" :placement="placement">
-    <XButton
-      :block="block"
-      :disabled="disabled"
-      :ghost="ghost"
-      :href="href"
-      :htmlType="htmlType"
-      :loading="loading_"
-      :shape="shape"
-      :size="size"
-      :target="target"
-      :type="type"
-      :color="color"
-      :spin="false"
-      :title="title ? title : $t(i18nMessages.antd.action.export)"
-    >
-      <IconLoader5Line :spin="loading_" v-if="loading_" />
-      <IconFileDownloadLine :spin="loading_" v-else />
-      <template v-if="!onlyIcon">
-        {{ $t(i18nMessages.antd.action.export) }}
-      </template>
-    </XButton>
-    <template #overlay>
-      <AMenu @click="onActionClick">
-        <AMenuItem v-if="jsonVisible" key="json">
-          <div class="tw-flex tw-items-center"><IconCodeView class="tw-mr-1" color="primary" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToJSON) }}</div>
-        </AMenuItem>
-        <AMenuItem v-if="pdfVisible" key="pdf">
-          <div class="tw-flex tw-items-center"><IconFilePdfLine class="tw-mr-1" color="green" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToPDF) }}</div>
-        </AMenuItem>
-        <AMenuItem v-if="imageVisible" key="image">
-          <div class="tw-flex tw-items-center">
-            <IconImageLine class="tw-mr-1" color="orange" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToImage) }}
-          </div>
-        </AMenuItem>
-        <AMenuItem v-if="excelVisible" key="excel">
-          <div class="tw-flex tw-items-center">
-            <IconFileExcelLine class="tw-mr-1" color="blue" scale="1.1" />{{ $t(i18nMessages.antd.action.exportToExcel) }}
-          </div>
-        </AMenuItem>
-      </AMenu>
-    </template>
-  </ADropdown>
-</template>
-
-<script lang="ts">
 import to from 'await-to-js';
 import { timer } from 'rxjs';
 import { isFunction } from '@fatesigner/utils/type-check';
-import { Dropdown, Menu, notification } from 'ant-design-vue';
 import { convertHtmlToCanvas } from '@fatesigner/utils/html-canvas';
+import { Dropdown, Menu, MenuItem, notification } from 'ant-design-vue';
 import { PropType, computed, defineComponent, reactive, ref } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconCodeView, IconFileDownloadLine, IconFileExcelLine, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
 
-import { XButton } from './button';
+import { XButton } from '../button';
+import { IconCodeSSlashLine, IconFileDownloadLine, IconFileExcel2Line, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
+
 import { IXButtonExportOptions, XButtonProps } from './types';
 
-export default defineComponent({
+/**
+ * 导出到 Excel、PDF、JSON、Image
+ */
+export const XButtonExport = defineComponent({
   name: 'x-button-export',
-  components: {
-    XButton,
-    IconCodeView,
-    IconImageLine,
-    IconLoader5Line,
-    IconFilePdfLine,
-    IconFileExcelLine,
-    IconFileDownloadLine,
-    [Dropdown.name]: Dropdown,
-    [Menu.Item.name]: Menu.Item,
-    [Menu.name]: Menu
-  },
   props: {
     ...XButtonProps,
     onlyIcon: {
@@ -147,7 +92,7 @@ export default defineComponent({
 
       if (key === 'json') {
         options_.json = await loadOptions(props?.options?.json, options_.json);
-        let opt = options_?.json as any;
+        const opt = options_?.json as any;
         if (opt?.content) {
           const url = window.URL.createObjectURL(new Blob([opt.content], { type: 'data:application/json;charset=utf-8' }));
           const link = document.createElement('a');
@@ -163,7 +108,7 @@ export default defineComponent({
         }
       } else if (key === 'excel') {
         options_.excel = await loadOptions(props?.options?.excel, options_.excel);
-        let opt = options_?.excel as any;
+        const opt = options_?.excel as any;
         if (opt) {
           const _excel: any = await import('exceljs');
           const ExcelJS = _excel.default;
@@ -219,7 +164,7 @@ export default defineComponent({
         }
       } else if (key === 'pdf') {
         options_.pdf = await loadOptions(props?.options?.pdf, options_.pdf);
-        let opt = options_?.pdf as any;
+        const opt = options_?.pdf as any;
         if (opt?.target) {
           // TODO
           // const jsPDF: any = await import('jspdf');
@@ -242,7 +187,7 @@ export default defineComponent({
         });
         await download(workbook); */
 
-        let opt = options_?.image as any;
+        const opt = options_?.image as any;
 
         if (opt?.target) {
           await convertHtmlToCanvas(opt.target, {
@@ -286,6 +231,82 @@ export default defineComponent({
       trigger,
       download
     };
+  },
+  render(ctx) {
+    return (
+      <Dropdown
+        disabled={ctx.disabled || ctx.loading_}
+        placement={ctx.placement}
+        v-slots={{
+          overlay: () => (
+            <Menu onClick={ctx.onActionClick}>
+              {[
+                ctx.jsonVisible ? (
+                  <MenuItem key='json'>
+                    <div class='tw-flex tw-items-center'>
+                      <IconCodeSSlashLine class='tw-mr-1' color='primary' scale='1.1' />
+                      {ctx.$t(i18nMessages.antd.action.exportToJSON)}
+                    </div>
+                  </MenuItem>
+                ) : (
+                  ''
+                ),
+                ctx.pdfVisible ? (
+                  <MenuItem key='pdf'>
+                    <div class='tw-flex tw-items-center'>
+                      <IconFilePdfLine class='tw-mr-1' color='green' scale='1.1' />
+                      {ctx.$t(i18nMessages.antd.action.exportToPDF)}
+                    </div>
+                  </MenuItem>
+                ) : (
+                  ''
+                ),
+                ctx.imageVisible ? (
+                  <MenuItem key='image'>
+                    <div class='tw-flex tw-items-center'>
+                      <IconImageLine class='tw-mr-1' color='orange' scale='1.1' />
+                      {ctx.$t(i18nMessages.antd.action.exportToImage)}
+                    </div>
+                  </MenuItem>
+                ) : (
+                  ''
+                ),
+                ctx.excelVisible ? (
+                  <MenuItem key='excel'>
+                    <div class='tw-flex tw-items-center'>
+                      <IconFileExcel2Line class='tw-mr-1' color='blue' scale='1.1' />
+                      {ctx.$t(i18nMessages.antd.action.exportToExcel)}
+                    </div>
+                  </MenuItem>
+                ) : (
+                  ''
+                )
+              ]}
+            </Menu>
+          )
+        }}
+      >
+        <XButton
+          block={ctx.block}
+          disabled={ctx.disabled}
+          ghost={ctx.ghost}
+          href={ctx.href}
+          htmlType={ctx.htmlType}
+          loading={ctx.loading_}
+          shape={ctx.shape}
+          size={ctx.size}
+          target={ctx.target}
+          type={ctx.type}
+          color={ctx.color}
+          spin={false}
+          title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.export)}
+        >
+          {[
+            ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconFileDownloadLine spin={ctx.loading_} />,
+            !ctx.onlyIcon ? <span>{ctx.$t(i18nMessages.antd.action.export)}</span> : ''
+          ]}
+        </XButton>
+      </Dropdown>
+    );
   }
 });
-</script>
