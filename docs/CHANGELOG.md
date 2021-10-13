@@ -1,3 +1,10 @@
+# [1.0.0-alpha.46](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.45...v1.0.0-alpha.46) (2021-10-13)
+
+
+### Features
+
+* 以 tsx 的模板定义方式重构组件 ([38eb518](https://github.com/fatesigner/antdvx/commit/38eb5187cb079ad81974aca44d1da034589d85d7))
+
 # [1.0.0-alpha.45](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.44...v1.0.0-alpha.45) (2021-10-09)
 
 
