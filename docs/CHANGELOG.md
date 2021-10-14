@@ -1,3 +1,10 @@
+# [1.0.0-alpha.48](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.47...v1.0.0-alpha.48) (2021-10-14)
+
+
+### Features
+
+* 更新 XTable 组件 title 节点样式 ([a04a64e](https://github.com/fatesigner/antdvx/commit/a04a64e5bf106438a41bd55fdb48e1fbc4d2c5e5))
+
 # [1.0.0-alpha.47](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.46...v1.0.0-alpha.47) (2021-10-14)
 
 
