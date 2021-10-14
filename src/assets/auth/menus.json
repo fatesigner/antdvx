@@ -87,6 +87,15 @@
         "children": []
       },
       {
+        "id": "fs96690e6975",
+        "label": "粘性布局",
+        "name": "sticky-section",
+        "url": "/sticky-section",
+        "target": null,
+        "icon": "",
+        "children": []
+      },
+      {
         "id": "df96690e69sc",
         "label": "过渡（Transitions）",
         "name": "transitions",

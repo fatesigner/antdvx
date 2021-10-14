@@ -8,9 +8,18 @@ import styles from './sticky-section.module.less';
  */
 export const StickySection = defineComponent({
   name: 'sticky-section',
+  inheritAttrs: false,
   props: {
     className: {
       type: Array as PropType<string[]>
+    },
+    shadowTop: {
+      type: Boolean,
+      default: false
+    },
+    shadowBottom: {
+      type: Boolean,
+      default: false
     }
   },
   setup(props) {
@@ -74,7 +83,12 @@ export const StickySection = defineComponent({
   render(ctx) {
     return [
       <div class={styles['sticky-section-top']} ref='topRef' />,
-      <div v-bind={ctx.$attrs} onClick={ctx.goto} ref='targetRef'>
+      <div
+        class={[ctx.shadowTop ? styles['sticky-shadow-top'] : undefined, ctx.shadowBottom ? styles['sticky-shadow-bottom'] : undefined]}
+        {...ctx.$attrs}
+        onClick={ctx.goto}
+        ref='targetRef'
+      >
         {ctx.$slots.default?.({ sticky: ctx.sticky })}
       </div>
     ];
