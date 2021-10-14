@@ -85,9 +85,9 @@ export const StickySection = defineComponent({
       <div class={styles['sticky-section-top']} ref='topRef' />,
       <div
         class={[ctx.shadowTop ? styles['sticky-shadow-top'] : undefined, ctx.shadowBottom ? styles['sticky-shadow-bottom'] : undefined]}
+        ref='targetRef'
         {...ctx.$attrs}
         onClick={ctx.goto}
-        ref='targetRef'
       >
         {ctx.$slots.default?.({ sticky: ctx.sticky })}
       </div>

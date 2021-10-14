@@ -682,8 +682,16 @@ export const XTable = defineComponent({
         name === 'title'
           ? function (slotData) {
               return (
-                <div class='tw-flex tw-flex-wrap tw-items-center tw-justify-between tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1'>
-                  <div class='tw-flex-1 tw-p-2'>
+                <div
+                  class={[
+                    'tw-flex',
+                    'tw-flex-wrap',
+                    'tw-items-center',
+                    'tw-justify-between',
+                    ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1'
+                  ]}
+                >
+                  <div class={['tw-flex-1 tw-overflow-hidden', ctx.options.bordered ? undefined : 'tw-p-2']}>
                     {ctx.$slots?.[name]?.({
                       ...slotData,
                       options: ctx.options,
