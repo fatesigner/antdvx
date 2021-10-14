@@ -1,3 +1,10 @@
+# [1.0.0-alpha.47](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.46...v1.0.0-alpha.47) (2021-10-14)
+
+
+### Features
+
+* 更新 StickySection( 粘性布局) 组件 ([91c1569](https://github.com/fatesigner/antdvx/commit/91c15690a70dc6872002513e69049dbcbd06c8e7))
+
 # [1.0.0-alpha.46](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.45...v1.0.0-alpha.46) (2021-10-13)
 
 
