@@ -1,3 +1,10 @@
+# [1.0.0-alpha.49](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.48...v1.0.0-alpha.49) (2021-10-15)
+
+
+### Features
+
+* 更新 XTable 组件，添加 getElement 函数 ([139d642](https://github.com/fatesigner/antdvx/commit/139d6421d867756c9a3e3d3a0f11b4488ee60f31))
+
 # [1.0.0-alpha.48](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.47...v1.0.0-alpha.48) (2021-10-14)
 
 
