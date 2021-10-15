@@ -57,6 +57,7 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
 ): IXTableRefType<TModel, TParams, TMethods> {
   const handler: IXTableHandlers<TModel> = {
     getAntTableRef: null,
+    getElement: null,
     addData: null,
     updateData: null,
     removeData: null,
@@ -108,8 +109,8 @@ export const XTable = defineComponent({
       type: Object as PropType<IXTableHandlers<any>>
     }
   },
-  emits: ['click'],
-  setup(props: any, { emit }) {
+  setup(props: any) {
+    const wrapRef = ref();
     const antTableRef = ref();
 
     // 列
@@ -420,6 +421,11 @@ export const XTable = defineComponent({
       return antTableRef.value;
     };
 
+    // 获取 html 节点
+    const getElement: IXTableHandlers<any>['getElement'] = () => {
+      return wrapRef.value;
+    };
+
     const setData: IXTableHandlers<any>['setData'] = (data: Record<string, any>[]) => {
       overallData = data;
       processData();
@@ -455,6 +461,7 @@ export const XTable = defineComponent({
     if (props.handler) {
       Object.assign(props.handler, {
         getAntTableRef,
+        getElement,
         setData,
         addData,
         updateData,
@@ -650,6 +657,7 @@ export const XTable = defineComponent({
 
     return {
       i18nMessages,
+      wrapRef,
       antTableRef,
       columns_,
       onPageChange,
@@ -760,9 +768,9 @@ export const XTable = defineComponent({
       rowKey: ctx.getRowKey,
       rowSelection: ctx.options.rowSelection
         ? {
+            fixed: ctx.options.rowSelection.fixed,
             columnWidth: ctx.options.rowSelection.columnWidth,
             columnTitle: ctx.options.rowSelection.columnTitle,
-            //fixed: ctx.options.rowSelection.fixed,
             getCheckboxProps: ctx.options.rowSelection.getCheckboxProps,
             hideDefaultSelections: ctx.options.rowSelection.hideDefaultSelections,
             selectedRowKeys: ctx.options.rowSelection.selectedRowKeys,
@@ -788,7 +796,7 @@ export const XTable = defineComponent({
     }
 
     return (
-      <div class='ant-table-x'>
+      <div class='ant-table-x' ref='wrapRef'>
         {[
           h(
             Table,

@@ -56,6 +56,11 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
   getAntTableRef?: () => any;
 
   /**
+   * 获取 html 节点
+   */
+  getElement?: () => HTMLElement;
+
+  /**
    * 手动设置数据
    * @param index 数据所在数组中的序号
    * @param data 待更新的数据

@@ -3,9 +3,7 @@
     <div class="tw-p-4 tw-text-lg tw-shadow-md tw-bg-white">Echarts 示例</div>
     <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4 tw-p-4">
       <div class="tw-pt-4 tw-pr-2 tw-pb-4 tw-pl-2 tw-rounded-sm tw-shadow-md tw-bg-white" v-for="chart in charts">
-        <div class="tw-flex tw-items-center tw-space-x-2">
-          <Chart :options="chart.getOptions" :aspect-ratio="2" :filename="chart.name"></Chart>
-        </div>
+        <Chart :options="chart.getOptions" :aspect-ratio="2" :filename="chart.name" />
       </div>
     </div>
   </ScrollView>
