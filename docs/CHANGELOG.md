@@ -1,3 +1,10 @@
+# [1.0.0-alpha.51](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.50...v1.0.0-alpha.51) (2021-10-18)
+
+
+### Bug Fixes
+
+* 修复 Iconfont 导入出错的问题 ([30deb2c](https://github.com/fatesigner/antdvx/commit/30deb2cc236933717132c88bf8f70ccfc993756b))
+
 # [1.0.0-alpha.50](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.49...v1.0.0-alpha.50) (2021-10-18)
 
 
