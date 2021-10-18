@@ -224,22 +224,29 @@ body.antdvx-theme-classic {
 
   // custom
   .ant-table-expand-icon {
-    color: #999;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
     cursor: pointer;
     font-size: 1.5em;
-    transition-property: transform;
-    transition-duration: 0.3s;
-    transition-timing-function: linear;
+    color: #999;
 
     .anticon {
-      display: block;
-      transition-property: font-size;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition-property: font-size, transform;
       transition-duration: 0.3s;
       transition-timing-function: ease-in-out;
     }
 
     &.ant-table-expand-unfold {
-      transform: scale(1, -1);
+      .anticon {
+        transform: scale(1, -1);
+      }
     }
 
     &:hover {

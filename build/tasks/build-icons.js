@@ -81,13 +81,13 @@ export default createIcon('${dirname}', ${JSON.stringify(svgObj, null, 2)});
   );
 
   // 写入 iconfont/icons/index.ts
-  fs.writeFileSync(
+  /* fs.writeFileSync(
     path.join(SRC_PATH, 'antdvx/components/iconfont/icons/index.ts'),
     arr.map((x) => `import ${x.name} from './${x.path}';`).join('\n') + '\n\r' + arr.map((x) => `export { ${x.name} };`).join('\n') + '\n',
     {
       encoding: 'utf-8'
     }
-  );
+  ); */
 
   // 写入 iconfont/config.ts
   fs.writeFileSync(
