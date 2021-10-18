@@ -1,3 +1,10 @@
+# [1.0.0-alpha.50](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.49...v1.0.0-alpha.50) (2021-10-18)
+
+
+### Features
+
+* 更新 Echarts、XTable 组件 ([29d853a](https://github.com/fatesigner/antdvx/commit/29d853ab9e93b93b823587f15d9f164a640f1c69))
+
 # [1.0.0-alpha.49](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.48...v1.0.0-alpha.49) (2021-10-15)
 
 
