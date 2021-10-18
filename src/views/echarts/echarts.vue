@@ -2,9 +2,17 @@
   <ScrollView fill-y scroll-y class="tw-bg-gray-100">
     <div class="tw-p-4 tw-text-lg tw-shadow-md tw-bg-white">Echarts 示例</div>
     <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4 tw-p-4">
-      <div class="tw-pt-4 tw-pr-2 tw-pb-4 tw-pl-2 tw-rounded-sm tw-shadow-md tw-bg-white" v-for="chart in charts">
-        <Chart :options="chart.getOptions" :aspect-ratio="2" :filename="chart.name" />
-      </div>
+      <Chart
+        v-for="chart in charts"
+        class="tw-pt-4 tw-pr-2 tw-pb-4 tw-pl-2 tw-rounded-sm tw-shadow-md tw-bg-white"
+        :options="chart.getOptions"
+        :aspect-ratio="2"
+        :filename="chart.name"
+      >
+        <template #title>
+          <div class="tw-text-base">{{ chart.name }}</div>
+        </template>
+      </Chart>
     </div>
   </ScrollView>
 </template>
@@ -72,13 +80,8 @@ export default defineComponent({
             });
           });
           return {
-            title: {
-              text: 'Income of Germany and France since 1950',
-              textStyle: {
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: 400
-              }
+            legend: {
+              top: 10
             },
             grid: {
               top: 100,
@@ -114,16 +117,8 @@ export default defineComponent({
         name: 'Stacked Area Chart',
         async getOptions() {
           return {
-            title: {
-              text: 'Stacked Area Chart',
-              textStyle: {
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: 400
-              }
-            },
             legend: {
-              top: 40,
+              top: 10,
               data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
             },
             grid: {
@@ -226,13 +221,8 @@ export default defineComponent({
             data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
           }
           return {
-            title: {
-              text: 'Large Area Chart',
-              textStyle: {
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: 400
-              }
+            legend: {
+              top: 10
             },
             grid: {
               top: 100,
@@ -298,16 +288,8 @@ export default defineComponent({
         name: 'Referer of a Website',
         async getOptions() {
           return {
-            title: {
-              text: 'Referer of a Website',
-              textStyle: {
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: 400
-              }
-            },
             legend: {
-              top: 50
+              top: 10
             },
             grid: {
               top: 100,
@@ -348,16 +330,8 @@ export default defineComponent({
         name: 'Stacked Area Bar',
         async getOptions() {
           return {
-            title: {
-              text: 'Stacked Area Bar',
-              textStyle: {
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: 400
-              }
-            },
             legend: {
-              top: 40
+              top: 10
             },
             grid: {
               top: 100,
@@ -478,16 +452,8 @@ export default defineComponent({
         name: 'Stacked Area Bar',
         async getOptions() {
           return {
-            title: {
-              text: 'Stacked Area Bar',
-              textStyle: {
-                fontSize: 16,
-                fontStyle: 'normal',
-                fontWeight: 400
-              }
-            },
             legend: {
-              top: 40
+              top: 10
             },
             grid: {
               top: 100,

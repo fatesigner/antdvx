@@ -353,7 +353,7 @@ export const VEcharts = defineComponent({
 
     let instance;
 
-    const styles = computed(() => {
+    const wrapStyles = computed(() => {
       if (props.aspectRatio) {
         return {
           width: '100%',
@@ -496,7 +496,7 @@ export const VEcharts = defineComponent({
     return {
       wrapRef,
       chartRef,
-      styles,
+      wrapStyles,
       options_,
       loading,
       initialized,
@@ -530,22 +530,24 @@ export const VEcharts = defineComponent({
     }
 
     return (
-      <div ref='wrapRef' class={styles.wrap} style={ctx.styles}>
-        <TransitionGroup
-          enterFromClass={styles['transition-enter-from']}
-          enterToClass={styles['transition-enter-to']}
-          leaveToClass={styles['transition-leave-to']}
-          enterActiveClass={styles['transition-enter-active']}
-          leaveActiveClass={styles['transition-enter-active']}
-        >
-          {solts}
-        </TransitionGroup>
+      <div>
         {ctx.initialized
           ? ctx.$slots?.default
             ? ctx.$slots?.default({ error: ctx.error, empty: ctx.empty, loading: ctx.loading, refresh: ctx.refresh })
             : ''
           : ''}
-        <div ref='chartRef' class={[styles.container, ctx.empty || !ctx.options_ ? styles.empty : '']} onTouchstart={ctx.touchstart} />
+        <div ref='wrapRef' class={styles.wrap} style={ctx.wrapStyles}>
+          <TransitionGroup
+            enterFromClass={styles['transition-enter-from']}
+            enterToClass={styles['transition-enter-to']}
+            leaveToClass={styles['transition-leave-to']}
+            enterActiveClass={styles['transition-enter-active']}
+            leaveActiveClass={styles['transition-enter-active']}>
+            {solts}
+          </TransitionGroup>
+
+          <div ref='chartRef' class={[styles.container, ctx.empty || !ctx.options_ ? styles.empty : '']} onTouchstart={ctx.touchstart} />
+        </div>
       </div>
     );
   }

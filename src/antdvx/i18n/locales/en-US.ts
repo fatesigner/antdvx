@@ -25,7 +25,9 @@ export default {
       exportToJSON: 'Export to JSON',
       exportToPDF: 'Export to PDF',
       exportToImage: 'Export to Image',
-      exportToExcel: 'Export to Excel'
+      exportToExcel: 'Export to Excel',
+      expand: 'Expand',
+      fold: 'Fold'
     },
     asyncAction: {
       error: 'Error'

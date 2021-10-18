@@ -1,4 +1,3 @@
-import { timer } from 'rxjs';
 import { useI18n } from 'vue-i18n';
 import { defineComponent, ref, watch } from 'vue';
 import { Popconfirm, message, notification } from 'ant-design-vue';
@@ -74,8 +73,7 @@ export const XButtonDelete = defineComponent({
         okText={ctx.$t(i18nMessages.antd.action.delete.oktext)}
         cancelText={ctx.$t(i18nMessages.antd.action.delete.cancelText)}
         title={ctx.$t(i18nMessages.antd.action.delete.confirmText)}
-        onConfirm={ctx.trigger}
-      >
+        onConfirm={ctx.trigger}>
         <XButton
           block={ctx.block}
           disabled={ctx.disabled}

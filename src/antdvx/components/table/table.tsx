@@ -5,6 +5,7 @@
 import to from 'await-to-js';
 import { merge } from 'lodash-es';
 import { bindLazyFunc, debounce } from '@fatesigner/utils';
+import { TableProps } from 'ant-design-vue/es/table/interface';
 import { Pagination, Table, notification } from 'ant-design-vue';
 import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, h, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
@@ -13,35 +14,39 @@ import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
+import { IconAngleDoubleDown } from '../iconfont';
+
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
-import { TableProps } from 'ant-design-vue/es/table/interface';
+import { useI18n } from 'vue-i18n';
 
-export const defaultXTableProps: IXTablePropsType<any, any> = {
-  loading: false,
-  // scroll: { x: true },
-  dataSource: {
-    data: [],
-    pageNo: 1,
-    pageSize: 10,
-    schema: {
-      data: 'data',
-      total: 'total'
+export const getDefaultXTableProps = function (): IXTablePropsType<any, any> {
+  return {
+    loading: false,
+    // scroll: { x: true },
+    dataSource: {
+      data: [],
+      pageNo: 1,
+      pageSize: 10,
+      schema: {
+        data: 'data',
+        total: 'total'
+      }
+    },
+
+    // 展开行
+    expandRowByClick: false,
+    expandedRowKeys: [],
+    defaultExpandAllRows: false,
+    defaultExpandedRowKeys: [],
+
+    pagination: {
+      size: 'small',
+      position: 'both',
+      showQuickJumper: true,
+      showSizeChanger: true,
+      pageSizeOptions: ['5', '10', '20', '30', '50', '100']
     }
-  },
-
-  // 展开行
-  expandRowByClick: false,
-  expandedRowKeys: [],
-  defaultExpandAllRows: false,
-  defaultExpandedRowKeys: [],
-
-  pagination: {
-    size: 'small',
-    position: 'both',
-    showQuickJumper: true,
-    showSizeChanger: true,
-    pageSizeOptions: ['5', '10', '20', '30', '50', '100']
-  }
+  };
 };
 
 /**
@@ -77,7 +82,7 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
   bindLazyFunc(handler, bindProperties);
 
   return {
-    options: reactive(merge({}, defaultXTableProps, props) as any),
+    options: reactive(merge({}, getDefaultXTableProps(), props) as any),
     handler,
     params: reactive(Object.assign({}, params) as any),
     methods
@@ -91,10 +96,7 @@ export const XTable = defineComponent({
   name: 'x-table',
   props: {
     options: {
-      type: Object as PropType<IXTablePropsType<any, any>>,
-      default() {
-        return defaultXTableProps;
-      }
+      type: Object as PropType<IXTablePropsType<any, any>>
     },
     // params
     params: {
@@ -697,8 +699,7 @@ export const XTable = defineComponent({
                     'tw-items-center',
                     'tw-justify-between',
                     ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1'
-                  ]}
-                >
+                  ]}>
                   <div class={['tw-flex-1 tw-overflow-hidden', ctx.options.bordered ? undefined : 'tw-p-2']}>
                     {ctx.$slots?.[name]?.({
                       ...slotData,
@@ -758,8 +759,25 @@ export const XTable = defineComponent({
       defaultExpandAllRows: ctx.options.defaultExpandAllRows,
       defaultExpandedRowKeys: ctx.options.defaultExpandedRowKeys,
       expandedRowKeys: ctx.options.expandedRowKeys,
+      expandedRowRender: ctx.options.expandedRowRender,
+      expandIcon:
+        ctx.options.expandIcon ?? ctx.$slots?.expandedRowRender
+          ? function ({ expandable, expanded, needIndentSpaced, onExpand, prefixCls, record }) {
+              return (
+                <div
+                  class={['ant-table-expand-icon', expanded ? 'ant-table-expand-unfold' : undefined]}
+                  title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
+                  onClick={(e) => {
+                    onExpand(record, e);
+                  }}>
+                  <IconAngleDoubleDown />
+                </div>
+              );
+            }
+          : undefined,
       expandRowByClick: ctx.options.expandRowByClick,
       expandIconColumnIndex: ctx.options.expandIconColumnIndex,
+      footer: ctx.options.footer,
       indentSize: ctx.options.indentSize,
       loading: ctx.options.loading,
       locale: ctx.options.locale,
@@ -786,6 +804,8 @@ export const XTable = defineComponent({
       size: ctx.options.size,
       customHeaderRow: ctx.options.customHeaderRow,
       customRow: ctx.options.customRow,
+      getPopupContainer: ctx.options.getPopupContainer,
+      transformCellText: ctx.options.getPopupContainer,
       onChange: ctx.onChange,
       onExpandedRowsChange: ctx.onExpandedRowsChange,
       onExpand: ctx.onExpand

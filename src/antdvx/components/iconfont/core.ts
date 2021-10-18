@@ -5,10 +5,10 @@
 import Icon from '@ant-design/icons-vue';
 import { defineComponent, h } from 'vue';
 import { Component } from '@vue/runtime-core';
+import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, IAntdvxIconNames } from './config';
-import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 /**
  * 创建 icon

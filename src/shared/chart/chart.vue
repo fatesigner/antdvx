@@ -23,13 +23,18 @@
       </div>
     </template>
 
-    <template #default="{ loading }">
-      <div class="tw-absolute tw-top-0 tw-left-0 tw-z-10" v-if="logo">
-        <img width="100" height="50" src="@/assets/img/logo.png" alt="" title="" />
-      </div>
-      <div :class="$style.actions">
-        <XButtonRefresh v-if="refreshable" :disabled="loading" class="tw-mr-2" color="primary" only-icon size="mini" type="link" :handler="refresh" />
-        <XButtonExport :disabled="loading" size="small" placement="bottomRight" :options="exportOptions" />
+    <template #default="{ loading, error }">
+      <div class="tw-flex tw-items-center tw-justify-end tw-mb-2">
+        <div v-if="logo">
+          <img width="100" height="50" src="@/assets/img/logo.png" alt="" title="" />
+        </div>
+        <div class="tw-flex-1 tw-pl-2 tw-pr-2">
+          <slot name="title" />
+        </div>
+        <div class="tw-flex-initial" v-if="!error" data-html2canvas-ignore>
+          <XButtonRefresh v-if="refreshable" :disabled="loading" class="tw-mr-2" color="primary" size="small" type="link" :handler="refresh" />
+          <XButtonExport v-if="!empty" :disabled="loading" size="small" placement="bottomRight" :options="exportOptions" />
+        </div>
       </div>
     </template>
   </VEcharts>
@@ -96,7 +101,7 @@ export default defineComponent({
       async image() {
         return {
           filename: props.filename,
-          target: chartRef.value?.getChartElement()
+          target: chartRef.value?.$el
         };
       }
     };

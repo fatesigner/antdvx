@@ -25,7 +25,9 @@ export default {
       exportToJSON: '导出到JSON',
       exportToPDF: '导出到PDF',
       exportToImage: '导出到图片',
-      exportToExcel: '导出到Excel'
+      exportToExcel: '导出到Excel',
+      expand: '展开',
+      fold: '收起'
     },
     asyncAction: {
       error: '错误'
