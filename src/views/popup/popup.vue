@@ -40,7 +40,10 @@ export default defineComponent({
         footer: null,
         destroyOnClose: true
       },
-      () => import('./form.vue'),
+      async () => {
+        //await timer(2000).toPromise();
+        return import('./form.vue');
+      },
       {
         model: null,
         onDone(e) {
@@ -54,10 +57,12 @@ export default defineComponent({
       {
         width: '66%',
         title: 'drawer 标题',
-        fullscreen: true,
-        destroyOnClose: true
+        fullscreen: true
       },
-      () => import('./form.vue'),
+      async () => {
+        //await timer(2000).toPromise();
+        return import('./form.vue');
+      },
       {
         model: null,
         onDone(e) {

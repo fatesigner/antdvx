@@ -6,10 +6,10 @@ import { bindLazyFunc } from '@fatesigner/utils';
 import { AsyncComponentLoader } from '@vue/runtime-core';
 import { PropType, defineComponent, h, reactive, ref, shallowRef } from 'vue';
 
-import { SpinnerLoading } from '../loading';
-import { ScrollView } from '../scroll-view';
-import { IconCloseLine } from '../iconfont';
 import { XButtonRefresh } from '../button';
+import { SpinnerLoading } from '../loading';
+import { IconCloseLine } from '../iconfont';
+import { ScrollView } from '../scroll-view';
 import { TransitionCollapse, TransitionOpacity, TransitionZoom } from '../transitions';
 
 import { IXModalHandlers, IXModalPropsType, IXModalRefType } from './types';
@@ -99,25 +99,35 @@ export const XModal = defineComponent({
         clearTimeout(loadComponentTimer);
         loadComponentTimer = null;
       }
-      if (component_.value) {
+
+      let needLoad = false;
+
+      if (!component_.value) {
+        loading.value = true;
+        needLoad = true;
+      } else if (props.options.destroyOnClose) {
         component_.value = null;
+        needLoad = true;
         loadComponentTimer = setTimeout(function () {
           loading.value = true;
           loadComponentTimer = null;
         }, 300);
-      } else {
-        loading.value = true;
       }
-      const [err, res] = await to(loader());
-      if (err) {
-        error.value = err.message;
-      } else {
-        component_.value = res.default;
+
+      if (needLoad) {
+        const [err, res] = await to(loader());
+        if (err) {
+          error.value = err.message;
+        } else {
+          component_.value = res.default;
+        }
       }
+
       if (loadComponentTimer) {
         clearTimeout(loadComponentTimer);
         loadComponentTimer = null;
       }
+
       loadComponentTimer = setTimeout(function () {
         loading.value = false;
         loadComponentTimer = null;
