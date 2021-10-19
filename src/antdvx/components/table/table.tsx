@@ -17,7 +17,6 @@ import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-sou
 import { IconAngleDoubleDown } from '../iconfont';
 
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
-import { useI18n } from 'vue-i18n';
 
 export const getDefaultXTableProps = function (): IXTablePropsType<any, any> {
   return {
@@ -374,8 +373,17 @@ export const XTable = defineComponent({
     // 刷新数据
     const refresh = async () => {
       props.options.loading = true;
+
       await loadData();
+
       processData();
+
+      if (!props.options.dataSource.data.length && props.options.dataSource.pageNo > 1) {
+        // 当数据为空，且当前页码不处于第一页，则重置分页
+        props.options.dataSource.pageNo = 1;
+        return refresh();
+      }
+
       props.options.loading = false;
     };
 
@@ -456,7 +464,7 @@ export const XTable = defineComponent({
     };
 
     const getAllData: IXTableHandlers<any>['getAllData'] = () => {
-      return overallData;
+      return overallData?.length ? overallData : props.options.dataSource.data;
     };
 
     // update handlers
@@ -699,7 +707,8 @@ export const XTable = defineComponent({
                     'tw-items-center',
                     'tw-justify-between',
                     ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1'
-                  ]}>
+                  ]}
+                >
                   <div class={['tw-flex-1 tw-overflow-hidden', ctx.options.bordered ? undefined : 'tw-p-2']}>
                     {ctx.$slots?.[name]?.({
                       ...slotData,
@@ -710,7 +719,7 @@ export const XTable = defineComponent({
                       handleRecordChange: ctx.handleRecordChange
                     })}
                   </div>
-                  {ctx.options.dataSource.data.length &&
+                  {ctx.options.dataSource.total &&
                   ctx.options.pagination &&
                   ctx.options.dataSource.pageSize &&
                   (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top') ? (
@@ -769,7 +778,8 @@ export const XTable = defineComponent({
                   title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
                   onClick={(e) => {
                     onExpand(record, e);
-                  }}>
+                  }}
+                >
                   <IconAngleDoubleDown />
                 </div>
               );
@@ -826,7 +836,7 @@ export const XTable = defineComponent({
             },
             solts
           ),
-          ctx.options.dataSource.data.length &&
+          ctx.options.dataSource.total &&
           ctx.options.pagination &&
           ctx.options.dataSource.pageSize &&
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (

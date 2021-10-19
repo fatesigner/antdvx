@@ -412,7 +412,11 @@ export default defineComponent({
         },
         del(record) {
           return async () => {
-            return Api.deleteUser(record.userid, tbRef.options.dataSource.data);
+            return Api.deleteUser(record.userid, tbRef.options.dataSource.data).then(() => {
+              if (!tbRef.options.dataSource.data.length) {
+                tbRef.handler.refresh();
+              }
+            });
           };
         },
         async delAll() {
