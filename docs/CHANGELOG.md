@@ -1,3 +1,11 @@
+# [1.0.0-alpha.52](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.51...v1.0.0-alpha.52) (2021-10-19)
+
+
+### Features
+
+* 更新 Modal、Drawer 的动态组件加载逻辑 ([c5cf299](https://github.com/fatesigner/antdvx/commit/c5cf2994b1279aaba7f07910e509d1840e4efb30))
+* 更新 XTable 组件，当数据为空，且当前页码不处于第一页，重置分页 ([a8eda7a](https://github.com/fatesigner/antdvx/commit/a8eda7aed88ebe8f51133cc674ab273bed9a0d22))
+
 # [1.0.0-alpha.51](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.50...v1.0.0-alpha.51) (2021-10-18)
 
 
