@@ -9,8 +9,6 @@ import { setAntdvxPipesConfig, setRequestAdapter } from '@/antdvx';
 import { i18n } from '@/i18n';
 import { httpService } from '@/app/services';
 
-import './theme.less';
-
 export const Antdvx = {
   install() {
     // 设置 Http 适配器

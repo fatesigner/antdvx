@@ -1,6 +1,5 @@
-// 因为涉及到样式覆盖，所以这里不做按需加载，直接导入所有样式
-@import '~ant-design-vue/dist/antd.less';
-@import '@/antdvx/dist/antdvx.less';
+// 引用 Antdvx 主题
+@import '@/antdvx/themes/default';
 
 // -------- Colors -----------
 // 主色
@@ -23,3 +22,9 @@
 @cyan-color: #00acc1;
 @blue-color: #1890ff;
 @purple-color: #6559cc;
+
+// ------------覆盖 Antdvx 主题----------------
+// Table
+// --
+@table-padding-vertical: 6px;
+@table-padding-horizontal: 12px;
