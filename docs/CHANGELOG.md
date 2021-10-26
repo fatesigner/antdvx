@@ -1,3 +1,10 @@
+# [1.0.0-alpha.53](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.52...v1.0.0-alpha.53) (2021-10-26)
+
+
+### Features
+
+* update theme ([cb3b36b](https://github.com/fatesigner/antdvx/commit/cb3b36be59abc9230772333ed10bb2d3cdeb9150))
+
 # [1.0.0-alpha.52](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.51...v1.0.0-alpha.52) (2021-10-19)
 
 
