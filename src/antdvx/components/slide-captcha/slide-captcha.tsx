@@ -3,12 +3,13 @@ import to from 'await-to-js';
 import { addClass, removeClass } from '@fatesigner/utils/document';
 import { map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
-import { XButton, getBoundaryPosition, getEventArgs, waitTransitionend } from '@/antdvx';
-import { PropType, Teleport, computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, useCssModule, watch } from 'vue';
+import { PropType, Teleport, computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
 
+import { XButton } from '../button';
 import { IconCheckLine, IconCloseLine, IconRefreshLine } from '../iconfont';
+import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
 
 /**
  * 验证码弹出层
