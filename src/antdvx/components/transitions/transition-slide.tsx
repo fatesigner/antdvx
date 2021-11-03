@@ -15,7 +15,8 @@ export const TransitionSlide = defineComponent({
       default: true
     },
     mode: {
-      type: String as PropType<'in-out' | 'out-in'>
+      type: String as PropType<'in-out' | 'out-in'>,
+      default: 'out-in'
     },
     direction: {
       // 'up', 'right', 'down', 'left'

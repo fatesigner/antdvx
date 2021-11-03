@@ -73,9 +73,14 @@ export default {
     },
     passport: {
       title: '系统登录',
-      logIn: '登录',
       username: '账号',
       password: '密码',
+      logIn: '登录',
+      autoLogin: '自动登录',
+      forgetPassword: '忘记密码',
+      register: '注册',
+      backToLogin: '返回登录',
+      submit: '提交',
       any: '随便填',
       thirdparty: '第三方登录',
       thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'

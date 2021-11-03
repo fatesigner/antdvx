@@ -3,7 +3,7 @@ import { Component, ComponentPublicInstance } from '@vue/runtime-core';
 import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from 'vue-router';
 import { KeepAlive, PropType, defineComponent, h, onActivated, onMounted, onUnmounted, ref, shallowRef, toRaw, watch } from 'vue';
 
-import { TransitionOpacity, TransitionSlide } from '../transitions';
+import { TransitionCollapse, TransitionOpacity, TransitionSlide } from '../transitions';
 
 export interface IComponentViewItem<
   T extends Component = {
@@ -48,7 +48,7 @@ export const ComponentView = defineComponent({
   name: 'component-view',
   props: {
     animation: {
-      type: String as PropType<'slide' | 'opacity'>,
+      type: String as PropType<'horizontal' | 'opacity' | 'slide'>,
       default: 'slide'
     },
     keepAlive: {
@@ -148,7 +148,7 @@ export const ComponentView = defineComponent({
       ) : ctx.comp ? (
         ctx.keepAlive || !!ctx.current?.keepAlive ? (
           ctx.animation === 'slide' ? (
-            <TransitionSlide>
+            <TransitionSlide mode='out-in'>
               <KeepAlive>{h(ctx.comp, ctx.current.props)}</KeepAlive>
             </TransitionSlide>
           ) : ctx.animation === 'opacity' ? (
@@ -159,7 +159,7 @@ export const ComponentView = defineComponent({
             <KeepAlive>{h(ctx.comp, ctx.current.props)}</KeepAlive>
           )
         ) : ctx.animation === 'slide' ? (
-          <TransitionSlide>{h(ctx.comp, ctx.current.props)}</TransitionSlide>
+          <TransitionSlide mode='out-in'>{h(ctx.comp, ctx.current.props)}</TransitionSlide>
         ) : ctx.animation === 'opacity' ? (
           <TransitionOpacity mode='out-in'>{h(ctx.comp, ctx.current.props)}</TransitionOpacity>
         ) : (

@@ -7,12 +7,12 @@
           <AppHeader />
         </div>
         <div class="tw-flex-1 tw-overflow-hidden tw-h-full">
-          <TransitionSlide>
+          <TransitionSlide mode="out-in">
             <Unauthorized v-if="status.code === 403" />
           </TransitionSlide>
           <template v-if="status.code === 200">
             <RouterView v-slot="{ Component }">
-              <TransitionSlide>
+              <TransitionSlide mode="out-in">
                 <KeepAlive v-if="$route.meta && $route.meta.keepAlive">
                   <Component :is="Component" :key="$route.meta.key" />
                 </KeepAlive>

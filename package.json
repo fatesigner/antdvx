@@ -57,7 +57,6 @@
     "axios": "0.x",
     "dayjs": "1.x",
     "echarts": "5.x",
-    "element-resize-detector": "1.x",
     "exceljs": "4.x",
     "gsap": "3.x",
     "inversify": "5.x",

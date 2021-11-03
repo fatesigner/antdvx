@@ -101,7 +101,7 @@ export const XButtonProps = {
     default: true
   },
   /**
-   * 是否自动弹出消息通知，当设置  handler 后生效
+   * 点击后执行的动作
    */
   handler: {
     type: Function as PropType<(...args: any[]) => Promise<any>>

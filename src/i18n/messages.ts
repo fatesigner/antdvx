@@ -73,9 +73,14 @@ export const i18nMessages = createLocaleMessages({
     },
     passport: {
       title: '',
-      logIn: '',
       username: '',
       password: '',
+      logIn: '',
+      autoLogin: '',
+      forgetPassword: '',
+      register: '',
+      backToLogin: '',
+      submit: '',
       any: '',
       thirdparty: '',
       thirdpartyTips: ''

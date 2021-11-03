@@ -13,7 +13,7 @@ export default {
     {
       name: 'login',
       path: 'login',
-      component: () => import('./login/login.vue'),
+      component: () => import('./login-generic.vue'),
       meta: {
         label: i18nMessages.app.route.passport.login,
         keepAlive: true,

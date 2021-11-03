@@ -73,10 +73,15 @@ export default {
     },
     passport: {
       title: 'Login Form',
-      logIn: 'Login',
       username: 'Username',
       password: 'Password',
-      any: 'any',
+      logIn: 'Login',
+      autoLogin: 'Auth Login',
+      forgetPassword: 'Forget Password',
+      register: 'Register',
+      backToLogin: 'Back To Login',
+      submit: 'Submit',
+      any: 'Any',
       thirdparty: 'Or connect with',
       thirdpartyTips: 'Can not be simulated on i18n, so please combine you own business simulation! ! !'
     },
