@@ -1,3 +1,10 @@
+# [1.0.0-alpha.55](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.54...v1.0.0-alpha.55) (2021-11-03)
+
+
+### Bug Fixes
+
+* 修复 import 引起的报错 ([22ac3f4](https://github.com/fatesigner/antdvx/commit/22ac3f4887872ad7564a5655004d434fe43f5495))
+
 # [1.0.0-alpha.54](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.53...v1.0.0-alpha.54) (2021-11-03)
 
 
