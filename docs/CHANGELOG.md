@@ -1,3 +1,10 @@
+# [1.0.0-alpha.54](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.53...v1.0.0-alpha.54) (2021-11-03)
+
+
+### Features
+
+* update some componets ([26707d6](https://github.com/fatesigner/antdvx/commit/26707d6e63e042663438e37b68292da6517b04a6))
+
 # [1.0.0-alpha.53](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.52...v1.0.0-alpha.53) (2021-10-26)
 
 
