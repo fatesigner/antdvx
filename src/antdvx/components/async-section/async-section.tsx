@@ -102,7 +102,7 @@ export const AsyncSection = defineComponent({
     return [
       <TransitionCollapse appear={false}>
         {ctx.loading_ ? (
-          <div>
+          <div {...ctx.$attrs}>
             {ctx.$slots.loading ? (
               ctx.$slots.loading()
             ) : (
@@ -120,7 +120,7 @@ export const AsyncSection = defineComponent({
       </TransitionCollapse>,
       <TransitionCollapse appear={false}>
         {!ctx.loading_ && ctx.error ? (
-          <div>
+          <div {...ctx.$attrs}>
             {ctx.$slots.error ? (
               ctx.$slots.error({ error: ctx.error, reload: ctx.reload })
             ) : (
@@ -137,9 +137,8 @@ export const AsyncSection = defineComponent({
           ''
         )}
       </TransitionCollapse>,
-
       <TransitionCollapse appear={false}>
-        {ctx.initialized ? <div>{ctx.$slots.default?.({ data: ctx.data, loading: ctx.loading_, reload: ctx.load })}</div> : ''}
+        {ctx.initialized ? <div {...ctx.$attrs}>{ctx.$slots.default?.({ data: ctx.data, loading: ctx.loading_, reload: ctx.load })}</div> : ''}
       </TransitionCollapse>
     ];
   }

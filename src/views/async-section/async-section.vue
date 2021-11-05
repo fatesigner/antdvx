@@ -4,7 +4,7 @@
       <div class="tw-text-lg">Async Section</div>
 
       <div class="tw-p-2 tw-border tw-border-gray-300">
-        <AsyncSection loading-text="Loading project..." :initialize="asyncSectionLoad(3000)">
+        <AsyncSection class="tw-p-4 tw-text-center" loading-text="Loading project..." :initialize="asyncSectionLoad(3000)">
           <template #default="{ data, reload }">
             <span>{{ data.text }}</span>
             <XButtonRefresh only-icon color="primary" size="small" type="link" :handler="reload" />

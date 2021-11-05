@@ -30,10 +30,14 @@ const SlideModal = defineComponent({
       required: true,
       type: Array as PropType<string[]>
     },
-    /*size: {
-      type: Object as PropType<{ width: number; height: number }>,
-      default: () => ({ width: 260, height: 160 })
-    },*/
+    backgroundSize: {
+      type: String as PropType<'contain' | 'cover'>,
+      default: 'cover'
+    },
+    precision: {
+      type: Number as PropType<number>,
+      default: 5
+    },
     position: {
       type: Object as PropType<{ top: number; left: number }>,
       default: () => ({ top: 0, left: 0 })
@@ -60,7 +64,6 @@ const SlideModal = defineComponent({
 
     // drag spended time
     const dragSpendedTime = ref('0');
-    const errorLimit = 2;
 
     const coordinate = {
       x: 0,
@@ -138,6 +141,46 @@ const SlideModal = defineComponent({
       ctx[operation]();
     };
 
+    // 绘制背景
+    const drawBackground = (ctx: CanvasRenderingContext2D, img: HTMLImageElement) => {
+      if (props.backgroundSize === 'contain') {
+        const canvasRatio = canvasRef.value.width / canvasRef.value.height;
+        const imgRatio = img.width / img.height;
+        let dx, dy, dw, dh;
+        if (imgRatio <= canvasRatio) {
+          dw = imgRatio * canvasRef.value.width;
+          dh = canvasRef.value.height;
+          dx = (canvasRef.value.width - dw) / 2;
+          dy = 0;
+        } else {
+          dw = canvasRef.value.width;
+          dh = dw / imgRatio;
+          dx = 0;
+          dy = (canvasRef.value.height - dh) / 2;
+        }
+        ctx.drawImage(img, dx, dy, dw, dh);
+      } else if (props.backgroundSize === 'cover') {
+        const canvasRatio = canvasRef.value.width / canvasRef.value.height;
+        const imgRatio = img.width / img.height;
+        let sx, sy, sw, sh;
+        if (imgRatio <= canvasRatio) {
+          sw = img.width;
+          sh = sw / canvasRatio;
+          sx = 0;
+          sy = (img.height - sh) / 2;
+        } else {
+          sh = img.height;
+          sw = sh * canvasRatio;
+          sx = (img.width - sw) / 2;
+          sy = 0;
+        }
+        // cover 覆盖，dx, dy 均为 0，绘制宽高为 canvas 的高宽
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, canvasRef.value.width, canvasRef.value.height);
+      } else {
+        ctx.drawImage(img, 0, 0, canvasRef.value.width, canvasRef.value.height);
+      }
+    };
+
     const drawImage = async () => {
       if (canvasRef.value) {
         loading.value = true;
@@ -158,7 +201,7 @@ const SlideModal = defineComponent({
           canvasChunkRef.value.width = canvasRef.value.offsetWidth;
           canvasChunkRef.value.height = canvasRef.value.offsetHeight;
 
-          ctx.drawImage(img, 0, 0, canvasRef.value.width, canvasRef.value.height);
+          drawBackground(ctx, img);
 
           chunk.real = chunk.size + chunk.radius * 2 + 2;
 
@@ -251,7 +294,7 @@ const SlideModal = defineComponent({
                     // validate
                     const _x = Math.round((parseInt(getComputedStyle($drag, null).getPropertyValue('left').replace('px', '')) ?? 0) + coordinate.offset);
                     removeClass(sliderRef.value, 'slide-modal-hidden');
-                    if (coordinate.x - errorLimit <= _x && _x <= coordinate.x + errorLimit) {
+                    if (coordinate.x - props.precision <= _x && _x <= coordinate.x + props.precision) {
                       // successful
                       status.value = 'successful';
                       removeClass(resultRef.value, 'slide-modal-failed');
@@ -269,15 +312,15 @@ const SlideModal = defineComponent({
                       waitTransitionend(resultRef.value).then(() => {
                         removeClass(resultRef.value, 'slide-modal-result-show');
                       });
-                      addClass(canvasChunkRef.value, 'slide-modal-result-back-left');
+                      addClass(canvasChunkRef.value, 'slide-modal-back-left');
                       waitTransitionend(canvasChunkRef.value).then(() => {
                         canvasChunkRef.value.style.left = '0';
-                        removeClass(canvasChunkRef.value, 'slide-modal-result-back-left');
+                        removeClass(canvasChunkRef.value, 'slide-modal-back-left');
                       });
-                      addClass($drag, 'slide-modal-result-back-left');
+                      addClass($drag, 'slide-modal-back-left');
                       waitTransitionend($drag).then(() => {
                         $drag.style.left = '0';
-                        removeClass($drag, 'slide-modal-result-back-left');
+                        removeClass($drag, 'slide-modal-back-left');
                       });
                       emit('failed', dragSpendedTime.value);
                     }
@@ -405,6 +448,14 @@ export const SlideCaptcha = defineComponent({
     images: {
       type: Array as PropType<string[]>,
       default: () => [require('./assets/1.jpg'), require('./assets/2.jpg'), require('./assets/3.jpg'), require('./assets/4.jpg')]
+    },
+    backgroundSize: {
+      type: String as PropType<'contain' | 'cover'>,
+      default: 'cover'
+    },
+    precision: {
+      type: Number as PropType<number>,
+      default: 5
     },
     valid: {
       type: Boolean,
@@ -548,6 +599,8 @@ export const SlideCaptcha = defineComponent({
               <SlideModal
                 images={ctx.images}
                 theme={ctx.theme}
+                backgroundSize={ctx.backgroundSize}
+                precision={ctx.precision}
                 position={ctx.position}
                 onClose={ctx.dismissCaptchaModal}
                 onFailed={ctx.onFailed}
