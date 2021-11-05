@@ -1,3 +1,10 @@
+# [1.0.0-alpha.56](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.55...v1.0.0-alpha.56) (2021-11-05)
+
+
+### Features
+
+* 更新 SlideCaptcha 验证码组件，添加 precision（精度范围）、backgroundSize 属性 ([ccb6d48](https://github.com/fatesigner/antdvx/commit/ccb6d48cd57b73689c57a6d6774b8e952c8c1217))
+
 # [1.0.0-alpha.55](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.54...v1.0.0-alpha.55) (2021-11-03)
 
 
