@@ -1,3 +1,10 @@
+# [1.0.0-alpha.57](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.56...v1.0.0-alpha.57) (2021-11-08)
+
+
+### Features
+
+* 移除预设的 Ant design less 变量 ([3388aa1](https://github.com/fatesigner/antdvx/commit/3388aa11ff7f1d79921512d416e59a83c4448584))
+
 # [1.0.0-alpha.56](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.55...v1.0.0-alpha.56) (2021-11-05)
 
 
