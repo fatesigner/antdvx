@@ -23,8 +23,36 @@
 @blue-color: #1890ff;
 @purple-color: #6559cc;
 
-// ------------覆盖 Antdvx 主题----------------
+// 覆盖 Antdvx 主题
+@font-size-base: 12px;
+@line-height-base: 1.66667;
+
+// Card
+@card-head-font-size: @font-size-base;
+@card-head-padding: 8.5px;
+@card-head-height: 36px;
+@card-head-height-sm: 24px;
+@card-padding-base: 12px;
+
+// Input
+// ---
+// 当改变 font-size 时需要更新该变量，此处匹配的是 font-size=12px
+@input-padding-vertical-base: 3px;
+@input-padding-vertical-sm: 0px;
+@input-padding-vertical-lg: 3.3px;
+
+// Buttons
+@btn-height-base: 28px;
+@btn-height-lg: 32px;
+@btn-height-sm: 22px;
+
 // Table
 // --
-@table-padding-vertical: 6px;
+@table-padding-vertical: 12px;
 @table-padding-horizontal: 12px;
+
+// Tabs
+// ---
+@tabs-card-head-background: linear-gradient(135deg, #e7ecf7, #fff);
+@tabs-bar-margin: 0 0 0 0;
+@tabs-horizontal-gutter: 16px;

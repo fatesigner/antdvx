@@ -1,0 +1,197 @@
+@import "~ant-design-vue/es/button/style/mixin";
+@import "../../themes/default";
+
+.antdvx-scroll-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.antdvx-scroll-transition {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate3d(-50%, -50%, 0);
+
+  &.antdvx-scroll-transition-enter-from {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.7);
+  }
+
+  &.antdvx-scroll-transition-enter-to {
+    opacity: 1;
+    transform: translate3d(-50%, -50%, 0) scale(1);
+  }
+
+  &.antdvx-scroll-transition-leave-to {
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0) scale(0.6);
+  }
+
+  &.antdvx-scroll-transition-enter-active,
+  &.antdvx-scroll-transition-leave-active {
+    transition-timing-function: ease-out;
+    transition-duration: 0.2s;
+    transition-property: opacity, transform;
+  }
+}
+
+.antdvx-scroll-view {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  &.antdvx-scroll-transition-enter-from,
+  &.antdvx-scroll-transition-leave-to {
+    opacity: 0;
+  }
+
+  &.antdvx-scroll-transition-enter-to {
+    opacity: 1;
+  }
+
+  &.antdvx-scroll-transition-enter-active,
+  &.antdvx-scroll-transition-leave-active {
+    transition-timing-function: ease-out;
+    transition-duration: 0.2s;
+    transition-property: opacity;
+  }
+
+  &.antdvx-scroll-hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.antdvx-scroll-content {
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.antdvx-scroll-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.antdvx-scroll-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.antdvx-scroll-fill-x {
+  width: 100%;
+}
+
+.antdvx-scroll-fill-y {
+  height: 100%;
+}
+
+.antdvx-scroll-fill-xy {
+  width: 100%;
+  height: 100%;
+}
+
+.antdvx-scroll-thumb {
+  cursor: pointer;
+  cursor: grab;
+  background-color: @scrollbar-thumb-color;
+  border-radius: @scrollbar-border-radius;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: opacity 0.2s ease-out, background-color 0.3s;
+}
+
+.antdvx-scroll-horizontal {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: @scrollbar-height * 2;
+
+  > .antdvx-scroll-thumb {
+    position: absolute;
+    bottom: 0;
+    width: 0;
+    height: @scrollbar-height;
+    transition: background-color 0.2s linear, height 0.2s ease-in-out;
+  }
+}
+
+.antdvx-scroll-vertical {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: @scrollbar-width * 2;
+
+  > .antdvx-scroll-thumb {
+    position: absolute;
+    right: 0;
+    width: @scrollbar-width;
+    height: 0;
+    transition: background-color 0.2s linear, width 0.2s ease-in-out;
+  }
+}
+
+.antdvx-scroll-bar {
+  position: absolute;
+  z-index: 1;
+  transition: background-color 0.2s linear, opacity 0.2s linear;
+
+  &.antdvx-scroll-hidden {
+    opacity: 0;
+  }
+}
+
+.antdvx-scroll-view.antdvx-scrollable-x {
+  > .antdvx-scroll-bar.antdvx-scroll-horizontal:active,
+  > .antdvx-scroll-bar.antdvx-scroll-horizontal:hover {
+    background-color: @scrollbar-track-color;
+
+    > .antdvx-scroll-thumb {
+      height: @scrollbar-height * 2;
+      background-color: @scrollbar-thumb-color
+    }
+  }
+}
+
+.antdvx-scroll-view.antdvx-scrollable-y {
+  > .antdvx-scroll-bar.antdvx-scroll-vertical:active,
+  > .antdvx-scroll-bar.antdvx-scroll-vertical:hover {
+    background-color: @scrollbar-track-color;
+
+    > .antdvx-scroll-thumb {
+      width: @scrollbar-width * 2;
+      background-color: @scrollbar-thumb-color
+    }
+  }
+}
+
+.antdvx-scroll-wrap:hover > .antdvx-scroll-bar {
+  opacity: 1;
+}
+
+.antdvx-scroll-x {
+  > .antdvx-scroll-view {
+    overflow-x: auto;
+
+    > .antdvx-scroll-content {
+      width: max-content;
+    }
+  }
+}
+
+.antdvx-scroll-y {
+  > .antdvx-scroll-view {
+    overflow-y: auto;
+  }
+}

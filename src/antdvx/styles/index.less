@@ -1,4 +1,5 @@
 @import '../themes/default';
+@import './mixins';
 
 @colorArr: primary @primary-color,
 secondary @secondary-color,
@@ -14,41 +15,24 @@ cyan @cyan-color,
 blue @blue-color,
 purple @purple-color;
 
-// Set font color
+// Set color
 // ---------------------------------------------------
 each(@colorArr, {
-  .antdvx-color-@{key} {
+  .antdvx-text-@{key} {
     color: @value;
+  }
+});
+
+each(@colorArr, {
+  .antdvx-bg-@{key} {
+    background-color: @value;
   }
 });
 
 body.antdvx-theme-classic {
   // Scrollbar
   // ---------------------------------------------------
-  * {
-    &::-webkit-scrollbar {
-      width: 12px;
-      height: 12px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      cursor: pointer;
-      cursor: grab;
-      background: rgba(129, 129, 128, 0.15);
-      border-radius: 6px;
-      box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
-
-      &:hover {
-        background-color: rgba(129, 129, 128, 0.2);
-      }
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(0, 4, 40, 0.06);
-      border-radius: 0;
-      box-shadow: none;
-    }
-  }
+  .scrollbar-mixin();
 
   // Base
   // ---------------------------------------------------
@@ -227,20 +211,20 @@ body.antdvx-theme-classic {
     position: relative;
     width: 100%;
     padding-bottom: 100%;
-    cursor: pointer;
     font-size: 1.5em;
     color: #999;
+    cursor: pointer;
 
     .anticon {
       position: absolute;
-      width: 100%;
-      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition-property: font-size, transform;
-      transition-duration: 0.3s;
+      width: 100%;
+      height: 100%;
       transition-timing-function: ease-in-out;
+      transition-duration: 0.3s;
+      transition-property: font-size, transform;
     }
 
     &.ant-table-expand-unfold {

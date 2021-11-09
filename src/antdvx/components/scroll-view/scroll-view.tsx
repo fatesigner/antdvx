@@ -12,7 +12,31 @@ import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle 
 import { XButtonRefresh } from '../button';
 import { SpinnerLoading } from '../loading';
 
-import styles from './scroll-view.module.less';
+const styles = {
+  wrap: 'antdvx-scroll-wrap',
+  view: 'antdvx-scroll-view',
+  content: 'antdvx-scroll-content',
+  'fill-x': 'antdvx-scroll-fill-x',
+  'fill-y': 'antdvx-scroll-fill-y',
+  'scroll-x': 'antdvx-scroll-x',
+  'scroll-y': 'antdvx-scroll-y',
+  bar: 'antdvx-scroll-bar',
+  'hide-scrollbar': 'antdvx-scroll-hide-scrollbar',
+  thumb: 'antdvx-scroll-thumb',
+  horizontal: 'antdvx-scroll-horizontal',
+  vertical: 'antdvx-scroll-vertical',
+  hidden: 'antdvx-scroll-hidden',
+  loading: 'antdvx-scroll-loading',
+  error: 'antdvx-scroll-error',
+  transition: 'antdvx-scroll-transition',
+  'transition-enter-from': 'antdvx-scroll-transition-enter-from',
+  'transition-enter-to': 'antdvx-scroll-transition-enter-to',
+  'transition-leave-to': 'antdvx-scroll-transition-leave-to',
+  'transition-enter-active': 'antdvx-scroll-transition-enter-active',
+  'transition-leave-active': 'antdvx-scroll-transition-leave-active',
+  'scrollable-x': 'antdvx-scrollable-x',
+  'scrollable-y': 'antdvx-scrollable-y'
+};
 
 /**
  * 可滚动视图区域, 用于区域滚动
@@ -153,13 +177,13 @@ export const ScrollView = defineComponent({
     );
 
     // 最外层 element
-    const viewRef = ref<HTMLElement>(null);
+    const viewRef = ref<HTMLElement>();
     // 内容 element
-    const contentRef = ref<HTMLElement>(null);
+    const contentRef = ref<HTMLElement>();
     // 水平滚动条 element
-    const horThumbRef = ref<HTMLElement>(null);
+    const horThumbRef = ref<HTMLElement>();
     // 垂直滚动条 element
-    const verThumbRef = ref<HTMLElement>(null);
+    const verThumbRef = ref<HTMLElement>();
 
     let horDrag$: Subscription;
     let verDrag$: Subscription;
@@ -589,12 +613,12 @@ export const ScrollView = defineComponent({
       );
     } else {
       solts.push(
-        <div class={[styles['scroll-view'], ctx.native ? null : styles['hide-scrollbar']]} key='content' ref='viewRef' onScroll={ctx.onScroll}>
+        <div class={[styles.view, ctx.native ? null : styles['hide-scrollbar']]} key='content' ref='viewRef' onScroll={ctx.onScroll}>
           {ctx.native
             ? ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })
             : [
                 !ctx.loading_ && !ctx.error ? (
-                  <div class={styles['scroll-content']} ref='contentRef'>
+                  <div class={styles.content} ref='contentRef'>
                     {ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })}
                   </div>
                 ) : (
@@ -622,7 +646,7 @@ export const ScrollView = defineComponent({
     return (
       <div
         class={[
-          styles['scroll-wrap'],
+          styles.wrap,
           ctx.fillX ? styles['fill-x'] : null,
           ctx.fillY ? styles['fill-y'] : null,
           ctx.scrollX ? styles['scroll-x'] : null,
