@@ -4,24 +4,25 @@
 
 import { createApp } from 'vue';
 
+// App
+import { App } from '@/app/app';
+import { createAppRouter } from '@/app/router';
+import { Pipes } from '@/app/core/pipes';
+
 // Plugins
-import { i18n } from '@/i18n';
-import { Dayjs } from '@/plugins/dayjs';
-import { Antdvx } from '@/plugins/antdvx';
-import { VeeValidate } from '@/plugins/vee-validate';
+import { i18n } from '@/app/i18n';
+import { Dayjs } from '@/app/plugins/dayjs';
+import { Antdvx } from '@/app/plugins/antdvx';
+import { VeeValidate } from '@/app/plugins/vee-validate';
 
 // Styles
-import './main.less';
+import '@/app/styles/index.less';
 
-// App
-import App from '@/app/App.vue';
-import { Pipes } from '@/app/pipes';
-import { createAppRouter } from '@/app/router';
-
-async function mountApp() {
+export async function mountApp() {
+  const app = createApp(App);
   const router = await createAppRouter();
 
-  const app = createApp(App).use(router).use(i18n._).use(Antdvx).use(Dayjs).use(VeeValidate).use(Pipes);
+  app.use(router).use(i18n._).use(Antdvx).use(Dayjs).use(VeeValidate).use(Pipes);
 
   router.isReady().then(() => {
     // 移除首屏启动界面

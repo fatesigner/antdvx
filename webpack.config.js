@@ -20,13 +20,13 @@ module.exports = webpackConfig({
       strictMath: false,
       noIeCompat: true,
       javascriptEnabled: true
-      // additionalData: '@import "~@/plugins/antdvx/theme.less";'
-      // modifyVars: require(path.join(SRC_PATH, 'theme/antdv.theme'))
+      // additionalData: '@import "~@/app/themes/default.less";'
+      // modifyVars: require(path.join(SRC_PATH, 'app/themes/default.less'))
     }
   },
   sass: {
     implementation: require('sass')
-    // additionalData: '@import "~@/theme/default.theme.scss";'
+    // additionalData: '@import "~@/app/themes/default.less";'
   },
   devServer: {
     // host: '0.0.0.0',
@@ -83,8 +83,11 @@ module.exports = webpackConfig({
       entry: {}
     },
     WebpackHtmlEmbedSourcePlugin: {
-      prependHead: [path.join(SRC_PATH, 'shared/splash-screen/dist/splash-screen.css')],
-      prependBody: [path.join(SRC_PATH, 'shared/splash-screen/dist/splash-screen.html'), path.join(SRC_PATH, 'shared/splash-screen/dist/splash-screen.js')],
+      prependHead: [path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.css')],
+      prependBody: [
+        path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.html'),
+        path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.js')
+      ],
       tests: [
         // 将 runtime.js 输出到 index.html
         /// [\\/]runtime.*.js$/,

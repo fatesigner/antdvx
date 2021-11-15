@@ -3,39 +3,214 @@
  */
 
 import { getAccessPermission } from '@/antdvx';
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
 
-import { authService } from '@/app/services';
-import { addExceptionRoute } from '@/shared/exception';
-import { login$, logout$, roleChanged$ } from '@/app/events';
-
-// 基础路由表，可匿名访问
-const baseRoutes = [];
-
-// 业务路由表，导入 routes 目录下的 router，并分析 meta 为其添加指定的 layout
-const richRoutes = [];
-const requirePages = require.context('@/views', true, /router\.ts$/);
-requirePages.keys().forEach((filename) => {
-  let router: any = requirePages(filename).default;
-  // 若该路由可被匿名访问，将其添加至基础路由表
-  if (!router.length) {
-    router = [router];
-  }
-  router.forEach((x) => {
-    if (x?.meta?.allowAnonymous) {
-      baseRoutes.push(x);
-    } else {
-      richRoutes.push(x);
-    }
-  });
-});
-
-export const BaseRoutes = baseRoutes;
-
-export const RichRoutes = richRoutes;
+import { authService } from './core/services';
+import { addExceptionRoute } from './shared/exception';
+import { login$, logout$, roleChanged$ } from './core/events';
+import { i18nMessages } from '@/app/i18n';
 
 /**
- * 创建 App Router 实例
+ * 定义路由表
+ */
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    component: () => import('./layout/layout-sidebar/layout-sidebar.vue'),
+    children: [
+      { path: '', redirect: 'portal' },
+      {
+        path: 'async-section',
+        component: () => import('./views/async-section/async-section.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'users',
+        path: 'auth/users',
+        component: () => import('./views/auth/users/users.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'roles',
+        path: 'auth/roles',
+        component: () => import('./views/auth/roles/roles.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'button',
+        path: 'button',
+        component: () => import('./views/button/button.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'combobox',
+        path: 'combobox',
+        component: () => import('./views/combobox/combobox.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'echarts',
+        path: 'echarts',
+        component: () => import('./views/echarts/echarts.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'grid-dragable',
+        path: 'grid-dragable',
+        component: () => import('./views/grid-dragable/grid-dragable.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'iconfont',
+        path: 'iconfont',
+        component: () => import('./views/iconfont/iconfont.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'icons',
+        path: 'icons',
+        component: () => import('./views/icons/icons.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'input',
+        path: 'input',
+        component: () => import('./views/input/input.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'lazy',
+        path: 'lazy',
+        component: () => import('./views/lazy/lazy.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'pipes',
+        path: 'pipes',
+        component: () => import('./views/pipes/pipes.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'popup',
+        path: 'popup',
+        component: () => import('./views/popup/popup.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'scroll-view',
+        path: 'scroll-view',
+        component: () => import('./views/scroll-view/scroll-view.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'sticky-section',
+        path: 'sticky-section',
+        component: () => import('./views/sticky-section/sticky-section.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'table',
+        path: 'table',
+        component: () => import('./views/table/table.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'tabs',
+        path: 'tabs',
+        component: () => import('./views/tabs/tabs.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'transitions',
+        path: 'transitions',
+        component: () => import('./views/transitions/transitions.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      },
+      {
+        name: 'portal',
+        path: 'portal',
+        component: () => import('./views/portal/portal.vue'),
+        meta: {
+          label: i18nMessages.app.route.portal,
+          keepAlive: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/passport',
+    component: () => import('./layout/layout-empty.vue'),
+    children: [
+      {
+        name: 'login',
+        path: 'login',
+        component: () => import('./views/passport/login-generic.vue'),
+        meta: {
+          label: i18nMessages.app.route.passport.login,
+          keepAlive: true,
+          allowAnonymous: true
+        }
+      }
+    ]
+  }
+];
+
+/**
+ * 创建路由实例
  * @constructor
  */
 export async function createAppRouter() {
@@ -43,7 +218,7 @@ export async function createAppRouter() {
     history: createWebHashHistory(),
     linkActiveClass: 'activated',
     linkExactActiveClass: 'exact-activated',
-    routes: RichRoutes
+    routes: routes
   });
 
   // 监听用户登录事件
@@ -84,9 +259,9 @@ export async function createAppRouter() {
   // 监听用户角色切换事件，设置不同的主页
   roleChanged$.on((val) => {
     if (val === 'admin') {
-      authService.config.homePage = 'dashboard';
+      authService.config.homePage = 'portal';
     } else if (val === 'normal') {
-      authService.config.homePage = 'dashboard';
+      authService.config.homePage = 'portal';
     } else {
       // 匿名用户，设置主页为空
       authService.config.homePage = null;
@@ -112,12 +287,12 @@ export async function createAppRouter() {
     } else if (status === 403) {
       // 最终确认当前用户没有该路由的访问授权，动态添加 403 路由，该界面将提示用户未获得对应的访问权限
       console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not allowed`);
-      const name = addExceptionRoute(router, status, to, () => import('@/layout/layout-empty.vue'));
+      const name = addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue'));
       return next({ name: name });
     } else if (status === 404) {
       // 该路由不存在，动态添加 404 路由，该界面将提示用户当前页面 not found
       console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not defined`);
-      const name = addExceptionRoute(router, status, to, () => import('@/layout/layout-empty.vue'));
+      const name = addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue'));
       return next({ name: name });
     }
 

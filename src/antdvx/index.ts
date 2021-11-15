@@ -12,6 +12,7 @@ export * from './utils';
 export * from './components/async-section';
 export * from './components/button';
 export * from './components/code-editor';
+export * from './components/combobox';
 export * from './components/component-view';
 export * from './components/drawer';
 export * from './components/echarts';

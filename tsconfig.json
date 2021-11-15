@@ -53,14 +53,14 @@
     ],
     "typeRoots": [
       "node_modules/@types",
-      "src/types"
+      "src/app/types"
     ]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
-    "src/types/**/*.d.ts"
+    "src/app/types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",

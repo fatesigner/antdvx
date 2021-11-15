@@ -46,7 +46,7 @@ gulp.task('api', async function () {
       child.on('exit', function () {
         fs.writeFileSync(
           path.join(outputPath, 'index.ts'),
-          `import { httpService } from '@/app/services';\n\rimport {${tags.map((x) => ` ${x}Api`).join(',')} } from './api';\n\r` +
+          `import { httpService } from '@/core/services';\n\rimport {${tags.map((x) => ` ${x}Api`).join(',')} } from './api';\n\r` +
             tags.map((tag) => `export const ${tag.replace(tag[0], tag[0].toLowerCase())}Api = new ${tag}Api(null, '', httpService as any);`).join('\n\r') +
             '\n',
           {

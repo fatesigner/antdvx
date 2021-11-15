@@ -16,7 +16,7 @@ module.exports = {
     // '^.+\\.jsx?$': 'babel-jest',
     '^.+\\.tsx?$': 'ts-jest'
   },
-  testRegex: ['(/__tests__/.*|(\\.|/)(test))\\.jsx?$', '(/__tests__/.*|(\\.|/)(test))\\.tsx?$'],
+  testRegex: ['(/tests/.*|(\\.|/)(test))\\.jsx?$', '(/tests/.*|(\\.|/)(test))\\.tsx?$'],
   // testMatch: ['./test/*.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   transformIgnorePatterns: ['<rootDir>/node_modules/(?!)']

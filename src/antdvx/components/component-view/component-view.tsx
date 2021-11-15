@@ -69,7 +69,6 @@ export const ComponentView = defineComponent({
     const route = useRoute();
     const router = useRouter();
 
-    const comp = shallowRef();
     const current = shallowRef();
 
     const activeKey_ = ref<string>(props.comps?.[0]?.name);
@@ -88,8 +87,7 @@ export const ComponentView = defineComponent({
           c = props.comps?.[0];
         }
 
-        current.value = c;
-        comp.value = toRaw(c.component);
+        current.value = toRaw(c);
         activeKey_.value = c.name;
 
         // 更新 route 参数
@@ -136,7 +134,6 @@ export const ComponentView = defineComponent({
     });
 
     return {
-      comp,
       current,
       toggle
     };
@@ -145,25 +142,25 @@ export const ComponentView = defineComponent({
     return ctx.current ? (
       ctx.$slots.default ? (
         ctx.$slots.default(ctx.current)
-      ) : ctx.comp ? (
+      ) : ctx.current?.component ? (
         ctx.keepAlive || !!ctx.current?.keepAlive ? (
           ctx.animation === 'slide' ? (
             <TransitionSlide mode='out-in'>
-              <KeepAlive>{h(ctx.comp, ctx.current.props)}</KeepAlive>
+              <KeepAlive>{h(ctx.current.component, ctx.current.props)}</KeepAlive>
             </TransitionSlide>
           ) : ctx.animation === 'opacity' ? (
             <TransitionOpacity mode='out-in'>
-              <KeepAlive>{h(ctx.comp, ctx.current.props)}</KeepAlive>
+              <KeepAlive>{h(ctx.current.component, ctx.current.props)}</KeepAlive>
             </TransitionOpacity>
           ) : (
-            <KeepAlive>{h(ctx.comp, ctx.current.props)}</KeepAlive>
+            <KeepAlive>{h(ctx.current.component, ctx.current.props)}</KeepAlive>
           )
         ) : ctx.animation === 'slide' ? (
-          <TransitionSlide mode='out-in'>{h(ctx.comp, ctx.current.props)}</TransitionSlide>
+          <TransitionSlide mode='out-in'>{h(ctx.current.component, ctx.current.props)}</TransitionSlide>
         ) : ctx.animation === 'opacity' ? (
-          <TransitionOpacity mode='out-in'>{h(ctx.comp, ctx.current.props)}</TransitionOpacity>
+          <TransitionOpacity mode='out-in'>{h(ctx.current.component, ctx.current.props)}</TransitionOpacity>
         ) : (
-          h(ctx.comp, ctx.current.props)
+          h(ctx.current.component, ctx.current.props)
         )
       ) : (
         ''

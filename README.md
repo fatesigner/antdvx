@@ -69,6 +69,7 @@ npm run lint
 
 ## 项目结构
 ``` bash
+├── .github                                  // github actions
 ├── .husky                                   // husky 钩子，用于 lint 和 git 消息提交规范
 │   ├── commit-msg                           // 验证 git 提交的消息规范
 │   └── pre-commit                           // 提交消息前，执行 lint-staged
@@ -92,73 +93,75 @@ npm run lint
 │   └── gulpfile.js                          // 管理 gulp 任务
 ├── coverage                                 // 执行测试后生成的代码覆盖率信息
 ├── src                                      // 项目源代码
-│   ├── api                                  // 定义 Api 接口，可使用 openapi-generator 生成此目录
-│   ├── app                                  // Api 
-│   │   ├── App.vue                          // App 组件
-│   │   ├── constants.ts                     // 定义全局常量
-│   │   ├── event.ts                         // 定义全局事件
-│   │   ├── inversify.ts                     // IOC 容器，注入依赖
-│   │   ├── pipes.ts                         // 定义通用过滤器
-│   │   ├── router.ts                        // App router
-│   │   ├── services.ts                      // 从 IOC 容器中获取服务实例
-│   │   │   ├── auth.service.ts              // 授权服务，指定当前 App 路由的授权逻辑
-│   │   │   ├── http.service.ts              // Http 服务，基于 Axios
-│   │   │   ├── session.service.ts           // 用户信息管理服务，用于保存当前登录用户的信息
-│   │   │   └── storage.service.ts           // 客户端持久化缓存服务（localstorage）
-│   │   └── store.ts                         // App store
+│   ├── api                                  // Api 接口，可使用 openapi-generator 生成此目录
+│   ├── app                                  // 应用的组件、模块及服务 
+│   │   ├── core                             // 包含应用所需要的核心组件、模块及服务
+│   │   │   ├── constants.ts                 // 全局常量
+│   │   │   ├── event.ts                     // 全局事件
+│   │   │   ├── inversify.ts                 // IOC 容器，注入依赖
+│   │   │   ├── pipes.ts                     // 通用过滤器
+│   │   │   ├── services.ts                  // 从 IOC 容器中获取服务实例
+│   │   │   │   ├── auth.service.ts          // 授权服务，指定当前 App 路由的授权逻辑
+│   │   │   │   ├── http.service.ts          // Http 服务，基于 Axios
+│   │   │   │   ├── session.service.ts       // 用户信息管理服务，用于保存当前登录用户的信息
+│   │   │   │   └── storage.service.ts       // 客户端持久化缓存服务（localstorage）
+│   │   │   └── store.ts                     // 全局状态容器
+│   │   ├── i18n                             // 国际化配置
+│   │   │   ├── locales
+│   │   │   │   ├── en-US.ts                 // 英语                    
+│   │   │   │   └── zh-CN.ts                 // 中文
+│   │   │   ├── startup.ts
+│   │   │   └── messages.ts                  // 定义全局国际化字符串
+│   │   ├── layout                           // 放置 layout（母版页）
+│   │   │   ├── layout-sidebar               // 包含侧边栏的 layout
+│   │   │   │   ├── components               // 组件
+│   │   │   │   ├── layout-sidebar.vue
+│   │   │   │   └── store.ts                 // store
+│   │   │   ├── layout-empty.vue             // 空 layout（不包含任何组件，可用于登录、报表等界面的展示）
+│   │   │   └── layout-exception.vue         // 显示异常的 layout（可用于界面出错后的展示）
+│   │   ├── plugins                          // 放置组件库的配置（初始化）代码，将在 main.ts 中使用 app.use 引入
+│   │   │   ├── antdvx
+│   │   │   │   ├── icons                    // 自定义图标
+│   │   │   │   ├── antdvx.less              // 导入 antdvx 样式库或者覆盖部分样式
+│   │   │   │   └── startup.ts                 // 配置 antdvx，比如 notification 的 duration 参数
+│   │   │   ├── tailwindcss                  // tailwindcss
+│   │   │   │   ├── tailwindcss.config.js    // 配置 tailwindcss 插件
+│   │   │   │   └── tailwindcss.less         // 导入 tailwindcss 模块
+│   │   │   ├── vee-validate                 // 配置 vee-validate
+│   │   │   │   ├── rules                    // 自定义验证规则
+│   │   │   │   ├── startup.ts
+│   │   │   │   └── vee-validate.less        // 配置 invalid 状态的样式
+│   │   │   └── dayjs.ts                     // dayjs 配置，可在此指定当前 App 语言切换后，dayjs 的处理逻辑
+│   │   ├── shared                           // 放置本地的一些通用组件
+│   │   ├── styles                       
+│   │   │   └── index.less                   // 全局样式 
+│   │   ├── types                            // 接口、类型文件
+│   │   │   ├── shims                        // 第三方模块                        
+│   │   │   ├── env.ts                       // 环境变量
+│   │   │   ├── menu.ts                      // 菜单
+│   │   │   ├── router.ts                    // 路由
+│   │   │   └── user.ts                      // 用户信息
+│   │   ├── utils                            // 全局工具函数
+│   │   └── views                            // 视图（路由）
+│   │   │   ├── passport
+│   │   │   │   ├── login-generic            // 登录页面
+│   │   │   ├── auth                         // 授权模块
+│   │   │   │   ├── menus                    // 菜单配置界面
+│   │   │   │   ├── roles                    // 权限清单界面
+│   │   │   │   ├── users                    // 用户清单界面
+│   │   │   └── portal                       // 应用启动入口（起始页）
+│   │   │   │   └──portal.vue
+│   │   │   │
+│   │   ├── app                              // app 根组件
+│   │   └── router                           // 路由表及配置
 │   ├── assets                               // 放置静态资源（image、json、font）
-│   ├── env                                  // 环境变量
+│   ├── envs                                 // 环境变量
 │   │   ├── .env                             // 默认环境变量，可被覆盖
 │   │   ├── .env.development                 // 开发环境变量
 │   │   ├── .env.production                  // 生产环境变量
-│   │   ├── .env.test                        // 测试环境变量
-│   ├── i18n                                 // 国际化配置
-│   │   ├── locales
-│   │   │   ├── en-US.ts                     // 英语                    
-│   │   │   └── zh-CN.ts                     // 中文
-│   │   ├── index.ts
-│   │   └── messages.ts                      // 定义全局国际化字符串
-│   ├── layout                               // 放置 layout（母版页）
-│   │   ├── layout-sidebar                   // 包含侧边栏的 layout
-│   │   │   ├── components                   // 组件
-│   │   │   ├── layout-sidebar.vue
-│   │   │   └── store.ts                     // store
-│   │   ├── layout-empty.vue                 // 空 layout（不包含任何组件，可用于登录、报表等界面的展示）
-│   │   └── layout-exception.vue             // 显示异常的 layout（可用于界面出错后的展示）
-│   ├── plugins                              // 放置组件库的配置（初始化）代码，将在 main.ts 中使用 app.use 引入
-│   │   ├── antdvx
-│   │   │   ├── icons                        // 自定义图标
-│   │   │   ├── index.ts                     // 配置 antdvx，比如 notification 的 duration 参数
-│   │   │   └── theme.less                   // 配置 antdvx 主题
-│   │   ├── tailwindcss                      // 配置 tailwindcss
-│   │   ├── vee-validate                     // 配置 vee-validate
-│   │   │   ├── rules                        // 自定义验证规则
-│   │   │   ├── index.ts
-│   │   │   └── vee-validate.less            // 自定义用于 invalid 状态的样式
-│   │   └── dayjs.ts                         // dayjs 配置，可在此指定当前 App 语言切换后，dayjs 的处理逻辑
-│   ├── shared                               // 放置本地的一些通用组件
-│   ├── types                                // 接口、类型文件
-│   │   ├── shims                            // 第三方模块                        
-│   │   ├── env.ts                           // 环境变量
-│   │   ├── menu.ts                          // 菜单
-│   │   ├── route.ts                         // 路由
-│   │   └── user.ts                          // 用户信息
-│   ├── utils                                // 全局工具函数
-│   ├── views                                // 视图（路由）
-│   │   ├── account                          // 账户模块
-│   │   │   ├── login                        // 登录页面
-│   │   │   └── router.ts                    // 定义当前视图的路由信息，该路由将会在 @/app/router 中自动导入
-│   │   ├── auth                             // 授权模块
-│   │   │   ├── menus                        // 菜单配置界面
-│   │   │   ├── roles                        // 权限清单界面
-│   │   │   ├── users                        // 用户清单界面
-│   │   │   └── router.ts
-│   │   ├── dashboard                        // 首页
-│   │   │   ├── dashboard.vue
-│   │   │   └── router.ts
-│   ├── index.ejs                            // index.html
-│   ├── main.less                            // 全局样式
-│   └── main.ts                              // 入口（初始化、导入插件）
+│   │   └── .env.test                        // 测试环境变量
+│   ├── index.ejs                            // 入口 html
+│   └── main.ts                              // 初始化、挂载 App
 ├── tests                                    // tests
 │   └── main.spec.ts
 ├── .browserslistrc                          // 定义目标浏览器配置，可在不同前端工具之间共享

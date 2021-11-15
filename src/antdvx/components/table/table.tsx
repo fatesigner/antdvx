@@ -14,7 +14,7 @@ import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
-import { IconAngleDoubleDown } from '../iconfont';
+import { IconAddBoxLine, IconAngleDoubleDown, IconCheckboxIndeterminateLine } from '../iconfont';
 
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
 
@@ -707,8 +707,7 @@ export const XTable = defineComponent({
                     'tw-items-center',
                     'tw-justify-between',
                     ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1'
-                  ]}
-                >
+                  ]}>
                   <div class={['tw-flex-1 tw-overflow-hidden', ctx.options.bordered ? undefined : 'tw-p-2']}>
                     {ctx.$slots?.[name]?.({
                       ...slotData,
@@ -774,13 +773,12 @@ export const XTable = defineComponent({
           ? function ({ expandable, expanded, needIndentSpaced, onExpand, prefixCls, record }) {
               return (
                 <div
-                  class={['ant-table-expand-icon', expanded ? 'ant-table-expand-unfold' : undefined]}
+                  class={['antdvx-table-expand-icon', expanded ? 'antdvx-table-expand-unfold' : undefined]}
                   title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
                   onClick={(e) => {
                     onExpand(record, e);
-                  }}
-                >
-                  <IconAngleDoubleDown />
+                  }}>
+                  {expanded ? <IconCheckboxIndeterminateLine /> : <IconAddBoxLine />}
                 </div>
               );
             }

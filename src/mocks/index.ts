@@ -5,11 +5,10 @@
 import { timer } from 'rxjs';
 import { Random, mock } from 'mockjs';
 
-import { IUser } from '@/types/user';
-import { IRole } from '@/types/role';
-import { ROLES } from '@/app/constants';
-import { httpService } from '@/app/services';
-import { isFunction } from '@fatesigner/utils/type-check';
+import { IUser } from '@/app/types/user';
+import { IRole } from '@/app/types/role';
+import { ROLES } from '@/app/core/constants';
+import { httpService } from '@/app/core/services';
 
 export const Api = new (class {
   get host() {
