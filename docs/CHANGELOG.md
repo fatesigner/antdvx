@@ -1,3 +1,10 @@
+# [1.0.0-alpha.59](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.58...v1.0.0-alpha.59) (2021-11-15)
+
+
+### Features
+
+* 更新项目结构 ([9685f5b](https://github.com/fatesigner/antdvx/commit/9685f5be29bd28a05f2ae69207b9e9c842804b63))
+
 # [1.0.0-alpha.58](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.57...v1.0.0-alpha.58) (2021-11-09)
 
 # [1.0.0-alpha.57](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.56...v1.0.0-alpha.57) (2021-11-08)
