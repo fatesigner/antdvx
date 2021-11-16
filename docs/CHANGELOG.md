@@ -1,3 +1,10 @@
+# [1.0.0-alpha.60](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.59...v1.0.0-alpha.60) (2021-11-16)
+
+
+### Features
+
+* 更新 ScrollView 组件，移除用于内容区域的 content 元素 ([6670f59](https://github.com/fatesigner/antdvx/commit/6670f5925fd387df795ea37ec221f172c19d81f4))
+
 # [1.0.0-alpha.59](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.58...v1.0.0-alpha.59) (2021-11-15)
 
 
