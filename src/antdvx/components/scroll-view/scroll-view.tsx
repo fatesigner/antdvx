@@ -16,12 +16,15 @@ const styles = {
   wrap: 'antdvx-scroll-wrap',
   view: 'antdvx-scroll-view',
   content: 'antdvx-scroll-content',
-  'fill-x': 'antdvx-scroll-fill-x',
-  'fill-y': 'antdvx-scroll-fill-y',
-  'scroll-x': 'antdvx-scroll-x',
-  'scroll-y': 'antdvx-scroll-y',
+  footer: 'antdvx-scroll-footer',
+  fillX: 'antdvx-scroll-fill-x',
+  fillY: 'antdvx-scroll-fill-y',
+  scrollX: 'antdvx-scroll-x',
+  scrollY: 'antdvx-scroll-y',
+  scrollableX: 'antdvx-scrollable-x',
+  scrollableY: 'antdvx-scrollable-y',
   bar: 'antdvx-scroll-bar',
-  'hide-scrollbar': 'antdvx-scroll-hide-scrollbar',
+  hideScrollbar: 'antdvx-scroll-hide-scrollbar',
   thumb: 'antdvx-scroll-thumb',
   horizontal: 'antdvx-scroll-horizontal',
   vertical: 'antdvx-scroll-vertical',
@@ -33,9 +36,7 @@ const styles = {
   'transition-enter-to': 'antdvx-scroll-transition-enter-to',
   'transition-leave-to': 'antdvx-scroll-transition-leave-to',
   'transition-enter-active': 'antdvx-scroll-transition-enter-active',
-  'transition-leave-active': 'antdvx-scroll-transition-leave-active',
-  'scrollable-x': 'antdvx-scrollable-x',
-  'scrollable-y': 'antdvx-scrollable-y'
+  'transition-leave-active': 'antdvx-scroll-transition-leave-active'
 };
 
 /**
@@ -46,6 +47,11 @@ export interface IScrollViewOptions {
    * 原生滚动模式, 默认为 false
    */
   native?: boolean;
+
+  /**
+   * 内容区域高度模式, 默认为 min 即 min-height: 100%;
+   */
+  contentHeight?: boolean;
 
   /**
    * 自动隐藏滚动条, 默认为 false
@@ -159,6 +165,7 @@ export const ScrollView = defineComponent({
   emits: ['initialized', 'scroll'],
   setup(props: any, { emit }) {
     let resizeObs: ResizeObserver;
+    let mutationObs: MutationObserver;
 
     const error = ref();
     const loading_ = ref(!!props.initialize);
@@ -178,8 +185,6 @@ export const ScrollView = defineComponent({
 
     // 最外层 element
     const viewRef = ref<HTMLElement>();
-    // 内容 element
-    const contentRef = ref<HTMLElement>();
     // 水平滚动条 element
     const horThumbRef = ref<HTMLElement>();
     // 垂直滚动条 element
@@ -217,9 +222,9 @@ export const ScrollView = defineComponent({
           horThumbRef.value.style.width = xBarWidth + '%';
           horThumbRef.value.style.height = xBarWidth ? '' : '0';
           if (xBarWidth) {
-            addClass(viewRef.value, styles['scrollable-x']);
+            addClass(viewRef.value, styles.scrollableX);
           } else {
-            removeClass(viewRef.value, styles['scrollable-x']);
+            removeClass(viewRef.value, styles.scrollableX);
           }
           // 更新 limit
           scrollLimit.left.max = horThumbRef.value.parentElement.offsetWidth - horThumbRef.value.offsetWidth;
@@ -229,9 +234,9 @@ export const ScrollView = defineComponent({
           verThumbRef.value.style.width = yBarHeight ? '' : '0';
           verThumbRef.value.style.height = yBarHeight + '%';
           if (yBarHeight) {
-            addClass(viewRef.value, styles['scrollable-y']);
+            addClass(viewRef.value, styles.scrollableY);
           } else {
-            removeClass(viewRef.value, styles['scrollable-y']);
+            removeClass(viewRef.value, styles.scrollableY);
           }
           // 更新 limit
           scrollLimit.top.max = verThumbRef.value.parentElement.offsetHeight - verThumbRef.value.offsetHeight;
@@ -270,7 +275,7 @@ export const ScrollView = defineComponent({
 
     const updateHorScroll = (xMove: number, transition = false) => {
       if (viewRef.value) {
-        const scrollLeft = (contentRef.value.offsetWidth / viewRef.value.clientWidth) * xMove;
+        const scrollLeft = (viewRef.value.scrollWidth / viewRef.value.clientWidth) * xMove;
         if (transition) {
           scrollTo_(viewRef.value, scrollLeft, null, transition ? scrollDuration : 0);
         } else {
@@ -281,7 +286,7 @@ export const ScrollView = defineComponent({
 
     const updateVerScroll = (yMove: number, transition = false) => {
       if (viewRef.value) {
-        const scrollTop = (contentRef.value.offsetHeight / viewRef.value.clientHeight) * yMove;
+        const scrollTop = (viewRef.value.scrollHeight / viewRef.value.clientHeight) * yMove;
         if (transition) {
           scrollTo_(viewRef.value, null, scrollTop, transition ? scrollDuration : 0);
         } else {
@@ -292,19 +297,19 @@ export const ScrollView = defineComponent({
 
     const resizeLayout = debounce(
       function () {
-        if (!contentRef.value) {
+        if (!viewRef.value) {
           return;
         }
 
         let xBarWidth = 0;
         let yBarHeight = 0;
 
-        if (contentRef.value.offsetWidth > viewRef.value.clientWidth) {
-          xBarWidth = ((viewRef.value.clientWidth * 100) / contentRef.value.offsetWidth).toFixed(1) as any;
+        if (viewRef.value.scrollWidth > viewRef.value.clientWidth) {
+          xBarWidth = ((viewRef.value.clientWidth * 100) / viewRef.value.scrollWidth).toFixed(1) as any;
         }
 
-        if (contentRef.value.offsetHeight > viewRef.value.clientHeight) {
-          yBarHeight = ((viewRef.value.clientHeight * 100) / contentRef.value.offsetHeight).toFixed(1) as any;
+        if (viewRef.value.scrollHeight > viewRef.value.clientHeight) {
+          yBarHeight = ((viewRef.value.clientHeight * 100) / viewRef.value.scrollHeight).toFixed(1) as any;
         }
 
         updateThumbSize(xBarWidth, yBarHeight);
@@ -316,12 +321,12 @@ export const ScrollView = defineComponent({
     // 外部操作（滚轮、触控）触发滚动
     const onScroll = (e) => {
       emit('scroll', e);
-      if (!contentRef.value || dragMoving) {
+      if (!viewRef.value || dragMoving) {
         return;
       }
 
-      const xMove = (viewRef.value.scrollLeft * viewRef.value.clientWidth) / contentRef.value.offsetWidth;
-      const yMove = (viewRef.value.scrollTop * viewRef.value.clientHeight) / contentRef.value.offsetHeight;
+      const xMove = (viewRef.value.scrollLeft * viewRef.value.clientWidth) / viewRef.value.scrollWidth;
+      const yMove = (viewRef.value.scrollTop * viewRef.value.clientHeight) / viewRef.value.scrollHeight;
 
       updateHorThumbStyle(xMove);
       updateVerThumbStyle(yMove);
@@ -471,12 +476,19 @@ export const ScrollView = defineComponent({
 
       // 监听窗口尺寸变化，重新设置滑块尺寸
       if (props.autoresize) {
-        if (contentRef.value) {
+        if (viewRef.value && !props.native) {
           if (!resizeObs) {
             resizeObs = new ResizeObserver(resizeLayout);
+            mutationObs = new MutationObserver(resizeLayout);
           }
-          resizeObs.observe(viewRef.value);
-          resizeObs.observe(contentRef.value);
+          // 观察 viewContainer 元素的变化
+          mutationObs.observe(viewRef.value, {
+            childList: true
+          });
+          // 观察 viewContainer 内所有子元素的尺寸变化
+          for (let i = 0; i < viewRef.value.children.length; i++) {
+            resizeObs.observe(viewRef.value.children[i]);
+          }
         }
       }
 
@@ -496,6 +508,7 @@ export const ScrollView = defineComponent({
         })
         .catch((err: Error) => {
           error.value = err.message;
+          console.error(err);
         });
     }, true);
 
@@ -549,10 +562,12 @@ export const ScrollView = defineComponent({
 
     onUnmounted(() => {
       // 移除视窗区域尺寸的监听
-      if (contentRef.value) {
+      if (viewRef.value && !props.native) {
         if (resizeObs) {
-          resizeObs.unobserve(viewRef.value);
-          resizeObs.unobserve(contentRef.value);
+          mutationObs.disconnect();
+          for (let i = 0; i < viewRef.value.children.length; i++) {
+            resizeObs.unobserve(viewRef.value.children[i]);
+          }
         }
       }
     });
@@ -560,7 +575,6 @@ export const ScrollView = defineComponent({
     return {
       i18nMessages,
       viewRef,
-      contentRef,
       horThumbRef,
       verThumbRef,
       error,
@@ -574,83 +588,14 @@ export const ScrollView = defineComponent({
     };
   },
   render(ctx) {
-    const solts = [];
-    if (ctx.loading_) {
-      solts.push(
-        <div class={styles.transition} key='loading'>
-          {ctx.$slots?.loading ? (
-            ctx.$slots?.loading()
-          ) : (
-            <div class={styles.loading}>
-              <div class='tw-space-y-2'>
-                <div class='tw-text-center'>
-                  <SpinnerLoading size={ctx.loadingSize} />
-                </div>
-                {ctx.loadingText ? <div class='tw-mt-5'>{ctx.loadingText}</div> : ''}
-              </div>
-            </div>
-          )}
-        </div>
-      );
-    } else if (ctx.error) {
-      solts.push(
-        <div class={styles.transition} key='error'>
-          {ctx.$slots?.error ? (
-            ctx.$slots?.error({ error: ctx.error, reload: ctx.reload })
-          ) : (
-            <div class={styles.error}>
-              <Alert
-                type='error'
-                show-icon
-                v-slots={{
-                  message: () => ctx.$t(i18nMessages.antd.asyncAction.error),
-                  description: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
-                }}
-              />
-            </div>
-          )}
-        </div>
-      );
-    } else {
-      solts.push(
-        <div class={[styles.view, ctx.native ? null : styles['hide-scrollbar']]} key='content' ref='viewRef' onScroll={ctx.onScroll}>
-          {ctx.native
-            ? ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })
-            : [
-                !ctx.loading_ && !ctx.error ? (
-                  <div class={styles.content} ref='contentRef'>
-                    {ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })}
-                  </div>
-                ) : (
-                  ''
-                ),
-                ctx.scrollX ? (
-                  <div class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]} onClick={ctx.horBarClick}>
-                    <div class={styles.thumb} ref='horThumbRef' />
-                  </div>
-                ) : (
-                  ''
-                ),
-                ctx.scrollY ? (
-                  <div class={[styles.bar, styles.vertical, ctx.autohide ? styles.hidden : null]} onClick={ctx.verBarClick}>
-                    <div class={styles.thumb} ref='verThumbRef' />
-                  </div>
-                ) : (
-                  ''
-                )
-              ]}
-        </div>
-      );
-    }
-
     return (
       <div
         class={[
           styles.wrap,
-          ctx.fillX ? styles['fill-x'] : null,
-          ctx.fillY ? styles['fill-y'] : null,
-          ctx.scrollX ? styles['scroll-x'] : null,
-          ctx.scrollY ? styles['scroll-y'] : null
+          ctx.fillX ? styles.fillX : null,
+          ctx.fillY ? styles.fillY : null,
+          ctx.scrollX ? styles.scrollX : null,
+          ctx.scrollY ? styles.scrollY : null
         ]}
       >
         <TransitionGroup
@@ -660,7 +605,59 @@ export const ScrollView = defineComponent({
           enterActiveClass={styles['transition-enter-active']}
           leaveActiveClass={styles['transition-enter-active']}
         >
-          {solts}
+          {ctx.loading_ ? (
+            <div class={styles.transition} key='loading'>
+              {ctx.$slots?.loading ? (
+                ctx.$slots?.loading()
+              ) : (
+                <div class={styles.loading}>
+                  <div class='tw-space-y-2'>
+                    <div class='tw-text-center'>
+                      <SpinnerLoading size={ctx.loadingSize} />
+                    </div>
+                    {ctx.loadingText ? <div class='tw-mt-5'>{ctx.loadingText}</div> : ''}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : ctx.error ? (
+            <div class={styles.transition} key='error'>
+              {ctx.$slots?.error ? (
+                ctx.$slots?.error({ error: ctx.error, reload: ctx.reload })
+              ) : (
+                <div class={styles.error}>
+                  <Alert
+                    type='error'
+                    show-icon
+                    v-slots={{
+                      message: () => ctx.$t(i18nMessages.antd.asyncAction.error),
+                      description: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div class={[styles.view, ctx.native ? null : styles.hideScrollbar]} key='content' ref='viewRef' onScroll={ctx.onScroll}>
+              {[
+                !ctx.loading_ && !ctx.error ? [ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })] : '',
+                !ctx.native && ctx.scrollX ? (
+                  <div class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]} onClick={ctx.horBarClick}>
+                    <div class={styles.thumb} ref='horThumbRef' />
+                  </div>
+                ) : (
+                  ''
+                ),
+                !ctx.native && ctx.scrollY ? (
+                  <div class={[styles.bar, styles.vertical, ctx.autohide ? styles.hidden : null]} onClick={ctx.verBarClick}>
+                    <div class={styles.thumb} ref='verThumbRef' />
+                  </div>
+                ) : (
+                  ''
+                )
+              ]}
+            </div>
+          )}
         </TransitionGroup>
       </div>
     );
