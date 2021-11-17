@@ -1,6 +1,5 @@
 <template>
-  <ScrollView fill-y scroll-y class="tw-bg-gray-100">
-    <div class="tw-p-4 tw-text-lg tw-shadow-md tw-bg-white">Echarts 示例</div>
+  <PageWrapper title="Echarts">
     <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4 tw-p-4">
       <Chart
         v-for="chart in charts"
@@ -14,7 +13,7 @@
         </template>
       </Chart>
     </div>
-  </ScrollView>
+  </PageWrapper>
 </template>
 
 <script lang="ts">
@@ -22,10 +21,12 @@ import { defineComponent } from 'vue';
 import { ScrollView, echarts } from '@/antdvx';
 
 import { Chart } from '@/app/shared/chart';
+import { PageWrapper } from '@/app/shared/page-wrapper';
 
 export default defineComponent({
   components: {
     Chart,
+    PageWrapper,
     ScrollView
   },
   setup() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="tw-flex tw-flex-col tw-h-full">
+  <div class="tw-flex tw-flex-col tw-h-full tw-p-2 tw-bg-white">
     <div class="tw-p-4 tw-space-y-4 box-shadow-bottom">
       <div class="tw-text-lg tw-space-x-4">
         <span>可拖拽两栏布局</span>
@@ -29,10 +29,12 @@
 </template>
 
 <script lang="ts">
+import { timer } from 'rxjs';
 import { defineComponent, ref } from 'vue';
 import { Input, InputSearch } from 'ant-design-vue';
 import { ANTDVX_SIZES, GridDragable, ScrollView, XButton, XButtonRefresh } from '@/antdvx';
-import { timer } from 'rxjs';
+
+import { PageWrapper } from '@/app/shared/page-wrapper';
 
 export default defineComponent({
   components: {
@@ -40,6 +42,7 @@ export default defineComponent({
     ScrollView,
     GridDragable,
     XButtonRefresh,
+    PageWrapper,
     [Input.name]: Input,
     [InputSearch.name]: InputSearch
   },

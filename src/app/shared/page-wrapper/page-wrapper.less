@@ -1,0 +1,51 @@
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.page-header {
+  padding: 8px 16px 0 16px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px #00152914;
+}
+
+.page-header-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.page-header-actions {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.page-header-title {
+  margin-right: 16px;
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.85);
+}
+
+.page-container {
+  position: relative;
+  flex: 1;
+}
+
+.page-wrapper-loading {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  z-index: 100;
+  transform: translate3d(-50%, 0, 0);
+}
+
+.page-wrapper-empty {
+  position: absolute;
+  top: 160px;
+  left: 50%;
+  z-index: 100;
+  transform: translate3d(-50%, 0, 0);
+}

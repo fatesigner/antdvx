@@ -34,7 +34,7 @@ import { computed, defineComponent, onBeforeUnmount, onMounted, ref, useCssModul
 
 import { i18nMessages } from '@/app/i18n';
 import { ENV } from '@/app/core/constants';
-import { LayoutSidebarStore } from '@/app/layout/layout-sidebar/store';
+import { AppStore } from '@/app/core/store';
 
 import { Menus } from '../menus';
 
@@ -58,21 +58,21 @@ export default defineComponent({
     const borderRef = ref<HTMLElement>(null);
 
     const collapsed = computed({
-      get: () => LayoutSidebarStore.state.collapsed,
+      get: () => AppStore.state.collapsed,
       set(val) {
-        LayoutSidebarStore.setCollapsed(val);
+        AppStore.setCollapsed(val);
       }
     });
 
     const theme = computed({
-      get: () => LayoutSidebarStore.state.theme,
+      get: () => AppStore.state.theme,
       set(val) {
-        LayoutSidebarStore.setTheme(val);
+        AppStore.setTheme(val);
       }
     });
 
     const toggleCollapsed = (val?: boolean) => {
-      LayoutSidebarStore.setCollapsed(val ?? !collapsed.value);
+      AppStore.setCollapsed(val ?? !collapsed.value);
     };
 
     const onScroll = (e) => {

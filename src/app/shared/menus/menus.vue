@@ -14,7 +14,7 @@ import { computed, defineComponent, nextTick, ref, watch } from 'vue';
 
 import { i18nMessages } from '@/app/i18n';
 import { IMenu } from '@/app/types/menu';
-import { LayoutSidebarStore } from '@/app/layout/layout-sidebar/store';
+import { AppStore } from '@/app/core/store';
 
 import MenuItem from './menu-item.vue';
 
@@ -35,9 +35,9 @@ export default defineComponent({
     const menus = ref<IMenu[]>(require('@/assets/auth/menus.json'));
 
     const collapsed = computed({
-      get: () => LayoutSidebarStore.state.collapsed,
+      get: () => AppStore.state.collapsed,
       set(val) {
-        LayoutSidebarStore.setCollapsed(val);
+        AppStore.setCollapsed(val);
       }
     });
 
@@ -46,9 +46,9 @@ export default defineComponent({
     const selectedKeys = ref([]);
 
     const theme = computed({
-      get: () => LayoutSidebarStore.state.theme,
+      get: () => AppStore.state.theme,
       set(val) {
-        LayoutSidebarStore.setTheme(val);
+        AppStore.setTheme(val);
       }
     });
 

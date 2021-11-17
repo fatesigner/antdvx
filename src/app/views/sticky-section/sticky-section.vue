@@ -1,5 +1,5 @@
 <template>
-  <ScrollView fill-y scroll-y native>
+  <PageWrapper title="Sticky Section">
     <StickySection class="tw-sticky tw-top-0 tw-bottom-0 tw-z-10" :class-name="['tw-cursor-pointer']" title="Click to show Package" shadow-top shadow-bottom>
       <template #default="{ sticky }">
         <div class="tw-flex tw-items-center tw-space-x-2 tw-bg-white tw-p-4">
@@ -31,17 +31,20 @@
     <div class="tw-p-4">
       <div v-for="item in 100">{{ item }}</div>
     </div>
-  </ScrollView>
+  </PageWrapper>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { IconArrowDownSLine, ScrollView, StickySection } from '@/antdvx';
 
+import { PageWrapper } from '@/app/shared/page-wrapper';
+
 export default defineComponent({
   components: {
     ScrollView,
     StickySection,
+    PageWrapper,
     IconArrowDownSLine
   },
   setup() {

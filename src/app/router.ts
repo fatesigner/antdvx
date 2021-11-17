@@ -16,169 +16,98 @@ import { i18nMessages } from '@/app/i18n';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: () => import('./layout/layout-sidebar/layout-sidebar.vue'),
+    component: () => import('./layout/layout-sidebar.vue'),
     children: [
       { path: '', redirect: 'portal' },
       {
+        name: 'async-section',
         path: 'async-section',
-        component: () => import('./views/async-section/async-section.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/async-section/async-section.vue')
       },
       {
         name: 'users',
         path: 'auth/users',
-        component: () => import('./views/auth/users/users.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/auth/users/users.vue')
       },
       {
         name: 'roles',
         path: 'auth/roles',
-        component: () => import('./views/auth/roles/roles.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/auth/roles/roles.vue')
       },
       {
         name: 'button',
         path: 'button',
-        component: () => import('./views/button/button.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/button/button.vue')
       },
       {
         name: 'combobox',
         path: 'combobox',
-        component: () => import('./views/combobox/combobox.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/combobox/combobox.vue')
       },
       {
         name: 'echarts',
         path: 'echarts',
-        component: () => import('./views/echarts/echarts.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/echarts/echarts.vue')
       },
       {
         name: 'grid-dragable',
         path: 'grid-dragable',
-        component: () => import('./views/grid-dragable/grid-dragable.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/grid-dragable/grid-dragable.vue')
       },
       {
         name: 'iconfont',
         path: 'iconfont',
-        component: () => import('./views/iconfont/iconfont.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/iconfont/iconfont.vue')
       },
       {
         name: 'icons',
         path: 'icons',
-        component: () => import('./views/icons/icons.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/icons/icons.vue')
       },
       {
         name: 'input',
         path: 'input',
-        component: () => import('./views/input/input.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/input/input.vue')
       },
       {
         name: 'lazy',
         path: 'lazy',
-        component: () => import('./views/lazy/lazy.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/lazy/lazy.vue')
       },
       {
         name: 'pipes',
         path: 'pipes',
-        component: () => import('./views/pipes/pipes.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/pipes/pipes.vue')
       },
       {
         name: 'popup',
         path: 'popup',
-        component: () => import('./views/popup/popup.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/popup/popup.vue')
       },
       {
         name: 'scroll-view',
         path: 'scroll-view',
-        component: () => import('./views/scroll-view/scroll-view.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/scroll-view/scroll-view.vue')
       },
       {
         name: 'sticky-section',
         path: 'sticky-section',
-        component: () => import('./views/sticky-section/sticky-section.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/sticky-section/sticky-section.vue')
       },
       {
         name: 'table',
         path: 'table',
-        component: () => import('./views/table/table.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/table/table.vue')
       },
       {
         name: 'tabs',
         path: 'tabs',
-        component: () => import('./views/tabs/tabs.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/tabs/tabs.vue')
       },
       {
         name: 'transitions',
         path: 'transitions',
-        component: () => import('./views/transitions/transitions.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
+        component: () => import('./views/transitions/transitions.vue')
       },
       {
         name: 'portal',

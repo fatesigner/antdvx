@@ -1,44 +1,46 @@
 <template>
-  <ScrollView fill-y scroll-y>
-    <div class="tw-p-4 tw-space-y-4">
-      <div class="tw-text-lg">Input</div>
+  <PageWrapper title="Input">
+    <div class="tw-p-2">
+      <div class="tw-p-4 tw-space-y-4 tw-bg-white">
+        <div class="tw-text-lg">文本框</div>
 
-      <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes">
-        <div class="tw-flex flex-wrap tw-items-center tw-space-x-2">
-          <div class="tw-flex-initial">筛选：</div>
-          <AInput class="tw-w-72" :size="size" placeholder="搜索患者案例..." />
-          <XButton :size="size">查询 / Query</XButton>
+        <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes">
+          <div class="tw-flex flex-wrap tw-items-center tw-space-x-2">
+            <div class="tw-flex-initial">筛选：</div>
+            <AInput class="tw-w-72" :size="size" placeholder="搜索患者案例..." />
+            <XButton :size="size">查询 / Query</XButton>
+          </div>
         </div>
-      </div>
 
-      <div class="tw-text-lg">单选</div>
+        <div class="tw-text-lg">单选</div>
 
-      <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes">
-        <div class="tw-flex flex-wrap tw-items-center tw-space-x-2">
-          <div class="tw-flex-initial">筛选：</div>
-          <XCombobox class="tw-w-24" :size="size" :options="['选项1', '选项2']" placeholder="请选择" />
-          <XButton :size="size">查询 / Query</XButton>
+        <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes">
+          <div class="tw-flex flex-wrap tw-items-center tw-space-x-2">
+            <div class="tw-flex-initial">筛选：</div>
+            <XCombobox class="tw-w-24" :size="size" :options="['选项1', '选项2']" placeholder="请选择" />
+            <XButton :size="size">查询 / Query</XButton>
+          </div>
         </div>
-      </div>
 
-      <div class="tw-text-lg">多选</div>
+        <div class="tw-text-lg">多选</div>
 
-      <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes">
-        <div class="tw-flex flex-wrap tw-items-center tw-space-x-2">
-          <div class="tw-flex-initial">筛选：</div>
-          <XCombobox class="tw-w-64" multiple :size="size" :options="['选项1', '选项2']" placeholder="请选择" />
-          <XButton :size="size">查询 / Query</XButton>
+        <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes">
+          <div class="tw-flex flex-wrap tw-items-center tw-space-x-2">
+            <div class="tw-flex-initial">筛选：</div>
+            <XCombobox class="tw-w-64" multiple :size="size" :options="['选项1', '选项2']" placeholder="请选择" />
+            <XButton :size="size">查询 / Query</XButton>
+          </div>
         </div>
-      </div>
 
-      <XButton @click="toggle">Toggle</XButton>
+        <XButton @click="toggle">Toggle</XButton>
 
-      <div v-if="visible">
-        <AInputSearch class="tw-w-52" placeholder="input search text" enter-button v-focus="{ focus, selectors: 'input' }" />
-        <input class="tw-border-2" v-focus="{ onBlur, onFocus }" />
+        <div v-if="visible">
+          <AInputSearch class="tw-w-52" placeholder="input search text" enter-button v-focus="{ focus, selectors: 'input' }" />
+          <input class="tw-border-2" v-focus="{ onBlur, onFocus }" />
+        </div>
       </div>
     </div>
-  </ScrollView>
+  </PageWrapper>
 </template>
 
 <script lang="ts">
@@ -47,11 +49,14 @@ import { Input, InputSearch } from 'ant-design-vue';
 import { ANTDVX_SIZES, ScrollView, XButton, XCombobox } from '@/antdvx';
 import { focus } from '@/antdvx/directives';
 
+import { PageWrapper } from '@/app/shared/page-wrapper';
+
 export default defineComponent({
   components: {
     XButton,
     XCombobox,
     ScrollView,
+    PageWrapper,
     [Input.name]: Input,
     [InputSearch.name]: InputSearch
   },

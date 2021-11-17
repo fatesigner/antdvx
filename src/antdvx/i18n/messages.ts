@@ -32,6 +32,9 @@ export const i18nMessages = createLocaleMessages({
     asyncAction: {
       error: ''
     },
+    backTop: {
+      title: ''
+    },
     pagination: {
       of: '',
       items: ''

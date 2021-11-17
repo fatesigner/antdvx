@@ -1,0 +1,28 @@
+@import "../../themes/default";
+
+.antdvx-back-top {
+  position: absolute;
+}
+
+.antdvx-back-top-shadow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 8px;
+  font-size: 1.4rem;
+  color: @primary-color;
+  cursor: pointer;
+  background-color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 46px 49px -2px rgb(19 41 75 / 15%), 0 14px 15px -2px rgb(19 41 75 / 14%), 0 6px 6px -2px rgb(19 41 75 / 14%), 0 2px 2px -2px rgb(19 41 75 / 13%);
+  transition-timing-function: ease-in-out;
+  transition-duration: 0.2s;
+  transition-property: background-color color;
+
+  &:hover {
+    color: #fff;
+    background-color: @primary-color;
+  }
+}

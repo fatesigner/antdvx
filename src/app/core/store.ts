@@ -11,10 +11,12 @@ const state: {
   // 语言
   lang: LanguageType;
   theme: 'light' | 'dark';
+  collapsed: boolean;
 } = merge(
   {
     lang: i18n._.global.locale as any,
-    theme: 'light'
+    theme: 'light',
+    collapsed: false
   },
   localStorageService.get(storageKey)
 );
@@ -53,6 +55,11 @@ export const AppStore = createStore(state, function (state) {
     localStorageService.set(storageKey, state);
   };
 
+  const setCollapsed = (collapsed: boolean) => {
+    state.collapsed = collapsed;
+    localStorageService.set(storageKey, state);
+  };
+
   // 若已缓存的语言与 i18n 初始语言不同
   if (state.lang !== i18n._.global.locale) {
     setLang(state.lang);
@@ -66,6 +73,7 @@ export const AppStore = createStore(state, function (state) {
   return {
     setLang,
     setTheme,
+    setCollapsed,
     getPopupRefs
   };
 });

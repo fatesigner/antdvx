@@ -1,51 +1,53 @@
 <template>
-  <ScrollView fill-y scroll-y>
-    <div class="tw-p-4">
-      <XTable v-bind="tbRef">
-        <template #title="{ options, params, handler, methods }">
-          <div class="tw-flex tw-items-center tw-space-x-2">
-            <AInput class="tw-w-44" allowClear v-model:value="params.keywords" placeholder="搜索用户名..." />
-            <XButtonSearch type="primary" :handler="handler.refresh" />
-            <XButtonAdd @click="methods.add" />
-            <XButtonDelete v-if="options.rowSelection.selectedRowKeys.length" color="danger" type="outline" :handler="methods.delAll" />
-            <ACheckbox v-model:checked="options.dataSource.serverPaging">服务端分页</ACheckbox>
-            <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="handler.refresh" />
-          </div>
-        </template>
-        <template #status="{ record }">
-          <ATag :color="record.status === MASTER_DATA_STATUS.enum.enabled ? 'green' : 'red'">{{ MASTER_DATA_STATUS.desc[record.status] }}</ATag>
-        </template>
-        <template #actions="{ record, index, methods }">
-          <div class="tw-space-x-2">
-            <XButton size="small" @click="methods.showAuthModal(record)"><IconUserSharedLine />授权</XButton>
-            <XButtonEdit notify size="mini" color="primary" only-icon type="link" :handler="methods.edit(record)" />
-            <XButtonDelete confirmed size="mini" color="danger" only-icon type="link" :handler="methods.del(record, index)" />
-          </div>
-        </template>
-        <template #expandedRowRender="{ record: parent }">
-          <div class="tw-p-4 tw-bg-white shadow-card">
-            <XTable v-if="parent._expandedRef" v-bind="parent._expandedRef">
-              <template #title="{ params, handler, methods }">
-                <div class="tw-flex tw-items-center tw-space-x-2">
-                  <AInput class="tw-w-72" size="small" allowClear v-model:value="params.keywords" placeholder="搜索用户名..." />
-                  <XButtonSearch only-icon size="small" color="secondary" type="primary" :handler="handler.refresh" />
-                  <XButtonAdd only-icon size="small" color="default" type="primary" @click="methods.add" />
-                  <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="handler.refresh" />
-                </div>
-              </template>
-              <template #actions="{ record, index, methods }">
-                <div class="tw-space-x-2">
-                  <XButtonEdit notify color="primary" only-icon type="link" size="mini" :handler="methods.edit(record, index)" />
-                  <XButtonDelete confirmed size="mini" color="danger" only-icon type="link" :handler="methods.del(record, index)" />
-                </div>
-              </template>
-            </XTable>
-          </div>
-        </template>
-      </XTable>
+  <PageWrapper title="Table">
+    <div class="tw-p-2">
+      <div class="tw-p-4 tw-bg-white">
+        <XTable v-bind="tbRef">
+          <template #title="{ options, params, handler, methods }">
+            <div class="tw-flex tw-items-center tw-space-x-2">
+              <AInput class="tw-w-44" allowClear v-model:value="params.keywords" placeholder="搜索用户名..." />
+              <XButtonSearch type="primary" :handler="handler.refresh" />
+              <XButtonAdd @click="methods.add" />
+              <XButtonDelete v-if="options.rowSelection.selectedRowKeys.length" color="danger" type="outline" :handler="methods.delAll" />
+              <ACheckbox v-model:checked="options.dataSource.serverPaging">服务端分页</ACheckbox>
+              <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="handler.refresh" />
+            </div>
+          </template>
+          <template #status="{ record }">
+            <ATag :color="record.status === MASTER_DATA_STATUS.enum.enabled ? 'green' : 'red'">{{ MASTER_DATA_STATUS.desc[record.status] }}</ATag>
+          </template>
+          <template #actions="{ record, index, methods }">
+            <div class="tw-space-x-2">
+              <XButton size="small" @click="methods.showAuthModal(record)"><IconUserSharedLine />授权</XButton>
+              <XButtonEdit notify size="mini" color="primary" only-icon type="link" :handler="methods.edit(record)" />
+              <XButtonDelete confirmed size="mini" color="danger" only-icon type="link" :handler="methods.del(record, index)" />
+            </div>
+          </template>
+          <template #expandedRowRender="{ record: parent }">
+            <div class="tw-p-4 tw-bg-white shadow-card">
+              <XTable v-if="parent._expandedRef" v-bind="parent._expandedRef">
+                <template #title="{ params, handler, methods }">
+                  <div class="tw-flex tw-items-center tw-space-x-2">
+                    <AInput class="tw-w-72" size="small" allowClear v-model:value="params.keywords" placeholder="搜索用户名..." />
+                    <XButtonSearch only-icon size="small" color="secondary" type="primary" :handler="handler.refresh" />
+                    <XButtonAdd only-icon size="small" color="default" type="primary" @click="methods.add" />
+                    <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="handler.refresh" />
+                  </div>
+                </template>
+                <template #actions="{ record, index, methods }">
+                  <div class="tw-space-x-2">
+                    <XButtonEdit notify color="primary" only-icon type="link" size="mini" :handler="methods.edit(record, index)" />
+                    <XButtonDelete confirmed size="mini" color="danger" only-icon type="link" :handler="methods.del(record, index)" />
+                  </div>
+                </template>
+              </XTable>
+            </div>
+          </template>
+        </XTable>
+      </div>
     </div>
     <XModal v-bind="authPopupRef" />
-  </ScrollView>
+  </PageWrapper>
 </template>
 
 <script lang="tsx">
@@ -71,6 +73,7 @@ import {
 
 import { Api } from '@/mocks';
 import { IUser } from '@/app/types/user';
+import { PageWrapper } from '@/app/shared/page-wrapper';
 import { MASTER_DATA_SEX, MASTER_DATA_STATUS } from '@/app/core/constants';
 
 export default defineComponent({
@@ -79,12 +82,13 @@ export default defineComponent({
     XModal,
     XButton,
     ScrollView,
-    IconUserSharedLine,
+    PageWrapper,
     XButtonAdd,
     XButtonEdit,
     XButtonDelete,
     XButtonSearch,
     XButtonRefresh,
+    IconUserSharedLine,
     [Tag.name]: Tag,
     [Input.name]: Input,
     [Checkbox.name]: Checkbox
@@ -235,6 +239,7 @@ export default defineComponent({
         ],
         dataSource: {
           serverPaging: false,
+          pageSize: 100,
           transport: {
             read({ pageNo, pageSize }, { keywords }, filters, sorter) {
               if (tbRef.options.dataSource.serverPaging) {

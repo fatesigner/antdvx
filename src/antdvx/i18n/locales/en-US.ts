@@ -32,6 +32,9 @@ export default {
     asyncAction: {
       error: 'Error'
     },
+    backTop: {
+      title: 'Back to Top'
+    },
     pagination: {
       of: 'of',
       items: 'items'

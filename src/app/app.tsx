@@ -1,7 +1,7 @@
 import { RouterView } from 'vue-router';
+import { ConfigProvider } from 'ant-design-vue';
 import { XDrawer, createXDrawer } from '@/antdvx';
 import { defineComponent, onMounted, ref } from 'vue';
-import { BackTop, ConfigProvider } from 'ant-design-vue';
 
 import { i18n } from '@/app/i18n';
 import { AppStore } from '@/app/core/store';
@@ -55,9 +55,6 @@ export const App = defineComponent({
     return (
       <ConfigProvider locale={ctx.locale}>
         <RouterView />
-        <BackTop>
-          <div class='ant-back-top-inner'>UP</div>
-        </BackTop>
         <XDrawer {...ctx.individuationDrawer} />
       </ConfigProvider>
     );

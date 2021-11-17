@@ -20,7 +20,7 @@ import { IconMenuLine } from '@/antdvx';
 import { computed, defineComponent } from 'vue';
 
 import { Language } from '@/app/shared/language';
-import { LayoutSidebarStore } from '@/app/layout/layout-sidebar/store';
+import { AppStore } from '@/app/core/store';
 
 import { User } from '../user';
 
@@ -31,17 +31,17 @@ export default defineComponent({
     IconMenuLine
   },
   setup() {
-    const collapsed = computed(() => LayoutSidebarStore.state.collapsed);
+    const collapsed = computed(() => AppStore.state.collapsed);
 
     const theme = computed({
-      get: () => LayoutSidebarStore.state.theme,
+      get: () => AppStore.state.theme,
       set(val) {
-        LayoutSidebarStore.setTheme(val);
+        AppStore.setTheme(val);
       }
     });
 
     const toggleCollapsed = () => {
-      LayoutSidebarStore.setCollapsed(!collapsed.value);
+      AppStore.setCollapsed(!collapsed.value);
     };
 
     return {

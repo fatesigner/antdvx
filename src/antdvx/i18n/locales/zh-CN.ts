@@ -32,6 +32,9 @@ export default {
     asyncAction: {
       error: '错误'
     },
+    backTop: {
+      title: '回到顶部'
+    },
     pagination: {
       of: '',
       items: '项'

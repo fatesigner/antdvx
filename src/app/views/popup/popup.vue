@@ -1,29 +1,31 @@
 <template>
-  <ScrollView fill-y scroll-y>
-    <div class="tw-flex tw-flex-wrap tw-p-2">
-      <div class="tw-p-2">
-        <XButton outline :handler="openModal()">打开 Modal</XButton>
-      </div>
-      <div class="tw-p-2">
-        <XButton outline :handler="openModal(true)">打开 Modal（全屏）</XButton>
-      </div>
-      <div class="tw-p-2">
-        <XButton outline :handler="openDrawer()">打开 Drawer</XButton>
-      </div>
-      <div class="tw-p-2">
-        <XButton outline :handler="openDrawer(false, true)">打开 Drawer（Left）</XButton>
-      </div>
-      <div class="tw-p-2">
-        <XButton outline :handler="openDrawer(true)">打开 Drawer（全屏）</XButton>
-      </div>
-      <div class="tw-p-2">
-        <XButton outline :handler="openDrawer(true, true)">打开 Drawer（全屏、Left）</XButton>
+  <PageWrapper title="Popup">
+    <div class="tw-p-2">
+      <div class="tw-flex tw-flex-wrap tw-p-4 tw-bg-white">
+        <div class="tw-p-2">
+          <XButton outline :handler="openModal()">打开 Modal</XButton>
+        </div>
+        <div class="tw-p-2">
+          <XButton outline :handler="openModal(true)">打开 Modal（全屏）</XButton>
+        </div>
+        <div class="tw-p-2">
+          <XButton outline :handler="openDrawer()">打开 Drawer</XButton>
+        </div>
+        <div class="tw-p-2">
+          <XButton outline :handler="openDrawer(false, true)">打开 Drawer（Left）</XButton>
+        </div>
+        <div class="tw-p-2">
+          <XButton outline :handler="openDrawer(true)">打开 Drawer（全屏）</XButton>
+        </div>
+        <div class="tw-p-2">
+          <XButton outline :handler="openDrawer(true, true)">打开 Drawer（全屏、Left）</XButton>
+        </div>
       </div>
     </div>
 
     <XModal v-bind="modalRef" />
     <XDrawer v-bind="drawerRef" />
-  </ScrollView>
+  </PageWrapper>
 </template>
 
 <script lang="ts">
@@ -31,12 +33,15 @@ import { timer } from 'rxjs';
 import { defineComponent } from 'vue';
 import { ScrollView, XButton, XDrawer, XModal, createXDrawer, createXModal } from '@/antdvx';
 
+import { PageWrapper } from '@/app/shared/page-wrapper';
+
 export default defineComponent({
   components: {
     XButton,
     XDrawer,
     XModal,
-    ScrollView
+    ScrollView,
+    PageWrapper
   },
   setup() {
     const modalRef = createXModal(

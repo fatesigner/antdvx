@@ -10,6 +10,7 @@ export * from './utils';
 
 // components
 export * from './components/async-section';
+export * from './components/back-top';
 export * from './components/button';
 export * from './components/code-editor';
 export * from './components/combobox';
