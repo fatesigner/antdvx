@@ -1,3 +1,10 @@
+# [1.0.0-alpha.62](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.61...v1.0.0-alpha.62) (2021-11-17)
+
+
+### Features
+
+* 添加 BackTop（回到顶部） 插件 ([e983170](https://github.com/fatesigner/antdvx/commit/e9831705f728df8851cb19e8f52e540bec401d4c))
+
 # [1.0.0-alpha.61](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.60...v1.0.0-alpha.61) (2021-11-17)
 
 
