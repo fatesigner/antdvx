@@ -1,3 +1,10 @@
+# [1.0.0-alpha.61](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.60...v1.0.0-alpha.61) (2021-11-17)
+
+
+### Features
+
+* 移除 TransitionZoom 的绝对定位样式 ([3d0aa07](https://github.com/fatesigner/antdvx/commit/3d0aa07bd5fffeb3e7985feeb3dcdcf3fe6f14aa))
+
 # [1.0.0-alpha.60](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.59...v1.0.0-alpha.60) (2021-11-16)
 
 
