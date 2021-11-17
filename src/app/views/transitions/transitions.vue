@@ -61,14 +61,14 @@
 
         <div class="tw-relative tw-h-64 tw-overflow-auto">
           <TransitionZoom>
-            <div v-if="zoom">
+            <div v-if="zoom" class="tw-absolute tw-top-4 tw-left-1/2 tw-transform tw--translate-x-1/2">
               <AAlert type="error">
                 <template #description> dasdasfasdssssssssssssssssssssssssssssss </template>
               </AAlert>
             </div>
           </TransitionZoom>
           <TransitionZoom>
-            <div v-if="!zoom">
+            <div v-if="!zoom" class="tw-absolute tw-top-4 tw-left-1/2 tw-transform tw--translate-x-1/2">
               <SpinnerLoading />
             </div>
           </TransitionZoom>

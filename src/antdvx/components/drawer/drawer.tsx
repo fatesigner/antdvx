@@ -192,8 +192,12 @@ export const XDrawer = defineComponent({
   render(ctx) {
     const content = ctx?.component
       ? [
-          <TransitionZoom>{ctx.loading ? <XDrawerLoading /> : ''}</TransitionZoom>,
-          <TransitionZoom>{!ctx.loading && !!ctx.error ? <XDrawerError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionZoom>,
+          <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
+            <TransitionZoom>{ctx.loading ? <XDrawerLoading /> : ''}</TransitionZoom>
+          </div>,
+          <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
+            <TransitionZoom>{!ctx.loading && !!ctx.error ? <XDrawerError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionZoom>
+          </div>,
           <TransitionOpacity>{!ctx.loading && !ctx.error ? (ctx.component_ ? h(ctx.component_, ctx.compProps) : '') : ''}</TransitionOpacity>
         ]
       : ctx.$slots?.default

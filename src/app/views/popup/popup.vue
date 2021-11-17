@@ -43,7 +43,8 @@ export default defineComponent({
       {
         title: 'modal 标题',
         fullscreen: true,
-        destroyOnClose: true
+        destroyOnClose: true,
+        footer: false
       },
       async () => {
         await timer(2000).toPromise();

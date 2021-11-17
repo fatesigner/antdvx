@@ -26,11 +26,6 @@ export const TransitionZoom = defineComponent({
   setup(props) {
     const onBeforeEnter = (el: HTMLElement) => {
       gsap.set(el, {
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        translateX: '-50%',
-        translateY: '-50%',
         opacity: 0,
         scale: props.scale
       });

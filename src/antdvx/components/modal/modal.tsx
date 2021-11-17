@@ -196,8 +196,12 @@ export const XModal = defineComponent({
     const content = ctx.options.fullscreen
       ? ctx?.component
         ? [
-            <TransitionZoom>{ctx.loading ? <XModalLoading /> : ''}</TransitionZoom>,
-            <TransitionZoom>{!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionZoom>,
+            <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
+              <TransitionZoom>{ctx.loading ? <XModalLoading /> : ''}</TransitionZoom>
+            </div>,
+            <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
+              <TransitionZoom>{!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionZoom>
+            </div>,
             <TransitionOpacity>{!ctx.loading && !ctx.error ? (ctx.component_ ? h(ctx.component_, ctx.compProps) : '') : ''}</TransitionOpacity>
           ]
         : ctx.$slots?.default
