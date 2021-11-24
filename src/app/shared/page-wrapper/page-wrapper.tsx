@@ -1,16 +1,26 @@
 import { Empty } from 'ant-design-vue';
+import { bindPromiseQueue } from '@fatesigner/utils';
+import { isFunction } from '@fatesigner/utils/type-check';
 import { SpinnerLoading, TransitionZoom } from '@/antdvx';
 import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 
+import { AppFooter } from '@/app/shared/footer';
+
 import './page-wrapper.less';
-import { isFunction } from '@fatesigner/utils/type-check';
-import { bindPromiseQueue } from '@fatesigner/utils';
 
 export const PageWrapper = defineComponent({
   name: 'page-wrapper',
   props: {
     title: {
       type: String
+    },
+    footer: {
+      type: Boolean,
+      default: false
+    },
+    overflowHidden: {
+      type: Boolean,
+      default: false
     },
     loading: {
       type: Boolean,
@@ -109,7 +119,7 @@ export const PageWrapper = defineComponent({
     ];
 
     return (
-      <div class='page-wrapper'>
+      <div class={['page-wrapper', ctx.overflowHidden ? 'tw-h-full tw-overflow-hidden' : undefined]}>
         <div class='page-header'>
           <div class='page-header-top'>
             <div class='page-header-title'>{ctx.title ?? ctx.$slots.title?.()}</div>
@@ -117,7 +127,8 @@ export const PageWrapper = defineComponent({
           </div>
           {ctx.$slots.header?.()}
         </div>
-        <div class='page-container'>{container}</div>
+        <div class={['page-container', ctx.overflowHidden ? 'tw-overflow-hidden' : undefined]}>{container}</div>
+        {ctx.footer ? <AppFooter /> : ''}
       </div>
     );
   }

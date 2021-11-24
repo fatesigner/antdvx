@@ -22,18 +22,26 @@ const state: {
 );
 
 export const AppStore = createStore(state, function (state) {
-  // 创建弹出层引用集合
+  // 定义全局弹出层引用集合
   const popupRefs: {
-    individuationDrawer: IXDrawerRefType<any, any>;
-  } = {
-    individuationDrawer: undefined
-  };
+    /**
+     * 个性化弹出层
+     */
+    individuation?: IXDrawerRefType<any, any>;
+  } = {};
 
   /**
-   * 获取弹出层集合
+   * 获取弹出层引用
    */
   const getPopupRefs = () => {
     return popupRefs;
+  };
+
+  /**
+   * 设置弹出层
+   */
+  const setPopupRefs = (refs: typeof popupRefs) => {
+    Object.assign(popupRefs, refs);
   };
 
   /**
@@ -74,6 +82,7 @@ export const AppStore = createStore(state, function (state) {
     setLang,
     setTheme,
     setCollapsed,
-    getPopupRefs
+    getPopupRefs,
+    setPopupRefs
   };
 });

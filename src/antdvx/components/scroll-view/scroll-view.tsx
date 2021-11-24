@@ -598,67 +598,72 @@ export const ScrollView = defineComponent({
           ctx.scrollY ? styles.scrollY : null
         ]}
       >
-        <TransitionGroup
-          enterFromClass={styles['transition-enter-from']}
-          enterToClass={styles['transition-enter-to']}
-          leaveToClass={styles['transition-leave-to']}
-          enterActiveClass={styles['transition-enter-active']}
-          leaveActiveClass={styles['transition-enter-active']}
-        >
-          {ctx.loading_ ? (
-            <div class={styles.transition} key='loading'>
-              {ctx.$slots?.loading ? (
-                ctx.$slots?.loading()
-              ) : (
-                <div class={styles.loading}>
-                  <div class='tw-space-y-2'>
-                    <div class='tw-text-center'>
-                      <SpinnerLoading size={ctx.loadingSize} />
+        {ctx.loading_ || ctx.error ? (
+          <TransitionGroup
+            enterFromClass={styles['transition-enter-from']}
+            enterToClass={styles['transition-enter-to']}
+            leaveToClass={styles['transition-leave-to']}
+            enterActiveClass={styles['transition-enter-active']}
+            leaveActiveClass={styles['transition-enter-active']}
+          >
+            {ctx.loading_ ? (
+              <div class={styles.transition} key='loading'>
+                {ctx.$slots?.loading ? (
+                  ctx.$slots?.loading()
+                ) : (
+                  <div class={styles.loading}>
+                    <div class='tw-space-y-2'>
+                      <div class='tw-text-center'>
+                        <SpinnerLoading size={ctx.loadingSize} />
+                      </div>
+                      {ctx.loadingText ? <div class='tw-mt-5'>{ctx.loadingText}</div> : ''}
                     </div>
-                    {ctx.loadingText ? <div class='tw-mt-5'>{ctx.loadingText}</div> : ''}
                   </div>
-                </div>
-              )}
-            </div>
-          ) : ctx.error ? (
-            <div class={styles.transition} key='error'>
-              {ctx.$slots?.error ? (
-                ctx.$slots?.error({ error: ctx.error, reload: ctx.reload })
-              ) : (
-                <div class={styles.error}>
-                  <Alert
-                    type='error'
-                    show-icon
-                    v-slots={{
-                      message: () => ctx.$t(i18nMessages.antd.asyncAction.error),
-                      description: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          ) : (
-            <div class={[styles.view, ctx.native ? null : styles.hideScrollbar]} key='content' ref='viewRef' onScroll={ctx.onScroll}>
-              {[
-                !ctx.loading_ && !ctx.error ? [ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })] : '',
-                !ctx.native && ctx.scrollX ? (
-                  <div class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]} onClick={ctx.horBarClick}>
-                    <div class={styles.thumb} ref='horThumbRef' />
-                  </div>
+                )}
+              </div>
+            ) : ctx.error ? (
+              <div class={styles.transition} key='error'>
+                {ctx.$slots?.error ? (
+                  ctx.$slots?.error({ error: ctx.error, reload: ctx.reload })
                 ) : (
-                  ''
-                ),
-                !ctx.native && ctx.scrollY ? (
-                  <div class={[styles.bar, styles.vertical, ctx.autohide ? styles.hidden : null]} onClick={ctx.verBarClick}>
-                    <div class={styles.thumb} ref='verThumbRef' />
+                  <div class={styles.error}>
+                    <Alert
+                      type='error'
+                      show-icon
+                      v-slots={{
+                        message: () => ctx.$t(i18nMessages.antd.asyncAction.error),
+                        description: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+                      }}
+                    />
                   </div>
-                ) : (
-                  ''
-                )
-              ]}
-            </div>
-          )}
-        </TransitionGroup>
+                )}
+              </div>
+            ) : (
+              ''
+            )}
+          </TransitionGroup>
+        ) : (
+          ''
+        )}
+        <div class={[styles.view, ctx.native ? null : styles.hideScrollbar]} ref='viewRef' onScroll={ctx.onScroll}>
+          {[
+            !ctx.loading_ && !ctx.error ? [ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })] : '',
+            !ctx.native && ctx.scrollX ? (
+              <div class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]} onClick={ctx.horBarClick}>
+                <div class={styles.thumb} ref='horThumbRef' />
+              </div>
+            ) : (
+              ''
+            ),
+            !ctx.native && ctx.scrollY ? (
+              <div class={[styles.bar, styles.vertical, ctx.autohide ? styles.hidden : null]} onClick={ctx.verBarClick}>
+                <div class={styles.thumb} ref='verThumbRef' />
+              </div>
+            ) : (
+              ''
+            )
+          ]}
+        </div>
       </div>
     );
   }

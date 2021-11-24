@@ -74,7 +74,7 @@ export default createIcon('${dirname}', ${JSON.stringify(svgObj, null, 2)});
   // 写入 iconfont/remixicons/index.ts
   fs.writeFileSync(
     path.join(SRC_PATH, 'antdvx/components/iconfont/remixicons/index.ts'),
-    remixIconsArr.map((x) => `import ${x.name} from './${x.path}';`).join('\n') + '\n\r' + remixIconsArr.map((x) => `export { ${x.name} };`).join('\n') + '\n',
+    remixIconsArr.map((x) => `export { default as ${x.name} } from './${x.path}';`).join('\n') + '\n',
     {
       encoding: 'utf-8'
     }

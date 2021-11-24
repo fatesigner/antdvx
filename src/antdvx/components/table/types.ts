@@ -151,6 +151,11 @@ export interface IXTablePropsType<TModel extends Record<string, any>, TParams ex
   // Custom props
 
   /**
+   * 自适应滚动，设置此值后，将会根据父容器自动调整表格尺寸
+   */
+  autoScroll?: boolean;
+
+  /**
    * 查询参数
    */
   params?: TParams;

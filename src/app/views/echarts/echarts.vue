@@ -34,7 +34,7 @@ export default defineComponent({
       {
         name: 'Income of Germany and France since 1950',
         async getOptions() {
-          const _rawData = require('./life-expectancy-table.json.json');
+          const _rawData = require('./life-expectancy-table.json');
           // var countries = ['Australia', 'Canada', 'China', 'Cuba', 'Finland', 'France', 'Germany', 'Iceland', 'India', 'Japan', 'North Korea', 'South Korea', 'New Zealand', 'Norway', 'Poland', 'Russia', 'Turkey', 'United Kingdom', 'United States'];
           const countries = ['Finland', 'France', 'Germany', 'Iceland', 'Norway', 'Poland', 'Russia', 'United Kingdom'];
           const datasetWithFilters = [];

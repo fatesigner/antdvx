@@ -110,7 +110,7 @@ export const XButtonExport = defineComponent({
         options_.excel = await loadOptions(props?.options?.excel, options_.excel);
         const opt = options_?.excel as any;
         if (opt) {
-          const _excel: any = await import('exceljs');
+          const _excel = await import('exceljs');
           const ExcelJS = _excel.default;
 
           const workbook = new ExcelJS.Workbook();
@@ -155,7 +155,7 @@ export const XButtonExport = defineComponent({
           if (worksheet.columns) {
             worksheet.columns.forEach((column) => {
               if (column.header) {
-                column.width = column.header.length < 12 ? 12 : column.header.length;
+                column.width = column.header.length < 12 ? 12 : column.header.length + 5;
               }
             });
           }

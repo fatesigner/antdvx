@@ -76,15 +76,9 @@ export const XBackTop = defineComponent({
     const switchAction = () => {
       if (target_.value) {
         if (target_.value.scrollTop >= props.threshold) {
-          console.log('present', target_.value.scrollTop);
           present();
         } else {
-          console.log('dismiss', target_.value.scrollTop);
           dismiss();
-        }
-      } else {
-        const $parent = wrapRef.value.offsetParent;
-        if ($parent) {
         }
       }
     };
@@ -106,7 +100,7 @@ export const XBackTop = defineComponent({
       }
     );
 
-    watch(target_, (val, valOld) => {
+    watch(target_, (val) => {
       // 移除上一个 targe 绑定的事件
       if (sub$) {
         sub$.unsubscribe();
@@ -116,8 +110,7 @@ export const XBackTop = defineComponent({
       if (val) {
         sub$ = fromEvent(val, 'scroll', { capture: false, passive: false })
           //.pipe(throttleTime(props.throttle))
-          .subscribe((e) => {
-            console.log(e);
+          .subscribe(() => {
             switchAction();
           });
       }

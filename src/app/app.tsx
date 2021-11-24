@@ -16,15 +16,16 @@ export const App = defineComponent({
     const locale = ref();
     const popupRefs = AppStore.getPopupRefs();
 
-    // 个性化设置弹出层
-    popupRefs.individuationDrawer = createXDrawer(
-      {
-        width: 300,
-        title: '个性化设置'
-      },
-      () => import('@/app/shared/individuation').then((res) => ({ default: res.IndividuationDrawer })),
-      {}
-    );
+    AppStore.setPopupRefs({
+      individuation: createXDrawer(
+        {
+          width: 300,
+          title: '个性化设置'
+        },
+        () => import('@/app/shared/individuation').then((res) => ({ default: res.IndividuationDrawer })),
+        {}
+      )
+    });
 
     const loadLang = async (lang: string) => {
       // 导入 language，非中文环境统一使用英文
@@ -48,14 +49,14 @@ export const App = defineComponent({
 
     return {
       locale,
-      individuationDrawer: popupRefs.individuationDrawer
+      popupRefs
     };
   },
   render(ctx) {
     return (
       <ConfigProvider locale={ctx.locale}>
         <RouterView />
-        <XDrawer {...ctx.individuationDrawer} />
+        <XDrawer {...ctx.popupRefs.individuation} />
       </ConfigProvider>
     );
   }

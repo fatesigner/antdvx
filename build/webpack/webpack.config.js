@@ -28,6 +28,7 @@ const WebpackCleanTerminalPlugin = require('./plugins/webpack-clean-terminal-plu
 const WebpackHtmlEmbedSourcePlugin = require('./plugins/webpack-html-embed-source-plugin');
 
 const Utils = require('../utils');
+const { ROOT_PATH } = require('../constants');
 
 module.exports = async function (options) {
   const { ENV, SRC_PATH, ROOT_PATH } = require('../constants');
@@ -97,6 +98,17 @@ module.exports = async function (options) {
       },
       options.postcss
     ),
+    ts: {
+      // 禁用 Typescript 类型检查，只做转译，仅删除掉类型注释，可提升编译速度
+      transpileOnly: false,
+      experimentalWatchApi: true,
+      // 使用 happyPackMode 模式加速编译，并减少 Webpack 报告的错误
+      happyPackMode: true,
+      // tsconfig.json 文件路径
+      configFile: path.join(ROOT_PATH, 'tsconfig.json'),
+      appendTsSuffixTo: [/\.vue$/],
+      appendTsxSuffixTo: [/\.vue$/]
+    },
     image: {
       test: ['gif', 'jpg', 'jpeg', 'png', 'ico'],
       mozjpeg: {
@@ -119,17 +131,6 @@ module.exports = async function (options) {
       webp: {
         quality: 75
       }
-    },
-    ts: {
-      // 禁用 Typescript 类型检查，只做转译，仅删除掉类型注释，可提升编译速度
-      transpileOnly: false,
-      experimentalWatchApi: true,
-      // 使用 happyPackMode 模式加速编译，并减少 Webpack 报告的错误
-      happyPackMode: true,
-      // tsconfig.json 文件路径
-      configFile: path.join(ROOT_PATH, 'tsconfig.json'),
-      appendTsSuffixTo: [/\.vue$/],
-      appendTsxSuffixTo: [/\.vue$/]
     },
     url: {
       esModule: false,
@@ -195,6 +196,7 @@ module.exports = async function (options) {
       publicPath: options.publicPath ?? '',
       filename: 'js/[name].[contenthash].js',
       chunkFilename: 'js/chunk-[name].[contenthash].js',
+      assetModuleFilename: 'assets/[hash][ext][query]',
       path: options.outputPath,
       environment: {
         arrowFunction: false,
@@ -207,6 +209,7 @@ module.exports = async function (options) {
       filename: 'js/[name].js',
       publicPath: options.publicPath ?? '/',
       chunkFilename: 'js/chunk-[name].js',
+      assetModuleFilename: 'assets/[hash][ext][query]',
       hotUpdateChunkFilename: '[id].hot-update.js',
       path: options.outputPath,
       devtoolFallbackModuleFilenameTemplate: 'webpack:///[resource-path]?[hash]',
@@ -463,6 +466,7 @@ module.exports = async function (options) {
         use: 'happypack/loader?id=js'
       },
       {
+        // image assets
         test: (function () {
           const exts = loaders.image.test;
           return new RegExp(`\\.(${exts.join('|')})\\??.*$`);
@@ -476,6 +480,7 @@ module.exports = async function (options) {
         }
       },
       {
+        // ohther assets
         test: (function () {
           const exts = loaders.url.test;
           return new RegExp(`\\.(${exts.join('|')})\\??.*$`);
@@ -655,11 +660,13 @@ module.exports = async function (options) {
           warnings: false,
           parse: {},
           sourceMap: false,
+          // 混淆变量，默认为 true
+          mangle: false,
           output: {
             // 美化输出
-            beautify: false,
+            beautify: true,
             // 是否保留注释 默认为 true
-            comments: false,
+            comments: true,
             quote_keys: false,
             quote_style: 1
           },

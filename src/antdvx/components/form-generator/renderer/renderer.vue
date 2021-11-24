@@ -108,7 +108,6 @@ export default defineComponent({
 
     const submit = (onSubmit) => {
       formRef.value.dispatchEvent(new Event('submit'));
-      debugger;
     };
 
     onMounted(() => {});

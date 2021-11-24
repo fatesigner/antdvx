@@ -111,8 +111,20 @@ export const XTable = defineComponent({
     }
   },
   setup(props: any) {
-    const wrapRef = ref();
+    const wrapRef = ref<HTMLElement>();
+    const topRef = ref<HTMLElement>();
+    const bottomRef = ref<HTMLElement>();
+
     const antTableRef = ref();
+
+    if (props.options.autoScroll) {
+      props.options.scroll = Object.assign(
+        {
+          y: 0
+        },
+        props.options.scroll
+      );
+    }
 
     // 列
     const columns_ = reactive([]);
@@ -148,6 +160,15 @@ export const XTable = defineComponent({
           el.style.height = main[index] + 'px';
         });
       });
+
+      // 设置高度
+      if (props.options.autoScroll) {
+        props.options.scroll.y =
+          wrapRef.value.offsetHeight -
+          (topRef.value?.offsetHeight ?? 0) -
+          (bottomRef.value?.offsetHeight ?? 0) -
+          ((wrapRef.value.querySelector('.ant-table-thead') as HTMLElement)?.offsetHeight + 5);
+      }
     }, 100);
 
     // Get record key
@@ -668,6 +689,8 @@ export const XTable = defineComponent({
     return {
       i18nMessages,
       wrapRef,
+      topRef,
+      bottomRef,
       antTableRef,
       columns_,
       onPageChange,
@@ -693,69 +716,66 @@ export const XTable = defineComponent({
     };
   },
   render(ctx) {
-    const solts = {};
-
-    for (const [name] of Object.entries(ctx.$slots)) {
-      solts[name] =
-        name === 'title'
-          ? function (slotData) {
-              return (
-                <div
-                  class={[
-                    'tw-flex',
-                    'tw-flex-wrap',
-                    'tw-items-center',
-                    'tw-justify-between',
-                    ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1'
-                  ]}>
-                  <div class={['tw-flex-1 tw-overflow-hidden', ctx.options.bordered ? undefined : 'tw-p-2']}>
-                    {ctx.$slots?.[name]?.({
-                      ...slotData,
-                      options: ctx.options,
-                      params: ctx.params,
-                      methods: ctx.methods,
-                      handler: ctx.handler,
-                      handleRecordChange: ctx.handleRecordChange
-                    })}
-                  </div>
-                  {ctx.options.dataSource.total &&
-                  ctx.options.pagination &&
-                  ctx.options.dataSource.pageSize &&
-                  (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top') ? (
-                    <div class='tw-flex-initial tw-p-2'>
-                      <Pagination
-                        size={ctx.options.pagination.size}
-                        pageSizeOptions={ctx.options.pagination.pageSizeOptions}
-                        showQuickJumper={ctx.options.pagination.showQuickJumper}
-                        showSizeChanger={ctx.options.pagination.showSizeChanger}
-                        showTotal={(total, range) =>
-                          `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
-                        }
-                        total={ctx.options.dataSource.total}
-                        v-models={[
-                          [ctx.options.dataSource.pageNo, 'current'],
-                          [ctx.options.dataSource.pageSize, 'pageSize']
-                        ]}
-                        onChange={ctx.onPageChange}
-                        onShowSizeChange={ctx.onPageSizeChange}
-                      />
-                    </div>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              );
-            }
-          : function (slotData) {
-              return ctx.$slots?.[name]?.({
+    const solts = {
+      title(slotData) {
+        return (
+          <div
+            ref='topRef'
+            class={['tw-flex', 'tw-flex-wrap', 'tw-items-center', 'tw-justify-between', ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1']}
+          >
+            <div class={['tw-flex-1 tw-overflow-hidden', ctx.options.bordered ? undefined : 'tw-p-2']}>
+              {ctx.$slots?.title?.({
                 ...slotData,
                 options: ctx.options,
                 params: ctx.params,
                 methods: ctx.methods,
                 handler: ctx.handler,
                 handleRecordChange: ctx.handleRecordChange
-              });
-            };
+              })}
+            </div>
+            {ctx.options.dataSource.total &&
+            ctx.options.pagination &&
+            ctx.options.dataSource.pageSize &&
+            (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top') ? (
+              <div class='tw-flex-initial tw-p-2'>
+                <Pagination
+                  size={ctx.options.pagination.size}
+                  pageSizeOptions={ctx.options.pagination.pageSizeOptions}
+                  showQuickJumper={ctx.options.pagination.showQuickJumper}
+                  showSizeChanger={ctx.options.pagination.showSizeChanger}
+                  showTotal={(total, range) =>
+                    `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
+                  }
+                  total={ctx.options.dataSource.total}
+                  v-models={[
+                    [ctx.options.dataSource.pageNo, 'current'],
+                    [ctx.options.dataSource.pageSize, 'pageSize']
+                  ]}
+                  onChange={ctx.onPageChange}
+                  onShowSizeChange={ctx.onPageSizeChange}
+                />
+              </div>
+            ) : (
+              ''
+            )}
+          </div>
+        );
+      }
+    };
+
+    for (const [name] of Object.entries(ctx.$slots)) {
+      if (name !== 'title') {
+        solts[name] = function (slotData) {
+          return ctx.$slots?.[name]?.({
+            ...slotData,
+            options: ctx.options,
+            params: ctx.params,
+            methods: ctx.methods,
+            handler: ctx.handler,
+            handleRecordChange: ctx.handleRecordChange
+          });
+        };
+      }
     }
 
     const props: TableProps = {
@@ -777,7 +797,8 @@ export const XTable = defineComponent({
                   title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
                   onClick={(e) => {
                     onExpand(record, e);
-                  }}>
+                  }}
+                >
                   {expanded ? <IconCheckboxIndeterminateLine /> : <IconAddBoxLine />}
                 </div>
               );
@@ -824,7 +845,7 @@ export const XTable = defineComponent({
     }
 
     return (
-      <div class='ant-table-x' ref='wrapRef'>
+      <div class={['ant-table-x', ctx.options.autoScroll ? 'tw-h-full' : undefined]} ref='wrapRef'>
         {[
           h(
             Table,
@@ -838,7 +859,10 @@ export const XTable = defineComponent({
           ctx.options.pagination &&
           ctx.options.dataSource.pageSize &&
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
-            <div class={['tw-flex tw-justify-end tw-mt-4 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
+            <div
+              ref='bottomRef'
+              class={['tw-flex tw-justify-end tw-mt-4 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
+            >
               <Pagination
                 size={ctx.options.pagination.size}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}

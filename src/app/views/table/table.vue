@@ -1,7 +1,7 @@
 <template>
-  <PageWrapper title="Table">
-    <div class="tw-p-2">
-      <div class="tw-p-4 tw-bg-white">
+  <PageWrapper title="Table" overflow-hidden>
+    <div class="tw-h-full tw-p-2">
+      <div class="tw-h-full tw-p-4 tw-bg-white">
         <XTable v-bind="tbRef">
           <template #title="{ options, params, handler, methods }">
             <div class="tw-flex tw-items-center tw-space-x-2">
@@ -118,12 +118,16 @@ export default defineComponent({
     // 主表
     const tbRef = createXTable(
       {
+        autoScroll: true,
         size: 'small',
         rowKey: 'userid',
         rowSelection: {
           type: 'checkbox',
           columnWidth: 40,
           selectedRowKeys: []
+        },
+        pagination: {
+          position: 'top'
         },
         columns: [
           {
@@ -215,7 +219,7 @@ export default defineComponent({
           {
             title: '状态',
             dataIndex: 'status',
-            width: 100,
+            width: 80,
             filters: [
               { text: '启用', value: 'enabled' },
               { text: '禁用', value: 'disabled' }
@@ -233,13 +237,13 @@ export default defineComponent({
           },
           {
             title: '操作',
-            width: 80,
+            width: 120,
             slots: { customRender: 'actions' }
           }
         ],
         dataSource: {
           serverPaging: false,
-          pageSize: 100,
+          pageSize: 20,
           transport: {
             read({ pageNo, pageSize }, { keywords }, filters, sorter) {
               if (tbRef.options.dataSource.serverPaging) {

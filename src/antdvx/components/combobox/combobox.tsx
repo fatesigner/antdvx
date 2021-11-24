@@ -32,6 +32,11 @@ export interface IXComboboxProps<TModel extends Record<string, any>> {
   autoBind?: boolean;
 
   /**
+   * 是否可搜索
+   */
+  searchable?: boolean;
+
+  /**
    * 是否将选项 item 的值包装到 value 中，会把 Select 的 value 类型从 string 变为 { key: string, label: vNodes, ... } 形式
    */
   labelInValue?: boolean;
@@ -112,6 +117,10 @@ export const XCombobox = defineComponent({
   name: 'x-combobox',
   props: {
     autoBind: {
+      type: Boolean,
+      default: false
+    },
+    searchable: {
       type: Boolean,
       default: false
     },
@@ -363,7 +372,6 @@ export const XCombobox = defineComponent({
       } else {
         if (props.importable) {
           const s = searchInput.value?.trim();
-          console.log('searchInput ', s);
           if (s) {
             needBackfill = true;
             valueBind.value = s;
@@ -386,13 +394,9 @@ export const XCombobox = defineComponent({
       }
     };
 
-    const onInputFocus = (e) => {
-      debugger;
-    };
+    const onInputFocus = (e) => {};
 
-    const onInputBlur = (e) => {
-      debugger;
-    };
+    const onInputBlur = (e) => {};
 
     onMounted(() => {
       // 添加自定义 input 搜索框
@@ -441,7 +445,8 @@ export const XCombobox = defineComponent({
           <SelectOption
             key={ctx.dataValueField ? option[ctx.dataValueField] : option}
             value={ctx.dataValueField ? option[ctx.dataValueField] : option}
-            label={ctx.dataTextField ? option[ctx.dataTextField] : option}>
+            label={ctx.dataTextField ? option[ctx.dataTextField] : option}
+          >
             {ctx.dataTextField ? option[ctx.dataTextField] : option}
           </SelectOption>
         );
@@ -453,7 +458,7 @@ export const XCombobox = defineComponent({
         <Select
           ref='selectRef'
           class='antdvx-combobox-select'
-          showSearch
+          showSearch={ctx.searchable}
           size={ctx.$attrs.size}
           mode={ctx.mode}
           allowClear={ctx.clearable}
@@ -472,7 +477,8 @@ export const XCombobox = defineComponent({
               ) : (
                 ''
               )
-          }}>
+          }}
+        >
           {options}
         </Select>
       </div>

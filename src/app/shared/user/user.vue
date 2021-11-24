@@ -59,8 +59,8 @@ export default defineComponent({
 
     // 个性化弹出层
     const individuation = () => {
-      const { individuationDrawer } = AppStore.getPopupRefs();
-      individuationDrawer.handler.present();
+      const popupRefs = AppStore.getPopupRefs();
+      popupRefs.individuation.handler.present();
     };
 
     const logout = async () => {

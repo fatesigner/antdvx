@@ -6,6 +6,15 @@
         <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4">
           <div class="tw-p-2 tw-border tw-border-gray-300" v-for="type in types">
             <div class="tw-text-lg tw-p-2">{{ type }} button</div>
+            <div class="tw-text-sm tw-p-2">Toggle</div>
+            <div class="tw-flex tw-flex-wrap">
+              <div class="tw-p-2">
+                <XButton color="default" :type="type">normal</XButton>
+              </div>
+              <div class="tw-p-2" v-for="color in colors">
+                <XButton :color="selected === color ? 'primary' : undefined" :type="type" @click="selected = color">{{ color }}</XButton>
+              </div>
+            </div>
             <div class="tw-text-sm tw-p-2">Colors</div>
             <div class="tw-flex tw-flex-wrap">
               <div class="tw-p-2">
@@ -218,6 +227,8 @@ export default defineComponent({
     [Dropdown.name]: Dropdown
   },
   setup() {
+    const selected = ref();
+
     const exportRef = ref();
 
     const popupRef = createXModal({
@@ -298,7 +309,7 @@ export default defineComponent({
       };
     };
 
-    return { exportRef, popupRef, exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
+    return { selected, exportRef, popupRef, exportOptions, sizes: ANTDVX_SIZES, colors: ANTDVX_COLORS, types: ANTDVX_BUTTON_TYPES, load, upload };
   }
 });
 </script>

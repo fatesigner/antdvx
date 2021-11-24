@@ -21,7 +21,6 @@
                 </TransitionSlide>
               </RouterView>
             </template>
-            <AppFooter />
             <XBackTop />
           </ScrollView>
         </div>
@@ -37,7 +36,6 @@ import { AppStore } from '@/app/core/store';
 import { User } from '@/app/shared/user';
 import { Sidebar } from '@/app/shared/sidebar';
 import { AppHeader } from '@/app/shared/header';
-import { AppFooter } from '@/app/shared/footer';
 import { Language } from '@/app/shared/language';
 import { ProgressBar } from '@/app/shared/progress-bar';
 import { NotFound, Unauthorized } from '@/app/shared/exception';
@@ -47,7 +45,6 @@ export default defineComponent({
     User,
     Sidebar,
     AppHeader,
-    AppFooter,
     NotFound,
     Language,
     ProgressBar,
