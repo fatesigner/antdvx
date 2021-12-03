@@ -28,7 +28,6 @@ const WebpackCleanTerminalPlugin = require('./plugins/webpack-clean-terminal-plu
 const WebpackHtmlEmbedSourcePlugin = require('./plugins/webpack-html-embed-source-plugin');
 
 const Utils = require('../utils');
-const { ROOT_PATH } = require('../constants');
 
 module.exports = async function (options) {
   const { ENV, SRC_PATH, ROOT_PATH } = require('../constants');

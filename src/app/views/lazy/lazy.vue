@@ -61,7 +61,7 @@ export default defineComponent({
     const input = ref();
     const failed = ref(false);
 
-    const comps = reactive<IComponentViewItem[]>([
+    const comps = reactive([
       {
         name: 'tab1',
         label: 'tab1',

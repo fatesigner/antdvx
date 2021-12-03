@@ -12,6 +12,7 @@ export default {
     },
     route: {
       exception: {
+        refresh: '刷新',
         notFound: {
           name: '未找到页面',
           title: '页面丢失',
@@ -36,7 +37,7 @@ export default {
       system: {
         menus: '菜单设置'
       },
-      portal: '首页',
+      portal: '主页',
       table: '表格',
       grid: 'kendo grid'
     },

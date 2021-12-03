@@ -83,7 +83,7 @@ export class SessionService<TUser extends SessionUser<TRoles>, TRoles extends re
    * 更新当前用户信息
    * @param user
    */
-  updateUser(user: TUser) {
+  updateUser(user) {
     if (user) {
       // this.user = user;
       this.user = merge({}, this.user, user);

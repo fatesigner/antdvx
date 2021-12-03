@@ -27,7 +27,8 @@ export default {
       exportToImage: '导出到图片',
       exportToExcel: '导出到Excel',
       expand: '展开',
-      fold: '收起'
+      fold: '收起',
+      reset: '重置'
     },
     asyncAction: {
       error: '错误'

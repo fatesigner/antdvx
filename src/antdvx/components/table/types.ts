@@ -35,6 +35,14 @@ export interface IXTableSorter<TModel extends Record<string, any>> {
 export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'title' | 'dataIndex' | 'filters'> & {
   title: string;
   dataIndex?: keyof TModel;
+
+  /**
+   * 过滤模式，默认为 filters
+   * @description filters：选项列表
+   * @description keywords：文本框
+   */
+  filterMode?: 'filters' | 'keywords';
+
   filters?: {
     text: string;
     value: string;

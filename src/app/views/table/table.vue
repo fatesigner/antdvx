@@ -127,7 +127,7 @@ export default defineComponent({
           selectedRowKeys: []
         },
         pagination: {
-          position: 'top'
+          position: 'both'
         },
         columns: [
           {
@@ -141,47 +141,7 @@ export default defineComponent({
             title: '用户名 & 账号',
             dataIndex: 'username',
             width: 80,
-            filterIcon(filtered) {
-              return (
-                <div class='tw-flex tw-items-center tw-justify-center'>
-                  <IconSearchLine color={filtered ? 'primary' : null} />
-                </div>
-              );
-            },
-            filterDropdown({ setSelectedKeys, selectedKeys, confirm, clearFilters, column }) {
-              return (
-                <div class='tw-p-2'>
-                  <Input
-                    class='tw-w-24'
-                    size='small'
-                    value={selectedKeys[0]}
-                    onChange={(e) => {
-                      setSelectedKeys(e.target.value ? [e.target.value] : []);
-                    }}
-                    onPressEnter={() => {
-                      confirm();
-                    }}
-                  />
-                  <div class='tw-mt-2 tw-space-x-2'>
-                    <XButtonSearch
-                      color='primary'
-                      type='primary'
-                      size='small'
-                      onClick={() => {
-                        confirm();
-                      }}
-                    />
-                    <XButton
-                      size='small'
-                      onClick={() => {
-                        clearFilters();
-                      }}>
-                      Reset
-                    </XButton>
-                  </div>
-                </div>
-              );
-            },
+            filterMode: 'keywords',
             onFilter(value, record) {
               return record.username.toLowerCase().includes(value.toLowerCase());
             }

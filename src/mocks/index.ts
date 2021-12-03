@@ -9,6 +9,7 @@ import { IUser } from '@/app/types/user';
 import { IRole } from '@/app/types/role';
 import { ROLES } from '@/app/core/constants';
 import { httpService } from '@/app/core/services';
+import { isFunction } from '@fatesigner/utils/type-check';
 
 export const Api = new (class {
   get host() {
@@ -105,7 +106,15 @@ export const Api = new (class {
     if (params?.filters) {
       const filterKeys = Object.keys(params.filters);
       if (filterKeys?.length) {
-        data = data.filter((x) => filterKeys.every((y) => params.filters[y].includes(x[y])));
+        data = data.filter((x) =>
+          filterKeys.every((y) => {
+            const filter = params.filters?.[y];
+            if (filter?.length) {
+              return filter.some((z) => x[y]?.toLowerCase().indexOf(z.toLowerCase()) > -1);
+            }
+            return true;
+          })
+        );
       }
     }
     // 排序

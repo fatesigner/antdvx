@@ -7,42 +7,43 @@ import { I18nMessagesType } from '../messages';
 export default {
   app: {
     sidebar: {
-      shrink: 'shrink',
-      unfold: 'unfold'
+      shrink: 'Shrink',
+      unfold: 'Unfold'
     },
     route: {
       exception: {
+        refresh: 'Refresh',
         notFound: {
-          name: 'notfound',
+          name: 'Notfound',
           title: 'Page Not Found',
           description: 'Please check that the URL you entered is correct, or click the button below to return to the homepage.',
-          back: 'back'
+          back: 'Back'
         },
         unauthorized: {
-          name: 'unauthorized',
+          name: 'Unauthorized',
           title: 'You do not have permission to go to this page',
           title2: 'Please contact your leader if you are dissatisfied',
           title3: 'Or you can go',
-          back: 'back',
-          gotologin: 'login',
-          gotohome: 'home'
+          back: 'Back',
+          gotologin: 'Login',
+          gotohome: 'Home'
         }
       },
       passport: {
-        login: 'login',
-        register: 'register',
-        findPwd: 'findPwd'
+        login: 'Login',
+        register: 'Register',
+        findPwd: 'FindPwd'
       },
       system: {
-        menus: 'menus auth'
+        menus: 'Menus Auth'
       },
-      portal: 'portal',
-      table: 'table',
-      grid: 'kendo grid'
+      portal: 'Portal',
+      table: 'Table',
+      grid: 'Kendo grid'
     },
     navbar: {
       logOut: 'Log Out',
-      portal: 'Dashboard',
+      portal: 'Portal',
       github: 'Github',
       theme: 'Theme',
       size: 'Global Size',

@@ -224,9 +224,14 @@ export interface IDataSource<
   serverPaging?: boolean;
 
   /**
+   * 是否执行服务端过滤，默认情况下，数据源将执行客户端过滤
+   */
+  //serverFiltering?: boolean;
+
+  /**
    * 是否执行服务端排序，默认情况下，数据源将执行客户端排序
    */
-  serverSorting?: boolean;
+  //serverSorting?: boolean;
 
   sort?: IDataSourceSort<TModel> | IDataSourceSort<TModel>[];
   group?: IDataSourceGroup<TModel> | IDataSourceGroup<TModel>[];

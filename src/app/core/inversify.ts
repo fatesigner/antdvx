@@ -93,6 +93,7 @@ const antdvxModule = new ContainerModule((bind) => {
     return {
       baseURL: ENV.APP_APIHOST,
       withCredentials: false,
+      timeout: 60000,
       addXMLHttpRequestHeader: true,
       transformResponse(res) {
         // 如果需要，可在此解析 response
@@ -103,8 +104,7 @@ const antdvxModule = new ContainerModule((bind) => {
         interceptors.request.use(
           function (config) {
             // 可在此设置请求的默认 header
-            if (!config.headers.token) {
-              config.headers.ApiToken = ENV.APP_NAME;
+            if (sessionService.user.accessToken) {
               config.headers.authorization = sessionService.user.accessToken;
             }
             return config;
@@ -140,8 +140,16 @@ const antdvxModule = new ContainerModule((bind) => {
           function (rejection): Promise<any> {
             // 在此定义请求错误的处理逻辑
             let message;
-            const err = rejection?.response?.data ?? {};
+            let err = rejection?.response?.data ?? {};
             const status = rejection?.response?.status;
+
+            try {
+              const err_ = JSON.parse(err);
+              if (err_) {
+                err = err_;
+              }
+            } catch (e) {}
+
             switch (status) {
               case -1: {
                 // 远程服务器无响应
@@ -158,6 +166,11 @@ const antdvxModule = new ContainerModule((bind) => {
                 // unauthorized 未授权
                 message = i18n._.global.tc(i18nMessages.app.http.unauthorized);
                 sessionService.logout();
+                break;
+              }
+              case 404: {
+                // notfound
+                message = i18n._.global.tc(i18nMessages.app.http.noResponse);
                 break;
               }
               case 408: {

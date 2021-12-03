@@ -69,6 +69,10 @@ module.exports = webpackConfig({
   plugins: {
     CopyWebpackPlugin: {
       patterns: [
+        /* {
+          from: path.join(SRC_PATH, 'public'),
+          to: ''
+        }, */
         {
           from: path.join(SRC_PATH, 'assets/img/favicon.ico'),
           to: ''

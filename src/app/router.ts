@@ -216,13 +216,11 @@ export async function createAppRouter() {
     } else if (status === 403) {
       // 最终确认当前用户没有该路由的访问授权，动态添加 403 路由，该界面将提示用户未获得对应的访问权限
       console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not allowed`);
-      const name = addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue'));
-      return next({ name: name });
+      return next({ name: addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue')) });
     } else if (status === 404) {
       // 该路由不存在，动态添加 404 路由，该界面将提示用户当前页面 not found
       console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not defined`);
-      const name = addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue'));
-      return next({ name: name });
+      return next({ name: addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue')) });
     }
 
     // 添加 router key 以取消默认的视图共享逻辑

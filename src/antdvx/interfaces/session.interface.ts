@@ -52,7 +52,7 @@ export interface ISessionService<TUser extends SessionUser<TRoles>, TRoles exten
    * 更新当前用户信息
    * @param user
    */
-  updateUser(user: TUser): void;
+  updateUser(user: Partial<TUser>): void;
 
   updateRole(role: TRoles[number]): void;
 

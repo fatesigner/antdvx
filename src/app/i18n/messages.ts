@@ -12,6 +12,7 @@ export const i18nMessages = createLocaleMessages({
     },
     route: {
       exception: {
+        refresh: '',
         notFound: {
           name: '',
           title: '',

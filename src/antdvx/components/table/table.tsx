@@ -6,7 +6,7 @@ import to from 'await-to-js';
 import { merge } from 'lodash-es';
 import { bindLazyFunc, debounce } from '@fatesigner/utils';
 import { TableProps } from 'ant-design-vue/es/table/interface';
-import { Pagination, Table, notification } from 'ant-design-vue';
+import { Input, Pagination, Table, notification } from 'ant-design-vue';
 import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, h, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
@@ -14,9 +14,11 @@ import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
-import { IconAddBoxLine, IconAngleDoubleDown, IconCheckboxIndeterminateLine } from '../iconfont';
+import { XButton, XButtonSearch } from '../button';
+import { IconAddBoxLine, IconCheckboxIndeterminateLine, IconSearchLine } from '../iconfont';
 
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
+import { useI18n } from 'vue-i18n';
 
 export const getDefaultXTableProps = function (): IXTablePropsType<any, any> {
   return {
@@ -40,7 +42,7 @@ export const getDefaultXTableProps = function (): IXTablePropsType<any, any> {
 
     pagination: {
       size: 'small',
-      position: 'both',
+      position: 'top',
       showQuickJumper: true,
       showSizeChanger: true,
       pageSizeOptions: ['5', '10', '20', '30', '50', '100']
@@ -111,6 +113,8 @@ export const XTable = defineComponent({
     }
   },
   setup(props: any) {
+    const { t } = useI18n();
+
     const wrapRef = ref<HTMLElement>();
     const topRef = ref<HTMLElement>();
     const bottomRef = ref<HTMLElement>();
@@ -209,11 +213,15 @@ export const XTable = defineComponent({
           if (filterKeys?.length) {
             data = data.filter((x) =>
               filterKeys.every((y) => {
-                const column = props.options.columns.find((x) => x.dataIndex === y);
-                if (isFunction(column?.onFilter)) {
-                  return filters[y].every((z) => column.onFilter(z, x));
+                const filter = filters?.[y];
+                if (filter?.length) {
+                  const column = props.options.columns.find((z) => z.dataIndex === y);
+                  if (isFunction(column?.onFilter)) {
+                    return filter.some((z) => column.onFilter(z, x));
+                  }
+                  return filter.some((z) => x[y] === z);
                 }
-                return filters[y].every((z) => x[y]?.toLowerCase().indexOf(z.toLowerCase()) > -1);
+                return true;
               })
             );
           }
@@ -532,6 +540,56 @@ export const XTable = defineComponent({
               if (x.onFilter) {
                 x_.onFilter = null;
               }
+              if (x?.filterMode === 'keywords') {
+                // 关键字过滤
+                if (!x.filterIcon) {
+                  x_.filterIcon = ({ filtered }) => {
+                    return (
+                      <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500'>
+                        <IconSearchLine color={filtered ? 'primary' : null} />
+                      </div>
+                    );
+                  };
+                }
+                if (!x.filterDropdown) {
+                  x_.filterDropdown = ({ setSelectedKeys, selectedKeys, confirm, clearFilters, column }) => {
+                    return (
+                      <div class='tw-p-2'>
+                        <Input
+                          class='tw-w-24'
+                          size='small'
+                          value={selectedKeys[0]}
+                          onChange={(e) => {
+                            const val = e.target.value.trim();
+                            setSelectedKeys(val ? [val] : []);
+                          }}
+                          onPressEnter={() => {
+                            confirm();
+                          }}
+                        />
+                        <div class='tw-mt-2 tw-space-x-2'>
+                          <XButtonSearch
+                            color='primary'
+                            type='primary'
+                            size='small'
+                            onClick={() => {
+                              confirm();
+                            }}
+                          />
+                          <XButton
+                            size='small'
+                            onClick={() => {
+                              clearFilters();
+                            }}
+                          >
+                            {t(i18nMessages.antd.action.reset)}
+                          </XButton>
+                        </div>
+                      </div>
+                    );
+                  };
+                }
+              }
               return x_;
             })
         );
@@ -584,6 +642,67 @@ export const XTable = defineComponent({
         });
 
         props.options.loading = true;
+
+        setTimeout(async function () {
+          props.options.dataSource.pageNo = 1;
+          if (props?.options?.dataSource?.serverPaging) {
+            // 服务端分页，重新加载数据
+            await refresh();
+          } else {
+            processData();
+          }
+          props.options.loading = false;
+        }, 500);
+      });
+    };
+
+    // 切换 过滤
+    const onFilterChange = () => {
+      nextTick(function () {
+        props?.options?.listeners?.change?.({
+          type: 'filter',
+          pagination: {
+            pageNo: props.options.dataSource.pageNo,
+            pageSize: props.options.dataSource.pageSize
+          },
+          filters,
+          sorter,
+          currentData: props.options.dataSource.data,
+          overallData
+        });
+
+        props.options.loading = true;
+
+        setTimeout(async function () {
+          props.options.dataSource.pageNo = 1;
+          if (props?.options?.dataSource?.serverPaging) {
+            // 服务端分页，重新加载数据
+            await refresh();
+          } else {
+            processData();
+          }
+          props.options.loading = false;
+        }, 500);
+      });
+    };
+
+    // 切换 排序
+    const onSortChange = () => {
+      nextTick(function () {
+        props?.options?.listeners?.change?.({
+          type: 'sorter',
+          pagination: {
+            pageNo: props.options.dataSource.pageNo,
+            pageSize: props.options.dataSource.pageSize
+          },
+          filters,
+          sorter,
+          currentData: props.options.dataSource.data,
+          overallData
+        });
+
+        props.options.loading = true;
+
         setTimeout(async function () {
           props.options.dataSource.pageNo = 1;
           if (props?.options?.dataSource?.serverPaging) {
@@ -614,23 +733,19 @@ export const XTable = defineComponent({
       // 过滤
       sorter = sorter_;
 
-      reload();
+      if (type === 'filter') {
+        onFilterChange();
+      } else if (type === 'sorter') {
+        onSortChange();
+      }
 
-      props?.options?.listeners?.change?.({
-        type,
-        pagination: {
-          pageNo: props.options.dataSource.pageNo,
-          pageSize: props.options.dataSource.pageSize
-        },
-        filters,
-        sorter,
-        currentData: props.options.dataSource.data,
-        overallData
-      });
+      //reload();
     };
+
     const onExpandedRowsChange = (expandedRows) => {
       props?.options?.listeners?.expandedRowsChange?.(expandedRows);
     };
+
     const onExpand = (expanded, record) => {
       const key = getRowKey(record);
       if (expanded) {
@@ -645,6 +760,7 @@ export const XTable = defineComponent({
     const onRowSelect = (record: any, selected: boolean, _selectedRows, nativeEvent) => {
       props?.options?.listeners?.rowSelect?.(record, selected, _selectedRows, nativeEvent);
     };
+
     const onRowSelectChange = (selectedRowKeys, _selectedRows) => {
       if (props?.options?.rowSelection) {
         selectedRows = _selectedRows;
@@ -654,9 +770,11 @@ export const XTable = defineComponent({
       }
       props?.options?.listeners?.rowSelectChange?.(selectedRowKeys, _selectedRows);
     };
+
     const onRowSelectAll = (selected: boolean, _selectedRows: any[], changeRows: any[]) => {
       props?.options?.listeners?.rowSelectAll?.(selected, _selectedRows, changeRows);
     };
+
     const onRowSelectInvert = (_selectedRows: any[]) => {
       props?.options?.listeners?.rowSelectInvert?.(_selectedRows);
     };
@@ -716,8 +834,16 @@ export const XTable = defineComponent({
     };
   },
   render(ctx) {
-    const solts = {
-      title(slotData) {
+    const solts: any = {};
+
+    if (
+      ctx.$slots?.title ||
+      (ctx.options.dataSource.total &&
+        ctx.options.pagination &&
+        ctx.options.dataSource.pageSize &&
+        (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top'))
+    ) {
+      solts.title = function (slotData) {
         return (
           <div
             ref='topRef'
@@ -760,8 +886,8 @@ export const XTable = defineComponent({
             )}
           </div>
         );
-      }
-    };
+      };
+    }
 
     for (const [name] of Object.entries(ctx.$slots)) {
       if (name !== 'title') {
@@ -861,7 +987,7 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-mt-4 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
+              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
             >
               <Pagination
                 size={ctx.options.pagination.size}

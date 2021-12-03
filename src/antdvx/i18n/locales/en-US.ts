@@ -27,7 +27,8 @@ export default {
       exportToImage: 'Export to Image',
       exportToExcel: 'Export to Excel',
       expand: 'Expand',
-      fold: 'Fold'
+      fold: 'Fold',
+      reset: 'Reset'
     },
     asyncAction: {
       error: 'Error'
