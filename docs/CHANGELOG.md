@@ -1,3 +1,10 @@
+# [1.0.0-alpha.65](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.64...v1.0.0-alpha.65) (2021-12-15)
+
+
+### Features
+
+* 调整 XTable 样式 ([8732b96](https://github.com/fatesigner/antdvx/commit/8732b966e3cdf9fd921a73b3290d20eec57b73b1))
+
 # [1.0.0-alpha.64](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.63...v1.0.0-alpha.64) (2021-12-03)
 
 
