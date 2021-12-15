@@ -360,21 +360,21 @@
   will-change: box-shadow, transform;
 
   &:not([disabled]):hover {
-    color: inherit;
+    color: @text-color;
     border-color: #d9d9d9;
     box-shadow: 0 4px 6px rgba(171, 171, 171, 0.4), 0 7px 13px -24px rgba(45, 35, 66, 0.3), inset 0 -2px 0 #ececec;
     transform: translateY(-1px);
   }
 
   &:not([disabled]):active {
-    color: inherit;
+    color: @text-color;
     border-color: #ddd;
     box-shadow: inset 0 3px 7px #cfcfcf;
     transform: translateY(1px);
   }
 
   &:focus {
-    color: inherit;
+    color: @text-color;
     border-color: #d9d9d9;
   }
 

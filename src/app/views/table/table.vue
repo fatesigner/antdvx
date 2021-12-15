@@ -4,7 +4,7 @@
       <div class="tw-h-full tw-p-4 tw-bg-white">
         <XTable v-bind="tbRef">
           <template #title="{ options, params, handler, methods }">
-            <div class="tw-flex tw-items-center tw-space-x-2">
+            <div class="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
               <AInput class="tw-w-44" allowClear v-model:value="params.keywords" placeholder="搜索用户名..." />
               <XButtonSearch type="primary" :handler="handler.refresh" />
               <XButtonAdd @click="methods.add" />

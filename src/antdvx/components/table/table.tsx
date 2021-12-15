@@ -847,9 +847,9 @@ export const XTable = defineComponent({
         return (
           <div
             ref='topRef'
-            class={['tw-flex', 'tw-flex-wrap', 'tw-items-center', 'tw-justify-between', ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1']}
+            class={['tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2', ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1']}
           >
-            <div class={['tw-flex-1 tw-overflow-hidden', ctx.options.bordered ? undefined : 'tw-p-2']}>
+            <div class={['tw-flex-1', ctx.options.bordered ? undefined : '']}>
               {ctx.$slots?.title?.({
                 ...slotData,
                 options: ctx.options,
@@ -863,7 +863,7 @@ export const XTable = defineComponent({
             ctx.options.pagination &&
             ctx.options.dataSource.pageSize &&
             (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top') ? (
-              <div class='tw-flex-initial tw-p-2'>
+              <div class='tw-flex-initial'>
                 <Pagination
                   size={ctx.options.pagination.size}
                   pageSizeOptions={ctx.options.pagination.pageSizeOptions}

@@ -1,19 +1,20 @@
 @import '../themes/default';
 @import './mixins';
 
-@colorArr: primary @primary-color,
-secondary @secondary-color,
-tertiary @tertiary-color,
-success @success-color,
-warning @warning-color,
-danger @danger-color,
-red @red-color,
-orange @orange-color,
-yellow @yellow-color,
-green @green-color,
-cyan @cyan-color,
-blue @blue-color,
-purple @purple-color;
+@colorArr:
+  primary @primary-color,
+  secondary @secondary-color,
+  tertiary @tertiary-color,
+  success @success-color,
+  warning @warning-color,
+  danger @danger-color,
+  red @red-color,
+  orange @orange-color,
+  yellow @yellow-color,
+  green @green-color,
+  cyan @cyan-color,
+  blue @blue-color,
+  purple @purple-color;
 
 // Set color
 // ---------------------------------------------------
@@ -158,10 +159,6 @@ body.antdvx-theme-classic {
     &.ant-table-empty > .ant-table-content > .ant-table-body,
     &.ant-table-empty > .ant-table-content > .ant-table-scroll > .ant-table-body {
       overflow: hidden !important;
-    }
-
-    .ant-table-title {
-      padding: 0;
     }
   }
 
