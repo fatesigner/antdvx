@@ -1,3 +1,10 @@
+# [1.0.0-alpha.66](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.65...v1.0.0-alpha.66) (2021-12-15)
+
+
+### Features
+
+* 调整 XTable title 布局 ([e2fdecf](https://github.com/fatesigner/antdvx/commit/e2fdecf06f91ceef48bfc19c9215057237dcfa3d))
+
 # [1.0.0-alpha.65](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.64...v1.0.0-alpha.65) (2021-12-15)
 
 
