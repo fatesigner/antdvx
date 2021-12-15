@@ -4,11 +4,12 @@
 
 import to from 'await-to-js';
 import { merge } from 'lodash-es';
+import { useI18n } from 'vue-i18n';
 import { bindLazyFunc, debounce } from '@fatesigner/utils';
 import { TableProps } from 'ant-design-vue/es/table/interface';
 import { Input, Pagination, Table, notification } from 'ant-design-vue';
 import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, h, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { PropType, defineComponent, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
@@ -18,7 +19,6 @@ import { XButton, XButtonSearch } from '../button';
 import { IconAddBoxLine, IconCheckboxIndeterminateLine, IconSearchLine } from '../iconfont';
 
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
-import { useI18n } from 'vue-i18n';
 
 export const getDefaultXTableProps = function (): IXTablePropsType<any, any> {
   return {
@@ -203,7 +203,9 @@ export const XTable = defineComponent({
         props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...overallData);
 
         // emit event
-        props.options?.listeners?.dataChange?.(props.options.dataSource.data);
+        nextTick(() => {
+          props.options?.listeners?.dataChange?.(props.options.dataSource.data);
+        });
       } else {
         let data = overallData.slice(0, overallData.length);
 
@@ -269,7 +271,9 @@ export const XTable = defineComponent({
         }
 
         // emit event
-        props.options?.listeners?.dataChange?.(props.options.dataSource.data);
+        nextTick(() => {
+          props.options?.listeners?.dataChange?.(props.options.dataSource.data);
+        });
       }
 
       // 重置 rowSlections
@@ -385,16 +389,22 @@ export const XTable = defineComponent({
         }
 
         props.options.loading = false;
-        props.options?.listeners?.dataLoaded?.(overallData);
+
+        // emit event
+        nextTick(() => {
+          props.options?.listeners?.dataLoaded?.(overallData);
+        });
       } else {
         // 静态数据
         if (props?.options?.dataSource?.data) {
           overallData = props.options.dataSource.data.slice(0, props.options.dataSource.data.length);
           props.options.dataSource.total = overallData.length;
 
-          // emit events
-          props.options?.listeners?.dataLoaded?.(overallData);
-          props.options?.listeners?.dataChange?.(props.options.dataSource.data);
+          // emit event
+          nextTick(() => {
+            props.options?.listeners?.dataLoaded?.(overallData);
+            props.options?.listeners?.dataChange?.(props.options.dataSource.data);
+          });
         }
       }
     };
@@ -845,10 +855,7 @@ export const XTable = defineComponent({
     ) {
       solts.title = function (slotData) {
         return (
-          <div
-            ref='topRef'
-            class={['tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2', ctx.options.bordered ? 'tw-p-2' : 'tw--ml-2 tw--mr-2 tw--mt-2 tw-pb-1']}
-          >
+          <div ref='topRef' class={['tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2', ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2']}>
             <div class={['tw-flex-1', ctx.options.bordered ? undefined : '']}>
               {ctx.$slots?.title?.({
                 ...slotData,
@@ -973,14 +980,9 @@ export const XTable = defineComponent({
     return (
       <div class={['ant-table-x', ctx.options.autoScroll ? 'tw-h-full' : undefined]} ref='wrapRef'>
         {[
-          h(
-            Table,
-            {
-              ref: 'antTableRef',
-              ...props
-            },
-            solts
-          ),
+          <Table ref='antTableRef' {...props}>
+            {solts}
+          </Table>,
           ctx.options.dataSource.total &&
           ctx.options.pagination &&
           ctx.options.dataSource.pageSize &&
