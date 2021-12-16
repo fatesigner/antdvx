@@ -131,7 +131,7 @@ export default defineComponent({
         },
         columns: [
           {
-            title: '编号',
+            title: <strong>编号</strong>,
             dataIndex: 'userid',
             width: 100,
             sorter: true,

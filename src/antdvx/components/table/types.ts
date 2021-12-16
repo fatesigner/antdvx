@@ -32,8 +32,7 @@ export interface IXTableSorter<TModel extends Record<string, any>> {
   order: 'ascend' | 'descend' | false;
 }
 
-export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'title' | 'dataIndex' | 'filters'> & {
-  title: string;
+export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'dataIndex' | 'filters'> & {
   dataIndex?: keyof TModel;
 
   /**
