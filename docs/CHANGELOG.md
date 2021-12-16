@@ -1,3 +1,10 @@
+# [1.0.0-alpha.68](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.67...v1.0.0-alpha.68) (2021-12-16)
+
+
+### Features
+
+* add border color class ([80f6381](https://github.com/fatesigner/antdvx/commit/80f638151e4ea57267b3ae51f0ef82555494ec7e))
+
 # [1.0.0-alpha.67](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.66...v1.0.0-alpha.67) (2021-12-16)
 
 
