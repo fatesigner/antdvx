@@ -1,3 +1,10 @@
+# [1.0.0-alpha.67](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.66...v1.0.0-alpha.67) (2021-12-16)
+
+
+### Features
+
+* 移除 XTable types 中对 title 属性 的覆盖 ([6ee122f](https://github.com/fatesigner/antdvx/commit/6ee122f7c8d0dbf9c9b4107945771e1a19fb90d9))
+
 # [1.0.0-alpha.66](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.65...v1.0.0-alpha.66) (2021-12-15)
 
 
