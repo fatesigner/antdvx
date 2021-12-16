@@ -30,6 +30,12 @@ each(@colorArr, {
   }
 });
 
+each(@colorArr, {
+  .antdvx-border-@{key} {
+    border-color: @value;
+  }
+});
+
 body.antdvx-theme-classic {
   // Scrollbar
   // ---------------------------------------------------
