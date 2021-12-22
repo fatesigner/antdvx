@@ -16,6 +16,8 @@ export const i18nMessages = createLocaleMessages({
         title: '',
         success: ''
       },
+      fullscreen: '',
+      fullscreenExit: '',
       save: '',
       refresh: '',
       upload: '',

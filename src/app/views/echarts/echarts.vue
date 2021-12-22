@@ -4,6 +4,7 @@
       <Chart
         v-for="chart in charts"
         class="tw-pt-4 tw-pr-2 tw-pb-4 tw-pl-2 tw-rounded-sm tw-shadow-md tw-bg-white"
+        :key="chart.name"
         :options="chart.getOptions"
         :aspect-ratio="2"
         :filename="chart.name"
@@ -17,8 +18,8 @@
 </template>
 
 <script lang="ts">
+import { echarts } from '@/antdvx';
 import { defineComponent } from 'vue';
-import { ScrollView, echarts } from '@/antdvx';
 
 import { Chart } from '@/app/shared/chart';
 import { PageWrapper } from '@/app/shared/page-wrapper';
@@ -26,8 +27,7 @@ import { PageWrapper } from '@/app/shared/page-wrapper';
 export default defineComponent({
   components: {
     Chart,
-    PageWrapper,
-    ScrollView
+    PageWrapper
   },
   setup() {
     const charts = [
@@ -40,7 +40,7 @@ export default defineComponent({
           const datasetWithFilters = [];
           const seriesList = [];
           echarts.util.each(countries, function (country) {
-            let datasetId = 'dataset_' + country;
+            const datasetId = 'dataset_' + country;
             datasetWithFilters.push({
               id: datasetId,
               fromDatasetId: 'dataset_raw',
@@ -213,11 +213,11 @@ export default defineComponent({
         name: 'Large Area Chart',
         async getOptions() {
           let base = +new Date(1968, 9, 3);
-          let oneDay = 24 * 3600 * 1000;
-          let date = [];
-          let data = [Math.random() * 300];
+          const oneDay = 24 * 3600 * 1000;
+          const date = [];
+          const data = [Math.random() * 300];
           for (let i = 1; i < 20000; i++) {
-            let now = new Date((base += oneDay));
+            const now = new Date((base += oneDay));
             date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
             data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
           }

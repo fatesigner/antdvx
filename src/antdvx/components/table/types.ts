@@ -2,9 +2,9 @@
  * types
  */
 
-import { TableProps } from 'ant-design-vue/es/table/interface';
-import { ColumnProps } from 'ant-design-vue/es/table/interface';
+import { VNode } from 'vue';
 import { PaginationProps } from 'ant-design-vue/es/pagination/Pagination';
+import { ColumnProps, TableProps } from 'ant-design-vue/es/table/interface';
 
 import { IDataSource, IPaginationParams } from '../../types/data-source';
 
@@ -25,15 +25,10 @@ export type IXTableModelExtend<T extends Record<string, any>> = Partial<T> & {
 
 export type IXTableFilters<TModel extends Record<string, any>> = Record<keyof TModel, string[]>;
 
-export interface IXTableSorter<TModel extends Record<string, any>> {
-  column: IXTableColumnProps<TModel>;
-  columnKey: keyof TModel;
-  field: keyof TModel;
-  order: 'ascend' | 'descend' | false;
-}
-
-export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'dataIndex' | 'filters'> & {
+export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'customRender' | 'dataIndex' | 'filters'> & {
   dataIndex?: keyof TModel;
+
+  customRender?: (data: { text: any; record: IXTableModelExtend<TModel>; index: number }) => string | VNode;
 
   /**
    * 过滤模式，默认为 filters
@@ -55,6 +50,13 @@ export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<Column
    */
   hidden?: boolean;
 };
+
+export interface IXTableSorter<TModel extends Record<string, any>> {
+  column: IXTableColumnProps<TModel>;
+  columnKey: keyof TModel;
+  field: keyof TModel;
+  order: 'ascend' | 'descend' | false;
+}
 
 export interface IXTableHandlers<TModel extends Record<string, any>> {
   /**
@@ -87,6 +89,11 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
    * @param data 待更新的数据
    */
   updateData?: (index: number, data: IXTableModelExtend<TModel>) => void;
+
+  /**
+   * 重新渲染 columns，当修改 column 选项后，需手动执行该函数
+   */
+  updateColumns?: () => void;
 
   /**
    * 删除指定数据
@@ -134,43 +141,17 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
    * @param row
    */
   validateRow?: (row: IXTableModelExtend<TModel>) => Promise<boolean>;
-}
-
-export interface IXTablePropsType<TModel extends Record<string, any>, TParams extends Record<string, any>>
-  extends Omit<TableProps, 'columns' | 'dataSource' | 'rowKey' | 'scroll'> {
-  // Override Antd
-  columns?: IXTableColumnProps<TModel>[];
-  rowKey?: keyof TModel | IXTableRowKeyFunc<TModel>;
-  scroll?: { x?: boolean | number; y?: boolean | number };
 
   /**
-   * 数据源配置
+   * 手动触发 record change 事件
+   * @param record
    */
-  dataSource?: IDataSource<Partial<IXTableModelExtend<TModel>>, TParams, IXTableFilters<TModel>, IXTableSorter<TModel>>;
+  handleRecordChange?: (record: IXTableModelExtend<TModel>) => void;
 
   /**
-   * 分页器配置
+   * 全屏放大
    */
-  pagination?: Omit<PaginationProps, 'current' | 'total' | 'pageSize'> & {
-    position?: 'top' | 'bottom' | 'both';
-  };
-
-  // Custom props
-
-  /**
-   * 自适应滚动，设置此值后，将会根据父容器自动调整表格尺寸
-   */
-  autoScroll?: boolean;
-
-  /**
-   * 查询参数
-   */
-  params?: TParams;
-
-  /**
-   * 事件
-   */
-  listeners?: IXTableListenersType<TModel>;
+  fullscreen?: () => Promise<void>;
 }
 
 export interface IXTableListenersType<TModel extends Record<string, any>> {
@@ -247,6 +228,50 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
    * 用户手动选择反选的回调
    */
   readonly rowSelectInvert?: (selectedRows: IXTableModelExtend<TModel>[]) => void;
+}
+
+export interface IXTablePropsType<TModel extends Record<string, any>, TParams extends Record<string, any>>
+  extends Omit<TableProps, 'columns' | 'dataSource' | 'rowKey' | 'scroll'> {
+  // Override Antd
+  columns?: IXTableColumnProps<TModel>[];
+  rowKey?: keyof TModel | IXTableRowKeyFunc<TModel>;
+  scroll?: { x?: boolean | number; y?: boolean | number };
+
+  /**
+   * 列的属性拓展
+   * @param column
+   * @constructor
+   */
+  columnMap?: (column: IXTableColumnProps<TModel>) => IXTableColumnProps<TModel>;
+
+  /**
+   * 数据源配置
+   */
+  dataSource?: IDataSource<Partial<IXTableModelExtend<TModel>>, TParams, IXTableFilters<TModel>, IXTableSorter<TModel>>;
+
+  /**
+   * 分页器配置
+   */
+  pagination?: Omit<PaginationProps, 'current' | 'total' | 'pageSize'> & {
+    position?: 'top' | 'bottom' | 'both';
+  };
+
+  // Custom props
+
+  /**
+   * 自适应滚动，设置此值后，将会根据父容器自动调整表格尺寸
+   */
+  autoScroll?: boolean;
+
+  /**
+   * 查询参数
+   */
+  params?: TParams;
+
+  /**
+   * 事件
+   */
+  listeners?: IXTableListenersType<TModel>;
 }
 
 export interface IXTableRefType<

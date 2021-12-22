@@ -16,6 +16,8 @@ export default {
         title: 'Delete',
         success: 'Delete success.'
       },
+      fullscreen: 'Fullscreen',
+      fullscreenExit: 'Exit Fullscreen',
       save: 'Save',
       refresh: 'Refresh',
       upload: 'Upload',

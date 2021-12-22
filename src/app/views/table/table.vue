@@ -10,7 +10,7 @@
               <XButtonAdd @click="methods.add" />
               <XButtonDelete v-if="options.rowSelection.selectedRowKeys.length" color="danger" type="outline" :handler="methods.delAll" />
               <ACheckbox v-model:checked="options.dataSource.serverPaging">服务端分页</ACheckbox>
-              <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="handler.refresh" />
+              <!--<XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="handler.refresh" />-->
             </div>
           </template>
           <template #status="{ record }">
@@ -56,9 +56,7 @@ import { defineComponent } from 'vue';
 import { Checkbox, Input, Modal, Tag } from 'ant-design-vue';
 import {
   IXButtonExportOptions,
-  IconSearchLine,
   IconUserSharedLine,
-  ScrollView,
   XButton,
   XButtonAdd,
   XButtonDelete,
@@ -81,7 +79,6 @@ export default defineComponent({
     XTable,
     XModal,
     XButton,
-    ScrollView,
     PageWrapper,
     XButtonAdd,
     XButtonEdit,
@@ -172,7 +169,7 @@ export default defineComponent({
               value: x.value,
               text: x.text
             })),
-            customRender({ text }) {
+            customRender({ text, record, index }) {
               return MASTER_DATA_SEX.desc[text];
             }
           },
@@ -191,7 +188,7 @@ export default defineComponent({
             dataIndex: 'createTime',
             width: 100,
             sorter(a, b) {
-              return new Date(a['createTime']).getTime() - new Date(b['createTime']).getTime();
+              return new Date(a.createTime).getTime() - new Date(b.createTime).getTime();
             },
             defaultSortOrder: 'descend'
           },
@@ -220,13 +217,14 @@ export default defineComponent({
         listeners: {
           change({ type, pagination, filters, sorter, currentData, overallData }) {
             console.log(type);
-            /*tbRef.options.columns.unshift({
+            // 动态添加列
+            /* tbRef.options.columns.unshift({
               title: 'CCC',
               width: 80,
               customRender({ text }) {
                 return 'ccc';
               }
-            });*/
+            }); */
           },
           dataChange(data) {
             console.log(data);
@@ -381,7 +379,7 @@ export default defineComponent({
         },
         del(record) {
           return async () => {
-            return Api.deleteUser(record.userid, tbRef.options.dataSource.data).then(() => {
+            return Api.deleteUser(record.userid, tbRef.handler.getSelectedData()).then(() => {
               if (!tbRef.options.dataSource.data.length) {
                 tbRef.handler.refresh();
               }
@@ -389,6 +387,7 @@ export default defineComponent({
           };
         },
         async delAll() {
+          console.log(tbRef.handler.getSelectedData());
           Modal.success({
             title: '已选中以下数据',
             content: JSON.stringify(tbRef.options.rowSelection.selectedRowKeys, null, 2)

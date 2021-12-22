@@ -3,6 +3,7 @@
  * IOC 容器，注入 APP 依赖
  */
 
+import { AxiosResponse } from 'axios';
 import { Container, ContainerModule } from 'inversify';
 import { isString } from '@fatesigner/utils/type-check';
 import {
@@ -116,7 +117,7 @@ const antdvxModule = new ContainerModule((bind) => {
 
         // 响应拦截
         interceptors.response.use(
-          function (res) {
+          function (res: AxiosResponse<any>) {
             // 在此定义请求成功后的处理逻辑，需要与后端配合
             if (isString(res.data) || !res.data || res?.data?.code === undefined || res?.data?.code === 0 || res?.data?.code === 200) {
               return res;

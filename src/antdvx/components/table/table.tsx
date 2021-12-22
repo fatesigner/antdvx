@@ -2,6 +2,7 @@
  * table
  */
 
+import { gsap } from 'gsap';
 import to from 'await-to-js';
 import { merge } from 'lodash-es';
 import { useI18n } from 'vue-i18n';
@@ -9,46 +10,66 @@ import { bindLazyFunc, debounce } from '@fatesigner/utils';
 import { TableProps } from 'ant-design-vue/es/table/interface';
 import { Input, Pagination, Table, notification } from 'ant-design-vue';
 import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { PropType, VNode, defineComponent, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
 import { AntdHttpAdapter } from '../../config';
 import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
-import { XButton, XButtonSearch } from '../button';
+import { XButton, XButtonFullscreenExit, XButtonSearch } from '../button';
 import { IconAddBoxLine, IconCheckboxIndeterminateLine, IconSearchLine } from '../iconfont';
 
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
 
-export const getDefaultXTableProps = function (): IXTablePropsType<any, any> {
-  return {
-    loading: false,
-    // scroll: { x: true },
-    dataSource: {
-      data: [],
-      pageNo: 1,
-      pageSize: 10,
-      schema: {
-        data: 'data',
-        total: 'total'
-      }
-    },
-
-    // 展开行
-    expandRowByClick: false,
-    expandedRowKeys: [],
-    defaultExpandAllRows: false,
-    defaultExpandedRowKeys: [],
-
-    pagination: {
-      size: 'small',
-      position: 'top',
-      showQuickJumper: true,
-      showSizeChanger: true,
-      pageSizeOptions: ['5', '10', '20', '30', '50', '100']
+const defaultXTableProps: IXTablePropsType<any, any> = {
+  loading: false,
+  // scroll: { x: true },
+  dataSource: {
+    data: [],
+    pageNo: 1,
+    pageSize: 10,
+    schema: {
+      data: 'data',
+      total: 'total'
     }
-  };
+  },
+
+  // 展开行
+  expandRowByClick: false,
+  expandedRowKeys: [],
+  defaultExpandAllRows: false,
+  defaultExpandedRowKeys: [],
+
+  pagination: {
+    size: 'small',
+    position: 'top',
+    showQuickJumper: true,
+    showSizeChanger: true,
+    pageSizeOptions: ['5', '10', '20', '30', '50', '100']
+  }
 };
+
+/**
+ * 配置 XTable 默认选项，用于所有 XTable 实例
+ */
+export function configureXTable<
+  TModel extends Record<string, any>,
+  TParams extends Record<string, any>,
+  TMethods extends Record<string, (...args: any[]) => any>
+>(
+  props: IXTablePropsType<TModel, TParams> & {
+    /**
+     * 往标题栏（前部）添加指定节点，用于所有表格实例
+     */
+    titlePrefix?: (tbRef: IXTableRefType<TModel, TParams, TMethods>) => VNode | VNode[];
+    /**
+     * 往标题栏（尾部）添加指定节点，用于所有表格实例
+     */
+    titleSuffix?: (tbRef: IXTableRefType<TModel, TParams, TMethods>) => VNode | VNode[];
+  }
+) {
+  merge(defaultXTableProps, props);
+}
 
 /**
  *  创建 XTable 实例
@@ -66,6 +87,7 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
     getElement: null,
     addData: null,
     updateData: null,
+    updateColumns: null,
     removeData: null,
     getSelectedData: null,
     getAllData: null,
@@ -74,16 +96,17 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
     refresh: null,
     reload: null,
     validate: null,
-    validateRow: null
+    validateRow: null,
+    handleRecordChange: null
   };
 
   // 代理异步函数
-  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow'];
+  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow', 'fullscreen'];
 
   bindLazyFunc(handler, bindProperties);
 
   return {
-    options: reactive(merge({}, getDefaultXTableProps(), props) as any),
+    options: reactive(merge({}, defaultXTableProps, props) as any),
     handler,
     params: reactive(Object.assign({}, params) as any),
     methods
@@ -113,6 +136,8 @@ export const XTable = defineComponent({
     }
   },
   setup(props: any) {
+    let resizeObs: ResizeObserver;
+
     const { t } = useI18n();
 
     const wrapRef = ref<HTMLElement>();
@@ -135,9 +160,6 @@ export const XTable = defineComponent({
 
     // 所有数据项
     let overallData = [];
-
-    // 当前选中的数据项
-    let selectedRows = [];
 
     // 当前选中的过滤、筛选条件
     let filters: IXTableFilters<any> = {} as any;
@@ -167,8 +189,10 @@ export const XTable = defineComponent({
 
       // 设置高度
       if (props.options.autoScroll) {
+        const computedStyle = getComputedStyle(wrapRef.value);
         props.options.scroll.y =
           wrapRef.value.offsetHeight -
+          (parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom)) -
           (topRef.value?.offsetHeight ?? 0) -
           (bottomRef.value?.offsetHeight ?? 0) -
           ((wrapRef.value.querySelector('.ant-table-thead') as HTMLElement)?.offsetHeight + 5);
@@ -177,7 +201,7 @@ export const XTable = defineComponent({
 
     // Get record key
     const getRowKey = (record: Record<string, any>, index?: number) => {
-      if (isString(props.options.rowKey)) {
+      if (isString(props.options?.rowKey)) {
         if (Object.prototype.hasOwnProperty.call(record, props.options.rowKey)) {
           if (record[props.options.rowKey as string]) {
             return record[props.options.rowKey as string];
@@ -198,7 +222,7 @@ export const XTable = defineComponent({
 
     // 处理数据，过滤、分页、筛选
     const processData = () => {
-      if (props?.options?.dataSource?.serverPaging) {
+      if (props.options?.dataSource?.serverPaging) {
         // 服务端分页
         props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...overallData);
 
@@ -257,7 +281,7 @@ export const XTable = defineComponent({
 
         // 客户端分页
         props.options.dataSource.total = data.length;
-        if (props?.options?.pagination && props.options.dataSource?.pageSize) {
+        if (props.options?.pagination && props.options.dataSource?.pageSize) {
           props.options.dataSource.data.splice(
             0,
             props.options.dataSource.data.length,
@@ -277,12 +301,12 @@ export const XTable = defineComponent({
       }
 
       // 重置 rowSlections
-      if (props?.options?.rowSelection) {
+      if (props.options?.rowSelection) {
         props.options.rowSelection.selectedRowKeys = [];
       }
 
       // 重置 rowSlections
-      if (props?.options?.rowSelection) {
+      if (props.options?.rowSelection) {
         props.options.rowSelection.selectedRowKeys = [];
       }
       // 重置 expandedRowKeys
@@ -293,13 +317,13 @@ export const XTable = defineComponent({
     const loadData = async () => {
       overallData = [];
 
-      if (props?.options?.dataSource.transport?.read) {
+      if (props.options?.dataSource.transport?.read) {
         props.options.loading = true;
 
         let _res: any;
         let _err: any;
 
-        if (isFunction(props?.options?.dataSource.transport?.read)) {
+        if (isFunction(props.options?.dataSource.transport?.read)) {
           const [err, res] = await to<any>(
             props.options.dataSource.transport.read(
               {
@@ -345,9 +369,9 @@ export const XTable = defineComponent({
 
         if (_err) {
           let errMsg;
-          if (isString(props?.options?.dataSource?.schema?.errors)) {
+          if (isString(props.options?.dataSource?.schema?.errors)) {
             errMsg = _res[props.options.dataSource.schema.errors];
-          } else if (isFunction(props?.options?.dataSource?.schema?.errors)) {
+          } else if (isFunction(props.options?.dataSource?.schema?.errors)) {
             errMsg = props.options.dataSource.schema.errors(_res);
           } else {
             errMsg = _err.message;
@@ -355,27 +379,27 @@ export const XTable = defineComponent({
           notification.error({ message: '', description: errMsg });
         } else {
           // 服务端分页
-          if (props?.options?.dataSource?.serverPaging) {
-            if (isFunction(props?.options?.dataSource?.transport?.read)) {
+          if (props.options?.dataSource?.serverPaging) {
+            if (isFunction(props.options?.dataSource?.transport?.read)) {
               overallData = _res.data;
               props.options.dataSource.total = _res?.total ?? overallData.length;
             } else {
               // parse
-              if (props?.options?.dataSource?.schema?.parse) {
-                _res = props?.options?.dataSource?.schema?.parse(_res);
+              if (props.options?.dataSource?.schema?.parse) {
+                _res = props.options?.dataSource?.schema?.parse(_res);
               }
 
               // total
-              if (isString(props?.options?.dataSource?.schema?.total)) {
+              if (isString(props.options?.dataSource?.schema?.total)) {
                 props.options.dataSource.total = _res[props.options.dataSource.schema.total];
-              } else if (isFunction(props?.options?.dataSource?.schema?.total)) {
+              } else if (isFunction(props.options?.dataSource?.schema?.total)) {
                 props.options.dataSource.total = props.options.dataSource.schema.total(_res);
               }
 
               // data
-              if (isString(props?.options?.dataSource?.schema?.data)) {
+              if (isString(props.options?.dataSource?.schema?.data)) {
                 overallData = _res[props.options.dataSource.schema.data];
-              } else if (isFunction(props?.options?.dataSource?.schema?.data)) {
+              } else if (isFunction(props.options?.dataSource?.schema?.data)) {
                 overallData = props.options.dataSource.schema.data(_res);
               } else {
                 overallData = _res;
@@ -396,7 +420,7 @@ export const XTable = defineComponent({
         });
       } else {
         // 静态数据
-        if (props?.options?.dataSource?.data) {
+        if (props.options?.dataSource?.data) {
           overallData = props.options.dataSource.data.slice(0, props.options.dataSource.data.length);
           props.options.dataSource.total = overallData.length;
 
@@ -434,19 +458,23 @@ export const XTable = defineComponent({
 
     // 全选
     const selectAll = async () => {
-      if (props?.options?.rowSelection?.selectedRowKeys) {
+      if (props.options?.rowSelection?.selectedRowKeys) {
         props.options.rowSelection.selectedRowKeys.splice(
           0,
           props.options.rowSelection.selectedRowKeys.length,
           ...props.options.dataSource.data.map((record, index) => getRowKey(record, index))
         );
-        props?.options?.listeners?.rowSelectAll?.(true, [], []);
+
+        // emit event
+        nextTick(() => {
+          props.options?.listeners?.rowSelectAll?.(true, [], []);
+        });
       }
     };
 
     // 反选
     const selectInvert = async () => {
-      if (props?.options?.rowSelection?.selectedRowKeys) {
+      if (props.options?.rowSelection?.selectedRowKeys) {
         props.options.rowSelection.selectedRowKeys.splice(
           0,
           props.options.rowSelection.selectedRowKeys.length,
@@ -454,15 +482,20 @@ export const XTable = defineComponent({
             .map((record, index) => getRowKey(record, index))
             .filter((key) => props.options.rowSelection.selectedRowKeys.indexOf(key) < 0)
         );
-        props?.options?.listeners?.rowSelectInvert?.(props.options.rowSelection.selectedRowKeys);
+
+        // emit event
+        nextTick(() => {
+          props.options?.listeners?.rowSelectInvert?.(props.options.rowSelection.selectedRowKeys);
+        });
       }
     };
 
     // 数据项更新后，触发事件
     const handleRecordChange = (e) => {
-      // Emit record-change
-      // emit('recordChange', e);
-      props?.options?.listeners?.recordChange?.(e);
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.recordChange?.(e);
+      });
     };
 
     // 获取 Ant table ref
@@ -495,15 +528,141 @@ export const XTable = defineComponent({
     const removeData: IXTableHandlers<any>['removeData'] = (index: number) => {
       props.options.dataSource.data.splice(index, 1);
       // TODO：update分页
-      //props.options.dataSource.total -= 1;
+      // props.options.dataSource.total -= 1;
     };
 
     const getSelectedData: IXTableHandlers<any>['getSelectedData'] = () => {
-      return selectedRows;
+      return props.options.dataSource.data.filter((record, index) => props.options.rowSelection.selectedRowKeys.includes(getRowKey(record, index)));
     };
 
     const getAllData: IXTableHandlers<any>['getAllData'] = () => {
       return overallData?.length ? overallData : props.options.dataSource.data;
+    };
+
+    // 重新渲染列
+    const updateColumns: IXTableHandlers<any>['updateColumns'] = () => {
+      columns_.splice(
+        0,
+        columns_.length,
+        ...props.options.columns
+          .filter((x) => !x.hidden)
+          .map((x) => {
+            if (props.options.columnMap) {
+              x = props.options.columnMap(x);
+            }
+
+            const x_ = Object.assign({}, x);
+
+            if (x.sorter) {
+              x_.sorter = true;
+              // 默认排序
+              if (x.defaultSortOrder) {
+                sorter.column = x_;
+                sorter.columnKey = x_.dataIndex;
+                sorter.field = x_.dataIndex;
+                sorter.order = x.defaultSortOrder;
+              }
+            }
+
+            if (x.onFilter) {
+              x_.onFilter = null;
+            }
+
+            if (x?.filterMode === 'keywords') {
+              // 关键字过滤
+              if (!x.onFilter) {
+                x.onFilter = (value, record) => {
+                  return record?.[x.dataIndex]?.toLowerCase()?.includes(value.toLowerCase());
+                };
+              }
+              if (!x.filterIcon) {
+                x_.filterIcon = ({ filtered }) => {
+                  return (
+                    <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500'>
+                      <IconSearchLine color={filtered ? 'primary' : null} />
+                    </div>
+                  );
+                };
+              }
+              if (!x.filterDropdown) {
+                x_.filterDropdown = ({ setSelectedKeys, selectedKeys, confirm, clearFilters, column }) => {
+                  return (
+                    <div class='tw-p-2'>
+                      <Input
+                        class='tw-w-24'
+                        size='small'
+                        value={selectedKeys[0]}
+                        onChange={(e) => {
+                          const val = e.target.value.trim();
+                          setSelectedKeys(val ? [val] : []);
+                        }}
+                        onPressEnter={() => {
+                          confirm();
+                        }}
+                      />
+                      <div class='tw-mt-2 tw-space-x-2'>
+                        <XButtonSearch
+                          color='primary'
+                          type='primary'
+                          size='small'
+                          onClick={() => {
+                            confirm();
+                          }}
+                        />
+                        <XButton
+                          size='small'
+                          onClick={() => {
+                            clearFilters();
+                          }}
+                        >
+                          {t(i18nMessages.antd.action.reset)}
+                        </XButton>
+                      </div>
+                    </div>
+                  );
+                };
+              }
+            }
+
+            return x_;
+          })
+      );
+    };
+
+    // 全屏放大
+    const fullscreen: IXTableHandlers<any>['fullscreen'] = () => {
+      return new Promise((resolve) => {
+        if (wrapRef.value) {
+          const bounding = wrapRef.value.getBoundingClientRect();
+
+          gsap.set(wrapRef.value, {
+            top: bounding.top,
+            left: bounding.left,
+            width: wrapRef.value.offsetWidth,
+            height: wrapRef.value.offsetHeight
+          });
+
+          wrapRef.value.classList.add('ant-table-x-fixed');
+
+          // 执行帧动画
+          const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+          const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+          gsap.to(wrapRef.value, {
+            duration: 0.3,
+            ease: 'power4',
+            padding: 16,
+            top: 0,
+            left: 0,
+            width: vw,
+            height: vh,
+            onComplete() {
+              resolve();
+            }
+          });
+        } else {
+          resolve();
+        }
+      });
     };
 
     // update handlers
@@ -517,116 +676,37 @@ export const XTable = defineComponent({
         removeData,
         getSelectedData,
         getAllData,
+        updateColumns,
         selectAll,
         selectInvert,
         refresh,
-        reload
-        //validate: null,
-        //validateRow: null
+        reload,
+        fullscreen,
+        handleRecordChange
+        // validate: null,
+        // validateRow: null
       } as IXTableHandlers<any>);
     }
 
-    // 监控 columns 变化
-    watch(
-      () => props.options.columns,
-      (val) => {
-        columns_.splice(
-          0,
-          columns_.length,
-          ...val
-            .filter((x) => !x.hidden)
-            .map((x) => {
-              const x_ = Object.assign({}, x);
-              if (x.sorter) {
-                x_.sorter = true;
-                // 默认排序
-                if (x.defaultSortOrder) {
-                  sorter.column = x_;
-                  sorter.columnKey = x_.dataIndex;
-                  sorter.field = x_.dataIndex;
-                  sorter.order = x.defaultSortOrder;
-                }
-              }
-              if (x.onFilter) {
-                x_.onFilter = null;
-              }
-              if (x?.filterMode === 'keywords') {
-                // 关键字过滤
-                if (!x.filterIcon) {
-                  x_.filterIcon = ({ filtered }) => {
-                    return (
-                      <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500'>
-                        <IconSearchLine color={filtered ? 'primary' : null} />
-                      </div>
-                    );
-                  };
-                }
-                if (!x.filterDropdown) {
-                  x_.filterDropdown = ({ setSelectedKeys, selectedKeys, confirm, clearFilters, column }) => {
-                    return (
-                      <div class='tw-p-2'>
-                        <Input
-                          class='tw-w-24'
-                          size='small'
-                          value={selectedKeys[0]}
-                          onChange={(e) => {
-                            const val = e.target.value.trim();
-                            setSelectedKeys(val ? [val] : []);
-                          }}
-                          onPressEnter={() => {
-                            confirm();
-                          }}
-                        />
-                        <div class='tw-mt-2 tw-space-x-2'>
-                          <XButtonSearch
-                            color='primary'
-                            type='primary'
-                            size='small'
-                            onClick={() => {
-                              confirm();
-                            }}
-                          />
-                          <XButton
-                            size='small'
-                            onClick={() => {
-                              clearFilters();
-                            }}
-                          >
-                            {t(i18nMessages.antd.action.reset)}
-                          </XButton>
-                        </div>
-                      </div>
-                    );
-                  };
-                }
-              }
-              return x_;
-            })
-        );
-      },
-      {
-        immediate: true,
-        deep: true
-      }
-    );
-
     // 切换 pageIndex
     const onPageChange = async () => {
-      props?.options?.listeners?.change?.({
-        type: 'pagination',
-        pagination: {
-          pageNo: props.options.dataSource.pageNo,
-          pageSize: props.options.dataSource.pageSize
-        },
-        filters,
-        sorter,
-        currentData: props.options.dataSource.data,
-        overallData
+      nextTick(() => {
+        props.options?.listeners?.change?.({
+          type: 'pagination',
+          pagination: {
+            pageNo: props.options.dataSource.pageNo,
+            pageSize: props.options.dataSource.pageSize
+          },
+          filters,
+          sorter,
+          currentData: props.options.dataSource.data,
+          overallData
+        });
       });
 
       props.options.loading = true;
 
-      if (props?.options?.dataSource?.serverPaging) {
+      if (props.options?.dataSource?.serverPaging) {
         // 服务端分页
         await refresh();
       } else {
@@ -639,7 +719,8 @@ export const XTable = defineComponent({
     // 切换 pageSize
     const onPageSizeChange = () => {
       nextTick(function () {
-        props?.options?.listeners?.change?.({
+        // emit event
+        props.options?.listeners?.change?.({
           type: 'pagination',
           pagination: {
             pageNo: props.options.dataSource.pageNo,
@@ -655,7 +736,7 @@ export const XTable = defineComponent({
 
         setTimeout(async function () {
           props.options.dataSource.pageNo = 1;
-          if (props?.options?.dataSource?.serverPaging) {
+          if (props.options.dataSource?.serverPaging) {
             // 服务端分页，重新加载数据
             await refresh();
           } else {
@@ -669,7 +750,10 @@ export const XTable = defineComponent({
     // 切换 过滤
     const onFilterChange = () => {
       nextTick(function () {
-        props?.options?.listeners?.change?.({
+        props.options.loading = true;
+
+        // emit event
+        props.options?.listeners?.change?.({
           type: 'filter',
           pagination: {
             pageNo: props.options.dataSource.pageNo,
@@ -681,25 +765,26 @@ export const XTable = defineComponent({
           overallData
         });
 
-        props.options.loading = true;
-
-        setTimeout(async function () {
+        nextTick(async function () {
           props.options.dataSource.pageNo = 1;
-          if (props?.options?.dataSource?.serverPaging) {
+          if (props.options?.dataSource?.serverPaging) {
             // 服务端分页，重新加载数据
             await refresh();
           } else {
             processData();
           }
           props.options.loading = false;
-        }, 500);
+        });
       });
     };
 
     // 切换 排序
     const onSortChange = () => {
       nextTick(function () {
-        props?.options?.listeners?.change?.({
+        props.options.loading = true;
+
+        // emit event
+        props.options?.listeners?.change?.({
           type: 'sorter',
           pagination: {
             pageNo: props.options.dataSource.pageNo,
@@ -711,49 +796,52 @@ export const XTable = defineComponent({
           overallData
         });
 
-        props.options.loading = true;
-
-        setTimeout(async function () {
+        nextTick(async function () {
           props.options.dataSource.pageNo = 1;
-          if (props?.options?.dataSource?.serverPaging) {
+          if (props.options?.dataSource?.serverPaging) {
             // 服务端分页，重新加载数据
             await refresh();
           } else {
             processData();
           }
           props.options.loading = false;
-        }, 500);
+        });
       });
     };
 
     const onChange = (pagination, filters_: any, sorter_: any, { currentDataSource }) => {
-      let type: IXTableChangeType;
+      nextTick(() => {
+        let type: IXTableChangeType;
 
-      // 设置 change 类型
-      if (JSON.stringify(filters) !== JSON.stringify(filters_)) {
-        type = 'filter';
-      } else if (JSON.stringify(sorter) !== JSON.stringify(sorter_)) {
-        type = 'sorter';
-      } else {
-        type = 'pagination';
-      }
+        // 设置 change 类型
+        if (JSON.stringify(filters) !== JSON.stringify(filters_)) {
+          type = 'filter';
+        } else if (JSON.stringify(sorter) !== JSON.stringify(sorter_)) {
+          type = 'sorter';
+        } else {
+          type = 'pagination';
+        }
 
-      // 筛选
-      filters = filters_;
-      // 过滤
-      sorter = sorter_;
+        // 筛选
+        filters = filters_;
+        // 过滤
+        sorter = sorter_;
 
-      if (type === 'filter') {
-        onFilterChange();
-      } else if (type === 'sorter') {
-        onSortChange();
-      }
+        if (type === 'filter') {
+          onFilterChange();
+        } else if (type === 'sorter') {
+          onSortChange();
+        }
 
-      //reload();
+        // reload();
+      });
     };
 
     const onExpandedRowsChange = (expandedRows) => {
-      props?.options?.listeners?.expandedRowsChange?.(expandedRows);
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.expandedRowsChange?.(expandedRows);
+      });
     };
 
     const onExpand = (expanded, record) => {
@@ -763,33 +851,56 @@ export const XTable = defineComponent({
       } else {
         props.options.expandedRowKeys = props.options.expandedRowKeys.filter((x) => x !== key);
       }
-      props?.options?.listeners?.expand?.(expanded, record);
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.expand?.(expanded, record);
+      });
     };
 
     // RowSelection 事件
     const onRowSelect = (record: any, selected: boolean, _selectedRows, nativeEvent) => {
-      props?.options?.listeners?.rowSelect?.(record, selected, _selectedRows, nativeEvent);
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.rowSelect?.(record, selected, _selectedRows, nativeEvent);
+      });
     };
 
     const onRowSelectChange = (selectedRowKeys, _selectedRows) => {
-      if (props?.options?.rowSelection) {
-        selectedRows = _selectedRows;
+      if (props.options?.rowSelection) {
         if (props.options.rowSelection?.selectedRowKeys) {
           props.options.rowSelection.selectedRowKeys = selectedRowKeys;
         }
       }
-      props?.options?.listeners?.rowSelectChange?.(selectedRowKeys, _selectedRows);
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.rowSelectChange?.(selectedRowKeys, _selectedRows);
+      });
     };
 
     const onRowSelectAll = (selected: boolean, _selectedRows: any[], changeRows: any[]) => {
-      props?.options?.listeners?.rowSelectAll?.(selected, _selectedRows, changeRows);
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.rowSelectAll?.(selected, _selectedRows, changeRows);
+      });
     };
 
     const onRowSelectInvert = (_selectedRows: any[]) => {
-      props?.options?.listeners?.rowSelectInvert?.(_selectedRows);
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.rowSelectInvert?.(_selectedRows);
+      });
     };
 
-    let resizeObs: ResizeObserver;
+    // 监控 columns 变化
+    watch(
+      [() => props.options.columns, () => props.options.columns.length],
+      () => {
+        updateColumns();
+      },
+      {
+        immediate: true
+      }
+    );
 
     onMounted(() => {
       loadData().then(() => {
@@ -827,7 +938,6 @@ export const XTable = defineComponent({
       onRowSelectChange,
       onRowSelectAll,
       onRowSelectInvert,
-      handleRecordChange,
       getRowKey,
 
       // events
@@ -839,8 +949,11 @@ export const XTable = defineComponent({
       addData,
       updateData,
       removeData,
+      updateColumns,
       refresh,
-      reload
+      reload,
+      fullscreen,
+      handleRecordChange
     };
   },
   render(ctx) {
@@ -857,14 +970,18 @@ export const XTable = defineComponent({
         return (
           <div ref='topRef' class={['tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2', ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2']}>
             <div class={['tw-flex-1', ctx.options.bordered ? undefined : '']}>
-              {ctx.$slots?.title?.({
-                ...slotData,
-                options: ctx.options,
-                params: ctx.params,
-                methods: ctx.methods,
-                handler: ctx.handler,
-                handleRecordChange: ctx.handleRecordChange
-              })}
+              <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
+                {ctx.options?.titlePrefix?.(ctx)}
+                {ctx.$slots?.title?.({
+                  ...slotData,
+                  options: ctx.options,
+                  params: ctx.params,
+                  methods: ctx.methods,
+                  handler: ctx.handler,
+                  handleRecordChange: ctx.handleRecordChange
+                })}
+                {ctx.options?.titleSuffix?.(ctx)}
+              </div>
             </div>
             {ctx.options.dataSource.total &&
             ctx.options.pagination &&
@@ -1012,6 +1129,17 @@ export const XTable = defineComponent({
             ''
           )
         ]}
+        <div class='ant-table-x-floater'>
+          <XButtonFullscreenExit
+            color='primary'
+            type='3d'
+            onClick={() => {
+              // 退出全屏
+              gsap.set(ctx.wrapRef, { clearProps: 'top,left,width,height' });
+              ctx.wrapRef.classList.remove('ant-table-x-fixed');
+            }}
+          />
+        </div>
       </div>
     );
   }

@@ -16,6 +16,8 @@ export default {
         title: '删除',
         success: '删除成功.'
       },
+      fullscreen: '全屏',
+      fullscreenExit: '退出全屏',
       save: '保存',
       refresh: '刷新',
       upload: '上传',

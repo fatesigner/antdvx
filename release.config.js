@@ -37,7 +37,7 @@ module.exports = {
         releaseRules: releaseRules,
         parserOpts: {
           // mergePattern: 'Merged PR .*:',
-          // the commits that contains BREAKING CHANGE or BREAKING CHANGES in their body will be considered breaking changes.
+          // the commits that contain BREAKING CHANGE or BREAKING CHANGES in their body will be considered breaking changes.
           noteKeywords: ['BREAKING CHANGE', 'BREAKING CHANGES']
         }
       }

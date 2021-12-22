@@ -1,3 +1,22 @@
+.ant-table-x-floater {
+  position: absolute;
+  right: 50%;
+  bottom: 20px;
+  z-index: 10;
+  display: none;
+  transform: translate3d(-50%, 0, 0);
+}
+
+.ant-table-x.ant-table-x-fixed {
+  position: fixed;
+  z-index: 100;
+  background-color: #fff;
+
+  .ant-table-x-floater {
+    display: flex;
+  }
+}
+
 .ant-table-x > .ant-table-wrapper > .ant-spin-nested-loading > .ant-spin-container > .ant-table {
   .ant-table-title {
     padding: 0;

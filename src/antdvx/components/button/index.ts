@@ -8,6 +8,8 @@ export * from './button-add';
 export * from './button-delete';
 export * from './button-edit';
 export * from './button-export';
+export * from './button-fullscreen';
+export * from './button-fullscreen-exit';
 export * from './button-refresh';
 export * from './button-save';
 export * from './button-search';
