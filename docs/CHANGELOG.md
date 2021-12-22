@@ -1,3 +1,10 @@
+# [1.0.0-alpha.70](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.69...v1.0.0-alpha.70) (2021-12-22)
+
+
+### Bug Fixes
+
+* 限制 axios 版本为 0.22.0、更新 XButton 组件中 rowKey 字段的类型 ([0f69112](https://github.com/fatesigner/antdvx/commit/0f69112503948f081c04b6f1d6286ffd83f5d9b8))
+
 # [1.0.0-alpha.69](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.68...v1.0.0-alpha.69) (2021-12-22)
 
 
