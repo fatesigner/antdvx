@@ -234,7 +234,7 @@ export interface IXTablePropsType<TModel extends Record<string, any>, TParams ex
   extends Omit<TableProps, 'columns' | 'dataSource' | 'rowKey' | 'scroll'> {
   // Override Antd
   columns?: IXTableColumnProps<TModel>[];
-  rowKey?: keyof TModel | IXTableRowKeyFunc<TModel>;
+  rowKey?: keyof IXTableModelExtend<TModel> | IXTableRowKeyFunc<IXTableModelExtend<TModel>>;
   scroll?: { x?: boolean | number; y?: boolean | number };
 
   /**

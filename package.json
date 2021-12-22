@@ -55,7 +55,7 @@
     "ace-builds": "1.x",
     "ant-design-vue": "2.x",
     "await-to-js": "3.x",
-    "axios": "0.x",
+    "axios": "0.22.0",
     "dayjs": "1.x",
     "echarts": "5.x",
     "exceljs": "4.x",
