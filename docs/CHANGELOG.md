@@ -1,3 +1,10 @@
+# [1.0.0-alpha.69](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.68...v1.0.0-alpha.69) (2021-12-22)
+
+
+### Features
+
+* XButton 组件添加 fullscreen、 columnMap、titlePrefix、titleSuffix 选项及功能 ([a8ec198](https://github.com/fatesigner/antdvx/commit/a8ec198524fc0298a8de71df8c600eedfc3d54ba))
+
 # [1.0.0-alpha.68](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.67...v1.0.0-alpha.68) (2021-12-16)
 
 
