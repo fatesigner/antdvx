@@ -2,7 +2,6 @@
  * table
  */
 
-import { gsap } from 'gsap';
 import to from 'await-to-js';
 import { merge } from 'lodash-es';
 import { useI18n } from 'vue-i18n';
@@ -17,7 +16,15 @@ import { i18nMessages } from '../../i18n/messages';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
 import { XButton, XButtonFullscreenExit, XButtonSearch } from '../button';
-import { IconAddBoxLine, IconCheckboxIndeterminateLine, IconSearchLine } from '../iconfont';
+import {
+  IconAddBoxLine,
+  IconCheckboxIndeterminateLine,
+  IconFilter2Fill,
+  IconFilter3Fill,
+  IconFilter3Line,
+  IconFilterOffLine,
+  IconSearchLine
+} from '../iconfont';
 
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
 
@@ -146,15 +153,6 @@ export const XTable = defineComponent({
 
     const antTableRef = ref();
 
-    if (props.options.autoScroll) {
-      props.options.scroll = Object.assign(
-        {
-          y: 0
-        },
-        props.options.scroll
-      );
-    }
-
     // 列
     const columns_ = reactive([]);
 
@@ -164,6 +162,37 @@ export const XTable = defineComponent({
     // 当前选中的过滤、筛选条件
     let filters: IXTableFilters<any> = {} as any;
     let sorter: IXTableSorter<any> = {} as any;
+
+    // 定义变量保存 autoScroll 参数
+    const autoScroll = {
+      enabled: false,
+      orgin: undefined
+    };
+
+    // 设置自适应高度
+    const setAutoScroll = () => {
+      if (!autoScroll.enabled) {
+        autoScroll.enabled = true;
+        autoScroll.orgin = props.options.scroll;
+      }
+      props.options.scroll = Object.assign(
+        {
+          y: 0
+        },
+        props.options.scroll
+      );
+      const computedStyle = getComputedStyle(wrapRef.value);
+      props.options.scroll.y =
+        wrapRef.value.offsetHeight -
+        (parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom)) -
+        (topRef.value?.offsetHeight ?? 0) -
+        (bottomRef.value?.offsetHeight ?? 0) -
+        ((wrapRef.value.querySelector('.ant-table-thead') as HTMLElement)?.offsetHeight + 5);
+    };
+
+    const resetAutoScroll = () => {
+      props.options.scroll = autoScroll.orgin;
+    };
 
     // 重绘 fixed 行高度，以解决 fixed 错位的渲染问题
     const resizeFixedRows = debounce(() => {
@@ -187,15 +216,8 @@ export const XTable = defineComponent({
         });
       });
 
-      // 设置高度
       if (props.options.autoScroll) {
-        const computedStyle = getComputedStyle(wrapRef.value);
-        props.options.scroll.y =
-          wrapRef.value.offsetHeight -
-          (parseFloat(computedStyle.paddingTop) + parseFloat(computedStyle.paddingBottom)) -
-          (topRef.value?.offsetHeight ?? 0) -
-          (bottomRef.value?.offsetHeight ?? 0) -
-          ((wrapRef.value.querySelector('.ant-table-thead') as HTMLElement)?.offsetHeight + 5);
+        setAutoScroll();
       }
     }, 100);
 
@@ -578,8 +600,8 @@ export const XTable = defineComponent({
               if (!x.filterIcon) {
                 x_.filterIcon = ({ filtered }) => {
                   return (
-                    <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500'>
-                      <IconSearchLine color={filtered ? 'primary' : null} />
+                    <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500' title={t(i18nMessages.antd.action.filter)}>
+                      {filtered ? <IconFilter2Fill color='primary' /> : <IconFilter3Line scale={1.3} />}
                     </div>
                   );
                 };
@@ -633,21 +655,18 @@ export const XTable = defineComponent({
     const fullscreen: IXTableHandlers<any>['fullscreen'] = () => {
       return new Promise((resolve) => {
         if (wrapRef.value) {
-          const bounding = wrapRef.value.getBoundingClientRect();
-
-          gsap.set(wrapRef.value, {
-            top: bounding.top,
-            left: bounding.left,
-            width: wrapRef.value.offsetWidth,
-            height: wrapRef.value.offsetHeight
-          });
+          // const bounding = wrapRef.value.getBoundingClientRect();
 
           wrapRef.value.classList.add('ant-table-x-fixed');
 
+          setAutoScroll();
+
+          resolve();
+
           // 执行帧动画
-          const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-          const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-          gsap.to(wrapRef.value, {
+          // const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+          // const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+          /* gsap.to(wrapRef.value, {
             duration: 0.3,
             ease: 'power4',
             padding: 16,
@@ -658,7 +677,7 @@ export const XTable = defineComponent({
             onComplete() {
               resolve();
             }
-          });
+          }); */
         } else {
           resolve();
         }
@@ -902,6 +921,18 @@ export const XTable = defineComponent({
       }
     );
 
+    watch(
+      () => props.options.autoScroll,
+      (val) => {
+        if (val) {
+          setAutoScroll();
+        } else {
+          resetAutoScroll();
+        }
+        resizeFixedRows();
+      }
+    );
+
     onMounted(() => {
       loadData().then(() => {
         processData();
@@ -913,6 +944,10 @@ export const XTable = defineComponent({
           resizeObs = new ResizeObserver(resizeFixedRows);
         }
         resizeObs.observe(antTableRef.value.$el);
+      }
+
+      if (props.options.autoScroll) {
+        setAutoScroll();
       }
     });
 
@@ -932,6 +967,8 @@ export const XTable = defineComponent({
       bottomRef,
       antTableRef,
       columns_,
+      setAutoScroll,
+      resetAutoScroll,
       onPageChange,
       onPageSizeChange,
       onRowSelect,
@@ -1135,8 +1172,9 @@ export const XTable = defineComponent({
             type='3d'
             onClick={() => {
               // 退出全屏
-              gsap.set(ctx.wrapRef, { clearProps: 'top,left,width,height' });
+              // gsap.set(ctx.wrapRef, { clearProps: 'top, left, width, height, padding' });
               ctx.wrapRef.classList.remove('ant-table-x-fixed');
+              ctx.resetAutoScroll();
             }}
           />
         </div>

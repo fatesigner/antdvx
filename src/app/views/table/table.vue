@@ -1,5 +1,5 @@
 <template>
-  <PageWrapper title="Table" overflow-hidden>
+  <PageWrapper title="Table" :overflow-hidden="tbRef.options.autoScroll">
     <div class="tw-h-full tw-p-2">
       <div class="tw-h-full tw-p-4 tw-bg-white">
         <XTable v-bind="tbRef">
@@ -10,6 +10,7 @@
               <XButtonAdd @click="methods.add" />
               <XButtonDelete v-if="options.rowSelection.selectedRowKeys.length" color="danger" type="outline" :handler="methods.delAll" />
               <ACheckbox v-model:checked="options.dataSource.serverPaging">服务端分页</ACheckbox>
+              <ACheckbox v-model:checked="options.autoScroll">自适应高度</ACheckbox>
               <!--<XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="handler.refresh" />-->
             </div>
           </template>
@@ -115,7 +116,11 @@ export default defineComponent({
     // 主表
     const tbRef = createXTable(
       {
-        autoScroll: true,
+        // autoScroll: true,
+        bordered: true,
+        scroll: {
+          x: true
+        },
         size: 'small',
         rowKey: 'userid',
         rowSelection: {
@@ -130,14 +135,14 @@ export default defineComponent({
           {
             title: <strong>编号</strong>,
             dataIndex: 'userid',
-            width: 100,
+            width: 140,
             sorter: true,
             sortDirections: ['descend']
           },
           {
             title: '用户名 & 账号',
             dataIndex: 'username',
-            width: 80,
+            width: 120,
             filterMode: 'keywords',
             onFilter(value, record) {
               return record.username.toLowerCase().includes(value.toLowerCase());
@@ -146,7 +151,7 @@ export default defineComponent({
           {
             title: '手机号',
             dataIndex: 'phone',
-            width: 180,
+            width: 120,
             sorter: true
           },
           {
@@ -158,7 +163,7 @@ export default defineComponent({
           {
             title: '地址',
             dataIndex: 'address',
-            width: 220,
+            width: 320,
             sorter: true
           },
           {
@@ -186,7 +191,7 @@ export default defineComponent({
           {
             title: '创建时间',
             dataIndex: 'createTime',
-            width: 100,
+            width: 140,
             sorter(a, b) {
               return new Date(a.createTime).getTime() - new Date(b.createTime).getTime();
             },

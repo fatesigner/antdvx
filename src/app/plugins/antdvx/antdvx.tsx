@@ -63,7 +63,7 @@ export const Antdvx = {
       titleSuffix(tbRef) {
         return [
           <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={tbRef.handler.refresh} />,
-          <XButtonFullscreen only-icon color='primary' size='mini' type='link' handler={tbRef.handler.fullscreen} />
+          <XButtonFullscreen color='primary' size='mini' type='link' handler={tbRef.handler.fullscreen} />
         ];
       }
     });

@@ -28,7 +28,7 @@ export type IXTableFilters<TModel extends Record<string, any>> = Record<keyof TM
 export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'customRender' | 'dataIndex' | 'filters'> & {
   dataIndex?: keyof TModel;
 
-  customRender?: (data: { text: any; record: IXTableModelExtend<TModel>; index: number }) => string | VNode;
+  customRender?: (data: { text: any; record: IXTableModelExtend<TModel>; index: number }) => number | string | VNode | VNode[];
 
   /**
    * 过滤模式，默认为 filters
