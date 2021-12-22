@@ -1,3 +1,10 @@
+# [1.0.0-alpha.71](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.70...v1.0.0-alpha.71) (2021-12-22)
+
+
+### Bug Fixes
+
+* 更新 XTable filter 功能 ([c5fbb53](https://github.com/fatesigner/antdvx/commit/c5fbb53f939d9abbd5d4a593d10dd469fe9154fe))
+
 # [1.0.0-alpha.70](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.69...v1.0.0-alpha.70) (2021-12-22)
 
 
