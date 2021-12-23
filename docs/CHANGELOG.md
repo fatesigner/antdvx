@@ -1,3 +1,10 @@
+# [1.0.0-alpha.72](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.71...v1.0.0-alpha.72) (2021-12-23)
+
+
+### Features
+
+* update XButtton fullscreen ([70c4d53](https://github.com/fatesigner/antdvx/commit/70c4d53234d40e13de15e664b9415b35352af6f7))
+
 # [1.0.0-alpha.71](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.70...v1.0.0-alpha.71) (2021-12-22)
 
 
