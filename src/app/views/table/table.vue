@@ -117,7 +117,7 @@ export default defineComponent({
     const tbRef = createXTable(
       {
         // autoScroll: true,
-        bordered: true,
+        // bordered: true,
         scroll: {
           x: true
         },
@@ -127,9 +127,6 @@ export default defineComponent({
           type: 'checkbox',
           columnWidth: 40,
           selectedRowKeys: []
-        },
-        pagination: {
-          position: 'both'
         },
         columns: [
           {

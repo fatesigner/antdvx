@@ -108,7 +108,7 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
   };
 
   // 代理异步函数
-  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow', 'fullscreen'];
+  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow'];
 
   bindLazyFunc(handler, bindProperties);
 
@@ -651,37 +651,42 @@ export const XTable = defineComponent({
       );
     };
 
-    // 全屏放大
+    // 进入全屏浏览模式
     const fullscreen: IXTableHandlers<any>['fullscreen'] = () => {
-      return new Promise((resolve) => {
-        if (wrapRef.value) {
-          // const bounding = wrapRef.value.getBoundingClientRect();
+      if (wrapRef.value) {
+        // const bounding = wrapRef.value.getBoundingClientRect();
 
-          wrapRef.value.classList.add('ant-table-x-fixed');
+        wrapRef.value.classList.add('ant-table-x-fixed');
 
-          setAutoScroll();
+        props.options.isFullscreen = true;
 
-          resolve();
+        setAutoScroll();
 
-          // 执行帧动画
-          // const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-          // const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-          /* gsap.to(wrapRef.value, {
-            duration: 0.3,
-            ease: 'power4',
-            padding: 16,
-            top: 0,
-            left: 0,
-            width: vw,
-            height: vh,
-            onComplete() {
-              resolve();
-            }
-          }); */
-        } else {
-          resolve();
-        }
-      });
+        // 执行帧动画
+        // const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+        // const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+        /* gsap.to(wrapRef.value, {
+          duration: 0.3,
+          ease: 'power4',
+          padding: 16,
+          top: 0,
+          left: 0,
+          width: vw,
+          height: vh,
+          onComplete() {
+          }
+        }); */
+      }
+    };
+
+    // 退出全屏浏览
+    const fullscreenExit: IXTableHandlers<any>['fullscreenExit'] = () => {
+      if (wrapRef.value) {
+        // gsap.set(ctx.wrapRef, { clearProps: 'top, left, width, height, padding' });
+        wrapRef.value.classList.remove('ant-table-x-fixed');
+        resetAutoScroll();
+        props.options.isFullscreen = false;
+      }
     };
 
     // update handlers
@@ -701,6 +706,7 @@ export const XTable = defineComponent({
         refresh,
         reload,
         fullscreen,
+        fullscreenExit,
         handleRecordChange
         // validate: null,
         // validateRow: null
@@ -990,6 +996,7 @@ export const XTable = defineComponent({
       refresh,
       reload,
       fullscreen,
+      fullscreenExit,
       handleRecordChange
     };
   },
@@ -1172,9 +1179,7 @@ export const XTable = defineComponent({
             type='3d'
             onClick={() => {
               // 退出全屏
-              // gsap.set(ctx.wrapRef, { clearProps: 'top, left, width, height, padding' });
-              ctx.wrapRef.classList.remove('ant-table-x-fixed');
-              ctx.resetAutoScroll();
+              ctx.fullscreenExit();
             }}
           />
         </div>

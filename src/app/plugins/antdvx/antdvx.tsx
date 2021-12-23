@@ -4,7 +4,7 @@
 
 import { merge } from 'lodash-es';
 import { message, notification } from 'ant-design-vue';
-import { XButtonFullscreen, XButtonRefresh, configureXTable, setAntdvxPipesConfig, setRequestAdapter } from '@/antdvx';
+import { XButtonFullscreen, XButtonFullscreenExit, XButtonRefresh, configureXTable, setAntdvxPipesConfig, setRequestAdapter } from '@/antdvx';
 
 import { i18n } from '@/app/i18n';
 import { httpService } from '@/app/core/services';
@@ -63,7 +63,13 @@ export const Antdvx = {
       titleSuffix(tbRef) {
         return [
           <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={tbRef.handler.refresh} />,
-          <XButtonFullscreen color='primary' size='mini' type='link' handler={tbRef.handler.fullscreen} />
+          tbRef.options.isFullscreen ? (
+            <XButtonFullscreenExit color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreenExit} />
+          ) : (
+            <XButtonFullscreen color='primary' size='small' type='link' onClick={tbRef.handler.fullscreen} />
+          ),
+          <XButtonFullscreen color='primary' size='large' onClick={tbRef.handler.fullscreen} />,
+          <XButtonFullscreen color='primary' onClick={tbRef.handler.fullscreen} />
         ];
       }
     });

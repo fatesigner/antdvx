@@ -149,9 +149,14 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
   handleRecordChange?: (record: IXTableModelExtend<TModel>) => void;
 
   /**
-   * 全屏放大
+   * 进入全屏浏览模式
    */
-  fullscreen?: () => Promise<void>;
+  fullscreen?: () => void;
+
+  /**
+   * 退出全屏浏览
+   */
+  fullscreenExit?: () => void;
 }
 
 export interface IXTableListenersType<TModel extends Record<string, any>> {
@@ -279,7 +284,12 @@ export interface IXTableRefType<
   TParams extends Record<string, any>,
   TMethods extends Record<string, (...args: any[]) => any>
 > {
-  options: IXTablePropsType<TModel, TParams>;
+  options: IXTablePropsType<TModel, TParams> & {
+    /**
+     * 指示当前是否处于全屏浏览的状态
+     */
+    readonly isFullscreen?: boolean;
+  };
   handler: IXTableHandlers<TModel>;
   params: TParams;
   methods: TMethods;
