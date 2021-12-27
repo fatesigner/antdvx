@@ -1,3 +1,12 @@
+# [1.0.0-alpha.73](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.72...v1.0.0-alpha.73) (2021-12-27)
+
+
+### Features
+
+* add XButtonDownload ([da8f3f2](https://github.com/fatesigner/antdvx/commit/da8f3f277ec071bf82bd94a2d6df6198318759aa))
+* BackTop 组件添加可拖动功能 ([f3ea5db](https://github.com/fatesigner/antdvx/commit/f3ea5dbc212ed7b8f8329b31e9f46ed533c88052))
+* update node version to v16 ([df133e6](https://github.com/fatesigner/antdvx/commit/df133e6ee76d3e15c875b245fae3566d4635adb9))
+
 # [1.0.0-alpha.72](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.71...v1.0.0-alpha.72) (2021-12-23)
 
 
