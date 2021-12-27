@@ -16,6 +16,7 @@ export default {
         title: '删除',
         success: '删除成功.'
       },
+      download: '下载',
       filter: '筛选',
       fullscreen: '全屏',
       fullscreenExit: '退出全屏',

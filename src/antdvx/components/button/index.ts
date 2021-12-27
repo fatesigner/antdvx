@@ -6,6 +6,7 @@ export * from './types';
 export * from './button';
 export * from './button-add';
 export * from './button-delete';
+export * from './button-download';
 export * from './button-edit';
 export * from './button-export';
 export * from './button-fullscreen';

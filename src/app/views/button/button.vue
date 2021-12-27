@@ -4,14 +4,14 @@
       <div class="tw-p-4 tw-space-y-4 tw-bg-white">
         <div class="tw-text-lg">基础</div>
         <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4">
-          <div class="tw-p-2 tw-border tw-border-gray-300" v-for="type in types">
+          <div class="tw-p-2 tw-border tw-border-gray-300" v-for="type in types" :key="type">
             <div class="tw-text-lg tw-p-2">{{ type }} button</div>
             <div class="tw-text-sm tw-p-2">Toggle</div>
             <div class="tw-flex tw-flex-wrap">
               <div class="tw-p-2">
                 <XButton color="default" :type="type">normal</XButton>
               </div>
-              <div class="tw-p-2" v-for="color in colors">
+              <div class="tw-p-2" v-for="color in colors" :key="color">
                 <XButton :color="selected === color ? 'primary' : undefined" :type="type" @click="selected = color">{{ color }}</XButton>
               </div>
             </div>
@@ -20,7 +20,7 @@
               <div class="tw-p-2">
                 <XButton color="default" :type="type">normal</XButton>
               </div>
-              <div class="tw-p-2" v-for="color in colors">
+              <div class="tw-p-2" v-for="color in colors" :key="color">
                 <XButton :color="color" :type="type">{{ color }}</XButton>
               </div>
               <div class="tw-p-2">
@@ -38,7 +38,7 @@
             </div>
             <div class="tw-text-sm tw-p-2">Sizes</div>
             <div class="tw-flex tw-flex-wrap">
-              <div class="tw-p-2" v-for="size in sizes">
+              <div class="tw-p-2" v-for="size in sizes" :key="size">
                 <XButton :size="size" :type="type">{{ size }}</XButton>
               </div>
             </div>
@@ -66,12 +66,12 @@
               用于需要异步操作的按钮，提供一个异步函数 handler，函数执行阶段，将自动添加 loading，结束后，若该函数抛出异常，则自动显示 notification。
             </div>
             <div class="tw-flex tw-flex-wrap tw-p-2 tw-border tw-border-gray-300">
-              <div class="tw-p-2" v-for="type in types">
+              <div class="tw-p-2" v-for="type in types" :key="type">
                 <XButtonUpload :type="type" :handler="upload(3000)" />
               </div>
             </div>
             <div class="tw-flex tw-flex-wrap tw-p-2 tw-border tw-border-gray-300">
-              <div class="tw-p-2" v-for="type in types">
+              <div class="tw-p-2" v-for="type in types" :key="type">
                 <XButtonExport :type="type" :options="exportOptions" />
               </div>
               <div class="tw-p-2">
@@ -123,6 +123,9 @@
                 <XButtonRefresh only-icon type="text" :handler="load(3000, true)" />
               </div>
               <div class="tw-p-2">
+                <XButtonDownload only-icon type="text" :handler="upload(3000, true)" />
+              </div>
+              <div class="tw-p-2">
                 <XButtonUpload only-icon type="text" :handler="upload(3000, true)" />
               </div>
             </div>
@@ -143,6 +146,9 @@
                 <XButtonRefresh color="primary" size="mini" type="link" :handler="load(3000, true)" />
               </div>
               <div class="tw-p-2">
+                <XButtonDownload color="primary" size="mini" type="link" :handler="load(3000, true)" />
+              </div>
+              <div class="tw-p-2">
                 <XButtonUpload color="secondary" size="mini" type="link" :handler="upload(3000, true)" />
               </div>
             </div>
@@ -161,6 +167,9 @@
               </div>
               <div class="tw-p-2">
                 <XButtonRefresh only-icon color="primary" size="mini" type="link" :handler="load(3000, true)" />
+              </div>
+              <div class="tw-p-2">
+                <XButtonDownload only-icon color="secondary" size="mini" type="link" :handler="upload(3000, true)" />
               </div>
               <div class="tw-p-2">
                 <XButtonUpload only-icon color="secondary" size="mini" type="link" :handler="upload(3000, true)" />
@@ -190,10 +199,10 @@ import {
   ANTDVX_SIZES,
   IXButtonExportOptions,
   IconArrowDownSLine,
-  ScrollView,
   XButton,
   XButtonAdd,
   XButtonDelete,
+  XButtonDownload,
   XButtonEdit,
   XButtonExport,
   XButtonRefresh,
@@ -219,9 +228,9 @@ export default defineComponent({
     XButtonRefresh,
     XButtonExport,
     XButtonUpload,
+    XButtonDownload,
     IconArrowDownSLine,
     PageWrapper,
-    ScrollView,
     [Menu.name]: Menu,
     [Menu.Item.name]: Menu.Item,
     [Dropdown.name]: Dropdown

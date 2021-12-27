@@ -16,6 +16,7 @@ export default {
         title: 'Delete',
         success: 'Delete success.'
       },
+      download: 'Download',
       filter: 'Filter',
       fullscreen: 'Fullscreen',
       fullscreenExit: 'Exit Fullscreen',
