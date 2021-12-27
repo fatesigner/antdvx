@@ -3,6 +3,6 @@ module.exports = {
   rules: {
     'no-descending-specificity': null,
     'property-no-unknown': null,
-    'function-name-case': ['lower', { ignoreKeywords: ['/colorPalette/'] }]
+    'function-name-case': ['lower', { ignoreFunctions: ['/colorPalette/'] }]
   }
 };

@@ -124,6 +124,7 @@ export default defineComponent({
         size: 'small',
         rowKey: 'userid',
         rowSelection: {
+          fixed: 'left',
           type: 'checkbox',
           columnWidth: 40,
           selectedRowKeys: []
@@ -133,6 +134,7 @@ export default defineComponent({
             title: <strong>编号</strong>,
             dataIndex: 'userid',
             width: 140,
+            fixed: 'left',
             sorter: true,
             sortDirections: ['descend']
           },
@@ -197,6 +199,7 @@ export default defineComponent({
           {
             title: '操作',
             width: 120,
+            fixed: 'right',
             slots: { customRender: 'actions' }
           }
         ],
