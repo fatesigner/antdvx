@@ -663,9 +663,9 @@ module.exports = async function (options) {
           mangle: false,
           output: {
             // 美化输出
-            beautify: true,
+            beautify: false,
             // 是否保留注释 默认为 true
-            comments: true,
+            comments: false,
             quote_keys: false,
             quote_style: 1
           },
@@ -700,15 +700,11 @@ module.exports = async function (options) {
   }
 
   if (isDevServer) {
-    let port;
     // Find available port.
-    await portfinder
+    const port = await portfinder
       .getPortPromise({
         port: options?.devServer?.port ?? 8080,
         stopPort: 65535
-      })
-      .then((_port) => {
-        port = _port;
       })
       .catch((err) => {
         throw err;

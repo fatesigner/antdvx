@@ -1,8 +1,8 @@
 module.exports = {
   extends: '@fatesigner/stylelint-config',
   rules: {
-    'function-name-case': null,
     'no-descending-specificity': null,
-    'property-no-unknown': null
+    'property-no-unknown': null,
+    'function-name-case': ['lower', { ignoreKeywords: ['/colorPalette/'] }]
   }
 };

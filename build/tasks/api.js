@@ -32,11 +32,11 @@ gulp.task('api', async function () {
         `openapi-generator-cli generate -g ruby -i ${srcPath} -o ${outputPath} -g typescript-axios --artifact-version 1.0.0-SNAPSHOT --additional-properties=withSeparateModelsAndApi=true,modelPackage=models,apiPackage=api,useSingleRequestParameter=true`,
         (error, stdout, stderr) => {
           if (error) {
-            // console.log(`error: ${error.message}`);
+            console.log(`error: ${error.message}`);
             reject(error);
           }
           if (stderr) {
-            // console.log(`stderr: ${stderr}`);
+            console.log(`stderr: ${stderr}`);
             // return;
           }
           // console.log(`stdout: ${stdout}`);
