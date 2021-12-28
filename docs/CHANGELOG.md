@@ -1,3 +1,5 @@
+# [1.0.0-alpha.74](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.73...v1.0.0-alpha.74) (2021-12-28)
+
 # [1.0.0-alpha.73](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.72...v1.0.0-alpha.73) (2021-12-27)
 
 
