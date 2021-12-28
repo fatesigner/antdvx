@@ -111,12 +111,12 @@ export const XBackTop = defineComponent({
         fromEvent($drag, 'touchstart', { capture: false, passive: false })
       );
       const mousemove$ = merge(
-        fromEvent(document.body, 'mousemove', { capture: false, passive: false }),
-        fromEvent(document.body, 'touchmove', { capture: false, passive: false })
+        fromEvent(document, 'mousemove', { capture: false, passive: false }),
+        fromEvent(document, 'touchmove', { capture: false, passive: false })
       );
       const mouseup$ = merge(
-        fromEvent(document.body, 'mouseup', { capture: false, passive: false }),
-        fromEvent(document.body, 'touchend', { capture: false, passive: false })
+        fromEvent(document, 'mouseup', { capture: false, passive: false }),
+        fromEvent(document, 'touchend', { capture: false, passive: false })
       );
 
       return mousedown$
@@ -206,6 +206,8 @@ export const XBackTop = defineComponent({
         }
         drag$ = getDrag$(wrapRef.value).subscribe((pos) => {
           const vw = getViewportSize(document);
+          console.log('pos.right', pos.right);
+          console.log('pos.bottom', pos.bottom);
           if (pos.right >= 0 && pos.right <= vw.width - wrapRef.value.offsetWidth) {
             wrapRef.value.style.right = `${pos.right}px`;
           }
