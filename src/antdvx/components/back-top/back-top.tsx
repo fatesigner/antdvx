@@ -233,7 +233,7 @@ export const XBackTop = defineComponent({
   },
   render(ctx) {
     return (
-      <div class='antdvx-back-top' ref='wrapRef' style={{ 'z-index': ctx.zIndex }} title={ctx.$t(i18nMessages.antd.backTop.title)} onClick={ctx.onClick}>
+      <div class='antdvx-back-top' ref='wrapRef' style={{ zIndex: ctx.zIndex }} title={ctx.$t(i18nMessages.antd.backTop.title)} onClick={ctx.onClick}>
         {ctx.$slots?.default ? (
           ctx.$slots.default()
         ) : (
