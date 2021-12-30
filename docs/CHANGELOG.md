@@ -1,3 +1,10 @@
+# [1.0.0-alpha.76](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.75...v1.0.0-alpha.76) (2021-12-30)
+
+
+### Bug Fixes
+
+* update style property type for zIndex ([3729f75](https://github.com/fatesigner/antdvx/commit/3729f750500ac37145cabf731fcb9ef0b48160a8))
+
 # [1.0.0-alpha.75](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.74...v1.0.0-alpha.75) (2021-12-30)
 
 
