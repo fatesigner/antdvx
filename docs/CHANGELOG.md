@@ -1,3 +1,10 @@
+# [1.0.0-alpha.75](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.74...v1.0.0-alpha.75) (2021-12-30)
+
+
+### Features
+
+* XTable 添加 getCurrentData 获取所有过滤、排序后（非分页后）的数据接口 ([ab36a7e](https://github.com/fatesigner/antdvx/commit/ab36a7e9b6d0436c39fac9ebbd09ab2c98b61dcb))
+
 # [1.0.0-alpha.74](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.73...v1.0.0-alpha.74) (2021-12-28)
 
 # [1.0.0-alpha.73](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.72...v1.0.0-alpha.73) (2021-12-27)
