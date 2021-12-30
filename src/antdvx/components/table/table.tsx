@@ -156,8 +156,11 @@ export const XTable = defineComponent({
     // 列
     const columns_ = reactive([]);
 
-    // 所有数据项
+    // 所有（非过滤、排序、分页后）数据
     let overallData = [];
+
+    // 所有过滤、排序后（非分页后）的数据，
+    let currentData = [];
 
     // 当前选中的过滤、筛选条件
     let filters: IXTableFilters<any> = {} as any;
@@ -245,8 +248,10 @@ export const XTable = defineComponent({
     // 处理数据，过滤、分页、筛选
     const processData = () => {
       if (props.options?.dataSource?.serverPaging) {
+        currentData = overallData;
+
         // 服务端分页
-        props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...overallData);
+        props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...currentData);
 
         // emit event
         nextTick(() => {
@@ -301,19 +306,21 @@ export const XTable = defineComponent({
           }
         }
 
+        currentData = data;
+
         // 客户端分页
-        props.options.dataSource.total = data.length;
+        props.options.dataSource.total = currentData.length;
         if (props.options?.pagination && props.options.dataSource?.pageSize) {
           props.options.dataSource.data.splice(
             0,
             props.options.dataSource.data.length,
-            ...data.slice(
+            ...currentData.slice(
               (props.options.dataSource.pageNo - 1) * props.options.dataSource.pageSize,
               props.options.dataSource.pageNo * props.options.dataSource.pageSize
             )
           );
         } else {
-          props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...data);
+          props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...currentData);
         }
 
         // emit event
@@ -561,6 +568,10 @@ export const XTable = defineComponent({
       return overallData?.length ? overallData : props.options.dataSource.data;
     };
 
+    const getCurrentData: IXTableHandlers<any>['getCurrentData'] = () => {
+      return currentData?.length ? currentData : props.options.dataSource.data;
+    };
+
     // 重新渲染列
     const updateColumns: IXTableHandlers<any>['updateColumns'] = () => {
       columns_.splice(
@@ -700,6 +711,7 @@ export const XTable = defineComponent({
         removeData,
         getSelectedData,
         getAllData,
+        getCurrentData,
         updateColumns,
         selectAll,
         selectInvert,

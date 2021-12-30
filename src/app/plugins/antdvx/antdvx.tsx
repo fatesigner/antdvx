@@ -51,7 +51,7 @@ export const Antdvx = {
     configureXTable({
       columnMap(column) {
         if (!column.filterMode) {
-          column.filterMode = 'keywords';
+          // column.filterMode = 'keywords';
         }
         return column;
       },

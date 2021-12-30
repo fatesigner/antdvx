@@ -392,6 +392,8 @@ export default defineComponent({
           };
         },
         async delAll() {
+          console.log(tbRef.handler.getAllData());
+          console.log(tbRef.handler.getCurrentData());
           console.log(tbRef.handler.getSelectedData());
           Modal.success({
             title: '已选中以下数据',

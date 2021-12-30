@@ -107,9 +107,14 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
   getSelectedData?: () => IXTableModelExtend<TModel>[];
 
   /**
-   * 获取所有数据，非分页后
+   * 获取所有（非过滤、排序、分页后）数据
    */
   getAllData?: () => IXTableModelExtend<TModel>[];
+
+  /**
+   * 获取所有过滤、排序后（非分页后）的数据，
+   */
+  getCurrentData?: () => IXTableModelExtend<TModel>[];
 
   /**
    * 全选
