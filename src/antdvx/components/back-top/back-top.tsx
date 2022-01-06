@@ -206,8 +206,6 @@ export const XBackTop = defineComponent({
         }
         drag$ = getDrag$(wrapRef.value).subscribe((pos) => {
           const vw = getViewportSize(document);
-          console.log('pos.right', pos.right);
-          console.log('pos.bottom', pos.bottom);
           if (pos.right >= 0 && pos.right <= vw.width - wrapRef.value.offsetWidth) {
             wrapRef.value.style.right = `${pos.right}px`;
           }

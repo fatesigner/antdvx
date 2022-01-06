@@ -116,13 +116,13 @@
   right: 0;
   bottom: 0;
   left: 0;
-  height: @scrollbar-height * 2;
+  height: @scrollbar-height;
 
   > .antdvx-scroll-thumb {
     position: absolute;
     bottom: 0;
     width: 0;
-    height: @scrollbar-height;
+    height: 5px;
     transition: background-color 0.2s linear, height 0.2s ease-in-out;
   }
 }
@@ -131,12 +131,12 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: @scrollbar-width * 2;
+  width: @scrollbar-width;
 
   > .antdvx-scroll-thumb {
     position: absolute;
     right: 0;
-    width: @scrollbar-width;
+    width: 5px;
     height: 0;
     transition: background-color 0.2s linear, width 0.2s ease-in-out;
   }
@@ -158,7 +158,7 @@
     background-color: @scrollbar-track-color;
 
     > .antdvx-scroll-thumb {
-      height: @scrollbar-height * 2;
+      height: @scrollbar-height;
       background-color: @scrollbar-thumb-color
     }
   }
@@ -170,7 +170,7 @@
     background-color: @scrollbar-track-color;
 
     > .antdvx-scroll-thumb {
-      width: @scrollbar-width * 2;
+      width: @scrollbar-width;
       background-color: @scrollbar-thumb-color
     }
   }
