@@ -1,3 +1,10 @@
+# [1.0.0-alpha.77](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.76...v1.0.0-alpha.77) (2022-01-06)
+
+
+### Bug Fixes
+
+* 更新 ScrollView 滚动条样式 ([ceed93e](https://github.com/fatesigner/antdvx/commit/ceed93ed80af92e3e1f4a0c02d14cd0784853441))
+
 # [1.0.0-alpha.76](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.75...v1.0.0-alpha.76) (2021-12-30)
 
 
