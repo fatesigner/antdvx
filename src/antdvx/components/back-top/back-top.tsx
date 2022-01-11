@@ -55,6 +55,7 @@ export const XBackTop = defineComponent({
     const present = () => {
       if (!visible.value) {
         visible.value = true;
+        wrapRef.value.style.display = 'block';
         // 设置初始位置
         gsap
           .set(wrapRef.value, {
@@ -201,8 +202,7 @@ export const XBackTop = defineComponent({
             target_.value = $parent as HTMLElement;
           }
         } else {
-          // switchAction();
-          present();
+          switchAction();
         }
         drag$ = getDrag$(wrapRef.value).subscribe((pos) => {
           const vw = getViewportSize(document);
