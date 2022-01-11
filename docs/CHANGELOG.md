@@ -1,3 +1,10 @@
+# [1.0.0-alpha.78](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.77...v1.0.0-alpha.78) (2022-01-11)
+
+
+### Bug Fixes
+
+* update BackTop component ([32ab3a4](https://github.com/fatesigner/antdvx/commit/32ab3a4c59209aab9562da608865c6e750d9fb52))
+
 # [1.0.0-alpha.77](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.76...v1.0.0-alpha.77) (2022-01-06)
 
 
