@@ -1,3 +1,10 @@
+# [1.0.0-alpha.79](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.78...v1.0.0-alpha.79) (2022-01-12)
+
+
+### Features
+
+* Add settings panel for XTable component ([09d876c](https://github.com/fatesigner/antdvx/commit/09d876c72076ce7fcf8486a20b678bda2a7ef212))
+
 # [1.0.0-alpha.78](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.77...v1.0.0-alpha.78) (2022-01-11)
 
 
