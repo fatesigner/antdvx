@@ -7,24 +7,18 @@ import { merge } from 'lodash-es';
 import { useI18n } from 'vue-i18n';
 import { bindLazyFunc, debounce } from '@fatesigner/utils';
 import { TableProps } from 'ant-design-vue/es/table/interface';
-import { Input, Pagination, Table, notification } from 'ant-design-vue';
-import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
-import { PropType, VNode, defineComponent, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { Checkbox, Input, InputNumber, Pagination, Select, Table, notification } from 'ant-design-vue';
+import { isArray, isBoolean, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
+import { PropType, VNode, defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
-import { AntdHttpAdapter } from '../../config';
+import { exchangeItem } from '../../utils';
 import { i18nMessages } from '../../i18n/messages';
+import { AntdHttpAdapter, AntdStorageService } from '../../config';
 import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
+import { XModal, createXModal } from '../modal';
 import { XButton, XButtonFullscreenExit, XButtonSearch } from '../button';
-import {
-  IconAddBoxLine,
-  IconCheckboxIndeterminateLine,
-  IconFilter2Fill,
-  IconFilter3Fill,
-  IconFilter3Line,
-  IconFilterOffLine,
-  IconSearchLine
-} from '../iconfont';
+import { IconAddBoxLine, IconArrowDownLine, IconArrowUpLine, IconCheckboxIndeterminateLine, IconFilter2Fill, IconFilter3Line } from '../iconfont';
 
 import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
 
@@ -143,6 +137,11 @@ export const XTable = defineComponent({
     }
   },
   setup(props: any) {
+    const instance = getCurrentInstance();
+
+    // 定义 uid
+    const uid = instance.uid;
+
     let resizeObs: ResizeObserver;
 
     const { t } = useI18n();
@@ -165,6 +164,19 @@ export const XTable = defineComponent({
     // 当前选中的过滤、筛选条件
     let filters: IXTableFilters<any> = {} as any;
     let sorter: IXTableSorter<any> = {} as any;
+
+    // 表格控制面板 选项
+    const settingsPanelOptions = reactive({
+      changed: false,
+      dataSource: []
+    });
+
+    // 表格控制面板 弹出层
+    const settingsPanelRef = createXModal({
+      width: 620,
+      destroyOnClose: true,
+      footer: false
+    });
 
     // 定义变量保存 autoScroll 参数
     const autoScroll = {
@@ -700,6 +712,31 @@ export const XTable = defineComponent({
       }
     };
 
+    // 打开当前表格的设置面板
+    const presentSettingsPanel: IXTableHandlers<any>['presentSettingsPanel'] = (onDismissed?: (changed: boolean) => void) => {
+      settingsPanelOptions.dataSource = [];
+      props.options.columns.forEach((x, index) => {
+        let fixed;
+        if (isBoolean(x.fixed) && x.fixed) {
+          fixed = 'left';
+        } else {
+          fixed = x.fixed;
+        }
+        settingsPanelOptions.dataSource.push({
+          key: index,
+          columnName: x.title,
+          visible: !x.hidden,
+          width: x.width,
+          fixed
+        });
+      });
+      settingsPanelOptions.changed = false;
+      settingsPanelRef.options.title = t(i18nMessages.antd.table.controlPanel.description);
+      return settingsPanelRef.handler.present(() => {
+        onDismissed?.(settingsPanelOptions.changed);
+      });
+    };
+
     // update handlers
     if (props.handler) {
       Object.assign(props.handler, {
@@ -719,6 +756,7 @@ export const XTable = defineComponent({
         reload,
         fullscreen,
         fullscreenExit,
+        presentSettingsPanel,
         handleRecordChange
         // validate: null,
         // validateRow: null
@@ -928,6 +966,28 @@ export const XTable = defineComponent({
       });
     };
 
+    if (AntdStorageService) {
+      // 还原已存储的配置
+      const str = AntdStorageService.get('table_control' + uid);
+      try {
+        const { expires, data } = JSON.parse(str);
+        if (expires && new Date().getTime() - expires < 3600 * 24 && data?.map) {
+          props.options.columns = data.map((x) => {
+            const column = props.options.columns.find((y) => y.title === x.columnName);
+            if (column) {
+              column.fixed = x.fixed;
+              column.hidden = !x.visible;
+              column.width = x.width;
+              column.fixed = x.fixed;
+            }
+            return column;
+          });
+        }
+      } catch (e) {}
+    } else {
+      console.warn('Please use setStorageService for Antdvx components.');
+    }
+
     // 监控 columns 变化
     watch(
       [() => props.options.columns, () => props.options.columns.length],
@@ -979,11 +1039,13 @@ export const XTable = defineComponent({
     });
 
     return {
-      i18nMessages,
+      uid,
       wrapRef,
       topRef,
       bottomRef,
       antTableRef,
+      settingsPanelRef,
+      settingsPanelOptions,
       columns_,
       setAutoScroll,
       resetAutoScroll,
@@ -1195,6 +1257,150 @@ export const XTable = defineComponent({
             }}
           />
         </div>
+        <XModal {...ctx.settingsPanelRef}>
+          <div class='tw-flex tw-flex-col tw-h-full'>
+            <div class='tw-flex-1 tw-pt-4 tw-pr-4 tw-pl-4 tw-overflow-y-auto' style='max-height: 460px;'>
+              <Table
+                pagination={false}
+                dataSource={ctx.settingsPanelOptions.dataSource}
+                columns={[
+                  {
+                    title: ctx.$t(i18nMessages.antd.table.controlPanel.columnName),
+                    dataIndex: 'columnName',
+                    customRender({ text }) {
+                      return text;
+                    }
+                  },
+                  {
+                    title: ctx.$t(i18nMessages.antd.table.controlPanel.visible),
+                    dataIndex: 'visible',
+                    width: 100,
+                    customRender({ record }) {
+                      return <Checkbox v-model={[record.visible, 'checked']} />;
+                    }
+                  },
+                  {
+                    title: ctx.$t(i18nMessages.antd.table.controlPanel.width),
+                    dataIndex: 'width',
+                    width: 100,
+                    customRender({ record }) {
+                      return <InputNumber class='tw-w-20' step={10} v-model={[record.width, 'value']} />;
+                    }
+                  },
+                  {
+                    title: ctx.$t(i18nMessages.antd.table.controlPanel.fixed),
+                    dataIndex: 'fixed',
+                    width: 100,
+                    customRender({ record }) {
+                      return (
+                        <Select
+                          class='tw-w-20'
+                          allowClear
+                          options={[
+                            {
+                              value: 'left',
+                              label: 'left'
+                            },
+                            {
+                              value: 'right',
+                              label: 'right'
+                            }
+                          ]}
+                          v-model={[record.fixed, 'value']}
+                        />
+                      );
+                    }
+                  },
+                  {
+                    title: ctx.$t(i18nMessages.antd.table.controlPanel.actions),
+                    dataIndex: 'actions',
+                    width: 100,
+                    customRender({ index }) {
+                      return (
+                        <div class='tw-flex tw-items-center tw-gap-1'>
+                          <XButton
+                            size='small'
+                            type='3d'
+                            title={ctx.$t(i18nMessages.antd.table.controlPanel.up)}
+                            onClick={() => {
+                              if (index === 0) {
+                                exchangeItem(ctx.settingsPanelOptions.dataSource, index, ctx.settingsPanelOptions.dataSource.length - 1);
+                              } else {
+                                exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
+                              }
+                            }}
+                          >
+                            <IconArrowUpLine color='primary' />
+                          </XButton>
+                          <XButton
+                            size='small'
+                            type='3d'
+                            title={ctx.$t(i18nMessages.antd.table.controlPanel.down)}
+                            onClick={() => {
+                              if (index === ctx.settingsPanelOptions.dataSource.length - 1) {
+                                exchangeItem(ctx.settingsPanelOptions.dataSource, index, 0);
+                              } else {
+                                exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
+                              }
+                            }}
+                          >
+                            <IconArrowDownLine color='primary' />
+                          </XButton>
+                        </div>
+                      );
+                    }
+                  }
+                ]}
+              />
+            </div>
+            <div class='tw-flex-initial tw-flex tw-p-4 tw-justify-end tw-space-x-4 tw-border-t tw-border-gray-200'>
+              <XButton
+                color='secondary'
+                size='large'
+                type='3d'
+                handler={async () => {
+                  ctx.options.columns = ctx.settingsPanelOptions.dataSource.map((x) => {
+                    const column = ctx.options.columns.find((y) => y.title === x.columnName);
+                    if (column) {
+                      column.fixed = x.fixed;
+                      column.hidden = !x.visible;
+                      column.width = x.width;
+                      column.fixed = x.fixed;
+                    }
+                    return column;
+                  });
+                  ctx.settingsPanelOptions.changed = true;
+                  ctx.updateColumns();
+                  ctx.settingsPanelRef.handler.dismiss();
+
+                  if (AntdStorageService) {
+                    // 将配置保存至 local storage
+                    AntdStorageService.set(
+                      'table_control' + ctx.uid,
+                      JSON.stringify({
+                        expires: new Date().getTime(),
+                        data: ctx.settingsPanelOptions.dataSource
+                      })
+                    );
+                  } else {
+                    console.warn('Please use setStorageService for Antdvx components.');
+                  }
+                }}
+              >
+                {ctx.$t(i18nMessages.antd.action.save)}
+              </XButton>
+              <XButton
+                size='large'
+                type='3d'
+                onClick={() => {
+                  ctx.settingsPanelRef.handler.dismiss();
+                }}
+              >
+                {ctx.$t(i18nMessages.antd.action.cancel)}
+              </XButton>
+            </div>
+          </div>
+        </XModal>
       </div>
     );
   }

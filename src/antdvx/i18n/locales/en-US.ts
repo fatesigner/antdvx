@@ -21,6 +21,7 @@ export default {
       fullscreen: 'Fullscreen',
       fullscreenExit: 'Exit Fullscreen',
       save: 'Save',
+      cancel: 'Cancel',
       refresh: 'Refresh',
       upload: 'Upload',
       search: 'Search',
@@ -53,6 +54,19 @@ export default {
       result: {
         failed: 'Drag the slider to stitch the hover image together correctly',
         successful: 'Complete picture matching and verification'
+      }
+    },
+    table: {
+      controlPanel: {
+        title: 'Control',
+        description: "Table Control Panel（update column's visible、width、fixed、order）",
+        columnName: 'Column Name',
+        visible: 'Visible',
+        width: 'Width',
+        fixed: 'Fixed',
+        actions: 'Actions',
+        up: 'Move to the previous column',
+        down: 'Move to the next column'
       }
     }
   }

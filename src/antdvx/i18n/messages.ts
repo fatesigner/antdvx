@@ -21,6 +21,7 @@ export const i18nMessages = createLocaleMessages({
       fullscreen: '',
       fullscreenExit: '',
       save: '',
+      cancel: '',
       refresh: '',
       upload: '',
       search: '',
@@ -53,6 +54,19 @@ export const i18nMessages = createLocaleMessages({
       result: {
         failed: '',
         successful: ''
+      }
+    },
+    table: {
+      controlPanel: {
+        title: '',
+        description: '',
+        columnName: '',
+        visible: '',
+        width: '',
+        fixed: '',
+        actions: '',
+        up: '',
+        down: ''
       }
     }
   }

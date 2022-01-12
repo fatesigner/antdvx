@@ -162,6 +162,12 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
    * 退出全屏浏览
    */
   fullscreenExit?: () => void;
+
+  /**
+   * 打开当前表格的设置面板，用于自定义列的显隐、宽度、顺序、fixed
+   * @param row
+   */
+  presentSettingsPanel?: (onDismissed?: (changed: boolean) => void) => Promise<void>;
 }
 
 export interface IXTableListenersType<TModel extends Record<string, any>> {

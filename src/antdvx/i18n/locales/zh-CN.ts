@@ -21,6 +21,7 @@ export default {
       fullscreen: '全屏',
       fullscreenExit: '退出全屏',
       save: '保存',
+      cancel: '取消',
       refresh: '刷新',
       upload: '上传',
       search: '搜索',
@@ -53,6 +54,19 @@ export default {
       result: {
         failed: '拖动滑块将悬浮图像正确拼合',
         successful: '完成图片拼合验证'
+      }
+    },
+    table: {
+      controlPanel: {
+        title: '设置',
+        description: '表格控制面板（列的可见性、宽度、是否固定、顺序）',
+        columnName: '列名',
+        visible: '是否可见',
+        width: '宽度',
+        fixed: '固定列',
+        actions: '操作',
+        up: '移至前一列',
+        down: '移至后一列'
       }
     }
   }

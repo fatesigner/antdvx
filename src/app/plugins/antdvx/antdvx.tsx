@@ -4,10 +4,19 @@
 
 import { merge } from 'lodash-es';
 import { message, notification } from 'ant-design-vue';
-import { XButtonFullscreen, XButtonFullscreenExit, XButtonRefresh, configureXTable, setAntdvxPipesConfig, setRequestAdapter } from '@/antdvx';
+import {
+  XButtonFullscreen,
+  XButtonFullscreenExit,
+  XButtonRefresh,
+  XTableSettingsPanelButton,
+  configureXTable,
+  setAntdvxPipesConfig,
+  setRequestAdapter,
+  setStorageService
+} from '@/antdvx';
 
 import { i18n } from '@/app/i18n';
-import { httpService } from '@/app/core/services';
+import { httpService, localStorageService } from '@/app/core/services';
 
 export const Antdvx = {
   install() {
@@ -15,6 +24,8 @@ export const Antdvx = {
     setRequestAdapter((options) => {
       return httpService.request(options);
     });
+
+    setStorageService(localStorageService);
 
     // 配置 pipes
     setAntdvxPipesConfig({
@@ -69,7 +80,13 @@ export const Antdvx = {
             <XButtonFullscreen color='primary' size='small' type='link' onClick={tbRef.handler.fullscreen} />
           ),
           <XButtonFullscreen color='primary' size='large' onClick={tbRef.handler.fullscreen} />,
-          <XButtonFullscreen color='primary' onClick={tbRef.handler.fullscreen} />
+          <XButtonFullscreen color='primary' onClick={tbRef.handler.fullscreen} />,
+          <XTableSettingsPanelButton
+            color='primary'
+            handler={() => {
+              return tbRef.handler.presentSettingsPanel();
+            }}
+          />
         ];
       }
     });

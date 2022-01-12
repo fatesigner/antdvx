@@ -12,10 +12,10 @@ import { isObject } from '@fatesigner/utils/type-check';
 export function getContentHeight(el: HTMLElement) {
   const cs = getComputedStyle(el);
 
-  //const paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+  // const paddingX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
   const paddingY = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
 
-  //const borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+  // const borderX = parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
   const borderY = parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
 
   // elementWidth = element.offsetWidth - paddingX - borderX;
@@ -192,7 +192,7 @@ export function expandSection(el: HTMLElement, callback?: (el: HTMLElement) => v
   return new Promise<void>((resolve) => {
     if (el && !el.offsetHeight) {
       el.addEventListener('transitionend', function listener() {
-        //el.removeEventListener('transitionend', arguments.callee);
+        // el.removeEventListener('transitionend', arguments.callee);
         el.removeEventListener('transitionend', listener);
         if (callback) {
           callback(el);
@@ -208,4 +208,25 @@ export function expandSection(el: HTMLElement, callback?: (el: HTMLElement) => v
       resolve();
     }
   });
+}
+
+/**
+ * 移动指定集合中的元素位置
+ * @param arr
+ * @param index
+ * @param index2
+ */
+export function exchangeItem(arr: any[], index: number, index2: number) {
+  if (index !== index2) {
+    if (index > index2) {
+      const temp = index2;
+      index2 = index;
+      index = temp;
+    }
+    const item = arr?.[index];
+    if (item && arr.length >= index2 - 1) {
+      arr.splice(index2 + 1, 0, item);
+      arr.splice(index, 1);
+    }
+  }
 }
