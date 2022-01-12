@@ -59,7 +59,7 @@ export default {
     table: {
       controlPanel: {
         title: '设置',
-        description: '表格控制面板（列的可见性、宽度、是否固定、顺序）',
+        description: '表格设置面板（列的可见性、宽度、是否固定、顺序）',
         columnName: '列名',
         visible: '是否可见',
         width: '宽度',

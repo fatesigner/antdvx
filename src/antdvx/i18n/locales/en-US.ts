@@ -58,8 +58,8 @@ export default {
     },
     table: {
       controlPanel: {
-        title: 'Control',
-        description: "Table Control Panel（update column's visible、width、fixed、order）",
+        title: 'Settings',
+        description: "Table Settings Panel（Update column's visible、width、fixed、order）",
         columnName: 'Column Name',
         visible: 'Visible',
         width: 'Width',
