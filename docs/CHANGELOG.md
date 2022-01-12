@@ -1,3 +1,10 @@
+# [1.0.0-alpha.80](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.79...v1.0.0-alpha.80) (2022-01-12)
+
+
+### Bug Fixes
+
+* Update i18n message for XTable ([a2eb9ec](https://github.com/fatesigner/antdvx/commit/a2eb9ec66121c15615e2443df80e8b2f67317e48))
+
 # [1.0.0-alpha.79](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.78...v1.0.0-alpha.79) (2022-01-12)
 
 
