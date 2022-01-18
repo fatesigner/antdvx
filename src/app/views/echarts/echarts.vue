@@ -1,39 +1,41 @@
 <template>
   <PageWrapper title="Echarts">
     <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4 tw-p-4">
-      <Chart
+      <VEcharts
         v-for="chart in charts"
         class="tw-pt-4 tw-pr-2 tw-pb-4 tw-pl-2 tw-rounded-sm tw-shadow-md tw-bg-white"
-        :key="chart.name"
-        :options="chart.getOptions"
+        :key="chart.title"
         :aspect-ratio="2"
-        :filename="chart.name"
+        :empty="chart.empty"
+        :title="chart.title"
+        :options="chart.options"
+        :filename="chart.title"
       >
-        <template #title>
-          <div class="tw-text-base">{{ chart.name }}</div>
-        </template>
-      </Chart>
+      </VEcharts>
     </div>
   </PageWrapper>
 </template>
 
-<script lang="ts">
-import { echarts } from '@/antdvx';
-import { defineComponent } from 'vue';
+<script lang="tsx">
+import { timer } from 'rxjs';
+import { VEcharts, echarts } from '@/antdvx';
+import { defineComponent, reactive } from 'vue';
 
-import { Chart } from '@/app/shared/chart';
 import { PageWrapper } from '@/app/shared/page-wrapper';
 
 export default defineComponent({
   components: {
-    Chart,
-    PageWrapper
+    PageWrapper,
+    VEcharts
   },
   setup() {
-    const charts = [
-      {
-        name: 'Income of Germany and France since 1950',
-        async getOptions() {
+    const charts = reactive({
+      chart1: {
+        title: <strong>Income of Germany and France since 1950</strong>,
+        empty: false,
+        async options() {
+          await timer(3000).toPromise();
+          charts.chart1.empty = true;
           const _rawData = require('./life-expectancy-table.json');
           // var countries = ['Australia', 'Canada', 'China', 'Cuba', 'Finland', 'France', 'Germany', 'Iceland', 'India', 'Japan', 'North Korea', 'South Korea', 'New Zealand', 'Norway', 'Poland', 'Russia', 'Turkey', 'United Kingdom', 'United States'];
           const countries = ['Finland', 'France', 'Germany', 'Iceland', 'Norway', 'Poland', 'Russia', 'United Kingdom'];
@@ -114,9 +116,10 @@ export default defineComponent({
           };
         }
       },
-      {
-        name: 'Stacked Area Chart',
-        async getOptions() {
+      chart2: {
+        title: 'Stacked Area Chart',
+        empty: false,
+        async options() {
           return {
             legend: {
               top: 10,
@@ -209,9 +212,10 @@ export default defineComponent({
           };
         }
       },
-      {
-        name: 'Large Area Chart',
-        async getOptions() {
+      chart3: {
+        title: 'Large Area Chart',
+        empty: false,
+        async options() {
           let base = +new Date(1968, 9, 3);
           const oneDay = 24 * 3600 * 1000;
           const date = [];
@@ -285,9 +289,10 @@ export default defineComponent({
           };
         }
       },
-      {
-        name: 'Referer of a Website',
-        async getOptions() {
+      chart4: {
+        title: 'Referer of a Website',
+        empty: false,
+        async options() {
           return {
             legend: {
               top: 10
@@ -327,9 +332,10 @@ export default defineComponent({
           };
         }
       },
-      {
-        name: 'Stacked Area Bar',
-        async getOptions() {
+      chart5: {
+        title: 'Stacked Area Bar',
+        empty: false,
+        async options() {
           return {
             legend: {
               top: 10
@@ -449,9 +455,10 @@ export default defineComponent({
           };
         }
       },
-      {
-        name: 'Stacked Area Bar',
-        async getOptions() {
+      chart6: {
+        title: 'Stacked Area Bar',
+        empty: false,
+        async options() {
           return {
             legend: {
               top: 10
@@ -542,7 +549,7 @@ export default defineComponent({
           };
         }
       }
-    ];
+    });
 
     return {
       charts

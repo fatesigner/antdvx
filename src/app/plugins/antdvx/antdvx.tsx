@@ -5,10 +5,12 @@
 import { merge } from 'lodash-es';
 import { message, notification } from 'ant-design-vue';
 import {
+  XButtonExport,
   XButtonFullscreen,
   XButtonFullscreenExit,
   XButtonRefresh,
   XTableSettingsPanelButton,
+  configureVEcharts,
   configureXTable,
   setAntdvxPipesConfig,
   setRequestAdapter,
@@ -58,6 +60,34 @@ export const Antdvx = {
     const classes = document.body.className.split(' ');
     classes.push('antdvx-theme-classic');
     document.body.className = classes.filter((x: any) => !!x).join(' ');
+
+    // echarts
+    configureVEcharts({
+      header(chartRef) {
+        return (
+          <div class='tw-flex tw-items-center tw-justify-end tw-mb-2'>
+            <div class='tw-flex-initial'>
+              <img width='40' height='20' src={require('@/assets/img/logo.png')} alt='' title='' />
+            </div>
+            {chartRef.title ? (
+              <div class='tw-flex-1 tw-pl-2 tw-pr-2'>
+                <div class='tw-text-base tw-text-center'>{chartRef.title}</div>
+              </div>
+            ) : (
+              ''
+            )}
+            {chartRef.error ? (
+              ''
+            ) : (
+              <div class='tw-flex-initial tw-space-x-2'>
+                {chartRef.refreshable ? <XButtonRefresh disabled={chartRef.loading} color='primary' size='small' type='link' handler={chartRef.refresh} /> : ''}
+                {chartRef.exportable ? <XButtonExport disabled={chartRef.loading} size='small' placement='bottomRight' options={chartRef.exportOptions} /> : ''}
+              </div>
+            )}
+          </div>
+        );
+      }
+    });
 
     configureXTable({
       columnMap(column) {

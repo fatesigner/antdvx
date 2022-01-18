@@ -2,15 +2,9 @@
  * echarts
  */
 
-import to from 'await-to-js';
 import { merge } from 'lodash-es';
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
 import * as echarts from 'echarts/core';
-import { debounce } from '@fatesigner/utils';
-import { isFunction } from '@fatesigner/utils/type-check';
-import { PropType, TransitionGroup, computed, defineComponent, onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
-
-import styles from './echarts.module.less';
 
 export { echarts };
 
@@ -59,7 +53,7 @@ const defaultConfig: {
  * @param theme
  * @param opts
  */
-export function echartsConfigure<Opt extends EChartsOption>(
+export function configureEcharts<Opt extends EChartsOption>(
   options: Opt,
   theme?: string | ThemeOption,
   opts?: {
@@ -164,6 +158,8 @@ export async function createEcharts<Opt extends EChartsOption>(
     import('echarts/lib/chart/bar'),
     import('echarts/lib/chart/line'),
     import('echarts/lib/chart/custom'),
+    import('echarts/lib/chart/scatter'),
+    import('echarts/lib/chart/radar'),
     // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
     import('echarts/lib/component/title'),
     import('echarts/lib/component/tooltip'),
@@ -282,273 +278,3 @@ export function getEchartsSplit(max, splitNumber, decimal = 0, divisible = 5) {
 
   return res;
 }
-
-/**
- * Vue Echarts 组件
- */
-export const VEcharts = defineComponent({
-  name: 'v-echarts',
-  props: {
-    theme: {
-      type: String,
-      default: null
-    },
-    devicePixelRatio: {
-      type: Number,
-      default: null
-    },
-    renderer: {
-      type: Object as PropType<RendererType>,
-      default: null
-    },
-    useDirtyRect: {
-      type: Boolean,
-      default: true
-    },
-    locale: {
-      type: String as PropType<string | LocaleOption>,
-      default: null
-    },
-    /*requires: {
-      type: Array as PropType<EchartsSeriesType>,
-      default: () => []
-    },*/
-    instance: {
-      type: Object as PropType<EChartsType>,
-      default: null
-    },
-    options: {
-      type: [Object, Function] as PropType<EChartsOption | EChartsOptionPromise>,
-      default: null
-    },
-    aspectRatio: {
-      type: [Number, String],
-      default: null
-    },
-    width: {
-      type: [Number, String] as PropType<number | 'auto'>,
-      default: null
-    },
-    height: {
-      type: [Number, String] as PropType<number | 'auto'>,
-      default: null
-    },
-    autoresize: {
-      type: Boolean,
-      default: true
-    },
-    empty: {
-      type: Boolean,
-      default: false
-    }
-  },
-  emits: ['touchstart', 'update:instance'],
-  setup(props: any, { emit }) {
-    const options_ = ref<EChartsOption>();
-    const wrapRef = ref();
-    const chartRef = ref();
-    const loading = ref(false);
-    const initialized = ref(false);
-    const error = ref<Error>();
-
-    let instance;
-
-    const wrapStyles = computed(() => {
-      if (props.aspectRatio) {
-        return {
-          width: '100%',
-          'padding-bottom': 100 / (props.aspectRatio as any) + '%'
-        };
-      } else {
-        return {
-          width: props.width ? props.width + 'px' : null,
-          height: props.height ? props.height + 'px' : null
-        };
-      }
-    });
-
-    const touchstart = (e) => {
-      emit('touchstart', e);
-    };
-
-    const resize = debounce(
-      () => {
-        if (instance) {
-          if (props.aspectRatio) {
-            instance.resize();
-          } else {
-            instance.resize({ width: props.width, height: props.height });
-          }
-        }
-      },
-      300,
-      false
-    );
-
-    const resizeSubsciber = (function () {
-      let resizeObs: ResizeObserver;
-      let listened = false;
-      return {
-        start() {
-          // 监听窗口尺寸变化，重新渲染图表
-          if (!listened && props.autoresize && wrapRef.value) {
-            listened = true;
-            if (!resizeObs) {
-              resizeObs = new ResizeObserver(resize);
-            }
-            resizeObs.observe(wrapRef.value);
-          }
-        },
-        stop() {
-          // 移除窗口尺寸的监听
-          if (listened && wrapRef.value) {
-            if (resizeObs) {
-              resizeObs.unobserve(wrapRef.value);
-            }
-            listened = false;
-          }
-        }
-      };
-    })();
-
-    const initialize = async () => {
-      loading.value = true;
-
-      instance = await createEcharts(chartRef.value, [], props.theme, {
-        devicePixelRatio: props.devicePixelRatio,
-        renderer: props.renderer,
-        useDirtyRect: props.useDirtyRect,
-        width: props.width,
-        height: props.height,
-        locale: props.locale
-      });
-
-      await setOption();
-
-      loading.value = false;
-      initialized.value = true;
-
-      // 往外传递实例对象
-      emit('update:instance', instance);
-    };
-
-    const setOption = async () => {
-      loading.value = true;
-
-      // 若提供的 options 参数为函数，异步获取 options
-      if (isFunction(props.options)) {
-        const [err, r] = await to((props.options as EChartsOptionPromise)());
-        if (err) {
-          error.value = err;
-        } else {
-          // await analyseImport(r);
-          options_.value = r;
-          error.value = null;
-        }
-      } else {
-        options_.value = props.options as any;
-      }
-      if (options_.value) {
-        instance.clear();
-        instance.setOption(options_.value);
-      }
-
-      loading.value = false;
-    };
-
-    watch(
-      () => props.options,
-      async () => {
-        if (instance) {
-          await setOption();
-          resize();
-        }
-      }
-    );
-
-    onMounted(() => {
-      initialize().then(() => {
-        resizeSubsciber.start();
-      });
-    });
-
-    onActivated(() => {
-      resizeSubsciber.start();
-      if (chartRef.value && chartRef.value.style.position === 'relative') {
-        // Reload chart
-        chartRef.value.style.position = '';
-        initialize();
-      }
-    });
-
-    onDeactivated(() => {
-      resizeSubsciber.stop();
-    });
-
-    onUnmounted(() => {
-      resizeSubsciber.stop();
-    });
-
-    const getChartElement = () => {
-      return chartRef.value;
-    };
-
-    return {
-      wrapRef,
-      chartRef,
-      wrapStyles,
-      options_,
-      loading,
-      initialized,
-      error,
-      resize,
-      refresh: setOption,
-      getChartElement,
-      touchstart
-    };
-  },
-  render(ctx) {
-    const solts = [];
-    if (ctx.loading) {
-      solts.push(
-        <div class={styles.transition} key='loading'>
-          {ctx.$slots?.loading ? ctx.$slots?.loading({ refresh: ctx.refresh }) : ''}
-        </div>
-      );
-    } else if (ctx.error) {
-      solts.push(
-        <div class={styles.transition} key='error'>
-          {ctx.$slots?.error ? ctx.$slots?.error({ error: ctx.error, refresh: ctx.refresh }) : ''}
-        </div>
-      );
-    } else if (ctx.empty) {
-      solts.push(
-        <div class={styles.transition} key='empty'>
-          {ctx.$slots?.empty ? ctx.$slots?.empty({ refresh: ctx.refresh }) : ''}
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        {ctx.initialized
-          ? ctx.$slots?.default
-            ? ctx.$slots?.default({ error: ctx.error, empty: ctx.empty, loading: ctx.loading, refresh: ctx.refresh })
-            : ''
-          : ''}
-        <div ref='wrapRef' class={styles.wrap} style={ctx.wrapStyles}>
-          <TransitionGroup
-            enterFromClass={styles['transition-enter-from']}
-            enterToClass={styles['transition-enter-to']}
-            leaveToClass={styles['transition-leave-to']}
-            enterActiveClass={styles['transition-enter-active']}
-            leaveActiveClass={styles['transition-enter-active']}>
-            {solts}
-          </TransitionGroup>
-
-          <div ref='chartRef' class={[styles.container, ctx.empty || !ctx.options_ ? styles.empty : '']} onTouchstart={ctx.touchstart} />
-        </div>
-      </div>
-    );
-  }
-});
