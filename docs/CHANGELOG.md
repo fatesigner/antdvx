@@ -1,3 +1,10 @@
+# [1.0.0-alpha.81](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.80...v1.0.0-alpha.81) (2022-01-18)
+
+
+### Features
+
+* 更新 VEcharts 组件 ([8dd4685](https://github.com/fatesigner/antdvx/commit/8dd46850f3274b2373fed5b455efe1af6cd9ecb3))
+
 # [1.0.0-alpha.80](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.79...v1.0.0-alpha.80) (2022-01-12)
 
 
