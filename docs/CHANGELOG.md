@@ -1,3 +1,10 @@
+# [1.0.0-alpha.82](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.81...v1.0.0-alpha.82) (2022-01-19)
+
+
+### Features
+
+* Add initialized event for VEcharts component ([4558ac4](https://github.com/fatesigner/antdvx/commit/4558ac4616ed6ab0f154174bb55a24ec9b5042e5))
+
 # [1.0.0-alpha.81](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.80...v1.0.0-alpha.81) (2022-01-18)
 
 
