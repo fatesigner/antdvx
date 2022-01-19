@@ -147,7 +147,7 @@ export const VEcharts = defineComponent({
       type: Object as PropType<EChartsConfig>
     }
   },
-  emits: ['touchstart', 'update:instance'],
+  emits: ['touchstart', 'initialized', 'update:instance'],
   setup(props: any, { emit }) {
     const options_ = ref<EChartsOption>();
     const wrapRef = ref();
@@ -249,6 +249,7 @@ export const VEcharts = defineComponent({
 
       // 往外传递实例对象
       emit('update:instance', instance);
+      emit('initialized', instance);
     };
 
     const setOption = async () => {

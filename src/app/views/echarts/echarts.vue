@@ -9,7 +9,7 @@
         :empty="chart.empty"
         :title="chart.title"
         :options="chart.options"
-        :filename="chart.title"
+        @initialized="onInitialized"
       >
       </VEcharts>
     </div>
@@ -551,8 +551,13 @@ export default defineComponent({
       }
     });
 
+    const onInitialized = (e) => {
+      console.log('Chart initialized instance: ', e);
+    };
+
     return {
-      charts
+      charts,
+      onInitialized
     };
   }
 });
