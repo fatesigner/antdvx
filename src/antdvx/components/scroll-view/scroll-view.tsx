@@ -246,19 +246,17 @@ export const ScrollView = defineComponent({
 
     const updateHorThumbStyle = (xMove: number) => {
       if (horThumbRef.value) {
-        const transform = `translate3d(${xMove}px, 0, 0)`;
-        horThumbRef.value.style.transform = transform;
-        horThumbRef.value.style['msTransform'] = transform;
-        horThumbRef.value.style['webkitTransform'] = transform;
+        horThumbRef.value.style.transform = `translate3d(${xMove}px, 0, 0)`;
+        // horThumbRef.value.style.msTransform = transform;
+        // horThumbRef.value.style.webkitTransform = transform;
       }
     };
 
     const updateVerThumbStyle = (yMove: number) => {
       if (verThumbRef.value) {
-        const transform = `translate3d(0, ${yMove}px, 0)`;
-        verThumbRef.value.style.transform = transform;
-        verThumbRef.value.style['msTransform'] = transform;
-        verThumbRef.value.style['webkitTransform'] = transform;
+        verThumbRef.value.style.transform = `translate3d(0, ${yMove}px, 0)`;
+        // verThumbRef.value.style.msTransform = transform;
+        // verThumbRef.value.style.webkitTransform = transform;
       }
     };
 
@@ -271,6 +269,11 @@ export const ScrollView = defineComponent({
           viewRef.value.scrollTop = top;
         }
       }
+    };
+
+    const scrollToBottom = async (duration = 0) => {
+      const top = viewRef.value.scrollHeight - viewRef.value.clientHeight;
+      scrollTo(undefined, top, duration);
     };
 
     const updateHorScroll = (xMove: number, transition = false) => {
@@ -582,6 +585,7 @@ export const ScrollView = defineComponent({
       load,
       reload,
       scrollTo,
+      scrollToBottom,
       onScroll,
       horBarClick,
       verBarClick

@@ -8,9 +8,9 @@
             <XButtonRefresh @click="reload">Reload</XButtonRefresh>
             <XButtonRefresh @click="appendData">Append Data</XButtonRefresh>
           </div>
-          <div v-for="arr in list">
+          <div v-for="(arr, index) in list" :key="index">
             <div class="tw-p-2">
-              <span v-for="item in arr" class="tw-p-2">{{ item }}</span>
+              <span class="tw-p-2" v-for="item in arr" :key="item">{{ item }}</span>
             </div>
           </div>
           <div class="tw-p-4 tw-text-center tw-bg-gray-100">footer</div>
@@ -22,11 +22,12 @@
             <h2>Scroll view with native bar</h2>
             <XButtonRefresh @click="reload2">Reload</XButtonRefresh>
             <XButtonRefresh @click="appendData2">Append Data</XButtonRefresh>
+            <XButtonRefresh @click="scrollToBottom">Scroll to bottom</XButtonRefresh>
           </div>
           <div class="tw-min-h-full tw-bg-gray-200">
-            <div v-for="arr in list2">
+            <div v-for="(arr, index) in list2" :key="index">
               <div class="tw-p-2">
-                <span v-for="item in arr" class="tw-p-2">{{ item }}</span>
+                <span class="tw-p-2" v-for="item in arr" :key="item">{{ item }}</span>
               </div>
             </div>
           </div>
@@ -41,9 +42,9 @@
               <XButtonRefresh @click="reload3">Reload</XButtonRefresh>
               <XButtonRefresh @click="appendData3">Append Data</XButtonRefresh>
             </div>
-            <div v-for="arr in list3">
+            <div v-for="(arr, index) in list3" :key="index">
               <div class="tw-p-2">
-                <span v-for="item in arr" class="tw-p-2">{{ item }}</span>
+                <span class="tw-p-2" v-for="item in arr" :key="item">{{ item }}</span>
               </div>
             </div>
             <div class="tw-p-4 tw-text-center tw-bg-gray-100">footer</div>
@@ -77,6 +78,10 @@ export default defineComponent({
     const list = ref([]);
     const list2 = ref([]);
     const list3 = ref([]);
+
+    const scrollToBottom = () => {
+      scrollViewRef2.value?.scrollToBottom(300);
+    };
 
     const loadData = (duration?: number, error?: boolean) => {
       return async () => {
@@ -141,6 +146,7 @@ export default defineComponent({
       list,
       list2,
       list3,
+      scrollToBottom,
       loadData,
       reload,
       reload2,
