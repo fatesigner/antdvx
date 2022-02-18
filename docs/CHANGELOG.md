@@ -1,3 +1,10 @@
+# [1.0.0-alpha.83](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.82...v1.0.0-alpha.83) (2022-02-18)
+
+
+### Features
+
+* ScrollView 组件添加 scrollToBottom 函数 ([ff994c5](https://github.com/fatesigner/antdvx/commit/ff994c5568d5ce72622ae15b59fa271623e9152d))
+
 # [1.0.0-alpha.82](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.81...v1.0.0-alpha.82) (2022-01-19)
 
 
