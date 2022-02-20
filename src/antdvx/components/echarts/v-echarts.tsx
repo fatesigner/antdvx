@@ -80,7 +80,7 @@ const defaultConfig: VEchartsOptions & {
    * 设置 header(标题栏)，用于所有 v-echarts 实例
    */
   header?: (
-    chartRef: { initialized: boolean; error: boolean; empty: boolean; loading: boolean; refresh: () => Promise<any> } & Record<any, any>
+    chartRef: VEchartsOptions & Record<any, any>
   ) => VNode | VNode[];
 } = {
   aspectRatio: 2,
@@ -360,13 +360,13 @@ export const VEcharts = defineComponent({
     return (
       <div>
         {ctx.$slots?.header ? (
-          ctx.$slots.header({ initialized: ctx.initialized, error: ctx.error, empty: ctx.empty, loading: ctx.loading, refresh: ctx.refresh })
+          ctx.$slots.header(ctx)
         ) : defaultConfig?.header ? (
           defaultConfig.header(ctx)
         ) : ctx.title || ctx.refreshable || ctx.exportable ? (
           <div class='tw-flex tw-items-center tw-justify-end tw-mb-2'>
             <div class='tw-flex-1'>
-              {ctx.$slots?.title ? ctx.$slots.title() : ctx.title?.el ? ctx.title : <div class='tw-pl-2 tw-pr-2 tw-text-base'>{ctx.title}</div>}
+              {ctx.$slots?.title ? ctx.$slots.title(ctx) : ctx.title?.el ? ctx.title : <div class='tw-pl-2 tw-pr-2 tw-text-base'>{ctx.title}</div>}
             </div>
             {ctx.error ? (
               ''
