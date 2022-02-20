@@ -1,3 +1,10 @@
+# [1.0.0-alpha.85](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.84...v1.0.0-alpha.85) (2022-02-20)
+
+
+### Features
+
+* update VEcharts ([b7b3243](https://github.com/fatesigner/antdvx/commit/b7b3243485d3e19af68cfd3852bc578c2d417f15))
+
 # [1.0.0-alpha.84](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.83...v1.0.0-alpha.84) (2022-02-20)
 
 
