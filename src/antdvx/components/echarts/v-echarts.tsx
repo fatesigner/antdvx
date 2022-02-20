@@ -12,7 +12,7 @@ import { IXButtonExportOptions, XButtonExport, XButtonRefresh } from '../button'
 
 import { EChartsOption, EChartsOptionPromise, EChartsType, LocaleOption, RendererType, createEcharts } from './echarts';
 
-import styles from './v-echarts.module.less';
+import $styles from './v-echarts.module.less';
 
 interface EChartsConfig {
   theme?: string;
@@ -158,7 +158,7 @@ export const VEcharts = defineComponent({
 
     let instance;
 
-    const wrapStyles = computed(() => {
+    const containerStyles = computed(() => {
       if (props.aspectRatio) {
         return {
           width: '100%',
@@ -177,7 +177,7 @@ export const VEcharts = defineComponent({
       async image() {
         return {
           filename: props.filename,
-          target: chartRef.value
+          target: wrapRef.value
         };
       }
     };
@@ -316,7 +316,7 @@ export const VEcharts = defineComponent({
     return {
       wrapRef,
       chartRef,
-      wrapStyles,
+      containerStyles,
       exportOptions,
       options_,
       loading,
@@ -332,17 +332,17 @@ export const VEcharts = defineComponent({
     const solts = [];
     if (ctx.loading) {
       solts.push(
-        <div class={styles.transition} key='loading'>
+        <div class={$styles.transition} key='loading'>
           {ctx.$slots?.loading ? ctx.$slots?.loading({ refresh: ctx.refresh }) : <Spin size='large' />}
         </div>
       );
     } else if (ctx.error) {
       solts.push(
-        <div class={styles.transition} key='error'>
+        <div class={$styles.transition} key='error'>
           {ctx.$slots?.error ? (
             ctx.$slots?.error({ error: ctx.error, refresh: ctx.refresh })
           ) : (
-            <div class={styles.error}>
+            <div class={$styles.error}>
               <span>{ctx.error}</span>
               <XButtonRefresh handler={ctx.refresh} only-icon color='primary' size='small' type='link' />
             </div>
@@ -351,14 +351,14 @@ export const VEcharts = defineComponent({
       );
     } else if (ctx.empty) {
       solts.push(
-        <div class={styles.transition} key='empty'>
+        <div class={$styles.transition} key='empty'>
           {ctx.$slots?.empty ? ctx.$slots?.empty({ refresh: ctx.refresh }) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </div>
       );
     }
 
     return (
-      <div>
+      <div ref='wrapRef'>
         {ctx.$slots?.header ? (
           ctx.$slots.header(ctx)
         ) : defaultConfig?.header ? (
@@ -371,7 +371,7 @@ export const VEcharts = defineComponent({
             {ctx.error ? (
               ''
             ) : (
-              <div class='tw-flex-initial tw-space-x-2'>
+              <div class='tw-flex-initial tw-space-x-2' data-html2canvas-ignore>
                 {ctx.refreshable ? <XButtonRefresh disabled={ctx.loading} color='primary' size='small' type='link' handler={ctx.refresh} /> : ''}
                 {ctx.exportable ? <XButtonExport disabled={ctx.loading} size='small' placement='bottomRight' options={ctx.exportOptions} /> : ''}
               </div>
@@ -380,17 +380,17 @@ export const VEcharts = defineComponent({
         ) : (
           ''
         )}
-        <div ref='wrapRef' class={styles.wrap} style={ctx.wrapStyles}>
+        <div class={$styles.container} style={ctx.containerStyles}>
           <TransitionGroup
-            enterFromClass={styles['transition-enter-from']}
-            enterToClass={styles['transition-enter-to']}
-            leaveToClass={styles['transition-leave-to']}
-            enterActiveClass={styles['transition-enter-active']}
-            leaveActiveClass={styles['transition-enter-active']}
+            enterFromClass={$styles['transition-enter-from']}
+            enterToClass={$styles['transition-enter-to']}
+            leaveToClass={$styles['transition-leave-to']}
+            enterActiveClass={$styles['transition-enter-active']}
+            leaveActiveClass={$styles['transition-enter-active']}
           >
             {solts}
           </TransitionGroup>
-          <div ref='chartRef' class={[styles.container, ctx.empty || !ctx.options_ ? styles.empty : '']} onTouchstart={ctx.touchstart} />
+          <div ref='chartRef' class={[$styles.chart, ctx.empty || !ctx.options_ ? $styles.empty : '']} onTouchstart={ctx.touchstart} />
         </div>
       </div>
     );
