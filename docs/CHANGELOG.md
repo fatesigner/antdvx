@@ -1,3 +1,10 @@
+# [1.0.0-alpha.84](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.83...v1.0.0-alpha.84) (2022-02-20)
+
+
+### Features
+
+* update VEcharts and GridDragable ([15b4ff7](https://github.com/fatesigner/antdvx/commit/15b4ff7805d26fe57f7bb93a162921cdd6097a11))
+
 # [1.0.0-alpha.83](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.82...v1.0.0-alpha.83) (2022-02-18)
 
 
