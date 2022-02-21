@@ -1,3 +1,10 @@
+# [1.0.0-alpha.86](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.85...v1.0.0-alpha.86) (2022-02-21)
+
+
+### Bug Fixes
+
+* add VEcharts error message ([974b222](https://github.com/fatesigner/antdvx/commit/974b2226fdb5a6be5dedf1dcc9262d5a08531078))
+
 # [1.0.0-alpha.85](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.84...v1.0.0-alpha.85) (2022-02-20)
 
 
