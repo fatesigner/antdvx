@@ -154,7 +154,7 @@ export const VEcharts = defineComponent({
     const chartRef = ref();
     const loading = ref(false);
     const initialized = ref(false);
-    const error = ref<Error>();
+    const error = ref();
 
     let instance;
 
@@ -259,7 +259,7 @@ export const VEcharts = defineComponent({
       if (isFunction(props.options)) {
         const [err, r] = await to((props.options as EChartsOptionPromise)());
         if (err) {
-          error.value = err;
+          error.value = err.message;
         } else {
           // await analyseImport(r);
           options_.value = r;
