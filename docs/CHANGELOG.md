@@ -1,3 +1,10 @@
+# [1.0.0-alpha.87](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.86...v1.0.0-alpha.87) (2022-02-22)
+
+
+### Bug Fixes
+
+* 修复 SlideCaptcha 滑动验证码组件在移动端无法显示的问题 ([c84ad5e](https://github.com/fatesigner/antdvx/commit/c84ad5ec0cdfaa0f85da1b5ff3e30005c60f8e25))
+
 # [1.0.0-alpha.86](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.85...v1.0.0-alpha.86) (2022-02-21)
 
 
