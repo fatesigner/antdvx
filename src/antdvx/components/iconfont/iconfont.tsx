@@ -22,7 +22,7 @@ export const Iconfont = defineComponent({
             })
           );
         } else {
-          comp = <span title={props.name} />;
+          comp = <span title={props.title} data-name={props.name} />;
           console.warn(`The iconfont name '${props.name}' is not registed.`);
         }
       }

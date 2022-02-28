@@ -79,9 +79,7 @@ const defaultConfig: VEchartsOptions & {
   /**
    * 设置 header(标题栏)，用于所有 v-echarts 实例
    */
-  header?: (
-    chartRef: VEchartsOptions & Record<any, any>
-  ) => VNode | VNode[];
+  header?: (chartRef: VEchartsOptions & Record<any, any>) => VNode | VNode[];
 } = {
   aspectRatio: 2,
   autoresize: true
@@ -154,7 +152,7 @@ export const VEcharts = defineComponent({
     const chartRef = ref();
     const loading = ref(false);
     const initialized = ref(false);
-    const error = ref();
+    const error = ref<string>();
 
     let instance;
 
@@ -259,7 +257,7 @@ export const VEcharts = defineComponent({
       if (isFunction(props.options)) {
         const [err, r] = await to((props.options as EChartsOptionPromise)());
         if (err) {
-          error.value = err.message;
+          error.value = err.message || '[VEcharts] Options load failed.';
         } else {
           // await analyseImport(r);
           options_.value = r;
@@ -386,8 +384,7 @@ export const VEcharts = defineComponent({
             enterToClass={$styles['transition-enter-to']}
             leaveToClass={$styles['transition-leave-to']}
             enterActiveClass={$styles['transition-enter-active']}
-            leaveActiveClass={$styles['transition-enter-active']}
-          >
+            leaveActiveClass={$styles['transition-enter-active']}>
             {solts}
           </TransitionGroup>
           <div ref='chartRef' class={[$styles.chart, ctx.empty || !ctx.options_ ? $styles.empty : '']} onTouchstart={ctx.touchstart} />

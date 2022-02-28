@@ -79,7 +79,8 @@ export const TransitionZoom = defineComponent({
     };
   },
   render(ctx) {
-    return (
+    const slot = ctx.$slots?.default();
+    return slot ? (
       <Transition
         appear={ctx.appear}
         mode={ctx.mode}
@@ -88,9 +89,9 @@ export const TransitionZoom = defineComponent({
         onEnter={ctx.onEnter}
         onLeave={ctx.onLeave}
         v-slots={{
-          default: () => (ctx.$slots?.default ? ctx.$slots?.default() : '')
+          default: () => slot
         }}
       />
-    );
+    ) : undefined;
   }
 });

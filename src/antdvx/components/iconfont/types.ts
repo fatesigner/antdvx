@@ -9,6 +9,9 @@ export const IconfontProps = {
   name: {
     type: String
   },
+  title: {
+    type: String
+  },
   color: {
     type: String as PropType<typeof ANTDVX_COLORS[number]>
   },

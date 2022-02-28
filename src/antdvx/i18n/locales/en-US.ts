@@ -11,7 +11,7 @@ export default {
       edit: 'Edit',
       delete: {
         oktext: 'Confirm',
-        cancelText: 'Cancele',
+        cancelText: 'Cancel',
         confirmText: 'Are you sure to delete it ?',
         title: 'Delete',
         success: 'Delete success.'

@@ -29,7 +29,8 @@ export const TransitionSlide = defineComponent({
     }
   },
   render(ctx) {
-    return (
+    const slot = ctx.$slots?.default();
+    return slot ? (
       <Transition
         appear={ctx.appear}
         mode={ctx.mode}
@@ -38,9 +39,9 @@ export const TransitionSlide = defineComponent({
         enterActiveClass={ctx.disabled ? undefined : styles['slide-' + ctx.direction + '-enter-active']}
         leaveActiveClass={ctx.disabled ? undefined : styles['slide-' + ctx.direction + '-leave-active']}
         v-slots={{
-          default: () => (ctx.$slots?.default ? ctx.$slots?.default() : '')
+          default: () => slot
         }}
       />
-    );
+    ) : undefined;
   }
 });

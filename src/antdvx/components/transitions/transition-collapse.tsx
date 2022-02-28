@@ -158,7 +158,8 @@ export const TransitionCollapse = defineComponent({
     };
   },
   render(ctx) {
-    return (
+    const slot = ctx.$slots?.default();
+    return slot ? (
       <Transition
         appear={ctx.appear}
         mode={ctx.mode}
@@ -169,9 +170,9 @@ export const TransitionCollapse = defineComponent({
         onLeave={ctx.onLeave}
         onAfterLeave={ctx.onAfterLeave}
         v-slots={{
-          default: () => (ctx.$slots?.default ? ctx.$slots?.default() : '')
+          default: () => slot
         }}
       />
-    );
+    ) : undefined;
   }
 });
