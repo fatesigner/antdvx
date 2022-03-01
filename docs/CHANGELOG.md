@@ -1,3 +1,10 @@
+# [1.0.0-alpha.89](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.88...v1.0.0-alpha.89) (2022-03-01)
+
+
+### Bug Fixes
+
+* 更新部分组件及样式 ([b4a76cd](https://github.com/fatesigner/antdvx/commit/b4a76cdda7788d8c2f27d1fa6aec3aebaf334579))
+
 # [1.0.0-alpha.88](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.87...v1.0.0-alpha.88) (2022-02-28)
 
 
