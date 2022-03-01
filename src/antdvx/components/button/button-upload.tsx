@@ -4,7 +4,7 @@ import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { IFileChooserOptions, createFileChooser } from '@fatesigner/file-chooser';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconFileUploadLine, IconLoader5Line } from '../iconfont';
+import { IconLoader5Line, IconUpload2Line } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
@@ -154,7 +154,7 @@ export const XButtonUpload = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconFileUploadLine /> : '',
+            ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconUpload2Line /> : '',
             ctx.$slots?.default ? ctx.$slots?.default({ loading: ctx.loading_ }) : <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
           ]
         }}

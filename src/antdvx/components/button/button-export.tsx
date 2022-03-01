@@ -8,7 +8,7 @@ import { PropType, computed, defineComponent, reactive, ref } from 'vue';
 import { i18nMessages } from '../../i18n/messages';
 
 import { XButton } from '../button';
-import { IconCodeSSlashLine, IconFileDownloadLine, IconFileExcel2Line, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
+import { IconCodeSSlashLine, IconDownload2Line, IconFileExcel2Line, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
 
 import { IXButtonExportOptions, XButtonProps } from './types';
 
@@ -284,8 +284,7 @@ export const XButtonExport = defineComponent({
               ]}
             </Menu>
           )
-        }}
-      >
+        }}>
         <XButton
           block={ctx.block}
           disabled={ctx.disabled}
@@ -299,10 +298,9 @@ export const XButtonExport = defineComponent({
           type={ctx.type}
           color={ctx.color}
           spin={false}
-          title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.export)}
-        >
+          title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.export)}>
           {[
-            ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconFileDownloadLine spin={ctx.loading_} />,
+            ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconDownload2Line spin={ctx.loading_} />,
             !ctx.onlyIcon ? <span>{ctx.$t(i18nMessages.antd.action.export)}</span> : ''
           ]}
         </XButton>

@@ -556,18 +556,21 @@ export const XTable = defineComponent({
 
     const addData: IXTableHandlers<any>['addData'] = (start: number, data: Record<string, any> | Record<string, any>[]) => {
       if (isArray(data)) {
-        props.options.dataSource.data.splice(start, 0, ...(data as any[]));
+        overallData.splice(start, 0, ...(data as any[]));
       } else {
-        props.options.dataSource.data.splice(start, 0, ...[data]);
+        overallData.splice(start, 0, ...[data]);
       }
+      processData();
     };
 
     const updateData: IXTableHandlers<any>['updateData'] = (index: number, data: Record<string, any>) => {
-      props.options.dataSource.data.splice(index, 1, data);
+      overallData.splice(index, 1, data);
+      processData();
     };
 
     const removeData: IXTableHandlers<any>['removeData'] = (index: number) => {
-      props.options.dataSource.data.splice(index, 1);
+      overallData.splice(index, 1);
+      processData();
       // TODO：update分页
       // props.options.dataSource.total -= 1;
     };

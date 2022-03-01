@@ -39,10 +39,26 @@ export const ANTDVX_DIRECTIONS = ['up', 'right', 'down', 'left'] as const;
 export const ANTDVX_BUTTON_TYPES = [
   'default',
   'primary',
-  //'ghost',
+  // 'ghost',
   'dashed',
   'link',
   'text',
   'outline',
   '3d'
+] as const;
+
+// 弹出框位置
+export const ANTDVX_PLACEMENTS = [
+  'top',
+  'left',
+  'right',
+  'bottom',
+  'topLeft',
+  'topRight',
+  'bottomLeft',
+  'bottomRight',
+  'leftTop',
+  'leftBottom',
+  'rightTop',
+  'rightBottom'
 ] as const;

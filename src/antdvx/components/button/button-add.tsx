@@ -69,13 +69,13 @@ export const XButtonAdd = defineComponent({
         type={ctx.type}
         color={ctx.color}
         spin={false}
-        //handler={ctx.handler}
-        //notify={ctx.notify}
+        // handler={ctx.handler}
+        // notify={ctx.notify}
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.add)}
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconAddLine />,
+            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconAddLine style={{ marginRight: ctx.onlyIcon ? undefined : '-2px' }} />,
             ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.add)}</span>
           ]
         }}
