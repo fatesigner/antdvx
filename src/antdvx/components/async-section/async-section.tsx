@@ -2,8 +2,6 @@ import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
 import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
 
-import { i18nMessages } from '../../i18n/messages';
-
 import { XButtonRefresh } from '../button';
 import { SpinnerLoading } from '../loading';
 import { TransitionCollapse } from '../transitions';
@@ -89,7 +87,6 @@ export const AsyncSection = defineComponent({
     });
 
     return {
-      i18nMessages,
       data,
       error,
       initialized,

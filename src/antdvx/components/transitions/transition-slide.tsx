@@ -2,7 +2,7 @@ import { PropType, Transition, defineComponent } from 'vue';
 
 import { ANTDVX_DIRECTIONS } from '../../constants';
 
-import styles from './transitions-slide.module.less';
+import $styles from './transitions-slide.module.less';
 
 /**
  * 滑动过渡, 方向可以为 'up' | 'right' | 'down' | 'left', 默认为 down
@@ -34,10 +34,10 @@ export const TransitionSlide = defineComponent({
       <Transition
         appear={ctx.appear}
         mode={ctx.mode}
-        enterToClass={ctx.disabled ? undefined : styles['slide-' + ctx.direction + '-enter-to']}
-        leaveToClass={ctx.disabled ? undefined : styles['slide-' + ctx.direction + '-leave-to']}
-        enterActiveClass={ctx.disabled ? undefined : styles['slide-' + ctx.direction + '-enter-active']}
-        leaveActiveClass={ctx.disabled ? undefined : styles['slide-' + ctx.direction + '-leave-active']}
+        enterToClass={ctx.disabled ? undefined : $styles['slide-' + ctx.direction + '-enter-to']}
+        leaveToClass={ctx.disabled ? undefined : $styles['slide-' + ctx.direction + '-leave-to']}
+        enterActiveClass={ctx.disabled ? undefined : $styles['slide-' + ctx.direction + '-enter-active']}
+        leaveActiveClass={ctx.disabled ? undefined : $styles['slide-' + ctx.direction + '-leave-active']}
         v-slots={{
           default: () => slot
         }}

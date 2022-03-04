@@ -8,20 +8,20 @@
         </div>
         <div class="tw-flex-1 tw-bg-gray-100 tw-overflow-hidden">
           <ScrollView fill-y scroll-y native>
-            <TransitionSlide mode="out-in">
+            <TransitionOpacity mode="out-in">
               <Unauthorized v-if="status.code === 403" />
-            </TransitionSlide>
+            </TransitionOpacity>
             <template v-if="status.code === 200">
               <RouterView v-slot="{ Component }">
-                <TransitionSlide mode="out-in">
+                <TransitionOpacity mode="out-in">
                   <KeepAlive v-if="$route.meta && $route.meta.keepAlive">
                     <Component :is="Component" :key="$route.meta.key" />
                   </KeepAlive>
                   <Component :is="Component" v-else :key="$route.meta.key" />
-                </TransitionSlide>
+                </TransitionOpacity>
               </RouterView>
             </template>
-            <XBackTop />
+            <XBackTop dragable :threshold="200" />
           </ScrollView>
         </div>
       </div>
@@ -30,7 +30,7 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { ScrollView, TransitionSlide, XBackTop } from '@/antdvx';
+import { ScrollView, TransitionOpacity, TransitionSlide, XBackTop } from '@/antdvx';
 
 import { AppStore } from '@/app/core/store';
 import { User } from '@/app/shared/user';
@@ -51,7 +51,8 @@ export default defineComponent({
     Unauthorized,
     XBackTop,
     ScrollView,
-    TransitionSlide
+    TransitionSlide,
+    TransitionOpacity
   },
   setup() {
     const theme = computed({

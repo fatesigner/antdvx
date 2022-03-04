@@ -13,7 +13,7 @@
         </ATabs>
 
         <div class="tw-p-2 tw-border tw-border-gray-300">
-          <ComponentView v-model:activeKey="activeKey" :comps="comps" :keep-alive="false" />
+          <ComponentView animation="opacity" v-model:activeKey="activeKey" :comps="comps" :keep-alive="false" />
         </div>
 
         <ATabs type="card" size="small" v-model:activeKey="activeKey2">
@@ -21,7 +21,7 @@
         </ATabs>
 
         <div class="tw-p-2 tw-border tw-border-gray-300">
-          <ComponentView v-model:activeKey="activeKey2" :comps="comps" :keep-alive="false" v-slot="{ name, component, props }">
+          <ComponentView animation="opacity" v-model:activeKey="activeKey2" :comps="comps" :keep-alive="false" v-slot="{ name, component, props }">
             <TransitionSlide>
               <div>
                 {{ name }}
