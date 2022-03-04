@@ -1,3 +1,10 @@
+# [1.0.0-alpha.90](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.89...v1.0.0-alpha.90) (2022-03-04)
+
+
+### Features
+
+* 添加 Widget 组件 ([b40e1fe](https://github.com/fatesigner/antdvx/commit/b40e1fe82d37998e24f987fb05dde9b47a89e4ed))
+
 # [1.0.0-alpha.89](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.88...v1.0.0-alpha.89) (2022-03-01)
 
 
