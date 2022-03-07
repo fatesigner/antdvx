@@ -58,16 +58,13 @@
 <script lang="ts">
 import { timer } from 'rxjs';
 import { Input } from 'ant-design-vue';
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { ScrollView, XButtonRefresh } from '@/antdvx';
-
-import { PageWrapper } from '@/app/shared/page-wrapper';
 
 export default defineComponent({
   components: {
     ScrollView,
     XButtonRefresh,
-    PageWrapper,
     [Input.name]: Input
   },
   setup() {
@@ -138,6 +135,14 @@ export default defineComponent({
       const data = await loadData()();
       list3.value = data;
     };
+
+    onMounted(() => {
+      setTimeout(() => {
+        scrollViewRef2.value.scroll$.subscribe((e: any) => {
+          console.log(e.target.scrollTop);
+        });
+      }, 1000);
+    });
 
     return {
       scrollViewRef,

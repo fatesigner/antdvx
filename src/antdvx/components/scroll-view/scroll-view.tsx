@@ -1,7 +1,7 @@
 import { Alert } from 'ant-design-vue';
 import { bindPromiseQueue, debounce } from '@fatesigner/utils';
-import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ReplaySubject, Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
 import { PropType, TransitionGroup, defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
 
@@ -167,6 +167,10 @@ export const ScrollView = defineComponent({
     let resizeObs: ResizeObserver;
     let mutationObs: MutationObserver;
 
+    // 定义滚动事件 Observable
+    const scrollSubject = new ReplaySubject<Event>(0);
+    const scroll$ = scrollSubject.asObservable();
+
     const error = ref();
     const loading_ = ref(!!props.initialize);
 
@@ -324,6 +328,7 @@ export const ScrollView = defineComponent({
     // 外部操作（滚轮、触控）触发滚动
     const onScroll = (e) => {
       emit('scroll', e);
+      scrollSubject.next(e);
       if (!viewRef.value || dragMoving) {
         return;
       }
@@ -576,19 +581,19 @@ export const ScrollView = defineComponent({
     });
 
     return {
-      i18nMessages,
       viewRef,
       horThumbRef,
       verThumbRef,
+      scroll$,
       error,
       loading_,
       load,
       reload,
       scrollTo,
       scrollToBottom,
-      onScroll,
       horBarClick,
-      verBarClick
+      verBarClick,
+      onScroll
     };
   },
   render(ctx) {
@@ -600,16 +605,14 @@ export const ScrollView = defineComponent({
           ctx.fillY ? styles.fillY : null,
           ctx.scrollX ? styles.scrollX : null,
           ctx.scrollY ? styles.scrollY : null
-        ]}
-      >
+        ]}>
         {ctx.loading_ || ctx.error ? (
           <TransitionGroup
             enterFromClass={styles['transition-enter-from']}
             enterToClass={styles['transition-enter-to']}
             leaveToClass={styles['transition-leave-to']}
             enterActiveClass={styles['transition-enter-active']}
-            leaveActiveClass={styles['transition-enter-active']}
-          >
+            leaveActiveClass={styles['transition-enter-active']}>
             {ctx.loading_ ? (
               <div class={styles.transition} key='loading'>
                 {ctx.$slots?.loading ? (
