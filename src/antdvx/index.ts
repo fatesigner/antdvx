@@ -1,21 +1,26 @@
-/**
- * index
- */
-
+// Constants
 export * from './config';
 export * from './constants';
-export * from './pipes';
 export * from './symbols';
+
+// Utils
 export * from './utils';
 
-// components
+// pipes
+export * from './pipes';
+
+// Services
+export * from './helpers';
+export * from './interfaces';
+export * from './services';
+
+// Components
 export * from './components/async-section';
 export * from './components/back-top';
 export * from './components/button';
 export * from './components/code-editor';
 export * from './components/combobox';
 export * from './components/component-view';
-export * from './components/widget';
 export * from './components/drawer';
 export * from './components/echarts';
 export * from './components/form-generator';
@@ -30,8 +35,4 @@ export * from './components/sticky-section';
 export * from './components/table';
 export * from './components/tabs';
 export * from './components/transitions';
-
-// services
-export * from './helpers';
-export * from './interfaces';
-export * from './services';
+export * from './components/widget';

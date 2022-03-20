@@ -35,11 +35,11 @@ export function createIcon(
         Icon,
         {
           class: ['antdvx-icon', ctx.color ? `antdvx-text-${ctx.color}` : undefined]
-          //style: ctx.style
-          //spin: ctx.spin,
-          //rotate: ctx.rotate
-          //twoToneColor: ctx.twoToneColor,
-          //viewBox: options.viewBox
+          // style: ctx.style
+          // spin: ctx.spin,
+          // rotate: ctx.rotate
+          // twoToneColor: ctx.twoToneColor,
+          // viewBox: options.viewBox
           // class: 'fa-icon'
         },
         {
@@ -81,7 +81,7 @@ export function createIcon(
               }
             );
           }
-          /*default() {
+          /* default() {
             if (options?.paths?.length) {
               return options.paths.map((x, index) => {
                 return h('path', {
@@ -97,7 +97,7 @@ export function createIcon(
                 })
               ];
             }
-          }*/
+          } */
         }
       );
     }

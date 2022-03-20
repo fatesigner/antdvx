@@ -92,14 +92,14 @@ export default defineComponent({
     let wrapWidth = 0;
     let tabsWidth = 0;
     let scrollLeft = 0;
-    let scrollLeftOld = 0;
+    const scrollLeftOld = 0;
 
     const onScroll = (e) => {
-      //scrollLeftOld = e.detail.scrollLeft;
+      // scrollLeftOld = e.detail.scrollLeft;
     };
 
     const itemClick = (item) => {
-      if (activated !== item.name) {
+      if (activated.value !== item.name) {
         activated.value = item.name;
       }
     };

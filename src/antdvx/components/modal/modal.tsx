@@ -164,7 +164,7 @@ export const XModal = defineComponent({
           if (hooks.length) {
             hooks.forEach((hook) => {
               if (hook) {
-                hook.call(null, ...args);
+                hook(...args);
               }
             });
             hooks = [];
@@ -245,8 +245,8 @@ export const XModal = defineComponent({
           .filter(Boolean)
           .join(' ')}
         zIndex={ctx.options.zIndex}
-        //dialogStyle={ctx.options.dialogStyle}
-        //dialogClass={ctx.options.dialogClass}
+        // dialogStyle={ctx.options.dialogStyle}
+        // dialogClass={ctx.options.dialogClass}
         onCancel={ctx.onCancel}
         onOk={ctx.onOk}
         v-slots={{

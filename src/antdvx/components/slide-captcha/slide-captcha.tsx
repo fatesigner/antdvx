@@ -6,10 +6,10 @@ import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { PropType, Teleport, computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
+import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
 
 import { XButton } from '../button';
 import { IconCheckLine, IconCloseLine, IconRefreshLine } from '../iconfont';
-import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
 
 /**
  * 验证码弹出层
@@ -472,10 +472,10 @@ export const SlideCaptcha = defineComponent({
     const presented = ref(false);
     const valid = ref(false);
 
-    /*const modalOffset = {
+    /* const modalOffset = {
       top: 22.5,
       left: 48
-    };*/
+    }; */
 
     const position = reactive({ top: 0, left: 0 });
 

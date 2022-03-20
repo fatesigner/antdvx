@@ -42,6 +42,8 @@ gulp.task(
         return prev;
       }, {});
     }
+    // Add sideEffects
+    pkg.sideEffects = false;
     fs.writeFileSync(path.join(OUTPUT_PATH, 'package.json'), JSON.stringify(pkg, null, 2), { encoding: 'utf8' });
   })
 );

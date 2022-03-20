@@ -1,7 +1,3 @@
-/**
- * index
- */
-
 export * from './transition-collapse';
 export * from './transition-opacity';
 export * from './transition-slide';

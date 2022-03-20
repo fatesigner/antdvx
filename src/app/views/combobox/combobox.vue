@@ -6,25 +6,26 @@
 
         <XButton @click="visible = !visible">Toggle</XButton>
 
-        <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes" v-if="visible">
-          <div class="tw-flex flex-wrap tw-items-center tw-space-x-2">
-            <div class="tw-flex-initial">筛选：</div>
-            <XCombobox
-              class="tw-w-36 tw-mr-8"
-              :size="size"
-              auto-bind
-              clearable
-              importable
-              label-in-value
-              data-value-field="name"
-              data-text-field="label"
-              :options="list.items"
-              v-model:value="list.key"
-              placeholder="选择一个项目..."
-            />
-            <XButton :size="size">查询 / Query</XButton>
+        <template v-if="visible">
+          <div class="tw-grid md:tw-grid-cols-2 tw-gap-4" v-for="size in sizes" :key="size">
+            <div class="tw-flex flex-wrap tw-items-center tw-gap-2">
+              <div class="tw-flex-initial">筛选：</div>
+              <XCombobox
+                class="tw-w-36"
+                :size="size"
+                auto-bind
+                clearable
+                label-in-value
+                data-value-field="name"
+                data-text-field="label"
+                :options="list.items"
+                v-model:value="list.key"
+                placeholder="选择一个项目..."
+              />
+              <XButton :size="size">查询 / Query</XButton>
+            </div>
           </div>
-        </div>
+        </template>
 
         <div class="tw-text-lg">多选</div>
 
@@ -41,9 +42,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
 import { Input, InputSearch } from 'ant-design-vue';
-import { ANTDVX_SIZES, ScrollView, XButton, XCombobox } from '@/antdvx';
+import { defineComponent, reactive, ref } from 'vue';
+import { ANTDVX_SIZES, XButton, XCombobox } from '@/antdvx';
 
 import { PageWrapper } from '@/app/shared/page-wrapper';
 
@@ -51,7 +52,6 @@ export default defineComponent({
   components: {
     XButton,
     XCombobox,
-    ScrollView,
     PageWrapper,
     [Input.name]: Input,
     [InputSearch.name]: InputSearch

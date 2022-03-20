@@ -4,6 +4,7 @@
 
 import { AsyncComponentLoader, AsyncComponentOptions } from '@vue/runtime-core';
 
+// 控件尺寸
 export type IWidgetSize = 'large' | 'default' | 'small';
 
 // 属性类别（设计）
@@ -82,6 +83,14 @@ export interface IFormDesignerWidget {
   attributes: IFormDesignerAttribute[];
 }
 
+export interface IFormGeneratorSettings {
+  hideRequiredMark: boolean;
+  labelAlign: 'left' | 'right';
+  layout: 'horizontal' | 'vertical' | 'inline';
+  size: IWidgetSize;
+  labelCol: { span: number; offset: number };
+}
+
 // 配置接口（设计）
 export interface IFormDesignerConfig {
   attributes: IFormDesignerAttribute[];
@@ -107,14 +116,6 @@ export interface IFormDesignerBinds {
     field: Record<string, any>;
   })[];
   settings: IFormGeneratorSettings;
-}
-
-export interface IFormGeneratorSettings {
-  hideRequiredMark: boolean;
-  labelAlign: 'left' | 'right';
-  layout: 'horizontal' | 'vertical' | 'inline';
-  size: IWidgetSize;
-  labelCol: { span: number; offset: number };
 }
 
 export interface IFormGeneratorData {

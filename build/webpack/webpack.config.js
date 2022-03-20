@@ -24,7 +24,7 @@ const autoprefixer = require('autoprefixer');
 const tailwindcss = require('tailwindcss');
 
 // const WebpackExternalEntryPlugin = require('./plugins/webpack-external-entry-plugin');
-const WebpackCleanTerminalPlugin = require('./plugins/webpack-clean-terminal-plugin');
+// const WebpackCleanTerminalPlugin = require('./plugins/webpack-clean-terminal-plugin');
 const WebpackHtmlEmbedSourcePlugin = require('./plugins/webpack-html-embed-source-plugin');
 
 const Utils = require('../utils');
@@ -203,7 +203,11 @@ module.exports = async function (options) {
       }
     };
   } else {
-    config.devtool = 'eval-source-map';
+    if (isDevServer) {
+      config.devtool = 'eval-source-map';
+    } else {
+      config.devtool = 'cheap-module-source-map';
+    }
     config.output = {
       filename: 'js/[name].js',
       publicPath: options.publicPath ?? '/',
@@ -456,13 +460,14 @@ module.exports = async function (options) {
         loader: 'vue-loader'
       },
       {
-        test: /\.ts(x)?$/,
-        use: 'happypack/loader?id=js'
+        test: /\.[j|t]s$/,
+        exclude: [/\bcore-js\b/, /\bwebpack\/buildin\b/, /\b@babel\/runtime-corejs3\b/],
+        use: 'babel-loader'
       },
       {
-        test: /\.js(x)?$/,
+        test: /\.[j|t]sx$/,
         exclude: [/\bcore-js\b/, /\bwebpack\/buildin\b/, /\b@babel\/runtime-corejs3\b/],
-        use: 'happypack/loader?id=js'
+        use: ['babel-loader', '@ant-design-vue/vue-jsx-hot-loader']
       },
       {
         // image assets
@@ -616,6 +621,19 @@ module.exports = async function (options) {
         }
       ]
     }),
+    new HappyPack({
+      id: 'jsx',
+      threads: 4,
+      debug: false,
+      verbose: false,
+      verboseWhenProfiling: false,
+      threadPool: happyThreadPool,
+      loaders: [
+        {
+          loader: '@ant-design-vue/vue-jsx-hot-loader'
+        }
+      ]
+    }),
     new VueLoaderPlugin(),
     new ForkTsCheckerWebpackPlugin({
       // async: true,
@@ -660,7 +678,7 @@ module.exports = async function (options) {
           parse: {},
           sourceMap: false,
           // 混淆变量，默认为 true
-          mangle: false,
+          mangle: true,
           output: {
             // 美化输出
             beautify: false,

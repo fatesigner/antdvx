@@ -1,8 +1,8 @@
 import { gsap } from 'gsap';
 import { getViewportSize } from '@fatesigner/utils/document';
 import { animationFrameScheduler, fromEvent, merge } from 'rxjs';
-import { defineComponent, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { defineComponent, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref } from 'vue';
 
 import { getEventArgs } from '../../utils';
 import { AntdStorageService } from '../../config';

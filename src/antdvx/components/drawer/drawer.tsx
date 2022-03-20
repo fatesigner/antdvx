@@ -165,7 +165,7 @@ export const XDrawer = defineComponent({
           if (hooks.length) {
             hooks.forEach((hook) => {
               if (hook) {
-                hook.call(null, ...args);
+                hook(...args);
               }
             });
             hooks = [];

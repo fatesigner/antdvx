@@ -119,11 +119,11 @@ export function getFiledObject(widget: IFormDesignerWidget): Record<string, any>
 }
 
 // 动态导入内置组件
-/*let requirePages = require.context('./widgets/base', true, /\*\.vue$/);
+/* let requirePages = require.context('./widgets/base', true, /\*\.vue$/);
 requirePages.keys().forEach((filename) => {
   const comp: any = requirePages(filename).default;
   FormDesignerConfig.widgets.base.push({
     name: filename,
     comp
   });
-});*/
+}); */

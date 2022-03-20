@@ -605,14 +605,16 @@ export const ScrollView = defineComponent({
           ctx.fillY ? styles.fillY : null,
           ctx.scrollX ? styles.scrollX : null,
           ctx.scrollY ? styles.scrollY : null
-        ]}>
+        ]}
+      >
         {ctx.loading_ || ctx.error ? (
           <TransitionGroup
             enterFromClass={styles['transition-enter-from']}
             enterToClass={styles['transition-enter-to']}
             leaveToClass={styles['transition-leave-to']}
             enterActiveClass={styles['transition-enter-active']}
-            leaveActiveClass={styles['transition-enter-active']}>
+            leaveActiveClass={styles['transition-enter-active']}
+          >
             {ctx.loading_ ? (
               <div class={styles.transition} key='loading'>
                 {ctx.$slots?.loading ? (
@@ -623,7 +625,7 @@ export const ScrollView = defineComponent({
                       <div class='tw-text-center'>
                         <SpinnerLoading size={ctx.loadingSize} />
                       </div>
-                      {ctx.loadingText ? <div class='tw-mt-5'>{ctx.loadingText}</div> : ''}
+                      {ctx.loadingText ? <div class='tw-mt-5 tw-text-center'>{ctx.loadingText}</div> : ''}
                     </div>
                   </div>
                 )}

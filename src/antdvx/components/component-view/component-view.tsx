@@ -3,7 +3,7 @@ import { Component, ComponentPublicInstance } from '@vue/runtime-core';
 import { RouteLocationNormalizedLoaded, Router, useRoute, useRouter } from 'vue-router';
 import { KeepAlive, PropType, defineComponent, h, onActivated, onMounted, onUnmounted, ref, shallowRef, toRaw, watch } from 'vue';
 
-import { TransitionCollapse, TransitionOpacity, TransitionSlide } from '../transitions';
+import { TransitionOpacity, TransitionSlide } from '../transitions';
 
 export interface IComponentViewItem<
   T extends Component = {

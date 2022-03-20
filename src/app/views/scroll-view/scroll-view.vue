@@ -138,7 +138,7 @@ export default defineComponent({
 
     onMounted(() => {
       setTimeout(() => {
-        scrollViewRef2.value.scroll$.subscribe((e: any) => {
+        scrollViewRef2.value?.scroll$.subscribe((e: any) => {
           console.log(e.target.scrollTop);
         });
       }, 1000);

@@ -104,7 +104,7 @@ export interface IDataSourceTransport<
    * 如果指定为函数，则数据源调用该函数而不是 ajax
    */
   read: IDatasourceTransportReadMethod<TModel, TParams, TFilters, TSorter>;
-  /*getParameterMap?: TGetMap;
+  /* getParameterMap?: TGetMap;
   postParameterMap?: TPostMap;
   putParameterMap?: TPutMap;
   deleteParameterMap?: TDeleteMap;
@@ -112,7 +112,7 @@ export interface IDataSourceTransport<
   post?: string | IDataSourceRequestOptions | IDatasourceTransportPostMethod;
   put?: string | IDataSourceRequestOptions | IDatasourceTransportPutMethod;
   delete?: string | IDataSourceRequestOptions | IDatasourceTransportDeleteMethod;
-  downloadExcel?: string | IDataSourceRequestOptions | IDatasourceTransportDownloadExcelMethod;*/
+  downloadExcel?: string | IDataSourceRequestOptions | IDatasourceTransportDownloadExcelMethod; */
 }
 
 export type IDataSourceTransportAddingMap<TModel extends Record<string, any>, TParams extends Record<string, any>> = () => TModel;
@@ -226,12 +226,12 @@ export interface IDataSource<
   /**
    * 是否执行服务端过滤，默认情况下，数据源将执行客户端过滤
    */
-  //serverFiltering?: boolean;
+  // serverFiltering?: boolean;
 
   /**
    * 是否执行服务端排序，默认情况下，数据源将执行客户端排序
    */
-  //serverSorting?: boolean;
+  // serverSorting?: boolean;
 
   sort?: IDataSourceSort<TModel> | IDataSourceSort<TModel>[];
   group?: IDataSourceGroup<TModel> | IDataSourceGroup<TModel>[];
