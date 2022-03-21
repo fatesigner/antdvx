@@ -1,3 +1,10 @@
+# [1.0.0-alpha.92](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.91...v1.0.0-alpha.92) (2022-03-21)
+
+
+### Features
+
+* add sideEffects false flag to package.json for tree shaking ([036a20a](https://github.com/fatesigner/antdvx/commit/036a20a149f3ce292ddb7e14a8d830ca1058bd9a))
+
 # [1.0.0-alpha.91](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.90...v1.0.0-alpha.91) (2022-03-07)
 
 
