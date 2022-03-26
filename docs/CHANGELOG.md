@@ -1,3 +1,10 @@
+# [1.0.0-alpha.93](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.92...v1.0.0-alpha.93) (2022-03-26)
+
+
+### Features
+
+* update XTable pagination  options ([1112f37](https://github.com/fatesigner/antdvx/commit/1112f37429f44ba467e5724dad3af60ef33a3f2c))
+
 # [1.0.0-alpha.92](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.91...v1.0.0-alpha.92) (2022-03-21)
 
 
