@@ -987,7 +987,7 @@ export const XTable = defineComponent({
       // 移除窗口尺寸的监听
       if (antTableRef.value?.$el) {
         if (resizeObs) {
-          resizeObs.unobserve(antTableRef.value.value);
+          resizeObs.unobserve(antTableRef.value.$el);
         }
       }
     });
@@ -1061,13 +1061,16 @@ export const XTable = defineComponent({
             (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top') ? (
               <div class='tw-flex-initial'>
                 <Pagination
-                  size={ctx.options.pagination.size}
+                  hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                   pageSizeOptions={ctx.options.pagination.pageSizeOptions}
+                  showLessItems={ctx.options.pagination.showLessItems}
                   showQuickJumper={ctx.options.pagination.showQuickJumper}
                   showSizeChanger={ctx.options.pagination.showSizeChanger}
                   showTotal={(total, range) =>
                     `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
                   }
+                  simple={ctx.options.pagination.simple}
+                  size={ctx.options.pagination.size}
                   total={ctx.options.dataSource.total}
                   v-models={[
                     [ctx.options.dataSource.pageNo, 'current'],
@@ -1181,13 +1184,16 @@ export const XTable = defineComponent({
               class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
             >
               <Pagination
-                size={ctx.options.pagination.size}
+                hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
+                showLessItems={ctx.options.pagination.showLessItems}
                 showQuickJumper={ctx.options.pagination.showQuickJumper}
                 showSizeChanger={ctx.options.pagination.showSizeChanger}
                 showTotal={(total, range) =>
                   `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
                 }
+                simple={ctx.options.pagination.simple}
+                size={ctx.options.pagination.size}
                 total={ctx.options.dataSource.total}
                 v-models={[
                   [ctx.options.dataSource.pageNo, 'current'],
