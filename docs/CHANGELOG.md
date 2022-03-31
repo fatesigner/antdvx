@@ -1,3 +1,10 @@
+# [1.0.0-alpha.94](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.93...v1.0.0-alpha.94) (2022-03-31)
+
+
+### Bug Fixes
+
+* change merge to mergeWith ([d414502](https://github.com/fatesigner/antdvx/commit/d4145027011f4da8f2d60439717e494aea1cbead))
+
 # [1.0.0-alpha.93](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.92...v1.0.0-alpha.93) (2022-03-26)
 
 
