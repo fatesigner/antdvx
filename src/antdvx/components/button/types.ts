@@ -17,10 +17,10 @@ export const XButtonProps = {
   /**
    * 设置危险按钮
    */
-  /*danger: {
+  /* danger: {
     type: Boolean,
     default: false
-  },*/
+  }, */
   /**
    * 按钮失效状态
    */
@@ -50,9 +50,9 @@ export const XButtonProps = {
   /**
    * 设置按钮的图标类型
    */
-  /*icon: {
+  /* icon: {
     type: String,
-  },*/
+  }, */
   /**
    * 设置按钮载入状态
    */

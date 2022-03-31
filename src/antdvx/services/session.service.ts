@@ -1,17 +1,17 @@
 import 'reflect-metadata';
-import { merge } from 'lodash-es';
+import { timer } from 'rxjs';
+import { isArray, mergeWith } from 'lodash-es';
 import { inject, injectable } from 'inversify';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 import { ANTDVX_SYMBOLS } from '../symbols';
 import { IStorageService } from '../interfaces/storage.interface';
 import { ISessionService, SessionLogoutResult, SessionUser } from '../interfaces/session.interface';
-import { timer } from 'rxjs';
 
 /**
  * session config
  */
-export interface SessionServiceConfig<TUser extends SessionUser<TRoles>, TRoles extends readonly string[]> {
+export interface SessionServiceConfig<TRoles extends readonly string[], TUser extends SessionUser<TRoles>> {
   getUserModel: () => TUser;
   onLogin: (user: TUser) => void;
   onLogout: (result: SessionLogoutResult) => void;
@@ -22,8 +22,8 @@ export interface SessionServiceConfig<TUser extends SessionUser<TRoles>, TRoles 
  * session 服务
  */
 @injectable()
-export class SessionService<TUser extends SessionUser<TRoles>, TRoles extends readonly string[]> implements ISessionService<TUser, TRoles> {
-  config: SessionServiceConfig<TUser, TRoles>;
+export class SessionService<TRoles extends readonly string[], TUser extends SessionUser<TRoles>> implements ISessionService<TUser, TRoles> {
+  config: SessionServiceConfig<TRoles, TUser>;
 
   /**
    * 当前用户信息
@@ -31,10 +31,10 @@ export class SessionService<TUser extends SessionUser<TRoles>, TRoles extends re
   user: TUser;
 
   constructor(
-    @inject(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG) config: SessionServiceConfig<TUser, TRoles>,
+    @inject(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG) config: SessionServiceConfig<TRoles, TUser>,
     @inject(ANTDVX_SYMBOLS.STORAGE_SERVICE) private _localStorageService: IStorageService
   ) {
-    this.config = merge({}, config);
+    this.config = mergeWith({}, config, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
 
     // 从 localStorage 中获取用户信息
     const user: TUser = this._localStorageService.get('user');
@@ -53,7 +53,7 @@ export class SessionService<TUser extends SessionUser<TRoles>, TRoles extends re
    * 获取默认用户信息
    */
   getDefaultUser(user?: { [P in keyof TUser]?: TUser[P] }): TUser {
-    return merge(this.config?.getUserModel?.(), user);
+    return mergeWith(this.config?.getUserModel?.(), user, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
   }
 
   /**
@@ -86,13 +86,13 @@ export class SessionService<TUser extends SessionUser<TRoles>, TRoles extends re
   updateUser(user) {
     if (user) {
       // this.user = user;
-      this.user = merge({}, this.user, user);
+      this.user = mergeWith({}, this.user, user, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
       this.saveToLocalStorage();
 
-      /*this.user.permissions = [];
+      /* this.user.permissions = [];
       if (!this.user.menus) {
         this.user.menus = [];
-      }*/
+      } */
 
       /* const strutree = new StructureTree<IMenu>();
       strutree.forEach(this.user.menus, (node) => {
@@ -104,7 +104,7 @@ export class SessionService<TUser extends SessionUser<TRoles>, TRoles extends re
   }
 
   updateRole(role: TRoles[number]) {
-    merge(this.user, { currentRole: role });
+    mergeWith(this.user, { currentRole: role }, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
     this.config?.onRoleChanged?.(role);
     this.saveToLocalStorage();
   }

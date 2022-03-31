@@ -772,7 +772,7 @@ module.exports = async function (options) {
   } else {
     config.plugins.push({
       apply: (compiler) => {
-        compiler.hooks.done.tap('EmitDoneWebpackPlugin ', (stats) => {
+        compiler.hooks.done.tap('EmitDoneWebpackPlugin', (stats) => {
           // const hasWarnings = stats.hasWarnings();
           const hasErrors = stats.hasErrors();
           if (hasErrors) {

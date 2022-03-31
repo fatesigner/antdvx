@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { merge } from 'lodash-es';
+import { isArray, mergeWith } from 'lodash-es';
 import { inject, injectable } from 'inversify';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 import { StructureTree } from '@fatesigner/utils/structure-tree';
@@ -38,8 +38,8 @@ const defaultConfig: AuthServiceConfig<any> = {
  */
 @injectable()
 export class AuthService<
-  TUser extends SessionUser<TRoles> & { permissions: string[] },
   TRoles extends readonly string[],
+  TUser extends SessionUser<TRoles> & { permissions: string[] },
   TRouteMeta extends {
     // 是否允许匿名访问，当设置为 false 时，需要同时配置 auth 属性
     allowAnonymous?: boolean;
@@ -54,7 +54,7 @@ export class AuthService<
     @inject(ANTDVX_SYMBOLS.AUTH_SERVICE_CONFIG) config: AuthServiceConfig<TRoles>,
     @inject(ANTDVX_SYMBOLS.SESSION_SERVICE) private _sessionService: ISessionService<TUser, TRoles>
   ) {
-    this.config = merge({}, defaultConfig, config);
+    this.config = mergeWith({}, defaultConfig, config, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
   }
 
   // 判断当前用户是否已认证

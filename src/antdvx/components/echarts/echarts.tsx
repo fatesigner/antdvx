@@ -2,7 +2,7 @@
  * echarts
  */
 
-import { merge } from 'lodash-es';
+import { isArray, merge, mergeWith } from 'lodash-es';
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
 import * as echarts from 'echarts/core';
 
@@ -182,7 +182,11 @@ export async function createEcharts<Opt extends EChartsOption>(
     existInstance.dispose();
   }
 
-  return echarts.init(dom, theme ?? defaultConfig.theme, merge({}, defaultConfig.opts, opts));
+  return echarts.init(
+    dom,
+    theme ?? defaultConfig.theme,
+    mergeWith({}, defaultConfig.opts, opts, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined))
+  );
 }
 
 export async function analyseImport(options: EChartsOption) {

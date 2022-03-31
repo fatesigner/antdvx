@@ -4,7 +4,7 @@
 
 import { VNode } from 'vue';
 import { PaginationProps } from 'ant-design-vue/es/pagination/Pagination';
-import { ColumnProps, TableProps } from 'ant-design-vue/es/table/interface';
+import { ColumnProps, TableProps, tableProps } from 'ant-design-vue/es/table/interface';
 
 import { IDataSource, IPaginationParams } from '../../types/data-source';
 
@@ -247,8 +247,9 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
 }
 
 export interface IXTablePropsType<TModel extends Record<string, any>, TParams extends Record<string, any>>
-  extends Omit<TableProps, 'columns' | 'dataSource' | 'rowKey' | 'scroll'> {
+  extends Omit<TableProps, 'locale' | 'columns' | 'dataSource' | 'rowKey' | 'scroll'> {
   // Override Antd
+  locale?: Partial<typeof tableProps>;
   columns?: IXTableColumnProps<TModel>[];
   rowKey?: keyof IXTableModelExtend<TModel> | IXTableRowKeyFunc<IXTableModelExtend<TModel>>;
   scroll?: { x?: boolean | number; y?: boolean | number };

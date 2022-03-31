@@ -45,6 +45,22 @@ export const XButton = defineComponent({
     return { loading_, trigger };
   },
   render(ctx) {
+    const props: any = {
+      block: ctx.block,
+      ghost: ctx.ghost,
+      href: ctx.href,
+      htmlType: ctx.htmlType,
+      loading: ctx.spin ? ctx.loading_ : false,
+      shape: ctx.shape,
+      size: ctx.size,
+      target: ctx.target,
+      type: ctx.type === 'outline' || ctx.type === '3d' ? undefined : ctx.type,
+      title: ctx.title,
+      onClick: ctx.trigger
+    };
+    if (ctx.disabled) {
+      props.disabled = true;
+    }
     return (
       <Button
         class={{
@@ -54,18 +70,7 @@ export const XButton = defineComponent({
           'ant-btn-mini': ctx.size === 'mini',
           'ant-loading': !ctx.spin && ctx.loading_
         }}
-        block={ctx.block}
-        disabled={ctx.disabled}
-        ghost={ctx.ghost}
-        href={ctx.href}
-        htmlType={ctx.htmlType}
-        loading={ctx.spin ? ctx.loading_ : false}
-        shape={ctx.shape}
-        size={ctx.size}
-        target={ctx.target}
-        type={ctx.type === 'outline' || ctx.type === '3d' ? undefined : ctx.type}
-        title={ctx.title}
-        onClick={ctx.trigger}
+        {...props}
       >
         {ctx.$slots.default?.({ loading: ctx.loading_ })}
       </Button>

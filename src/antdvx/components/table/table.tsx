@@ -3,9 +3,9 @@
  */
 
 import to from 'await-to-js';
-import { merge } from 'lodash-es';
+import { mergeWith } from 'lodash-es';
 import { useI18n } from 'vue-i18n';
-import { bindLazyFunc, debounce } from '@fatesigner/utils';
+import { bindLazyFunc, throttle } from '@fatesigner/utils';
 import { TableProps } from 'ant-design-vue/es/table/interface';
 import { Checkbox, Input, InputNumber, Pagination, Select, Table, notification } from 'ant-design-vue';
 import { isArray, isBoolean, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
@@ -58,7 +58,7 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
   bindLazyFunc(handler, bindProperties);
 
   return {
-    options: reactive(merge({}, defaultXTableProps, props) as any),
+    options: reactive(mergeWith({}, defaultXTableProps, props, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined)) as any),
     handler,
     params: reactive(Object.assign({}, params) as any),
     methods
@@ -161,7 +161,7 @@ export const XTable = defineComponent({
     };
 
     // 重绘 fixed 行高度，以解决 fixed 错位的渲染问题
-    const resizeFixedRows = debounce(() => {
+    const resizeFixedRows = () => {
       if (!antTableRef.value?.$el) {
         return;
       }
@@ -185,7 +185,7 @@ export const XTable = defineComponent({
       if (props.options.autoScroll) {
         setAutoScroll();
       }
-    }, 100);
+    };
 
     // Get record key
     const getRowKey = (record: Record<string, any>, index?: number) => {
@@ -973,7 +973,7 @@ export const XTable = defineComponent({
       // 监听窗口尺寸变化
       if (antTableRef.value?.$el) {
         if (!resizeObs) {
-          resizeObs = new ResizeObserver(resizeFixedRows);
+          resizeObs = new ResizeObserver(throttle(resizeFixedRows, 2000, true, false));
         }
         resizeObs.observe(antTableRef.value.$el);
       }

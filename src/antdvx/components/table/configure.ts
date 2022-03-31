@@ -1,5 +1,5 @@
 import { VNode } from 'vue';
-import { merge } from 'lodash-es';
+import { isArray, mergeWith } from 'lodash-es';
 
 import { IXTablePropsType, IXTableRefType } from './types';
 
@@ -50,5 +50,5 @@ export function configureXTable<
     titleSuffix?: (tbRef: IXTableRefType<TModel, TParams, TMethods>) => VNode | VNode[];
   }
 ) {
-  merge(defaultXTableProps, props);
+  mergeWith(defaultXTableProps, props, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
 }

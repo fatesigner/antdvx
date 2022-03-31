@@ -28,7 +28,11 @@ export function highlightHtml(keywords: string, text: string, className: string)
  * 获取 Odata 参数
  * @param options
  */
-export function getOdataQueryStr(options: { pageNo?: number; pageSize?: number; filters?: (() => string)[] }) {
+export function getOdataQuery(options: { pageNo?: number; pageSize?: number; filters?: (() => string)[] }): {
+  skip: string;
+  top: string;
+  filter: string;
+} {
   const filter = options?.filters.reduce((prev, cur) => {
     const r = cur();
     if (r) {
@@ -37,8 +41,8 @@ export function getOdataQueryStr(options: { pageNo?: number; pageSize?: number; 
     return prev;
   }, []);
   return {
-    skip: isNullOrUndefined(options?.pageNo) || isNullOrUndefined(options?.pageSize) ? undefined : options.pageSize * options.pageNo,
-    top: isNullOrUndefined(options?.pageNo) || isNullOrUndefined(options?.pageSize) ? undefined : options.pageSize,
+    skip: isNullOrUndefined(options?.pageNo) || isNullOrUndefined(options?.pageSize) ? undefined : (options.pageSize * options.pageNo).toString(),
+    top: isNullOrUndefined(options?.pageNo) || isNullOrUndefined(options?.pageSize) ? undefined : options.pageSize.toString(),
     filter: filter.length ? filter.join(' and ') : undefined
   };
 }
@@ -308,4 +312,113 @@ export function getTimestampStr(
     str += res.seconds.toString() + format?.second;
   }
   return str;
+}
+
+export function getEventArgs(e: MouseEvent | TouchEvent) {
+  if ((e as TouchEvent).touches) {
+    return {
+      // TouchEvent does not support offset position
+      offsetX: 0,
+      offsetY: 0,
+      points: Array.from((e as TouchEvent).touches).map(({ clientX, clientY }) => [clientX, clientY])
+    };
+  } else {
+    return {
+      offsetX: (e as MouseEvent).offsetX,
+      offsetY: (e as MouseEvent).offsetY,
+      points: [[(e as MouseEvent).clientX, (e as MouseEvent).clientY]]
+    };
+  }
+}
+
+/**
+ * 删除集合中的指定某个元素，并返回该元素在集合中的位置
+ * @return index
+ */
+export function removeItem<T>(callback: (record: T) => boolean, arr: T[]): number {
+  if (arr) {
+    const index = arr.findIndex((x) => callback(x));
+    if (index > -1) {
+      arr.splice(index, 1);
+    }
+    return index;
+  }
+  return -1;
+}
+
+/**
+ * 移动指定集合中的元素位置
+ * @param arr
+ * @param index
+ * @param index2
+ */
+export function exchangeItem(arr: any[], index: number, index2: number) {
+  if (index !== index2) {
+    if (index > index2) {
+      const temp = index2;
+      index2 = index;
+      index = temp;
+    }
+    const item = arr?.[index];
+    if (item && arr.length >= index2 - 1) {
+      arr.splice(index2 + 1, 0, item);
+      arr.splice(index, 1);
+    }
+  }
+}
+
+/**
+ * 过滤树形结构数据
+ * @param nodes
+ * @param callback
+ */
+export function filterTreeData<T>(nodes: T[], callback: (node: T, index: number, parentNodes: T[]) => boolean) {
+  const newNodes = [];
+
+  // 采用递归深度遍历
+  const forEach = (nodes, newNodes, parentNodes) => {
+    let matched = false;
+    for (const [index, childNode] of nodes.entries()) {
+      const childrenNodes = childNode.Children;
+      const childNodeNew = { ...childNode, Children: [] };
+      if (callback(childNode, index, parentNodes)) {
+        matched = true;
+        newNodes.push(childNodeNew);
+        if (childrenNodes && childrenNodes.length) {
+          forEach(childrenNodes, childNodeNew.Children, [...parentNodes, childNode]);
+        }
+      } else {
+        // 未匹配，继续过滤子节点
+        if (childrenNodes && childrenNodes.length) {
+          if (forEach(childrenNodes, childNodeNew.Children, [...parentNodes, childNode])) {
+            matched = true;
+            newNodes.push(childNodeNew);
+          }
+        }
+      }
+    }
+    return matched;
+  };
+
+  forEach(nodes, newNodes, []);
+
+  return newNodes;
+}
+
+/**
+ * 将 base64 编码转换为 file 对象
+ * @param dataurl
+ * @param filename
+ */
+export function dataURLtoFile(dataurl: string, filename: string, options): File {
+  // 获取到 base64 编码
+  const arr = dataurl.split(',');
+  // 将 base64 编码转为字符串
+  const bstr = window.atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n); // 创建初始化为0的，包含length个元素的无符号整型数组
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  return new File([u8arr], filename, options);
 }

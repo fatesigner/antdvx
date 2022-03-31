@@ -2,14 +2,36 @@
  * vee-validate
  */
 
+import { SchemaOf } from 'yup';
 import AllRules from '@vee-validate/rules';
-import { configure, defineRule } from 'vee-validate';
+import { ComputedRef, Ref, reactive } from 'vue';
+// import { ErrorMessage, Field, Form } from 'vee-validate';
+import { PublicFormContext, SubmissionHandler, configure, defineRule, useForm } from 'vee-validate';
 import { localize, setLocale } from '@vee-validate/i18n';
-//import { ErrorMessage, Field, Form } from 'vee-validate';
 
 import { i18n } from '@/app/i18n';
 
 import './vee-validate.less';
+import { UnwrapNestedRefs } from '@vue/reactivity';
+
+interface FieldContext {
+  field: string;
+  value: unknown;
+  form: Record<string, unknown>;
+  rule?: {
+    name: string;
+    params?: Record<string, unknown> | unknown[];
+  };
+}
+type MaybeRef<T> = Ref<T> | ComputedRef<T> | T;
+type GenericValidateFunction = (value: unknown, ctx: FieldContext) => boolean | string | Promise<boolean | string>;
+interface FormOptions<TValues extends Record<string, any>> {
+  validationSchema?: MaybeRef<Record<keyof TValues, GenericValidateFunction | string | Record<string, any>> | SchemaOf<TValues>>;
+  initialValues?: MaybeRef<TValues>;
+  initialErrors?: Record<keyof TValues, string | undefined>;
+  initialTouched?: Record<keyof TValues, boolean>;
+  validateOnMount?: boolean;
+}
 
 export const VeeValidate = {
   install(app) {
@@ -26,9 +48,9 @@ export const VeeValidate = {
     });
 
     // Register global component
-    //app.component('VeeForm', Form);
-    //app.component('VeeField', Field);
-    //app.component('VeeErrorMessage', ErrorMessage);
+    // app.component('VeeForm', Form);
+    // app.component('VeeField', Field);
+    // app.component('VeeErrorMessage', ErrorMessage);
 
     const loadLang = async (lang) => {
       // 导入 language，非中文环境统一使用英文
@@ -60,3 +82,29 @@ export const VeeValidate = {
     i18n.hooks.afterSet.tapAsync(loadLang);
   }
 };
+
+/**
+ * 创建 VeeValidate 表单
+ * @param opts
+ * @param onSubmit
+ */
+export function createForm<TValues extends Record<string, any> = Record<string, any>>(
+  opts: FormOptions<TValues>,
+  onSubmit: SubmissionHandler<TValues>
+): UnwrapNestedRefs<{ context: PublicFormContext<TValues>; isSubmitting: boolean; onSubmit: (e?: Event) => Promise<void> }> {
+  const context = useForm(opts);
+
+  return reactive({
+    context,
+    isSubmitting: context.isSubmitting,
+    onSubmit: context.handleSubmit(onSubmit)
+  });
+}
+
+/**
+ * 手动触发指定表单的提交事件
+ * @param formRef
+ */
+export function triggerFormSubmit(formRef: HTMLElement) {
+  formRef.dispatchEvent(new Event('submit'));
+}

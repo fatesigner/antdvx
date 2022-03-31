@@ -3,6 +3,7 @@
  */
 
 module.exports = {
+  purge: ['./src/**/*.{html,vue,js,ts,jsx,tsx}'],
   content: ['./src/**/*.{html,vue,js,ts,jsx,tsx}'],
   prefix: 'tw-',
   theme: {

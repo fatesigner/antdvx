@@ -1,6 +1,6 @@
 import to from 'await-to-js';
 import { timer } from 'rxjs';
-import { merge } from 'lodash-es';
+import { isArray, mergeWith } from 'lodash-es';
 import { Alert, Drawer } from 'ant-design-vue';
 import { bindLazyFunc } from '@fatesigner/utils';
 import { AsyncComponentLoader } from '@vue/runtime-core';
@@ -271,6 +271,6 @@ export function createXDrawer<TProps extends Record<string, any>, TComponent ext
     handler,
     component,
     compProps: reactive(compProps ?? {}),
-    options: reactive(merge({}, defaultXDrawerProps, options))
+    options: reactive(mergeWith({}, defaultXDrawerProps, options, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined)))
   } as any;
 }

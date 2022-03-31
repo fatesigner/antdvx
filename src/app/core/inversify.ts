@@ -40,7 +40,7 @@ const antdvxModule = new ContainerModule((bind) => {
   bind<IStorageService>(ANTDVX_SYMBOLS.STORAGE_SERVICE).to(StorageService);
 
   // SessionService
-  bind<SessionServiceConfig<IUser<typeof ROLES.keys>, typeof ROLES.keys>>(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG).toConstantValue({
+  bind<SessionServiceConfig<typeof ROLES.keys, IUser<typeof ROLES.keys>>>(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG).toConstantValue({
     // 用户登录
     onLogin(user) {
       login$.emit(user);

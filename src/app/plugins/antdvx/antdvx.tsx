@@ -31,21 +31,21 @@ export const Antdvx = {
 
     // 配置 pipes
     setAntdvxPipesConfig({
-      dateFormat: 'YYYY',
+      dateFormat: 'YYYY-MM-DD',
       fixed: {
-        digits: 3,
-        mode: 'normal'
+        digits: 2,
+        mode: 'round'
       },
       currencyFormat: new Intl.NumberFormat('en-US', {
-        style: 'currency',
+        style: 'decimal',
         currency: 'USD',
-        minimumFractionDigits: 3,
-        maximumFractionDigits: 3
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
       })
     });
 
     notification.config({
-      duration: 2,
+      duration: 1,
       placement: 'topRight',
       bottom: '50px'
     });
@@ -90,8 +90,14 @@ export const Antdvx = {
     });
 
     configureXTable({
+      pagination: {
+        size: 'small',
+        showLessItems: true,
+        showQuickJumper: false,
+        pageSizeOptions: ['50', '100', '200', '500', '10000']
+      },
       columnMap(column) {
-        if (!column.filterMode) {
+        if (!column.filterMode && column.dataIndex !== 'actions') {
           // column.filterMode = 'keywords';
         }
         return column;
@@ -103,20 +109,21 @@ export const Antdvx = {
       // 标题栏，尾部添加刷新按钮
       titleSuffix(tbRef) {
         return [
-          <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={tbRef.handler.refresh} />,
-          tbRef.options.isFullscreen ? (
-            <XButtonFullscreenExit color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreenExit} />
-          ) : (
-            <XButtonFullscreen color='primary' size='small' type='link' onClick={tbRef.handler.fullscreen} />
-          ),
-          <XButtonFullscreen color='primary' size='large' onClick={tbRef.handler.fullscreen} />,
-          <XButtonFullscreen color='primary' onClick={tbRef.handler.fullscreen} />,
+          // <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={tbRef.handler.refresh} />,
           <XTableSettingsPanelButton
+            only-icon
             color='primary'
+            size='mini'
+            type='link'
             handler={() => {
               return tbRef.handler.presentSettingsPanel();
             }}
-          />
+          />,
+          tbRef.options.isFullscreen ? (
+            <XButtonFullscreenExit only-icon color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreenExit} />
+          ) : (
+            <XButtonFullscreen only-icon color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreen} />
+          )
         ];
       }
     });

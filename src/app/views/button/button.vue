@@ -3,18 +3,10 @@
     <div class="tw-p-2">
       <div class="tw-p-4 tw-space-y-4 tw-bg-white">
         <div class="tw-text-lg">基础</div>
+        <AButton href="https://www.google.com" :disabled="false">ddd</AButton>
         <div class="tw-grid lg:tw-grid-cols-2 tw-gap-4">
           <div class="tw-p-2 tw-border tw-border-gray-300" v-for="type in types" :key="type">
             <div class="tw-text-lg tw-p-2">{{ type }} button</div>
-            <div class="tw-text-sm tw-p-2">Toggle</div>
-            <div class="tw-flex tw-flex-wrap">
-              <div class="tw-p-2">
-                <XButton color="default" :type="type">normal</XButton>
-              </div>
-              <div class="tw-p-2" v-for="color in colors" :key="color">
-                <XButton :color="selected === color ? 'primary' : undefined" :type="type" @click="selected = color">{{ color }}</XButton>
-              </div>
-            </div>
             <div class="tw-text-sm tw-p-2">Colors</div>
             <div class="tw-flex tw-flex-wrap">
               <div class="tw-p-2">
@@ -40,6 +32,15 @@
             <div class="tw-flex tw-flex-wrap">
               <div class="tw-p-2" v-for="size in sizes" :key="size">
                 <XButton :size="size" :type="type">{{ size }}</XButton>
+              </div>
+            </div>
+            <div class="tw-text-sm tw-p-2">Href Link</div>
+            <div class="tw-flex tw-flex-wrap">
+              <div class="tw-p-2">
+                <XButton href="https://www.google.com" target="_blank" :type="type">Redirect</XButton>
+              </div>
+              <div class="tw-p-2">
+                <XButton disabled href="https://www.google.com" target="_blank" :type="type">Redirect</XButton>
               </div>
             </div>
             <div class="tw-text-sm tw-p-2">Dropdown</div>
@@ -192,7 +193,7 @@
 <script lang="tsx">
 import { timer } from 'rxjs';
 import { defineComponent, ref } from 'vue';
-import { Dropdown, Menu } from 'ant-design-vue';
+import { Button, Dropdown, Menu } from 'ant-design-vue';
 import {
   ANTDVX_BUTTON_TYPES,
   ANTDVX_COLORS,
@@ -218,6 +219,7 @@ import { PageWrapper } from '@/app/shared/page-wrapper';
 
 export default defineComponent({
   components: {
+    [Button.name]: Button,
     XModal,
     XButton,
     XButtonAdd,
