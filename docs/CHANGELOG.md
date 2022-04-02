@@ -1,3 +1,10 @@
+# [1.0.0-alpha.95](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.94...v1.0.0-alpha.95) (2022-04-02)
+
+
+### Bug Fixes
+
+* fix XTable autoScroll bug ([ad4c8f8](https://github.com/fatesigner/antdvx/commit/ad4c8f81e1d82c15fd2b022f749cc2659de7361a))
+
 # [1.0.0-alpha.94](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.93...v1.0.0-alpha.94) (2022-03-31)
 
 
