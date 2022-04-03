@@ -1,3 +1,10 @@
+# [1.0.0-alpha.96](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.95...v1.0.0-alpha.96) (2022-04-03)
+
+
+### Bug Fixes
+
+* XButton 3d type focus color ([e2c1c58](https://github.com/fatesigner/antdvx/commit/e2c1c582fe38bc1bdacb0f51a3a17091d453cf02))
+
 # [1.0.0-alpha.95](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.94...v1.0.0-alpha.95) (2022-04-02)
 
 
