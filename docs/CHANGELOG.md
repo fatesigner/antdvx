@@ -1,3 +1,10 @@
+# [1.0.0-alpha.97](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.96...v1.0.0-alpha.97) (2022-04-04)
+
+
+### Bug Fixes
+
+* ignore undefined column in XTable ([7a482a8](https://github.com/fatesigner/antdvx/commit/7a482a84185a72966cf25c512b7efff60c146813))
+
 # [1.0.0-alpha.96](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.95...v1.0.0-alpha.96) (2022-04-03)
 
 
