@@ -544,7 +544,7 @@ export const XTable = defineComponent({
         0,
         columns_.length,
         ...props.options.columns
-          .filter((x) => !x.hidden)
+          .filter((x) => x && !x.hidden)
           .map((x) => {
             if (props.options.columnMap) {
               x = props.options.columnMap(x);

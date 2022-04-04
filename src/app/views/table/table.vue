@@ -200,7 +200,8 @@ export default defineComponent({
             width: 120,
             fixed: 'right',
             slots: { customRender: 'actions' }
-          }
+          },
+          undefined
         ],
         dataSource: {
           serverPaging: false,
