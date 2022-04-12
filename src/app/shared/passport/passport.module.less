@@ -1,0 +1,41 @@
+@import '@/app/themes/default';
+
+.passport {
+  :global(.ant-input-affix-wrapper .ant-input-lg) {
+    padding: 6px 12px;
+  }
+
+  :global(.slide-captcha-wrap) {
+    height: initial;
+    padding: 8px 12px;
+  }
+}
+
+.form {
+  gap: 1rem;
+}
+
+.link {
+  &:not([disabled]) {
+    color: @primary-color;
+
+    &:hover,
+    &:focus {
+      color: ~`colorPalette('@{primary-color}', 5)`;
+      text-decoration: underline;
+    }
+
+    &:active,
+    &.active {
+      color: ~`colorPalette('@{primary-color}', 7)`
+    }
+  }
+
+  &[disabled] {
+    color: @primary-3;
+  }
+}
+
+.submit {
+  @apply tw-pt-3 tw-pb-3 tw-text-base tw-h-auto;
+}

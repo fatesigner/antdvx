@@ -6,7 +6,7 @@ import $styles from './transitions-opacity.module.less';
  * 透明度
  */
 export const TransitionOpacity = defineComponent({
-  name: 'transition-opacity',
+  name: 'TransitionOpacity',
   props: {
     appear: {
       type: Boolean,

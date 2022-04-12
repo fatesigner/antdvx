@@ -85,7 +85,7 @@ module.exports = {
     extend: {
       colors: {
         // 主色
-        primary: '#8262ff',
+        primary: '#002fa7',
         // 辅色
         secondary: '#f67828',
         // 配色

@@ -8,7 +8,7 @@ import $styles from './transitions-slide.module.less';
  * 滑动过渡, 方向可以为 'up' | 'right' | 'down' | 'left', 默认为 down
  */
 export const TransitionSlide = defineComponent({
-  name: 'transition-slide',
+  name: 'TransitionSlide',
   props: {
     appear: {
       type: Boolean,

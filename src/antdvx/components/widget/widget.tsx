@@ -13,14 +13,14 @@ import { WidgetProps } from './type';
  * 浮动小部件
  */
 export const Widget = defineComponent({
-  name: 'widget',
+  name: 'Widget',
   props: WidgetProps,
   emits: ['click'],
   setup(props) {
     const instance = getCurrentInstance();
 
     // 定义 uid
-    const uid = instance.uid;
+    const uid = props.name ? props.name : instance.uid;
 
     const wrapRef = ref<HTMLElement>();
 
@@ -126,7 +126,7 @@ export const Widget = defineComponent({
         // 设置初始位置
         if (AntdStorageService) {
           // 还原已存储的位置
-          const str = AntdStorageService.get('WIDGET_' + uid);
+          const str = AntdStorageService.get('WIDGET_' + uid) as string;
           try {
             if (str) {
               const { right, bottom } = JSON.parse(str);
@@ -191,8 +191,7 @@ export const Widget = defineComponent({
         }}
         onClick={() => {
           ctx.$emit('click');
-        }}
-      >
+        }}>
         {ctx.$slots?.default ? ctx.$slots.default() : <div class='antdvx-widget-shadow' />}
       </div>
     );

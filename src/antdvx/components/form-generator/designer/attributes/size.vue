@@ -12,7 +12,6 @@ import { WIDGET_SIZE_OPTIONS } from '../../constants';
 
 export default defineComponent({
   components: {
-    // Antd
     [Input.name]: Input,
     [RadioGroup.name]: RadioGroup,
     [Form.Item.name]: Form.Item

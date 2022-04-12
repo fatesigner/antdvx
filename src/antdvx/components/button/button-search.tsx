@@ -8,7 +8,7 @@ import { XButton } from './button';
 import { XButtonProps } from './types';
 
 export const XButtonSearch = defineComponent({
-  name: 'x-button-search',
+  name: 'XButtonSearch',
   props: {
     ...XButtonProps,
     onlyIcon: {
@@ -69,8 +69,8 @@ export const XButtonSearch = defineComponent({
         type={ctx.type}
         color={ctx.color}
         spin={false}
-        //handler={ctx.handler}
-        //notify={ctx.notify}
+        // handler={ctx.handler}
+        // notify={ctx.notify}
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.search)}
         onClick={ctx.trigger}
         v-slots={{

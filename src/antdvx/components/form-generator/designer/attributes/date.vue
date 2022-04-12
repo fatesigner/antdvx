@@ -31,7 +31,6 @@ export default defineComponent({
   components: {
     XButton,
     Iconfont,
-    // Antd
     [Popover.name]: Popover,
     [Form.Item.name]: Form.Item,
     [Input.name]: Input,

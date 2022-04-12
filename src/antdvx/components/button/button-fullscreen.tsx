@@ -11,7 +11,7 @@ import { XButtonProps } from './types';
  * 按钮：全屏
  */
 export const XButtonFullscreen = defineComponent({
-  name: 'x-button-fullscreen',
+  name: 'XButtonFullscreen',
   props: {
     ...XButtonProps,
     onlyIcon: {

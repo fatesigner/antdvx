@@ -5,23 +5,25 @@
 import to from 'await-to-js';
 import { useI18n } from 'vue-i18n';
 import { mergeWith } from 'lodash-es';
-import { bindLazyFunc, debounce } from '@fatesigner/utils';
+import { UnknownType } from '@fatesigner/utils/types';
+import { ExceljsHelper } from '@fatesigner/utils/exceljs';
 import { TableProps } from 'ant-design-vue/es/table/interface';
+import { bindLazyFunc, debounce, exchangeItem } from '@fatesigner/utils';
 import { Checkbox, Input, InputNumber, Pagination, Select, Table, notification } from 'ant-design-vue';
 import { isArray, isBoolean, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
 
-import { exchangeItem } from '../../utils';
 import { i18nMessages } from '../../i18n/messages';
+import { IDataSourceRequestOptions } from '../../types';
+import { HttpContentType } from '../../services/http.service';
 import { AntdHttpAdapter, AntdStorageService } from '../../config';
-import { HttpContentType, IDataSourceRequestOptions } from '../../types/data-source';
 
 import { XModal, createXModal } from '../modal';
 import { XButton, XButtonFullscreenExit, XButtonSearch } from '../button';
 import { IconAddBoxLine, IconArrowDownLine, IconArrowUpLine, IconCheckboxIndeterminateLine, IconFilter2Fill, IconFilter3Line } from '../iconfont';
 
 import { defaultXTableProps } from './configure';
-import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
+import { IXTableChangeType, IXTableColumnProps, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
 
 /**
  *  创建 XTable 实例
@@ -29,11 +31,12 @@ import { IXTableChangeType, IXTableFilters, IXTableHandlers, IXTablePropsType, I
  * @param params
  * @param methods
  */
-export function createXTable<TModel extends Record<string, any>, TParams extends Record<string, any>, TMethods extends Record<string, (...args: any[]) => any>>(
-  props: IXTablePropsType<TModel, TParams>,
-  params?: TParams,
-  methods?: TMethods
-): IXTableRefType<TModel, TParams, TMethods> {
+export function createXTable<
+  TModel extends UnknownType<any> = UnknownType<any>,
+  TParams extends UnknownType = never,
+  TMethods extends UnknownType<(...args: unknown[]) => unknown> = UnknownType<(...args: unknown[]) => unknown>,
+  TMeta extends UnknownType = never
+>(props: IXTablePropsType<TModel, TParams, TMeta>, params?: TParams, methods?: TMethods): IXTableRefType<TModel, TParams, TMethods, TMeta> {
   const handler: IXTableHandlers<TModel> = {
     getAntTableRef: null,
     getElement: null,
@@ -49,11 +52,12 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
     reload: null,
     validate: null,
     validateRow: null,
-    handleRecordChange: null
+    handleRecordChange: null,
+    downloadExcel: null
   };
 
   // 代理异步函数
-  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow'];
+  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow', 'downloadExcel'];
 
   bindLazyFunc(handler, bindProperties);
 
@@ -69,10 +73,10 @@ export function createXTable<TModel extends Record<string, any>, TParams extends
  * XTable 表格组件
  */
 export const XTable = defineComponent({
-  name: 'x-table',
+  name: 'XTable',
   props: {
     options: {
-      type: Object as PropType<IXTablePropsType<any, any>>
+      type: Object as PropType<IXTablePropsType<any, any, any>>
     },
     // params
     params: {
@@ -91,7 +95,7 @@ export const XTable = defineComponent({
     const instance = getCurrentInstance();
 
     // 定义 uid
-    const uid = instance.uid;
+    const uid = props.options.name ? props.options.name : instance.uid;
 
     let resizeObs: ResizeObserver;
 
@@ -104,7 +108,7 @@ export const XTable = defineComponent({
     const antTableRef = ref();
 
     // 列
-    const columns_ = reactive([]);
+    const columns_ = ref([]);
 
     // 所有（非过滤、排序、分页后）数据
     let overallData = [];
@@ -114,7 +118,7 @@ export const XTable = defineComponent({
 
     // 当前选中的过滤、筛选条件
     let filters: IXTableFilters<any> = {} as any;
-    let sorter: IXTableSorter<any> = {} as any;
+    let sorter: IXTableSorter<any, any> = {} as any;
 
     // 表格控制面板 选项
     const settingsPanelOptions = reactive({
@@ -247,21 +251,21 @@ export const XTable = defineComponent({
         if (sorter?.columnKey) {
           const column = props.options.columns.find((x) => x.dataIndex === sorter.columnKey);
           if (isFunction(column?.sorter)) {
-            if (sorter.order === 'ascend') {
+            if (sorter.order === 'asc') {
               data = data.sort((a, b) => {
                 return column.sorter(a, b);
               });
-            } else if (sorter.order === 'descend') {
+            } else if (sorter.order === 'desc') {
               data = data.sort((a, b) => {
                 return column.sorter(b, a);
               });
             }
           } else {
-            if (sorter.order === 'ascend') {
+            if (sorter.order === 'asc') {
               data = data.sort((a, b) => {
                 return a[sorter.columnKey] - b[sorter.columnKey];
               });
-            } else if (sorter.order === 'descend') {
+            } else if (sorter.order === 'desc') {
               data = data.sort((a, b) => {
                 return b[sorter.columnKey] - a[sorter.columnKey];
               });
@@ -306,10 +310,10 @@ export const XTable = defineComponent({
     };
 
     // 请求数据
-    const loadData = async () => {
+    const loadData = async (firstLoad?: boolean) => {
       overallData = [];
 
-      if (props.options?.dataSource.transport?.read) {
+      if (!firstLoad && props.options?.dataSource.transport?.read) {
         props.options.loading = true;
 
         let _res: any;
@@ -333,7 +337,7 @@ export const XTable = defineComponent({
             _res = res;
           }
         } else {
-          const requestOptions: IDataSourceRequestOptions = {
+          const requestOptions: IDataSourceRequestOptions<any> = {
             url: '',
             method: 'GET',
             contentType: HttpContentType.JSON,
@@ -540,92 +544,87 @@ export const XTable = defineComponent({
 
     // 重新渲染列
     const updateColumns: IXTableHandlers<any>['updateColumns'] = () => {
-      columns_.splice(
-        0,
-        columns_.length,
-        ...props.options.columns
-          .filter((x) => x && !x.hidden)
-          .map((x) => {
-            if (props.options.columnMap) {
-              x = props.options.columnMap(x);
+      columns_.value = props.options.columns
+        .filter((x) => x && !x.hidden)
+        .map((x) => {
+          if (props.options.columnMap) {
+            x = props.options.columnMap(x);
+          }
+
+          const x_ = Object.assign({}, x);
+
+          if (x.sorter) {
+            x_.sorter = true;
+            // 默认排序
+            if (x.defaultSortOrder) {
+              sorter.column = x_;
+              sorter.columnKey = x_.dataIndex;
+              sorter.field = x_.dataIndex;
+              sorter.order = x.defaultSortOrder;
             }
+          }
 
-            const x_ = Object.assign({}, x);
+          if (x.onFilter) {
+            x_.onFilter = null;
+          }
 
-            if (x.sorter) {
-              x_.sorter = true;
-              // 默认排序
-              if (x.defaultSortOrder) {
-                sorter.column = x_;
-                sorter.columnKey = x_.dataIndex;
-                sorter.field = x_.dataIndex;
-                sorter.order = x.defaultSortOrder;
-              }
+          if (x?.filterMode === 'keywords') {
+            // 关键字过滤
+            if (!x.onFilter) {
+              x.onFilter = (value, record) => {
+                return record?.[x.dataIndex]?.toLowerCase()?.includes(value.toLowerCase());
+              };
             }
-
-            if (x.onFilter) {
-              x_.onFilter = null;
+            if (!x.filterIcon) {
+              x_.filterIcon = ({ filtered }) => {
+                return (
+                  <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500' title={t(i18nMessages.antd.action.filter)}>
+                    {filtered ? <IconFilter2Fill color='primary' /> : <IconFilter3Line scale={1.3} />}
+                  </div>
+                );
+              };
             }
-
-            if (x?.filterMode === 'keywords') {
-              // 关键字过滤
-              if (!x.onFilter) {
-                x.onFilter = (value, record) => {
-                  return record?.[x.dataIndex]?.toLowerCase()?.includes(value.toLowerCase());
-                };
-              }
-              if (!x.filterIcon) {
-                x_.filterIcon = ({ filtered }) => {
-                  return (
-                    <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500' title={t(i18nMessages.antd.action.filter)}>
-                      {filtered ? <IconFilter2Fill color='primary' /> : <IconFilter3Line scale={1.3} />}
-                    </div>
-                  );
-                };
-              }
-              if (!x.filterDropdown) {
-                x_.filterDropdown = ({ setSelectedKeys, selectedKeys, confirm, clearFilters, column }) => {
-                  return (
-                    <div class='tw-p-2'>
-                      <Input
-                        class='tw-w-24'
+            if (!x.filterDropdown) {
+              x_.filterDropdown = ({ setSelectedKeys, selectedKeys, confirm, clearFilters, column }) => {
+                return (
+                  <div class='tw-p-2'>
+                    <Input
+                      class='tw-w-24'
+                      size='small'
+                      value={selectedKeys[0]}
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        setSelectedKeys(val ? [val] : []);
+                      }}
+                      onPressEnter={() => {
+                        confirm();
+                      }}
+                    />
+                    <div class='tw-mt-2 tw-space-x-2'>
+                      <XButtonSearch
+                        color='primary'
+                        type='primary'
                         size='small'
-                        value={selectedKeys[0]}
-                        onChange={(e) => {
-                          const val = e.target.value.trim();
-                          setSelectedKeys(val ? [val] : []);
-                        }}
-                        onPressEnter={() => {
+                        onClick={() => {
                           confirm();
                         }}
                       />
-                      <div class='tw-mt-2 tw-space-x-2'>
-                        <XButtonSearch
-                          color='primary'
-                          type='primary'
-                          size='small'
-                          onClick={() => {
-                            confirm();
-                          }}
-                        />
-                        <XButton
-                          size='small'
-                          onClick={() => {
-                            clearFilters();
-                          }}
-                        >
-                          {t(i18nMessages.antd.action.reset)}
-                        </XButton>
-                      </div>
+                      <XButton
+                        size='small'
+                        onClick={() => {
+                          clearFilters();
+                        }}>
+                        {t(i18nMessages.antd.action.reset)}
+                      </XButton>
                     </div>
-                  );
-                };
-              }
+                  </div>
+                );
+              };
             }
+          }
 
-            return x_;
-          })
-      );
+          return x_;
+        });
     };
 
     // 进入全屏浏览模式
@@ -691,6 +690,22 @@ export const XTable = defineComponent({
       });
     };
 
+    // 导出到 Excel
+    const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?) => {
+      const { workbook } = await ExceljsHelper.addWorksheet(undefined, {
+        columns: columns_.value
+          ?.filter((x) => !!x.excel)
+          ?.map((x) => ({
+            key: x.dataIndex,
+            header: x.title,
+            customRender: x.customRender,
+            ...x?.excel
+          })),
+        data: data ?? (overallData as any)
+      });
+      await ExceljsHelper.downloadFile(workbook, 'excel');
+    };
+
     // update handlers
     if (props.handler) {
       Object.assign(props.handler, {
@@ -711,7 +726,8 @@ export const XTable = defineComponent({
         fullscreen,
         fullscreenExit,
         presentSettingsPanel,
-        handleRecordChange
+        handleRecordChange,
+        downloadExcel
         // validate: null,
         // validateRow: null
       } as IXTableHandlers<any>);
@@ -851,6 +867,8 @@ export const XTable = defineComponent({
           type = 'pagination';
         }
 
+        // options.orderby.replace('ascend', 'asc').replace('descend', 'desc')
+
         // 筛选
         filters = filters_;
         // 过滤
@@ -922,7 +940,7 @@ export const XTable = defineComponent({
 
     if (AntdStorageService) {
       // 还原已存储的配置
-      const str = AntdStorageService.get('table_control' + uid);
+      const str = AntdStorageService.get('table_control' + uid) as string;
       try {
         const { expires, data } = JSON.parse(str);
         if (expires && new Date().getTime() - expires < 3600 * 24 && data?.map) {
@@ -966,7 +984,7 @@ export const XTable = defineComponent({
     );
 
     onMounted(() => {
-      loadData().then(() => {
+      loadData(!props.options.autoload).then(() => {
         processData();
       });
 
@@ -1025,7 +1043,8 @@ export const XTable = defineComponent({
       reload,
       fullscreen,
       fullscreenExit,
-      handleRecordChange
+      handleRecordChange,
+      downloadExcel
     };
   },
   render(ctx) {
@@ -1122,8 +1141,7 @@ export const XTable = defineComponent({
                   title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
                   onClick={(e) => {
                     onExpand(record, e);
-                  }}
-                >
+                  }}>
                   {expanded ? <IconCheckboxIndeterminateLine /> : <IconAddBoxLine />}
                 </div>
               );
@@ -1181,8 +1199,7 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
-            >
+              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1288,8 +1305,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1302,8 +1318,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1345,8 +1360,7 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1354,8 +1368,7 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>

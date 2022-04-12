@@ -5,20 +5,14 @@
 import { timer } from 'rxjs';
 import { Random, mock } from 'mockjs';
 
-import { IUser } from '@/app/types/user';
-import { IRole } from '@/app/types/role';
-import { ROLES } from '@/app/core/constants';
 import { httpService } from '@/app/core/services';
-import { isFunction } from '@fatesigner/utils/type-check';
 
 export const Api = new (class {
   get host() {
     return httpService.instance.defaults.baseURL;
   }
 
-  constructor() {}
-
-  async login(params: { username: string; password: string }): Promise<IUser<typeof ROLES.keys>> {
+  async login(params: { username: string; password: string }): Promise<any> {
     await timer(1000).toPromise();
     return Promise.resolve({
       username: params.username,
@@ -43,7 +37,7 @@ export const Api = new (class {
     return Promise.resolve();
   }
 
-  async addUser(user: IUser<any>) {}
+  async addUser(user: any) {}
 
   async deleteUser(userid: string, users: any[]) {
     const idx = users.findIndex((x) => x.userid === userid);
@@ -54,7 +48,7 @@ export const Api = new (class {
     }
   }
 
-  async getRoles(): Promise<IRole[]> {
+  async getRoles(): Promise<any[]> {
     await timer(1000).toPromise();
     return import('./roles.json').then(({ default: data }) => {
       return data;
@@ -64,6 +58,26 @@ export const Api = new (class {
   async saveRoles(params: any): Promise<any> {
     await timer(2000).toPromise();
     return Promise.resolve();
+  }
+
+  async getTest() {
+    return Promise.resolve({
+      data: [
+        {
+          id: 'ssssss',
+          name: 'zzzzzzzz',
+          count: 123123
+        }
+      ],
+      total: 100
+    });
+  }
+
+  async getPermissions(params: any): Promise<any> {
+    await timer(1000).toPromise();
+    return import('./permissions.json').then(({ default: res }) => {
+      return res;
+    });
   }
 
   async getUsers(params?: { userid?: string; sex?: string; keywords?: string; pageNo?: number; pageSize?: number; filters?; sorter? }): Promise<{
@@ -122,7 +136,7 @@ export const Api = new (class {
       if (params?.sorter?.order === 'ascend') {
         if (params.sorter.columnKey === 'createTime') {
           data = data.sort((a, b) => {
-            return new Date(a['createTime']).getTime() - new Date(b['createTime']).getTime();
+            return new Date(a.createTime).getTime() - new Date(b.createTime).getTime();
           });
         } else {
           data = data.sort((a, b) => {
@@ -132,7 +146,7 @@ export const Api = new (class {
       } else if (params.sorter.order === 'descend') {
         if (params.sorter.columnKey === 'createTime') {
           data = data.sort((a, b) => {
-            return new Date(b['createTime']).getTime() - new Date(a['createTime']).getTime();
+            return new Date(b.createTime).getTime() - new Date(a.createTime).getTime();
           });
         } else {
           data = data.sort((a, b) => {
@@ -153,7 +167,7 @@ export const Api = new (class {
       total
     };
 
-    /*return {
+    /* return {
       data: mock({
         'data|80-100': [
           {
@@ -174,7 +188,11 @@ export const Api = new (class {
         ]
       }).data,
       total: 10
-    };*/
+    }; */
+  }
+
+  updatePassword(values: any) {
+    return Promise.resolve();
   }
 
   async getChildren(params: { userid: string; pageNo?: number; pageSize?: number; id?: number; keywords?: string }) {
@@ -183,16 +201,16 @@ export const Api = new (class {
     let data = mock({
       'data|80-100': [
         {
-          userid: user.data?.[0]?.userid, //随机id
-          username: user.data?.[0]?.username, //随机名称
-          id: '@id', //随机id
+          userid: user.data?.[0]?.userid, // 随机id
+          username: user.data?.[0]?.username, // 随机名称
+          id: '@id', // 随机id
           name: '@last', // 随机昵称
-          phone: /^1[34578]\d{9}$/, //随机电话号码
-          'age|11-99': 1, //年龄
-          address: '@county(true)', //随机地址
-          email: '@email', //随机邮箱
-          'sex|1': ['male', 'female'], //随机性别
-          createTime: '@datetime', //创建时间
+          phone: /^1[34578]\d{9}$/, // 随机电话号码
+          'age|11-99': 1, // 年龄
+          address: '@county(true)', // 随机地址
+          email: '@email', // 随机邮箱
+          'sex|1': ['male', 'female'], // 随机性别
+          createTime: '@datetime', // 创建时间
           avatar() {
             return Random.image('100×100', Random.color(), '#757575', 'png', this.nickName);
           }

@@ -1,0 +1,83 @@
+@import '@/app/themes/default';
+
+.not-found {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+
+  > dt {
+    position: relative;
+    max-width: 100%;
+    padding: 20px;
+    overflow: hidden;
+
+    :global(.description) {
+      margin-bottom: 30px;
+      font-size: 16px;
+      color: grey;
+      opacity: 0;
+      animation-name: slideUp;
+      animation-duration: 0.5s;
+      animation-delay: 0.2s;
+      animation-fill-mode: forwards;
+    }
+
+  :global(.btn-back) {
+      display: block;
+      float: left;
+      width: 110px;
+      height: 36px;
+      font-size: 14px;
+      line-height: 36px;
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+      background: #1482f0;
+      border-radius: 100px;
+      opacity: 0;
+      animation-name: slideUp;
+      animation-duration: 0.5s;
+      animation-delay: 0.3s;
+      animation-fill-mode: forwards;
+    }
+
+    @keyframes slideUp {
+      0% {
+        opacity: 0;
+        transform: translateY(60px);
+      }
+
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  > dd {
+    position: relative;
+    width: 600px;
+    max-width: 100%;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+  h1 {
+    font-size: 7.5em;
+    font-weight: 600;
+  }
+
+  h2 {
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 900px) {
+  .not-found {
+    flex-direction: column;
+  }
+}

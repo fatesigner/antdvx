@@ -8,7 +8,7 @@ import { XButton } from './button';
 import { XButtonProps } from './types';
 
 export const XButtonAdd = defineComponent({
-  name: 'x-button-add',
+  name: 'XButtonAdd',
   props: {
     ...XButtonProps,
     onlyIcon: {

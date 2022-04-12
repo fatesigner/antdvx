@@ -1,0 +1,43 @@
+@import '@/app/themes/default';
+
+.bg {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  overflow: auto;
+  background-color: #f2f3f5;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.36), rgba(0, 0, 0, 0.36)), url(../../../assets/img/bg.svg);
+  background-repeat: no-repeat, no-repeat;
+  background-position: center center, center center;
+  background-size: cover, cover;
+}
+
+.container {
+  @apply tw-flex tw-flex-col tw-justify-center tw-gap-6;
+
+  background-color: #fff;
+  max-width: 100%;
+  min-height: 100%;
+  height: max-content;
+}
+
+.content {
+  @apply tw-flex-1 tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-full tw-gap-2;
+
+  padding: 46px 46px 16px;
+}
+
+.title {
+  @apply tw-mt-2 tw-mb-2 tw-text-center tw-text-sm md:tw-text-xl lg:tw-text-2xl tw-text-primary tw-font-bold;
+}
+
+@screen _xl {
+  .container {
+  }
+}
+
+@screen lg {
+  .container {
+    padding: 46px 66px 16px;
+  }
+}

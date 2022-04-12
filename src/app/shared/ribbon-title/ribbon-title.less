@@ -1,0 +1,133 @@
+@import "~ant-design-vue/es/button/style/mixin";
+@import '@/app/themes/default';
+
+@colorArr: {
+  primary: @primary-color;
+  secondary: @secondary-color;
+  tertiary: @tertiary-color;
+  success: @success-color;
+  warning: @warning-color;
+  danger: @danger-color;
+  red: @red-color;
+  orange: @orange-color;
+  yellow: @yellow-color;
+  green: @green-color;
+  cyan: @cyan-color;
+  blue: @blue-color;
+  purple: @purple-color;
+}
+
+.ribbon-title {
+  --color: transparent;
+  --color2: transparent;
+  --color3: transparent;
+
+  position: relative;
+  z-index: 1;
+
+  .ribbon-flag-left,
+  .ribbon-flag-right {
+    position: absolute;
+    display: block;
+    content: '';
+  }
+
+  .ribbon-flag-left {
+    bottom: -0.5rem;
+    left: -1.5rem;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    border: 0.75rem solid transparent;
+    border-top-color: var(--color2);
+    border-right-color: var(--color2);
+    border-bottom-color: var(--color2);
+  }
+
+  .ribbon-flag-right {
+    right: -1.5rem;
+    bottom: -0.5rem;
+    z-index: -1;
+    width: 0;
+    height: 0;
+    border: 0.75rem solid transparent;
+    border-top-color: var(--color2);
+    border-bottom-color: var(--color2);
+    border-left-color: var(--color2);
+  }
+}
+
+.ribbon-shadow {
+  position: absolute;
+  bottom: -0.25rem;
+  left: 0;
+  width: 100%;
+  height: 0.25rem;
+  background: rgba(0, 0, 0, 0.125);
+}
+
+.ribbon-title-inner {
+  padding: 0 1rem 0 1rem;
+  margin: 0 -0.5rem 0 -0.5rem;
+  color: #fff;
+  border-radius: 0.0625rem 0.0625rem 0 0;
+  background-color: var(--color);
+
+  &::before,
+  &::after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    content: '';
+    border: 0.25rem solid transparent;
+  }
+
+  &::before {
+    bottom: -0.5rem;
+    left: -0.5rem;
+    border-top-color: var(--color3);
+    border-right-color: var(--color3);
+  }
+
+  &::after {
+    right: -0.5rem;
+    bottom: -0.5rem;
+    border-top-color: var(--color3);
+    border-left-color: var(--color3);
+  }
+}
+
+each(@colorArr, {
+  .ribbon-title-@{key} {
+    --color: @value;
+    --color2: ~`colorPalette('@{value}', 6.5)`;
+    --color3: ~`colorPalette('@{value}', 7.5)`;
+
+    .ribbon-flag-left {
+      border-top-color: var(--color2);
+      border-right-color: var(--color2);
+      border-bottom-color: var(--color2);
+    }
+
+    .ribbon-flag-right {
+      border-top-color: var(--color2);
+      border-bottom-color: var(--color2);
+      border-left-color: var(--color2);
+    }
+
+    .ribbon-title-inner {
+      background-color: var(--color);
+
+      &::before {
+        border-top-color: var(--color3);
+        border-right-color: var(--color3);
+      }
+
+      &::after {
+        border-top-color: var(--color3);
+        border-left-color: var(--color3);
+      }
+    }
+  }
+});

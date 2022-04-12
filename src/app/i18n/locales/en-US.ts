@@ -25,24 +25,25 @@ export default {
           title2: 'Please contact your leader if you are dissatisfied',
           title3: 'Or you can go',
           back: 'Back',
-          gotologin: 'Login',
-          gotohome: 'Home'
+          gotoLogin: 'Login',
+          gotoHome: 'Home'
         }
       },
       passport: {
         login: 'Login',
         register: 'Register',
-        findPwd: 'FindPwd'
+        findPwd: 'FindPwd',
+        logout: 'You have logged out.'
       },
       system: {
         menus: 'Menus Auth'
       },
-      portal: 'Portal',
-      table: 'Table',
-      grid: 'Kendo grid'
+      portal: 'Portal'
     },
     navbar: {
-      logOut: 'Log Out',
+      exitOut: 'Exit out',
+      updatePassword: 'Update password',
+      logOut: 'Log out',
       portal: 'Portal',
       github: 'Github',
       theme: 'Theme',
@@ -73,22 +74,31 @@ export default {
       connectionAbort: 'Connect the server timeout, check your network Settings'
     },
     passport: {
-      title: 'Login Form',
-      username: 'Username',
-      password: 'Password',
-      logIn: 'Login',
-      autoLogin: 'Auth Login',
-      forgetPassword: 'Forget Password',
-      register: 'Register',
-      backToLogin: 'Back To Login',
-      submit: 'Submit',
-      any: 'Any',
-      thirdparty: 'Or connect with',
-      thirdpartyTips: 'Can not be simulated on i18n, so please combine you own business simulation! ! !'
-    },
-    notification: {
-      login: 'Login successfully',
-      logout: 'You have logged out.'
+      login: {
+        title: 'Sign In',
+        username: 'Enter user name',
+        password: 'Enter password',
+        rememberMe: 'Remember Me',
+        submit: 'Sign In',
+        any: 'Any',
+        thirdParty: 'Or connect with',
+        thirdPartyTips: 'Can not be simulated on i18n, so please combine you own business simulation! ! !',
+        message: 'Login successfully'
+      },
+      updatePassword: {
+        title: 'Update password',
+        forget: 'Forget password?',
+        username: 'Enter user name',
+        oldPassword: 'Enter old password',
+        newPassword: 'Enter new password',
+        confirmPassword: 'Confirm new password',
+        backToLogin: 'Back To Login',
+        submit: 'Submit',
+        message: {
+          submitSuccess: 'Password updated successfully',
+          inconsistent: 'Passwords are inconsistent'
+        }
+      }
     }
   }
 } as I18nMessagesType;

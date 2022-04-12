@@ -5,25 +5,24 @@ import { inject, injectable } from 'inversify';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 import { ANTDVX_SYMBOLS } from '../symbols';
-import { IStorageService } from '../interfaces/storage.interface';
-import { ISessionService, SessionLogoutResult, SessionUser } from '../interfaces/session.interface';
+import { ISessionService, IStorageService, IUser, RoleTypeOfUser, SessionLogoutResult } from '../types';
 
 /**
  * session config
  */
-export interface SessionServiceConfig<TRoles extends readonly string[], TUser extends SessionUser<TRoles>> {
+export interface SessionServiceConfig<TUser extends IUser> {
   getUserModel: () => TUser;
   onLogin: (user: TUser) => void;
   onLogout: (result: SessionLogoutResult) => void;
-  onRoleChanged: (roles: TRoles[number]) => void;
+  onRoleChanged: (role: RoleTypeOfUser<TUser>) => void;
 }
 
 /**
  * session 服务
  */
 @injectable()
-export class SessionService<TRoles extends readonly string[], TUser extends SessionUser<TRoles>> implements ISessionService<TUser, TRoles> {
-  config: SessionServiceConfig<TRoles, TUser>;
+export class SessionService<TUser extends IUser> implements ISessionService<TUser> {
+  config: SessionServiceConfig<TUser>;
 
   /**
    * 当前用户信息
@@ -31,13 +30,13 @@ export class SessionService<TRoles extends readonly string[], TUser extends Sess
   user: TUser;
 
   constructor(
-    @inject(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG) config: SessionServiceConfig<TRoles, TUser>,
+    @inject(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG) config: SessionServiceConfig<TUser>,
     @inject(ANTDVX_SYMBOLS.STORAGE_SERVICE) private _localStorageService: IStorageService
   ) {
     this.config = mergeWith({}, config, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
 
     // 从 localStorage 中获取用户信息
-    const user: TUser = this._localStorageService.get('user');
+    const user = this._localStorageService.get('user') as TUser;
 
     // 验证用户信息有效性
     if (this.verify(user)) {
@@ -103,7 +102,7 @@ export class SessionService<TRoles extends readonly string[], TUser extends Sess
     }
   }
 
-  updateRole(role: TRoles[number]) {
+  updateRole(role: RoleTypeOfUser<TUser>) {
     mergeWith(this.user, { currentRole: role }, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
     this.config?.onRoleChanged?.(role);
     this.saveToLocalStorage();

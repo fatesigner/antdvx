@@ -10,7 +10,7 @@ import { XButton } from './button';
 import { XButtonProps } from './types';
 
 export const XButtonUpload = defineComponent({
-  name: 'x-button-upload',
+  name: 'XButtonUpload',
   props: {
     ...XButtonProps,
     autosize: {

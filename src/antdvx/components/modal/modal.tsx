@@ -25,7 +25,7 @@ const defaultXModalProps: Partial<IXModalPropsType> = {
 };
 
 const XModalLoading = defineComponent({
-  name: 'x-modal-loading',
+  name: 'XModalLoading',
   render() {
     return (
       <div class='tw-flex tw-items-center tw-justify-center'>
@@ -38,7 +38,7 @@ const XModalLoading = defineComponent({
 });
 
 const XModalError = defineComponent({
-  name: 'x-modal-error',
+  name: 'XModalError',
   props: {
     error: String,
     reload: Function
@@ -64,7 +64,7 @@ const XModalError = defineComponent({
  * Modal 弹出层，基于 AntModal
  */
 export const XModal = defineComponent({
-  name: 'x-modal',
+  name: 'XModal',
   props: {
     options: {
       type: Object as PropType<IXModalPropsType>,

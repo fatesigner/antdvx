@@ -2,144 +2,32 @@
  * router
  */
 
-import { getAccessPermission } from '@/antdvx';
-import { RouteRecordRaw, createRouter, createWebHashHistory } from 'vue-router';
+import { getAccessPermission } from '@/antdvx/helpers';
+import { createRouter, createWebHashHistory } from 'vue-router';
 
-import { authService } from './core/services';
-import { addExceptionRoute } from './shared/exception';
-import { login$, logout$, roleChanged$ } from './core/events';
 import { i18nMessages } from '@/app/i18n';
+import { authService } from '@/app/core/services';
+import { addExceptionRoute } from '@/app/layout/shared/exception';
+import { login$, logout$, roleChanged$ } from '@/app/core/events';
+import { RoleNamesType } from '@/app/core/inversify';
+
+const LayoutEmpty = () => import('@/app/layout/layout-empty').then(({ LayoutEmpty }) => LayoutEmpty);
+const LayoutSidebar = () => import('@/app/layout/layout-sidebar').then(({ LayoutSidebar }) => LayoutSidebar);
 
 /**
- * 定义路由表
+ * 为路由的 path 添加前缀
+ * @param prefix
+ * @param routes
  */
-const routes: RouteRecordRaw[] = [
-  {
-    path: '/',
-    component: () => import('./layout/layout-sidebar.vue'),
-    children: [
-      { path: '', redirect: 'portal' },
-      {
-        name: 'async-section',
-        path: 'async-section',
-        component: () => import('./views/async-section/async-section.vue')
-      },
-      {
-        name: 'users',
-        path: 'auth/users',
-        component: () => import('./views/auth/users/users.vue')
-      },
-      {
-        name: 'roles',
-        path: 'auth/roles',
-        component: () => import('./views/auth/roles/roles.vue')
-      },
-      {
-        name: 'button',
-        path: 'button',
-        component: () => import('./views/button/button.vue')
-      },
-      {
-        name: 'combobox',
-        path: 'combobox',
-        component: () => import('./views/combobox/combobox.vue')
-      },
-      {
-        name: 'echarts',
-        path: 'echarts',
-        component: () => import('./views/echarts/echarts.vue')
-      },
-      {
-        name: 'grid-dragable',
-        path: 'grid-dragable',
-        component: () => import('./views/grid-dragable/grid-dragable.vue')
-      },
-      {
-        name: 'iconfont',
-        path: 'iconfont',
-        component: () => import('./views/iconfont/iconfont.vue')
-      },
-      {
-        name: 'icons',
-        path: 'icons',
-        component: () => import('./views/icons/icons.vue')
-      },
-      {
-        name: 'input',
-        path: 'input',
-        component: () => import('./views/input/input.vue')
-      },
-      {
-        name: 'lazy',
-        path: 'lazy',
-        component: () => import('./views/lazy/lazy.vue')
-      },
-      {
-        name: 'pipes',
-        path: 'pipes',
-        component: () => import('./views/pipes/pipes.vue')
-      },
-      {
-        name: 'popup',
-        path: 'popup',
-        component: () => import('./views/popup/popup.vue')
-      },
-      {
-        name: 'scroll-view',
-        path: 'scroll-view',
-        component: () => import('./views/scroll-view/scroll-view.vue')
-      },
-      {
-        name: 'sticky-section',
-        path: 'sticky-section',
-        component: () => import('./views/sticky-section/sticky-section.vue')
-      },
-      {
-        name: 'table',
-        path: 'table',
-        component: () => import('./views/table/table.vue')
-      },
-      {
-        name: 'tabs',
-        path: 'tabs',
-        component: () => import('./views/tabs/tabs.vue')
-      },
-      {
-        name: 'transitions',
-        path: 'transitions',
-        component: () => import('./views/transitions/transitions.vue')
-      },
-      {
-        name: 'portal',
-        path: 'portal',
-        component: () => import('./views/portal/portal.vue'),
-        meta: {
-          label: i18nMessages.app.route.portal,
-          keepAlive: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/passport',
-    component: () => import('./layout/layout-empty.vue'),
-    children: [
-      {
-        name: 'login',
-        path: 'login',
-        component: () => import('./views/passport/login-generic.vue'),
-        meta: {
-          label: i18nMessages.app.route.passport.login,
-          keepAlive: true,
-          allowAnonymous: true
-        }
-      }
-    ]
-  }
-];
+function prefixRoutes(prefix, routes) {
+  return routes.map((route) => {
+    route.path = prefix + '/' + route.path;
+    return route;
+  });
+}
 
 /**
- * 创建路由实例
+ * 创建 App Router 实例
  * @constructor
  */
 export async function createAppRouter() {
@@ -147,7 +35,146 @@ export async function createAppRouter() {
     history: createWebHashHistory(),
     linkActiveClass: 'activated',
     linkExactActiveClass: 'exact-activated',
-    routes: routes
+    // 路由表
+    routes: [
+      {
+        path: '/',
+        component: LayoutSidebar,
+        children: [
+          { path: '', redirect: 'portal' },
+          {
+            name: 'portal',
+            path: 'portal',
+            component: () => import('./views/portal/portal').then(({ PortalView }) => PortalView),
+            meta: {
+              label: i18nMessages.app.route.portal
+            }
+          },
+          {
+            name: 'async-section',
+            path: 'async-section',
+            component: () => import('./views/async-section/async-section').then(({ AsyncSectionView }) => AsyncSectionView)
+          },
+          {
+            name: 'button',
+            path: 'button',
+            component: () => import('./views/button/button').then(({ ButtonView }) => ButtonView)
+          },
+          {
+            name: 'combobox',
+            path: 'combobox',
+            component: () => import('./views/combobox/combobox').then(({ ComboboxView }) => ComboboxView)
+          },
+          {
+            name: 'echarts',
+            path: 'echarts',
+            component: () => import('./views/echarts/echarts').then(({ EchartsView }) => EchartsView)
+          },
+          {
+            name: 'grid-dragable',
+            path: 'grid-dragable',
+            component: () => import('./views/grid-dragable/grid-dragable').then(({ GridDragableView }) => GridDragableView)
+          },
+          {
+            name: 'iconfont',
+            path: 'iconfont',
+            component: () => import('./views/iconfont/iconfont').then(({ IconfontView }) => IconfontView)
+          },
+          {
+            name: 'icons',
+            path: 'icons',
+            component: () => import('./views/icons/icons').then(({ IconsView }) => IconsView)
+          },
+          {
+            name: 'input',
+            path: 'input',
+            component: () => import('./views/input/input').then(({ InputView }) => InputView)
+          },
+          {
+            name: 'lazy',
+            path: 'lazy',
+            component: () => import('./views/lazy/lazy').then(({ LazyView }) => LazyView)
+          },
+          {
+            name: 'pipes',
+            path: 'pipes',
+            component: () => import('./views/pipes/pipes').then(({ PipesView }) => PipesView)
+          },
+          {
+            name: 'popup',
+            path: 'popup',
+            component: () => import('./views/popup/popup').then(({ PopupView }) => PopupView)
+          },
+          {
+            name: 'scroll-view',
+            path: 'scroll-view',
+            component: () => import('./views/scroll-view/scroll-view').then(({ Scrollview }) => Scrollview)
+          },
+          {
+            name: 'sticky-section',
+            path: 'sticky-section',
+            component: () => import('./views/sticky-section/sticky-section').then(({ StickySectionView }) => StickySectionView)
+          },
+          {
+            name: 'table',
+            path: 'table',
+            component: () => import('./views/table/table').then(({ TableView }) => TableView)
+          },
+          {
+            name: 'tabs',
+            path: 'tabs',
+            component: () => import('./views/tabs/tabs').then(({ TabsView }) => TabsView)
+          },
+          {
+            name: 'transitions',
+            path: 'transitions',
+            component: () => import('./views/transitions/transitions').then(({ TransitionsView }) => TransitionsView)
+          },
+          ...prefixRoutes('system-settings', [
+            {
+              name: 'systemSettingsPermissions',
+              path: 'permissions',
+              component: () => import('./views/system-settings/permissions/permissions').then(({ PermissionsView }) => PermissionsView),
+              meta: {
+                label: 'Permissions'
+              }
+            },
+            {
+              name: 'systemSettingsRoles',
+              path: 'roles',
+              component: () => import('./views/system-settings/roles/roles').then(({ RolesView }) => RolesView),
+              meta: {
+                label: 'Roles'
+              }
+            },
+            {
+              name: 'systemSettingsUsers',
+              path: 'users',
+              component: () => import('./views/system-settings/users/users').then(({ UsersView }) => UsersView),
+              meta: {
+                label: 'Users'
+              }
+            }
+          ])
+        ]
+      },
+      {
+        path: '/passport',
+        component: LayoutEmpty,
+        children: [
+          {
+            name: 'login',
+            path: 'login',
+            component: () => import('./views/passport/passport-generic').then(({ PassportGenericView }) => PassportGenericView),
+            meta: {
+              label: 'Login',
+              allowAnonymous: true,
+              keepAlive: true
+            }
+          }
+        ]
+      }
+    ]
   });
 
   // 监听用户登录事件
@@ -186,10 +213,10 @@ export async function createAppRouter() {
   });
 
   // 监听用户角色切换事件，设置不同的主页
-  roleChanged$.on((val) => {
-    if (val === 'admin') {
+  roleChanged$.on((role) => {
+    if (role.name === 'Admin') {
       authService.config.homePage = 'portal';
-    } else if (val === 'normal') {
+    } else if (role.name === 'normal') {
       authService.config.homePage = 'portal';
     } else {
       // 匿名用户，设置主页为空
@@ -200,10 +227,10 @@ export async function createAppRouter() {
   // 注册全局前置守卫
   router.beforeEach((to, from, next) => {
     // 获取待跳转的路由可访问的权限
-    const status: any = getAccessPermission(
+    const status = getAccessPermission<RoleNamesType>(
       to,
       () => authService.isAuthenticated(),
-      (x) => authService.isAuthorized(x)
+      (to) => authService.isAuthorized(to)
     );
 
     if (status === 401) {
@@ -216,11 +243,15 @@ export async function createAppRouter() {
     } else if (status === 403) {
       // 最终确认当前用户没有该路由的访问授权，动态添加 403 路由，该界面将提示用户未获得对应的访问权限
       console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not allowed`);
-      return next({ name: addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue')) });
+      return next({
+        name: addExceptionRoute(router, status, to, LayoutEmpty)
+      });
     } else if (status === 404) {
       // 该路由不存在，动态添加 404 路由，该界面将提示用户当前页面 not found
       console.warn(`[App Router warn]: ${status} => The request page '${to.path}' is not defined`);
-      return next({ name: addExceptionRoute(router, status, to, () => import('@/app/layout/layout-empty.vue')) });
+      return next({
+        name: addExceptionRoute(router, status, to, LayoutEmpty)
+      });
     }
 
     // 添加 router key 以取消默认的视图共享逻辑

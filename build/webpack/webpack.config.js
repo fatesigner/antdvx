@@ -26,6 +26,7 @@ const tailwindcss = require('tailwindcss');
 // const WebpackExternalEntryPlugin = require('./plugins/webpack-external-entry-plugin');
 // const WebpackCleanTerminalPlugin = require('./plugins/webpack-clean-terminal-plugin');
 const WebpackHtmlEmbedSourcePlugin = require('./plugins/webpack-html-embed-source-plugin');
+const WebpackIgnoreNotfoundExportPlugin = require('./plugins/webpack-ignore-notfound-export-plugin');
 
 const Utils = require('../utils');
 
@@ -654,6 +655,7 @@ module.exports = async function (options) {
     }),
     new CopyWebpackPlugin(options?.plugins?.CopyWebpackPlugin),
     new WebpackHtmlEmbedSourcePlugin(options?.plugins?.WebpackHtmlEmbedSourcePlugin),
+    new WebpackIgnoreNotfoundExportPlugin(),
     // new WebpackExternalEntryPlugin(options?.plugins?.WebpackExternalEntryPlugin),
     // new WebpackCleanTerminalPlugin(),
     // 排除 moment.js 的 locale 文件，以减少生成的包体积

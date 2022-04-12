@@ -8,7 +8,7 @@ import styles from './spinner-loading.module.less';
  * Spinner Loading
  */
 export const SpinnerLoading = defineComponent({
-  name: 'spinner-loading',
+  name: 'SpinnerLoading',
   props: {
     color: String,
     width: Number,

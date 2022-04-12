@@ -3,16 +3,18 @@
  */
 
 import { VNode } from 'vue';
+import { UnknownType } from '@fatesigner/utils/types';
+import { IWorksheetColumn } from '@fatesigner/utils/exceljs';
 import { PaginationProps } from 'ant-design-vue/es/pagination/Pagination';
 import { ColumnProps, TableProps, tableProps } from 'ant-design-vue/es/table/interface';
 
-import { IDataSource, IPaginationParams } from '../../types/data-source';
+import { IDataSource, IPaginationParams } from '../../types';
 
 export type IXTableChangeType = 'filter' | 'sorter' | 'pagination';
 
-export type IXTableRowKeyFunc<TModel extends Record<string, any>> = (record: TModel, index: number) => string;
+export type IXTableRowKeyFunc<TModel extends UnknownType<any> = UnknownType<any>> = (record: TModel, index: number) => string;
 
-export type IXTableModelExtend<T extends Record<string, any>> = Partial<T> & {
+export type IXTableModelExtend<T extends UnknownType> = Partial<T> & {
   /**
    * 是否处于行内编辑状态
    */
@@ -20,14 +22,16 @@ export type IXTableModelExtend<T extends Record<string, any>> = Partial<T> & {
   /**
    * 展开行的引用，用于表格嵌套场景
    */
-  _expandedRef?: any;
+  _expandedRef?: unknown;
 } & Record<string, any>;
 
-export type IXTableFilters<TModel extends Record<string, any>> = Record<keyof TModel, string[]>;
+export type IXTableFilters<TModel extends UnknownType<any> = UnknownType<any>> = Record<keyof TModel, string[]>;
 
-export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<ColumnProps, 'customRender' | 'dataIndex' | 'filters'> & {
+export type IXTableColumnProps<TModel extends UnknownType<any> = UnknownType<any>, TMeta extends UnknownType = never> = Omit<
+  ColumnProps,
+  'customRender' | 'dataIndex' | 'filters'
+> & {
   dataIndex?: keyof TModel;
-
   customRender?: (data: { text: any; record: IXTableModelExtend<TModel>; index: number }) => number | string | VNode | VNode[];
 
   /**
@@ -39,26 +43,37 @@ export type IXTableColumnProps<TModel extends Record<string, any>> = Omit<Column
 
   filters?: {
     text: string;
-    value: string;
+    value: number | string;
     children?: {
       text: string;
       value: string;
     }[];
   }[];
+
   /**
-   * 隐藏该列，默认为 false
+   * 是否隐藏该列，默认为 false
    */
   hidden?: boolean;
+
+  /**
+   * 用于 Excel 导出的选项
+   */
+  excel?: IWorksheetColumn<TModel>;
+
+  /**
+   * 附加的数据
+   */
+  meta?: TMeta;
 };
 
-export interface IXTableSorter<TModel extends Record<string, any>> {
-  column: IXTableColumnProps<TModel>;
+export interface IXTableSorter<TModel extends UnknownType<any> = UnknownType<any>, TMeta extends UnknownType = never> {
+  column: IXTableColumnProps<TModel, TMeta>;
   columnKey: keyof TModel;
   field: keyof TModel;
-  order: 'ascend' | 'descend' | false;
+  order: 'asc' | 'desc' | false;
 }
 
-export interface IXTableHandlers<TModel extends Record<string, any>> {
+export interface IXTableHandlers<TModel extends UnknownType<any> = UnknownType<any>> {
   /**
    * 获取 Ant Table 实例
    */
@@ -154,6 +169,12 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
   handleRecordChange?: (record: IXTableModelExtend<TModel>) => void;
 
   /**
+   * 导出到 Excel
+   * @param data
+   */
+  downloadExcel?: (data?: IXTableModelExtend<TModel>) => Promise<void>;
+
+  /**
    * 进入全屏浏览模式
    */
   fullscreen?: () => void;
@@ -170,7 +191,7 @@ export interface IXTableHandlers<TModel extends Record<string, any>> {
   presentSettingsPanel?: (onDismissed?: (changed: boolean) => void) => Promise<void>;
 }
 
-export interface IXTableListenersType<TModel extends Record<string, any>> {
+export interface IXTableListenersType<TModel extends UnknownType<any> = UnknownType<any>, TMeta extends UnknownType = never> {
   // Ant table events
   /**
    * 分页、排序、筛选变化时触发
@@ -182,7 +203,7 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
     type: IXTableChangeType;
     pagination: IPaginationParams;
     filters: IXTableFilters<TModel>;
-    sorter: IXTableSorter<TModel>;
+    sorter: IXTableSorter<TModel, TMeta>;
     /**
      * 当前数据
      */
@@ -246,25 +267,36 @@ export interface IXTableListenersType<TModel extends Record<string, any>> {
   readonly rowSelectInvert?: (selectedRows: IXTableModelExtend<TModel>[]) => void;
 }
 
-export interface IXTablePropsType<TModel extends Record<string, any>, TParams extends Record<string, any>>
+export interface IXTablePropsType<TModel extends UnknownType, TParams extends UnknownType, TMeta extends UnknownType>
   extends Omit<TableProps, 'locale' | 'columns' | 'dataSource' | 'rowKey' | 'scroll'> {
   // Override Antd
   locale?: Partial<typeof tableProps>;
-  columns?: IXTableColumnProps<TModel>[];
+  columns?: IXTableColumnProps<TModel, TMeta>[];
   rowKey?: keyof IXTableModelExtend<TModel> | IXTableRowKeyFunc<IXTableModelExtend<TModel>>;
   scroll?: { x?: boolean | number; y?: boolean | number };
+
+  /**
+   * 表格名称，唯一值，用于确定该表格
+   */
+  name?: string;
+
+  /**
+   * 是否自动加载数据，默认为 true
+   */
+  autoload?: boolean;
 
   /**
    * 列的属性拓展
    * @param column
    * @constructor
    */
-  columnMap?: (column: IXTableColumnProps<TModel>) => IXTableColumnProps<TModel>;
+  columnMap?: (column: IXTableColumnProps<TModel, TMeta>) => IXTableColumnProps<TModel, TMeta>;
 
   /**
    * 数据源配置
    */
-  dataSource?: IDataSource<Partial<IXTableModelExtend<TModel>>, TParams, IXTableFilters<TModel>, IXTableSorter<TModel>>;
+  dataSource?: IDataSource<IXTableModelExtend<TModel>, TParams, IXTableFilters<TModel>, IXTableSorter<IXTableModelExtend<TModel>, TMeta>>;
+  // dataSource?: IDataSource<IXTableSorter<IXTableModelExtend<TModel>, TMeta>>;
 
   /**
    * 分页器配置
@@ -288,15 +320,16 @@ export interface IXTablePropsType<TModel extends Record<string, any>, TParams ex
   /**
    * 事件
    */
-  listeners?: IXTableListenersType<TModel>;
+  listeners?: IXTableListenersType<TModel, TMeta>;
 }
 
 export interface IXTableRefType<
-  TModel extends Record<string, any>,
-  TParams extends Record<string, any>,
-  TMethods extends Record<string, (...args: any[]) => any>
+  TModel extends UnknownType<any> = UnknownType<any>,
+  TParams extends UnknownType = never,
+  TMethods extends UnknownType<(...args: unknown[]) => unknown> = never,
+  TMeta extends UnknownType = never
 > {
-  options: IXTablePropsType<TModel, TParams> & {
+  options: IXTablePropsType<TModel, TParams, TMeta> & {
     /**
      * 指示当前是否处于全屏浏览的状态
      */

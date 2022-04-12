@@ -21,6 +21,7 @@ import { defineComponent } from 'vue';
 import { ENV } from '@/app/core/constants';
 
 export default defineComponent({
+  name: 'SplashScreen',
   setup() {
     return {
       title: ENV.APP_TITLE

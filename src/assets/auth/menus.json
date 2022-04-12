@@ -15,7 +15,7 @@
     "icon": "code-box-line",
     "children": [
       {
-        "id": "d796690e69zd",
+        "id": "d79ss90e69zd",
         "label": "图标",
         "name": "iconfont",
         "url": "/iconfont",
@@ -24,7 +24,7 @@
         "children": []
       },
       {
-        "id": "zf96690e69zd",
+        "id": "zsg6690e69zd",
         "label": "可滚动视图区域",
         "name": "scroll-view",
         "url": "/scroll-view",
@@ -69,7 +69,7 @@
         "children": []
       },
       {
-        "id": "d796690e69zd",
+        "id": "d790990e69zd",
         "label": "输入框",
         "name": "input",
         "url": "/input",
@@ -143,7 +143,7 @@
     ]
   },
   {
-    "id": "0de468996de8",
+    "id": "yd9d4d63a0dy",
     "label": "系统设置",
     "name": null,
     "url": null,
@@ -151,20 +151,30 @@
     "icon": "settings-line",
     "children": [
       {
-        "id": "b724c8a0b1ad",
-        "label": "route.menus",
-        "name": "Menus",
-        "url": "/menus",
-        "target": "_self",
-        "icon": null,
+        "id": "yf96690e6d7z",
+        "label": "Permissions",
+        "name": "systemSettingsPermissions",
+        "url": "/system-settings/permissions",
+        "target": null,
+        "icon": "funds-line",
         "children": []
       },
       {
-        "id": "ae5b3b625fc0",
-        "label": "route.auth",
-        "name": "Auth",
-        "url": "/auth",
-        "target": "_self",
+        "id": "y79g390e6d7z",
+        "label": "Roles",
+        "name": "systemSettingsRoles",
+        "url": "/system-settings/roles",
+        "target": null,
+        "icon": "file-user-line",
+        "children": []
+      },
+      {
+        "id": "y796690e697z",
+        "label": "Users",
+        "name": "systemSettingsUsers",
+        "url": "/system-settings/users",
+        "target": null,
+        "icon": "user-line",
         "children": []
       }
     ]

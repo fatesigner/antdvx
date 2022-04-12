@@ -10,7 +10,6 @@ import { Checkbox, CheckboxGroup } from 'ant-design-vue';
 
 export default defineComponent({
   components: {
-    // Antd
     [Checkbox.name]: Checkbox,
     [CheckboxGroup.name]: CheckboxGroup
   },

@@ -25,23 +25,24 @@ export const i18nMessages = createLocaleMessages({
           title2: '',
           title3: '',
           back: '',
-          gotologin: '',
-          gotohome: ''
+          gotoLogin: '',
+          gotoHome: ''
         }
       },
       passport: {
         login: '',
         register: '',
-        findPwd: ''
+        findPwd: '',
+        logout: ''
       },
       system: {
         menus: ''
       },
-      portal: '',
-      table: '',
-      grid: ''
+      portal: ''
     },
     navbar: {
+      exitOut: '',
+      updatePassword: '',
       logOut: '',
       portal: '',
       github: '',
@@ -73,22 +74,31 @@ export const i18nMessages = createLocaleMessages({
       connectionAbort: ''
     },
     passport: {
-      title: '',
-      username: '',
-      password: '',
-      logIn: '',
-      autoLogin: '',
-      forgetPassword: '',
-      register: '',
-      backToLogin: '',
-      submit: '',
-      any: '',
-      thirdparty: '',
-      thirdpartyTips: ''
-    },
-    notification: {
-      login: '',
-      logout: ''
+      login: {
+        title: '',
+        username: '',
+        password: '',
+        rememberMe: '',
+        submit: '',
+        any: '',
+        thirdParty: '',
+        thirdPartyTips: '',
+        message: ''
+      },
+      updatePassword: {
+        title: '',
+        forget: '',
+        username: '',
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        backToLogin: '',
+        submit: '',
+        message: {
+          submitSuccess: '',
+          inconsistent: ''
+        }
+      }
     }
   }
 });

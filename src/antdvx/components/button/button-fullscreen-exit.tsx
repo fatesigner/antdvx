@@ -11,7 +11,7 @@ import { XButtonProps } from './types';
  * 按钮：退出全屏
  */
 export const XButtonFullscreenExit = defineComponent({
-  name: 'x-button-fullscreen-exit',
+  name: 'XButtonFullscreenExit',
   props: {
     ...XButtonProps,
     onlyIcon: {

@@ -3,8 +3,8 @@ import Qs from 'qs';
 import { inject, injectable, optional } from 'inversify';
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
+import { IHttpService } from '../types';
 import { ANTDVX_SYMBOLS } from '../symbols';
-import { IHttpService } from '../interfaces/http.interface';
 
 /**
  * Http 服务 config
@@ -127,41 +127,39 @@ export function createHttpService(
   config: HttpServiceConfig,
   configure?: (defaultAxiosRequestConfig: AxiosRequestConfig, interceptors: AxiosInstance['interceptors']) => void
 ): AxiosInstance {
-  {
-    config = Object.assign({}, defaultHttpServiceConfig, config);
+  config = Object.assign({}, defaultHttpServiceConfig, config);
 
-    const Http = Axios.create();
+  const Http = Axios.create();
 
-    // 更新 Axios default config
-    Object.keys(config).forEach((key) => {
-      if (Object.prototype.hasOwnProperty.call(Axios.defaults, key)) {
-        Http.defaults[key] = config[key];
-      }
-    });
-
-    if (config.addXMLHttpRequestHeader) {
-      // 为 xhr 请求添加 header 头
-      Http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+  // 更新 Axios default config
+  Object.keys(config).forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(Axios.defaults, key)) {
+      Http.defaults[key] = config[key];
     }
+  });
 
-    // 请求拦截: 为 POST 类型的传参序列化
-    Http.interceptors.request.use(
-      function (config) {
-        if (config.method !== 'get' && config.method !== 'GET' && config.headers['Content-Type'] === HttpContentType.FormUrlEncoded) {
-          config.data = Qs.stringify(config.data);
-        }
-        return config;
-      },
-      function (error: Error) {
-        return Promise.reject(error);
-      }
-    );
-
-    // 执行自定义配置
-    if (configure) {
-      configure(Http.defaults, Http.interceptors);
-    }
-
-    return Http;
+  if (config.addXMLHttpRequestHeader) {
+    // 为 xhr 请求添加 header 头
+    Http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
   }
+
+  // 请求拦截: 为 POST 类型的传参序列化
+  Http.interceptors.request.use(
+    function (config) {
+      if (config.method !== 'get' && config.method !== 'GET' && config.headers['Content-Type'] === HttpContentType.FormUrlEncoded) {
+        config.data = Qs.stringify(config.data);
+      }
+      return config;
+    },
+    function (error: Error) {
+      return Promise.reject(error);
+    }
+  );
+
+  // 执行自定义配置
+  if (configure) {
+    configure(Http.defaults, Http.interceptors);
+  }
+
+  return Http;
 }

@@ -4,8 +4,11 @@ import { PropType, defineComponent, ref, watch } from 'vue';
 import { ANTDVX_SIZES } from '../../constants';
 
 export const XButtonSpin = defineComponent({
-  name: 'x-button-spin',
+  name: 'XButtonSpin',
   props: {
+    title: {
+      type: String
+    },
     size: {
       type: String as PropType<typeof ANTDVX_SIZES[number]>,
       default: 'default'

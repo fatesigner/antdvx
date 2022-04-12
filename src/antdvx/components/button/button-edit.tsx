@@ -8,7 +8,7 @@ import { XButton } from './button';
 import { XButtonProps } from './types';
 
 export const XButtonEdit = defineComponent({
-  name: 'x-button-edit',
+  name: 'XButtonEdit',
   props: {
     ...XButtonProps,
     onlyIcon: {
@@ -69,8 +69,8 @@ export const XButtonEdit = defineComponent({
         type={ctx.type}
         color={ctx.color}
         spin={false}
-        //handler={ctx.handler}
-        //notify={ctx.notify}
+        // handler={ctx.handler}
+        // notify={ctx.notify}
         title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.edit)}
         onClick={ctx.trigger}
         v-slots={{

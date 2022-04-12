@@ -15,7 +15,7 @@ import { IconCheckLine, IconCloseLine, IconRefreshLine } from '../iconfont';
  * 验证码弹出层
  */
 const SlideModal = defineComponent({
-  name: 'slide-modal',
+  name: 'SlideModal',
   components: {
     XButton,
     IconCloseLine,
@@ -434,7 +434,7 @@ const SlideModal = defineComponent({
  * 验证码
  */
 export const SlideCaptcha = defineComponent({
-  name: 'slide-captcha',
+  name: 'SlideCaptcha',
   components: {
     IconCheckLine
   },
@@ -588,8 +588,7 @@ export const SlideCaptcha = defineComponent({
         {...ctx.$attrs}
         class={['slide-captcha-wrap', ctx.valid ? 'slide-captcha-valid' : undefined]}
         title={ctx.valid ? ctx.$t(i18nMessages.antd.slideCaptcha.validText) : ctx.$t(i18nMessages.antd.slideCaptcha.tip)}
-        onClick={ctx.presentCaptchaModal}
-      >
+        onClick={ctx.presentCaptchaModal}>
         {inner}
       </div>,
       <Teleport to='body'>

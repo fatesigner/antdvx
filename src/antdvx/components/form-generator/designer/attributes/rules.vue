@@ -108,7 +108,6 @@ export default defineComponent({
   components: {
     IconQuestionLine,
     XButton,
-    // Antd
     [Popover.name]: Popover,
     [Form.Item.name]: Form.Item,
     [Input.name]: Input,

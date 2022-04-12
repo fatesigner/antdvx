@@ -1,0 +1,71 @@
+@import '@/app/themes/default';
+
+.dropdown {
+  @apply tw-flex tw-items-center tw-px-1 tw-gap-2 tw-h-full tw-cursor-pointer;
+
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+
+  :global(.ant-badge) {
+    transform: scale(0.7);
+  }
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  margin-right: 8px;
+  border-radius: 50%;
+}
+
+.username {
+  overflow: hidden;
+  font-size: 12px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabs {
+  width: 336px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+}
+
+.content {
+  margin-top: 12px;
+  max-height: 360px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.item {
+  padding: 8px 16px;
+  cursor: pointer;
+
+  &:hover{
+    background-color: @primary-1;
+  }
+}
+
+.footer {
+  height: 46px;
+  color: rgba(0,0,0,.85);
+  line-height: 46px;
+  text-align: center;
+  border-top: 1px solid #f0f0f0;
+  border-radius: 0 0 2px 2px;
+  transition: all .3s;
+
+  div{
+    display: inline-block;
+    width: 50%;
+    cursor: pointer;
+    transition: all .3s;
+    user-select: none;
+  }
+}

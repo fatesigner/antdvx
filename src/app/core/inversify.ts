@@ -6,30 +6,20 @@
 import { AxiosResponse } from 'axios';
 import { Container, ContainerModule } from 'inversify';
 import { isString } from '@fatesigner/utils/type-check';
-import {
-  ANTDVX_SYMBOLS,
-  AuthService,
-  AuthServiceConfig,
-  HttpService,
-  HttpServiceConfig,
-  IAuthService,
-  IHttpService,
-  ISessionService,
-  IStorageService,
-  SessionService,
-  SessionServiceConfig,
-  StorageService
-} from '@/antdvx';
+import { AuthServiceConfig, IAuthService, IHttpService, IRole, ISessionService, IStorageService, IUser } from '@/antdvx/types';
+import { AuthService, HttpService, HttpServiceConfig, SessionService, SessionServiceConfig, StorageService } from '@/antdvx/services';
+import { ANTDVX_SYMBOLS } from '@/antdvx/symbols';
 
-import { IUser } from '@/app/types/user';
-import { RouteMeta } from '@/app/types/route';
+import { IAppUser } from '@/app/types/user';
 import { i18n, i18nMessages } from '@/app/i18n';
 import { ENV, ROLES } from '@/app/core/constants';
 import { login$, logout$, roleChanged$ } from '@/app/core/events';
 
-// 定义服务类型
-export type SessionServiceType = ISessionService<IUser<typeof ROLES.keys>, typeof ROLES.keys>;
-export type AuthServiceType = IAuthService<IUser<typeof ROLES.keys>, typeof ROLES.keys, RouteMeta<typeof ROLES.keys>>;
+// 定义类型
+export type RoleNamesType = typeof ROLES.keys;
+export type UserType = IAppUser<IRole<RoleNamesType>>;
+export type AuthServiceType = IAuthService<UserType>;
+export type SessionServiceType = ISessionService<UserType>;
 
 // 新建 IOC 容器
 const appDIC = new Container({ defaultScope: 'Singleton' });
@@ -40,7 +30,7 @@ const antdvxModule = new ContainerModule((bind) => {
   bind<IStorageService>(ANTDVX_SYMBOLS.STORAGE_SERVICE).to(StorageService);
 
   // SessionService
-  bind<SessionServiceConfig<typeof ROLES.keys, IUser<typeof ROLES.keys>>>(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG).toConstantValue({
+  bind<SessionServiceConfig<UserType>>(ANTDVX_SYMBOLS.SESSION_SERVICE_CONFIG).toConstantValue({
     // 用户登录
     onLogin(user) {
       login$.emit(user);
@@ -48,8 +38,8 @@ const antdvxModule = new ContainerModule((bind) => {
     onLogout(res) {
       logout$.emit(res);
     },
-    onRoleChanged(roles) {
-      roleChanged$.emit(roles);
+    onRoleChanged(role) {
+      roleChanged$.emit(role);
     },
     getUserModel() {
       return {
@@ -74,7 +64,7 @@ const antdvxModule = new ContainerModule((bind) => {
   bind<SessionServiceType>(ANTDVX_SYMBOLS.SESSION_SERVICE).to(SessionService);
 
   // AuthService
-  bind<AuthServiceConfig<typeof ROLES.keys>>(ANTDVX_SYMBOLS.AUTH_SERVICE_CONFIG).toConstantValue({
+  bind<AuthServiceConfig<UserType>>(ANTDVX_SYMBOLS.AUTH_SERVICE_CONFIG).toConstantValue({
     // 主页地址
     homePage: 'portal',
     // 授权界面地址 name
@@ -84,7 +74,7 @@ const antdvxModule = new ContainerModule((bind) => {
     // 是否开启重定向模式，登出后将暂存当前地址，登录后重定向至该地址
     redirectEnable: false,
     // 超级管理员角色，该角色将会跳过认证
-    superRole: ['admin']
+    superRole: ['Admin']
   });
   bind<AuthServiceType>(ANTDVX_SYMBOLS.AUTH_SERVICE).to(AuthService);
 
@@ -106,7 +96,9 @@ const antdvxModule = new ContainerModule((bind) => {
           function (config) {
             // 可在此设置请求的默认 header
             if (sessionService.user.accessToken) {
-              config.headers.authorization = sessionService.user.accessToken;
+              config.headers.ApiToken = ENV.APP_NAME;
+              config.headers.authorization = 'Bearer ' + sessionService.user.accessToken;
+              config.headers['X-Authorization'] = 'Bearer ' + sessionService.user.xAccessToken;
             }
             return config;
           },
@@ -117,9 +109,28 @@ const antdvxModule = new ContainerModule((bind) => {
 
         // 响应拦截
         interceptors.response.use(
-          function (res: AxiosResponse<any>) {
+          function (res: any) {
+            // 更新 access-token
+            sessionService.updateUser({
+              accessToken: res?.headers?.['access-token'],
+              xAccessToken: res?.headers?.['x-access-token']
+            } as any);
+
+            // 补丁：解决 JsonParse 大整数精度丢失的问题
+            if (res?.headers?.['content-type']?.indexOf('application/json') > -1) {
+              try {
+                const str = res.data.replace(/[\d.]{18,}/g, (val) => `"${val}"`);
+                const data = JSON.parse(str);
+                if (data) {
+                  res.data = data;
+                }
+              } catch (e) {
+                res.data = JSON.parse(res.data);
+              }
+            }
+
             // 在此定义请求成功后的处理逻辑，需要与后端配合
-            if (isString(res.data) || !res.data || res?.data?.code === undefined || res?.data?.code === 0 || res?.data?.code === 200) {
+            if (isString(res.data) || !res.data || res?.data?.code === undefined || res?.data?.code === 0 || res?.data?.Code === 200) {
               return res;
             } else if (res?.data?.code === 401 || res?.data?.code === 403) {
               // 判断返回状态为 unauthorized 未授权，则登出当前账户，并将错误消息传递过去
@@ -185,7 +196,11 @@ const antdvxModule = new ContainerModule((bind) => {
                   if (Object.prototype.toString.call(err) === '[object String]') {
                     message = err;
                   } else {
-                    message = err.msg || err.message || err.Message || i18n._.global.tc(i18nMessages.app.http.requestFailed);
+                    if (err.Result) {
+                      message = err.Result?.[Object.keys(err.Result)?.[0]];
+                    } else {
+                      message = err.msg || err.message || err.Message || i18n._.global.tc(i18nMessages.app.http.requestFailed);
+                    }
                   }
                 }
               }

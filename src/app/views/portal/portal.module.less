@@ -1,0 +1,42 @@
+@import '@/app/themes/default';
+
+.patient-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+
+  @apply tw-rounded-sm tw-shadow-md tw-bg-white;
+
+  border: 2px solid transparent;
+  transition: border 0.25s ease-out;
+
+  &:hover {
+    border-color: @primary-color;
+  }
+
+  .name {
+    margin-bottom: 2px;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .title {
+    font-size: 12px;
+    color: #555;
+  }
+}
+
+.patient-header {
+  @apply tw-flex tw-justify-between tw-pt-2 tw-pr-2 tw-pb-2 tw-pl-2 tw-border-b tw-border-gray-100;
+}
+
+.patient-content {
+  @apply tw-p-2 tw-space-y-2;
+
+  flex: 1;
+}
+
+.patient-footer {
+  @apply tw-pt-1 tw-pr-2 tw-pb-1 tw-pl-2 tw-border-t tw-border-gray-100;
+}

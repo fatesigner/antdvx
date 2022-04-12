@@ -6,11 +6,10 @@
 
 <script lang="ts">
 import { Form, Input } from 'ant-design-vue';
-import { defineComponent, PropType } from 'vue';
+import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
   components: {
-    // Antd
     [Form.Item.name]: Form.Item,
     [Input.name]: Input
   },

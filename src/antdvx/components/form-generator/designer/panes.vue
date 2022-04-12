@@ -39,7 +39,6 @@ export default defineComponent({
   components: {
     Draggable,
     ScrollView,
-    // Antd
     [Collapse.name]: Collapse,
     [Collapse.Panel.name]: Collapse.Panel
   },
@@ -56,7 +55,7 @@ export default defineComponent({
     const collapseKey = ref(widgetsGrouped.map((x) => x.label));
 
     const clone = (widget: IFormDesignerWidget) => {
-      let widgetClone = cloneDeep(widget) as IFormDesignerBinds['widgets'][number];
+      const widgetClone = cloneDeep(widget) as IFormDesignerBinds['widgets'][number];
       widgetClone.key = FormDesignerConfig.name();
       widgetClone.field = getFiledObject(widget);
       widgetClone.field.name = widgetClone.key;

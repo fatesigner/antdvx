@@ -6,6 +6,7 @@
 import { convertModelArrToEnum } from '@fatesigner/utils';
 
 import { IENV } from '@/app/types/env';
+import { CommonStatus } from '@/api/models';
 
 /**
  * environment 环境变量
@@ -44,50 +45,268 @@ export const API_HOSTS = convertModelArrToEnum([
 
 // 用户角色
 export const ROLES = convertModelArrToEnum([
-  // 管理员
   {
-    name: 'admin',
-    value: 'admin',
-    text: '管理员',
-    account: {
-      username: 'Tom',
-      password: '1234'
-    }
+    value: 0,
+    text: 'None',
+    name: 'None'
   },
-  // 用户
   {
-    name: 'normal',
-    value: 'normal',
-    text: '用户',
-    account: {
-      username: 'normal',
-      password: '123456'
-    }
+    value: 1,
+    text: 'Admin',
+    name: 'Admin'
+  },
+  {
+    value: 2,
+    text: 'SuperAdmin',
+    name: 'SuperAdmin'
   }
-]);
+] as const);
+
+// 定义排序方式
+export const SORTORDS = convertModelArrToEnum([
+  {
+    value: 'latest',
+    text: '最新排序',
+    name: 'latest'
+  },
+  {
+    value: 'ASC',
+    text: '从低到高',
+    name: 'ASC'
+  },
+  {
+    value: 'DESC',
+    text: '从高到底',
+    name: 'DESC'
+  }
+] as const);
 
 export const MASTER_DATA_STATUS = convertModelArrToEnum([
   {
-    value: 'enabled',
-    text: '启用',
-    name: 'enabled'
+    value: 0,
+    text: '正常',
+    name: 'enable'
   },
   {
-    value: 'disabled',
-    text: '禁用',
+    value: 1,
+    text: '停用',
     name: 'disabled'
   }
 ] as const);
 
-export const MASTER_DATA_SEX = convertModelArrToEnum([
+/**
+ * 定义通用状态
+ */
+export const COMMON_STATUS = convertModelArrToEnum([
   {
-    value: 'male',
-    text: '男',
-    name: 'male'
+    value: CommonStatus.NUMBER_0,
+    text: 'Enabled',
+    name: 'enabled'
   },
   {
-    value: 'female',
-    text: '女',
-    name: 'female'
+    value: CommonStatus.NUMBER_1,
+    text: 'Disabled',
+    name: 'disabled'
+  }
+] as const);
+
+/**
+ * 定义用户性别
+ */
+export const SEX_STATUS = convertModelArrToEnum([
+  {
+    value: 1,
+    text: 'Male',
+    name: 'Male'
+  },
+  {
+    value: 2,
+    text: 'Female',
+    name: 'Female'
+  },
+  {
+    value: 3,
+    text: 'Unknown',
+    name: 'Unknown'
+  }
+] as const);
+
+/**
+ * 定义权限类别
+ */
+export const PERMISSIONS_TYPE = convertModelArrToEnum([
+  {
+    value: 'System',
+    text: 'System',
+    name: 'System',
+    description: ''
+  },
+  {
+    value: 'Custom',
+    text: 'Custom',
+    name: 'Custom',
+    description: ''
+  }
+] as const);
+
+/**
+ * 定义权限集合
+ */
+export const PERMISSIONS = convertModelArrToEnum([
+  {
+    value: 'DiciplineFullAccess',
+    text: 'DiciplineFullAccess',
+    name: 'DiciplineFullAccess',
+    description: ''
+  },
+  {
+    value: 'DiciplineReadonlyAccess',
+    text: 'DiciplineReadonlyAccess',
+    name: 'DiciplineReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'CompanyInformationFullAccess',
+    text: 'CompanyInformationFullAccess',
+    name: 'CompanyInformationFullAccess',
+    description: ''
+  },
+  {
+    value: 'CompanyInformationReadonlyAccess',
+    text: 'CompanyInformationReadonlyAccess',
+    name: 'CompanyInformationReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'OrgnizaitonFullAccess',
+    text: 'OrgnizaitonFullAccess',
+    name: 'OrgnizaitonFullAccess',
+    description: ''
+  },
+  {
+    value: 'OrgnizaitonReadonlyAccess',
+    text: 'OrgnizaitonReadonlyAccess',
+    name: 'OrgnizaitonReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'ExchangeRatesFullAccess',
+    text: 'ExchangeRatesFullAccess',
+    name: 'ExchangeRatesFullAccess',
+    description: ''
+  },
+  {
+    value: 'ExchangeRatesReadonlyAccess',
+    text: 'ExchangeRatesReadonlyAccess',
+    name: 'ExchangeRatesReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'PositionFullAccess',
+    text: 'PositionFullAccess',
+    name: 'PositionFullAccess',
+    description: ''
+  },
+  {
+    value: 'PositionReadonlyAccess',
+    text: 'PositionReadonlyAccess',
+    name: 'PositionReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'RolesFullAccess',
+    text: 'RolesFullAccess',
+    name: 'RolesFullAccess',
+    description: ''
+  },
+  {
+    value: 'RolesReadonlyAccess',
+    text: 'RolesReadonlyAccess',
+    name: 'RolesReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'StaffingPoolFullAccess',
+    text: 'StaffingPoolFullAccess',
+    name: 'StaffingPoolFullAccess',
+    description: ''
+  },
+  {
+    value: 'StaffingPoolReadonlyAccess',
+    text: 'StaffingPoolReadonlyAccess',
+    name: 'StaffingPoolReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'UserInformationFullAccess',
+    text: 'UserInformationFullAccess',
+    name: 'UserInformationFullAccess',
+    description: ''
+  },
+  {
+    value: 'UserInformationReadonlyAccess',
+    text: 'UserInformationReadonlyAccess',
+    name: 'UserInformationReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'ProjectOverviewFullAccess',
+    text: 'ProjectOverviewFullAccess',
+    name: 'ProjectOverviewFullAccess',
+    description: ''
+  },
+  {
+    value: 'ProjectOverviewReadonlyAccess',
+    text: 'ProjectOverviewReadonlyAccess',
+    name: 'ProjectOverviewReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'ProjectMasterDataFullAccess',
+    text: 'ProjectMasterDataFullAccess',
+    name: 'ProjectMasterDataFullAccess',
+    description: ''
+  },
+  {
+    value: 'ProjectMasterDataReadonlyAccess',
+    text: 'ProjectMasterDataReadonlyAccess',
+    name: 'ProjectMasterDataReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'TravelMasterdataFullAccess',
+    text: 'TravelMasterdataFullAccess',
+    name: 'TravelMasterdataFullAccess',
+    description: ''
+  },
+  {
+    value: 'TravelMasterdataReadonlyAccess',
+    text: 'TravelMasterdataReadonlyAccess',
+    name: 'TravelMasterdataReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'StaffingPlanFullAccess',
+    text: 'StaffingPlanFullAccess',
+    name: 'StaffingPlanFullAccess',
+    description: ''
+  },
+  {
+    value: 'StaffingPlanReadonlyAccess',
+    text: 'StaffingPlanReadonlyAccess',
+    name: 'StaffingPlanReadonlyAccess',
+    description: ''
+  },
+  {
+    value: 'TravelPlanFullAccess',
+    text: 'TravelPlanFullAccess',
+    name: 'TravelPlanFullAccess',
+    description: ''
+  },
+  {
+    value: 'StaffingPlanReadonlyAccess',
+    text: 'StaffingPlanReadonlyAccess',
+    name: 'StaffingPlanReadonlyAccess',
+    description: ''
   }
 ] as const);

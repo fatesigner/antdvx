@@ -1,0 +1,95 @@
+@import '@/app/themes/default';
+
+@colorArr: {
+  primary: @primary-color;
+  secondary: @secondary-color;
+  tertiary: @tertiary-color;
+  success: @success-color;
+  warning: @warning-color;
+  danger: @danger-color;
+  red: @red-color;
+  orange: @orange-color;
+  yellow: @yellow-color;
+  green: @green-color;
+  cyan: @cyan-color;
+  blue: @blue-color;
+  purple: @purple-color;
+}
+
+.count {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.annular {
+  @apply tw-inline-block tw-relative tw-rounded;
+
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.2rem;
+  font-family: 'Roboto Mono', 'Menlo', 'dejavu sans mono', 'Consolas', 'Lucida Console', monospace;
+  transition: background-color 0.1s, color 0.1s;
+
+  color: #333;
+
+  svg {
+    color: #666;
+    fill: ~`colorPalette('#666', 5)`;
+    stroke: ~`colorPalette('#666', 5)`;
+  }
+
+  &.mini {
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 0.8rem;
+  }
+
+  &.small {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
+  }
+
+  &.large {
+    width: 5rem;
+    height: 5rem;
+    font-size: 1.6rem;
+  }
+
+  svg {
+    stroke-linecap: round;
+    border-radius: 50%;
+  }
+
+  .circle1 {
+    opacity: 0.1;
+  }
+
+  .circle2 {
+    fill: none;
+    stroke-opacity: 0;
+    transform-origin: 50% 50%;
+    transform: rotate(-90deg);
+    stroke-dasharray: 0, 0;
+  }
+}
+
+// colors
+// ---------------------------------------------------
+each(@colorArr, {
+  .@{key} {
+    color: @value;
+
+    svg {
+      color: @value;
+      fill: ~`colorPalette('@{value}', 5)`;
+      stroke: ~`colorPalette('@{value}', 5)`;
+    }
+  }
+});

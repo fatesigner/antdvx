@@ -11,7 +11,7 @@ import { XButton } from './button';
 import { XButtonProps } from './types';
 
 export const XButtonDelete = defineComponent({
-  name: 'x-button-delete',
+  name: 'XButtonDelete',
   props: {
     ...XButtonProps,
     placement: {

@@ -5,26 +5,9 @@ import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 import { StructureTree } from '@fatesigner/utils/structure-tree';
 
 import { ANTDVX_SYMBOLS } from '../symbols';
-import { IAuthService } from '../interfaces/auth.interface';
-import { ISessionService, SessionUser } from '../interfaces/session.interface';
+import { AuthServiceConfig, IAuthService, IMenu, IRouteLocationNormalized, ISessionService, IUser, NamesTypeOfRole, RoleTypeOfUser } from '../types';
 
-/**
- * 授权、认证服务 config
- */
-export interface AuthServiceConfig<TRoles extends readonly string[]> {
-  // 主页地址
-  homePage: string;
-  // 授权界面地址 name
-  authPage: string;
-  // 授权认证模式
-  authMode: 'client' | 'server';
-  // 是否开启重定向模式，登出后将暂存当前地址，登录后重定向至该地址
-  redirectEnable?: boolean;
-  // 超级管理员角色，该角色将会跳过认证
-  superRole: TRoles[number][];
-}
-
-const defaultConfig: AuthServiceConfig<any> = {
+const defaultConfig: AuthServiceConfig = {
   homePage: null,
   redirectEnable: false,
   authPage: null,
@@ -38,49 +21,38 @@ const defaultConfig: AuthServiceConfig<any> = {
  */
 @injectable()
 export class AuthService<
-  TRoles extends readonly string[],
-  TUser extends SessionUser<TRoles> & { permissions: string[] },
-  TRouteMeta extends {
-    // 是否允许匿名访问，当设置为 false 时，需要同时配置 auth 属性
-    allowAnonymous?: boolean;
-    // 允许访问的角色清单
-    auth?: TRoles[number][];
-  }
-> implements IAuthService<TUser, TRoles, TRouteMeta>
+  TUser extends IUser = IUser,
+  TRoute extends IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>> = IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>>,
+  TMenu extends IMenu = IMenu
+> implements IAuthService<TUser, TRoute, TMenu>
 {
-  config: AuthServiceConfig<TRoles>;
+  config: AuthServiceConfig<TUser>;
 
   constructor(
-    @inject(ANTDVX_SYMBOLS.AUTH_SERVICE_CONFIG) config: AuthServiceConfig<TRoles>,
-    @inject(ANTDVX_SYMBOLS.SESSION_SERVICE) private _sessionService: ISessionService<TUser, TRoles>
+    @inject(ANTDVX_SYMBOLS.AUTH_SERVICE_CONFIG) config: AuthServiceConfig<TUser>,
+    @inject(ANTDVX_SYMBOLS.SESSION_SERVICE) private _sessionService: ISessionService<TUser>
   ) {
     this.config = mergeWith({}, defaultConfig, config, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
   }
 
-  // 判断当前用户是否已认证
   isAuthenticated(): boolean {
     return !!(this._sessionService.user?.username && this._sessionService.user?.accessToken);
   }
 
-  /**
-   * 判断指定的路由是否有权限访问
-   * @param to
-   * @param roles 指定角色组，默认为当前用户的角色组
-   */
-  isAuthorized(to: any, roles?: TRoles[number][]) {
+  isAuthorized(to: TRoute, roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
     // 跳过授权界面
     if (!to.name || to.name === this.config.authPage) {
       return true;
     }
 
     // 绕过超级管理员角色
-    if (this.config.superRole && this._sessionService?.user?.roles?.some((role) => this.config.superRole.includes(role))) {
+    if (this.config.superRole && this._sessionService?.user?.roles?.some((role) => this.config.superRole.includes(role.name))) {
       return true;
     }
 
     if (this.config.authMode === 'client') {
       if (!roles) {
-        roles = this._sessionService?.user?.roles ?? [];
+        roles = this._sessionService?.user?.roles?.map((x) => x.name) ?? [];
       }
 
       let routes = [];
@@ -93,7 +65,7 @@ export class AuthService<
 
       return routes.every((route) => {
         // 寻找 route 中定义的 meta 属性
-        const meta: TRouteMeta = route.meta;
+        const meta: TRoute['meta'] = route.meta;
         if (meta && route.name) {
           if (meta.allowAnonymous) {
             // 允许匿名
@@ -111,26 +83,11 @@ export class AuthService<
         }
       });
     } else {
-      return this._sessionService.user.permissions.some((record) => record === to.name);
+      return this._sessionService.user?.role?.menus?.some?.((menu) => menu.name === to.name);
     }
   }
 
-  /**
-   * 对于指定的角色组，判断给定的角色组是否已授权（即两个集合是否交集）
-   * @param roles   roles
-   * @param {Array} authorizedRoles
-   * 没有指定角色组 视为已授权
-   * @return {Object}
-   * permissible：是否有权限访问
-   * unauthorizedRoles：未符合的角色组 若数量和小于指定的角色组 视为 已授权 否则为 未授权
-   */
-  authRoles(
-    roles: TRoles[number][],
-    authorizedRoles: TRoles[number][]
-  ): {
-    permissible: boolean;
-    unauthorizedRoles: TRoles[number][];
-  } {
+  authRoles(roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][], authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
     const authorizedRolesNew = [];
     const length = authorizedRoles && authorizedRoles.length;
     let temp;
@@ -154,13 +111,8 @@ export class AuthService<
     };
   }
 
-  /**
-   * 获取指定角色可访问的路由
-   * @param routes
-   * @param roles 指定的角色列表，默认为当前用户所拥有的的角色
-   */
-  getAuthorizedRoutes(routes: any[], roles?: TRoles[number][]) {
-    roles = roles ?? this._sessionService.user.roles;
+  getAuthorizedRoutes(routes: TRoute[], roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
+    roles = roles ?? this._sessionService?.user?.roles?.map?.((x) => x.name);
 
     const strutree = new StructureTree<any>({
       idKey: 'path',
@@ -175,14 +127,9 @@ export class AuthService<
     return d.filter((x) => x.children.length);
   }
 
-  /**
-   * 获取指定角色可访问的菜单
-   * @param menusFromServer 服务端返回的菜单
-   * @param roles 指定的角色列表，默认为当前用户所拥有的的角色
-   */
-  getAuthorizedMenus(menusFromServer: any[], roles?: TRoles[number][]) {
+  getAuthorizedMenus(menusFromServer: TMenu[], roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
     if (isNullOrUndefined(roles)) {
-      roles = this._sessionService.user.roles;
+      roles = this._sessionService?.user?.roles?.map?.((x) => x.name) ?? [];
     }
 
     // 绕过超级管理员角色

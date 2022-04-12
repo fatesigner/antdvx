@@ -1,0 +1,25 @@
+@import '@/app/themes/default';
+
+.dropdown {
+  @apply tw-flex tw-items-center tw-px-2 tw-gap-2 tw-h-full tw-cursor-pointer;
+
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+}
+
+.username {
+  overflow: hidden;
+  font-size: 12px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

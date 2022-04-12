@@ -24,7 +24,7 @@ const defaultXDrawerProps: Partial<IXDrawerPropsType> = {
 };
 
 const XDrawerLoading = defineComponent({
-  name: 'x-modal-loading',
+  name: 'XDrawerLoading',
   render() {
     return (
       <div class='tw-p-4'>
@@ -35,7 +35,7 @@ const XDrawerLoading = defineComponent({
 });
 
 const XDrawerError = defineComponent({
-  name: 'x-modal-error',
+  name: 'XDrawerError',
   props: {
     error: String,
     reload: Function
@@ -59,7 +59,7 @@ const XDrawerError = defineComponent({
  * Drawer 抽屉层，基于 AntDrawer
  */
 export const XDrawer = defineComponent({
-  name: 'x-drawer',
+  name: 'XDrawer',
   props: {
     options: {
       type: Object as PropType<IXDrawerPropsType>,

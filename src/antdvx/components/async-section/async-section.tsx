@@ -12,7 +12,7 @@ import { IAsAsyncSectionProps } from './types';
  * 用于显示异步加载状态的区域
  */
 export const AsyncSection = defineComponent({
-  name: 'async-section',
+  name: 'AsyncSection',
   inheritAttrs: false,
   props: {
     loading: {

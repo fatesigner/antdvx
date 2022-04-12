@@ -7,7 +7,7 @@ import styles from './code-editor.module.less';
  * Code 编辑器
  */
 export const CodeEditor = defineComponent({
-  name: 'code-editor',
+  name: 'CodeEditor',
   props: {
     value: {
       type: String,

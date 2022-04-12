@@ -7,9 +7,10 @@ import styles from './sticky-section.module.less';
  * 粘性布局, position=sticky
  */
 export const StickySection = defineComponent({
-  name: 'sticky-section',
+  name: 'StickySection',
   inheritAttrs: false,
   props: {
+    title: String,
     className: {
       type: Array as PropType<string[]>
     },
@@ -64,7 +65,7 @@ export const StickySection = defineComponent({
             sticky.value = false;
             targetRef.value.classList.remove(...props.className);
           }
-          //e.target.classList.toggle(props.stickyClassName, e.intersectionRatio < 1);
+          // e.target.classList.toggle(props.stickyClassName, e.intersectionRatio < 1);
         },
         { threshold: [0, 1] }
       );
@@ -86,9 +87,9 @@ export const StickySection = defineComponent({
       <div
         class={[ctx.shadowTop ? styles['sticky-shadow-top'] : undefined, ctx.shadowBottom ? styles['sticky-shadow-bottom'] : undefined]}
         ref='targetRef'
+        title={ctx.title}
         {...ctx.$attrs}
-        onClick={ctx.goto}
-      >
+        onClick={ctx.goto}>
         {ctx.$slots.default?.({ sticky: ctx.sticky })}
       </div>
     ];

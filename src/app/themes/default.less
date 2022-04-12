@@ -3,11 +3,11 @@
 
 // -------- Colors -----------
 // 主色
-@primary-color: #8262ff;
+@primary-color: #004a96;
 // 辅色
 @secondary-color: #f67828;
 // 配色
-@tertiary-color: #67c23a;
+@tertiary-color: #75b48a;
 // 成功
 @success-color: #52c41a;
 // 警告
@@ -20,11 +20,12 @@
 @yellow-color: #ffd600;
 @green-color: #67c23a;
 @cyan-color: #00acc1;
-@blue-color: #1890ff;
+@blue-color: #5c81d6;
 @purple-color: #6559cc;
 
 // 覆盖 Antdvx 主题
 // --
+@text-color: #222;
 @font-size-base: 12px;
 @line-height-base: 1.66667;
 @height-base: 28px;
@@ -38,6 +39,11 @@
 @padding-sm: 8px; // Form controls and items
 @padding-xs: 6px; // small items
 @padding-xss: 4px; // more small
+
+// Animation
+@animation-duration-slow: 0.1s; // Modal
+@animation-duration-base: 0.2s;
+@animation-duration-fast: 0.1s; // Tooltip
 
 // Card
 // --
@@ -81,19 +87,19 @@
 @menu-inline-toplevel-item-height: @height-lg;
 @menu-item-height: @height-lg;
 @menu-item-boundary-margin: 0;
-@menu-item-active-bg: @primary-2;
+@menu-item-active-bg: @primary-1;
 @menu-item-active-border-width: 0;
 
 // Form
 // --
-@form-item-margin-bottom: 16px;
+@form-item-margin-bottom: 0;
 
 // Table
 // --
-@table-padding-vertical: 12px;
-@table-padding-horizontal: 22px;
-@table-selected-row-bg: #eee;
-@table-selected-row-hover-bg: #fafafa;
+@table-padding-vertical: 8px;
+@table-padding-horizontal: 12px;
+@table-row-hover-bg: #eee;
+@table-selected-row-bg: @primary-1;
 
 // Tabs
 // --

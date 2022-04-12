@@ -33,6 +33,7 @@ interface Navigator {
   notification: any;
   webkitGetUserMedia: any;
   mozGetUserMedia: any;
+  msSaveBlob: any;
 }
 
 declare let require: any;

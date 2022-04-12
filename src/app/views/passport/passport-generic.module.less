@@ -1,0 +1,27 @@
+.container {
+  min-width: 260px;
+}
+
+@screen _sm {
+  .bg {
+    background-color: #fff;
+  }
+}
+
+@screen sm {
+  .bg {
+    background-color: #f2f3f5;
+    background-image: url(../../../assets/img/bg.svg);
+    background-repeat: no-repeat, no-repeat;
+    background-position: center center, center center;
+    background-size: cover, cover;
+  }
+
+  .container {
+    width: 360px;
+    padding: 26px 46px 46px;
+    background-color: #fff;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 0 10px;
+  }
+}

@@ -4,6 +4,7 @@ import { PropType } from 'vue';
  * Widget props
  */
 export const WidgetProps = {
+  name: String,
   visible: {
     type: Boolean,
     default: true

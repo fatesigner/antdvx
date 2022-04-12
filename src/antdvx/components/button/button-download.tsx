@@ -8,7 +8,7 @@ import { XButton } from './button';
 import { XButtonProps } from './types';
 
 export const XButtonDownload = defineComponent({
-  name: 'x-button-download',
+  name: 'XButtonDownload',
   props: {
     ...XButtonProps,
     onlyIcon: {

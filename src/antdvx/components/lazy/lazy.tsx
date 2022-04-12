@@ -16,7 +16,7 @@ interface ILazyComponentOptions {
 
 const Error = function (options?: ILazyComponentOptions) {
   return defineComponent({
-    name: 'lazy-component-error',
+    name: 'LazyComponentError',
     props: {
       error: Object as PropType<Error>,
       reload: Function
@@ -41,7 +41,7 @@ const Error = function (options?: ILazyComponentOptions) {
 
 const Loading = function (options?: ILazyComponentOptions) {
   return defineComponent({
-    name: 'lazy-component-loading',
+    name: 'LazyComponentLoading',
     render() {
       return (
         <div style={{ width: options?.width, height: options?.height }}>

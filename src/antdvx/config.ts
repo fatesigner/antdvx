@@ -2,17 +2,16 @@
  * Antdv config
  */
 
-import { IStorageService } from './interfaces';
-import { IHttpAdapter } from './types/data-source';
+import { IDataSourceRequestOptions, IHttpAdapter, IStorageService } from './types';
 
-export let AntdHttpAdapter: IHttpAdapter = null;
-export let AntdStorageService: IStorageService = null;
+export let AntdHttpAdapter: IHttpAdapter<any>;
+export let AntdStorageService: IStorageService;
 
 /**
  * 配置 http request 适配器
  * @param adapter
  */
-export function setRequestAdapter(adapter: IHttpAdapter) {
+export function setRequestAdapter<TOptions extends IDataSourceRequestOptions = IDataSourceRequestOptions>(adapter: IHttpAdapter<TOptions>) {
   AntdHttpAdapter = adapter;
 }
 

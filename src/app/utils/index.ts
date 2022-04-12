@@ -2,10 +2,9 @@
  * utils
  */
 
-import { StructureTree } from '@fatesigner/utils/structure-tree';
+import { IMenu } from '@/antdvx/types';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
-import { IMenu } from '@/app/types/menu';
 import { IRouteConfig } from '@/app/types/route';
 
 /**
@@ -52,29 +51,24 @@ export function getOdataQuery(options: { pageNo?: number; pageSize?: number; fil
  * @param routes
  * @param filter
  */
-export function getMenusFromRoutes(routes: IRouteConfig[], filter?: (router: any) => boolean) {
-  const strutreeRouters: StructureTree<IRouteConfig> = new StructureTree<IRouteConfig>();
+export async function getMenusFromRoutes(routes: IRouteConfig[], filter?: (router: any) => boolean) {
+  // const strutreeRouters: StructureTree<IRouteConfig> = new StructureTree<IRouteConfig>();
   // 解析路由表
-  return strutreeRouters.reduce(
-    routes,
-    (prev, cur, index, parentNodes) => {
-      if (cur.name) {
-        const menu: IMenu = {
-          id: cur.name.toString(),
-          name: cur.name.toString(),
-          label: cur?.meta?.label,
-          url: parentNodes.map((x: any) => x.path).join('/') + cur.path,
-          level: parentNodes.length
-        };
-        if (!filter || filter(cur)) {
-          prev.push(menu);
-        }
+  return routes.reduce((prev, cur, index, parentNodes) => {
+    if (cur.name && (!cur?.children || !cur.children?.length)) {
+      const menu: IMenu = {
+        id: index + cur.name,
+        name: cur.name,
+        label: cur?.meta?.label,
+        url: cur.path
+      };
+      if (!filter || filter(cur)) {
+        prev.push(menu);
       }
+    }
 
-      return prev;
-    },
-    []
-  );
+    return prev;
+  }, []);
 }
 
 // 将冗余数据转换为多维结构数据
@@ -409,6 +403,7 @@ export function filterTreeData<T>(nodes: T[], callback: (node: T, index: number,
  * 将 base64 编码转换为 file 对象
  * @param dataurl
  * @param filename
+ * @param options
  */
 export function dataURLtoFile(dataurl: string, filename: string, options): File {
   // 获取到 base64 编码
@@ -421,4 +416,23 @@ export function dataURLtoFile(dataurl: string, filename: string, options): File 
     u8arr[n] = bstr.charCodeAt(n);
   }
   return new File([u8arr], filename, options);
+}
+
+/**
+ * 调用打印
+ * @param htmlStr 待打印的模板字符串
+ * @constructor
+ */
+export function print(htmlStr: string): Promise<void> {
+  return new Promise((resolve) => {
+    const $iframe = document.createElement('iframe');
+    $iframe.style.display = 'none';
+    document.body.appendChild($iframe);
+    $iframe.contentDocument.write(htmlStr);
+    $iframe.contentDocument.close();
+    $iframe.contentWindow.print();
+    window.setTimeout(() => {
+      resolve();
+    }, 500);
+  });
 }

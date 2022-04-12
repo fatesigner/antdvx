@@ -8,7 +8,7 @@ import { IconArrowUpLine } from '../iconfont';
 import { Widget, WidgetProps } from '../widget';
 
 export const XBackTop = defineComponent({
-  name: 'x-back-top',
+  name: 'XBackTop',
   props: {
     ...WidgetProps,
     target: {
@@ -104,8 +104,7 @@ export const XBackTop = defineComponent({
               scrollTo(ctx.target_, undefined, 0, ctx.duration ?? 0);
             }
           }
-        }}
-      >
+        }}>
         {ctx.$slots?.default ? (
           ctx.$slots.default()
         ) : (

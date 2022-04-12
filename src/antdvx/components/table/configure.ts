@@ -3,7 +3,8 @@ import { isArray, mergeWith } from 'lodash-es';
 
 import { IXTablePropsType, IXTableRefType } from './types';
 
-export const defaultXTableProps: IXTablePropsType<any, any> = {
+export const defaultXTableProps: IXTablePropsType<any, any, any> = {
+  autoload: true,
   loading: false,
   // scroll: { x: true },
   dataSource: {
@@ -37,17 +38,18 @@ export const defaultXTableProps: IXTablePropsType<any, any> = {
 export function configureXTable<
   TModel extends Record<string, any>,
   TParams extends Record<string, any>,
-  TMethods extends Record<string, (...args: any[]) => any>
+  TMethods extends Record<string, (...args: any[]) => any>,
+  TMeta extends Record<string, any>
 >(
-  props: IXTablePropsType<TModel, TParams> & {
+  props: IXTablePropsType<TModel, TParams, TMeta> & {
     /**
      * 往标题栏（前部）添加指定节点，用于所有表格实例
      */
-    titlePrefix?: (tbRef: IXTableRefType<TModel, TParams, TMethods>) => VNode | VNode[];
+    titlePrefix?: (tbRef: IXTableRefType<TModel, TParams, TMethods, TMeta>) => VNode | VNode[];
     /**
      * 往标题栏（尾部）添加指定节点，用于所有表格实例
      */
-    titleSuffix?: (tbRef: IXTableRefType<TModel, TParams, TMethods>) => VNode | VNode[];
+    titleSuffix?: (tbRef: IXTableRefType<TModel, TParams, TMethods, TMeta>) => VNode | VNode[];
   }
 ) {
   mergeWith(defaultXTableProps, props, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));

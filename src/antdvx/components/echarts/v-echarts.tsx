@@ -97,7 +97,7 @@ export function configureVEcharts(options: typeof defaultConfig) {
  * Vue Echarts 组件
  */
 export const VEcharts = defineComponent({
-  name: 'v-echarts',
+  name: 'VEcharts',
   props: {
     title: {
       type: [Object, String]

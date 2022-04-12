@@ -1,8 +1,14 @@
+/**
+ * store
+ */
+
 import { merge } from 'lodash-es';
-import { IXDrawerRefType, createStore } from '@/antdvx';
+import { createStore } from '@/antdvx/helpers';
+import { IXDrawerRefType, IXModalRefType } from '@/antdvx';
 
 import { LanguageType, i18n } from '@/app/i18n';
 import { localStorageService } from '@/app/core/services';
+import { ProgressBarStore } from '@/app/shared/progress-bar';
 
 const storageKey = 'APP_STORE';
 
@@ -15,7 +21,7 @@ const state: {
 } = merge(
   {
     lang: i18n._.global.locale as any,
-    theme: 'light',
+    theme: 'light' as 'light' | 'dark',
     collapsed: false
   },
   localStorageService.get(storageKey)
@@ -25,10 +31,24 @@ export const AppStore = createStore(state, function (state) {
   // 定义全局弹出层引用集合
   const popupRefs: {
     /**
-     * 个性化弹出层
+     * 个性化
      */
     individuation?: IXDrawerRefType<any, any>;
+    /**
+     * 修改密码
+     */
+    updatePassword?: IXModalRefType<
+      {
+        readonly: boolean;
+        username: string;
+      },
+      any
+    >;
   } = {};
+
+  let scrollRef: {
+    scrollTo: (left: number, top: number, duration?: number) => Promise<void>;
+  };
 
   /**
    * 获取弹出层引用
@@ -42,6 +62,16 @@ export const AppStore = createStore(state, function (state) {
    */
   const setPopupRefs = (refs: typeof popupRefs) => {
     Object.assign(popupRefs, refs);
+  };
+
+  // 显示进度条
+  const presentProgressBar = () => {
+    ProgressBarStore.present();
+  };
+
+  // 关闭进度条
+  const dismissProgressBar = () => {
+    ProgressBarStore.dismiss();
   };
 
   /**
@@ -63,9 +93,28 @@ export const AppStore = createStore(state, function (state) {
     localStorageService.set(storageKey, state);
   };
 
+  /**
+   * 切换 sidebar 展开/收起
+   * @param collapsed
+   */
   const setCollapsed = (collapsed: boolean) => {
     state.collapsed = collapsed;
     localStorageService.set(storageKey, state);
+  };
+
+  /**
+   * 获取 滚动区域视图 的引用
+   */
+  const getScrollViewRef = () => {
+    return scrollRef;
+  };
+
+  /**
+   * 设置 滚动区域视图 的引用
+   * @param ref
+   */
+  const setScrollViewRef = (ref: any) => {
+    scrollRef = ref;
   };
 
   // 若已缓存的语言与 i18n 初始语言不同
@@ -79,6 +128,10 @@ export const AppStore = createStore(state, function (state) {
   });
 
   return {
+    getScrollViewRef,
+    setScrollViewRef,
+    presentProgressBar,
+    dismissProgressBar,
     setLang,
     setTheme,
     setCollapsed,

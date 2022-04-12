@@ -22,7 +22,7 @@
               </template>
               <template v-else-if="item.type === 'radio'">
                 <ARadioGroup name="radioGroup" :value="field.value" @change="handleChange">
-                  <ARadio :disabled="item.disabled" :value="item.value" v-for="item in item.options.list">{{ item.label }}</ARadio>
+                  <ARadio :disabled="item.disabled" :key="item.value" :value="item.value" v-for="item in item.options.list">{{ item.label }}</ARadio>
                 </ARadioGroup>
               </template>
             </AFormItem>
@@ -49,7 +49,6 @@ export default defineComponent({
     Iconfont,
     XButton,
     ScrollView,
-    // Antd
     [Spin.name]: Spin,
     [Form.name]: Form,
     [Form.Item.name]: Form.Item,
@@ -90,7 +89,7 @@ export default defineComponent({
               schema: {}
             };
             val.widgets.forEach((item) => {
-              let name = item.name ?? item.key;
+              const name = item.name ?? item.key;
               _form.state[name] = item.defaultValue ?? null;
               if (item.rules?.props.required) {
                 _form.schema[name] = 'required';

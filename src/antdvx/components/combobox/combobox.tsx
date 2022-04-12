@@ -1,11 +1,9 @@
-/**
- * x-combobox
- */
-
 import { debounce } from '@fatesigner/utils';
-import { AutoComplete, Select, SelectOption, Spin } from 'ant-design-vue';
+import { AutoComplete, Empty, Select, SelectOption, Spin } from 'ant-design-vue';
+import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
 import { PropType, computed, defineComponent, nextTick, onMounted, reactive, ref, watch } from 'vue';
-import { isArray, isFunction, isNullOrUndefined, isObject, isString } from '@fatesigner/utils/type-check';
+
+import { ANTDVX_SIZES } from '../../constants';
 
 /**
  * 过滤列表项
@@ -21,9 +19,24 @@ type DataFieldMap<TModel extends Record<string, any>> = (option: TModel) => stri
 
 export interface IXComboboxProps<TModel extends Record<string, any>> {
   /**
+   * 控件尺寸
+   */
+  size?: typeof ANTDVX_SIZES[number];
+
+  /**
    * 指定是否在初始化时绑定数据源，默认为 false
    */
   autoBind?: boolean;
+
+  /**
+   * 禁用
+   */
+  disabled?: boolean;
+
+  /**
+   * 在每次打开后重新加载数据
+   */
+  reloadOnOpen?: boolean;
 
   /**
    * 是否可搜索
@@ -33,7 +46,7 @@ export interface IXComboboxProps<TModel extends Record<string, any>> {
   /**
    * 是否将选项 item 的值包装到 value 中，会把 Select 的 value 类型从 string 变为 { key: string, label: vNodes, ... } 形式
    */
-  labelInValue?: boolean;
+  // labelInValue?: boolean;
 
   /**
    * 是否可清除
@@ -44,6 +57,10 @@ export interface IXComboboxProps<TModel extends Record<string, any>> {
    * 是否可手动输入值，在没有匹配的列表项时，可选择当前输入的内容
    */
   importable?: boolean;
+
+  dropdownMatchSelectWidth?: boolean;
+
+  dropdownStyle?: any;
 
   /**
    * 指定是否服务端过滤，如果为 true，数据源将把筛选实现留给远程服务。默认情况下，数据源将执行客户端过滤。
@@ -64,6 +81,16 @@ export interface IXComboboxProps<TModel extends Record<string, any>> {
    * 提供列表项文本内容的数据项字段，将根据此字段过滤数据源，默认为 text
    */
   dataTextField?: string | DataFieldMap<TModel>;
+
+  /**
+   * 提供回填到选择框的列表项中数据项字段，默认为 children（combobox 模式下为 value） 即 Option 的子元素。比如在子元素需要高亮效果时，此值可以设为 value
+   */
+  dataLabelField?: string | DataFieldMap<TModel>;
+
+  /**
+   * 提供列表项文本内容的数据项字段，将根据此字段过滤数据源，默认为 text
+   */
+  dataFilterField?: string | DataFieldMap<TModel>;
 
   /**
    * 选中的值
@@ -135,9 +162,21 @@ export function getDefaultComboboxProps<TModel extends Record<string, any>>(): I
  * 自定义组合框控件
  */
 export const XCombobox = defineComponent({
-  name: 'x-combobox',
+  name: 'XCombobox',
   props: {
+    size: {
+      type: String as PropType<typeof ANTDVX_SIZES[number]>,
+      default: 'default'
+    },
     autoBind: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    reloadOnOpen: {
       type: Boolean,
       default: false
     },
@@ -145,10 +184,6 @@ export const XCombobox = defineComponent({
       type: String
     },
     searchable: {
-      type: Boolean,
-      default: false
-    },
-    labelInValue: {
       type: Boolean,
       default: false
     },
@@ -164,6 +199,11 @@ export const XCombobox = defineComponent({
       type: Boolean,
       default: false
     },
+    dropdownMatchSelectWidth: {
+      type: Boolean,
+      default: true
+    },
+    dropdownStyle: Object,
     dataKeyField: {
       type: [String, Function] as PropType<string | DataFieldMap<any>>
     },
@@ -173,15 +213,18 @@ export const XCombobox = defineComponent({
     dataTextField: {
       type: [String, Function] as PropType<string | DataFieldMap<any>>
     },
+    dataLabelField: {
+      type: [String, Function] as PropType<string | DataFieldMap<any>>
+    },
+    dataFilterField: {
+      type: String
+    },
     multiple: {
       type: Boolean,
       default: false
     },
     value: {
       type: [String, Number, Object, Array]
-    },
-    optionLabelProp: {
-      type: String
     },
     delay: {
       type: Number,
@@ -223,6 +266,13 @@ export const XCombobox = defineComponent({
       return dataValueMap.value;
     });
 
+    const dataLabelMap = computed<DataFieldMap<any>>(() => {
+      if (props.dataLabelField) {
+        return getDataFieldMap(props.dataLabelField);
+      }
+      return dataTextMap.value;
+    });
+
     const value_ = ref();
 
     const valueBind = ref();
@@ -244,7 +294,12 @@ export const XCombobox = defineComponent({
         if (props.filter) {
           displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => props.filter(searchInput, x)));
         } else {
-          displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x[props.dataTextField]?.indexOf(searchInput) > -1));
+          const _searchInput = searchInput.toLowerCase();
+          if (isNullOrUndefined(props.dataFilterField)) {
+            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x[props.dataTextField].toLowerCase().indexOf(_searchInput) > -1));
+          } else {
+            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x[props.dataFilterField].toLowerCase().indexOf(_searchInput) > -1));
+          }
         }
       } else {
         displayOptions.splice(0, displayOptions.length, ...props.options);
@@ -254,22 +309,22 @@ export const XCombobox = defineComponent({
     // 加载数据
     const loadData = async () => {
       if (isFunction(props.optionsLoader)) {
-        return props.optionsLoader(searchInput).then((res) => {
-          props.options.splice(0, props.options.length, ...res);
-          // 执行一次客户端过滤
-          if (!props.serverFilter) {
-            filterData();
-          }
-        });
+        loading.value = true;
+        return props
+          .optionsLoader(searchInput)
+          .then((res) => {
+            props.options.splice(0, props.options.length, ...res);
+            // 执行一次客户端过滤
+            if (!props.serverFilter) {
+              filterData();
+            }
+          })
+          .finally(() => {
+            loading.value = false;
+          });
       } else {
         filterData();
       }
-    };
-
-    const onChange = (e) => {
-      nextTick(() => {
-        emit('change', e);
-      });
     };
 
     // 搜索框输入
@@ -298,7 +353,7 @@ export const XCombobox = defineComponent({
       if (visible) {
         // 当数据为空时，每次展开后刷新数据
         if (isFunction(props.optionsLoader)) {
-          if ((!displayOptions.length || displayOptions.length !== props.options.length) && !loading.value) {
+          if ((props.reloadOnOpen || ((!displayOptions.length || displayOptions.length !== props.options.length) && !loading.value)) && !loading.value) {
             await loadData();
             await filterData();
           }
@@ -308,14 +363,29 @@ export const XCombobox = defineComponent({
             await filterData();
           }
         }
+      } else {
+        if (isFunction(props.optionsLoader) && props.reloadOnOpen) {
+          displayOptions.splice(0, displayOptions.length);
+        }
       }
     };
 
+    const onChange = (e) => {
+      nextTick(() => {
+        emit('change', e);
+      });
+    };
+
     const onSelect = (value, option) => {
-      emit('select', {
-        value,
-        option,
-        options: props.options
+      nextTick(() => {
+        emit('select', {
+          value,
+          option,
+          options: props.options
+        });
+        if (props.searchable && !props.importable) {
+          searchInput = '';
+        }
       });
     };
 
@@ -329,22 +399,10 @@ export const XCombobox = defineComponent({
             if (props.importable) {
               value_.value = valueBind.value = val;
             } else {
-              if (props.labelInValue) {
-                if (isNullOrUndefined(props.dataValueField)) {
-                  throw new Error('If use labelInValue, please set the dataValueField property');
-                } else {
-                  if (isArray(val)) {
-                    valueBind.value = val.map((x) => x[props.dataValueField]);
-                  } else {
-                    valueBind.value = val[props.dataValueField];
-                  }
-                }
+              if (isArray(val)) {
+                valueBind.value = val.map((x) => x);
               } else {
-                if (isObject(val)) {
-                  console.error("Warning: 'value' should in shape of '{ value: string | number, label?: any }' when you set 'labelInValue' to 'true'");
-                } else {
-                  value_.value = valueBind.value = val;
-                }
+                value_.value = valueBind.value = val;
               }
             }
           }
@@ -365,48 +423,19 @@ export const XCombobox = defineComponent({
       }
     );
 
-    watch(
+    /* watch(
       () => props.optionsLoader,
       () => {
         loadData();
       }
-    );
+    ); */
 
     watch(value_, (val) => {
       emit('update:value', val);
     });
 
     watch(valueBind, (val: string | any[]) => {
-      if (props.importable || !props.labelInValue) {
-        value_.value = val;
-      } else {
-        if (props.labelInValue) {
-          if (isNullOrUndefined(props.dataValueField)) {
-            throw new Error('If use labelInValue, please set the dataValueField property');
-          } else {
-            if (isArray(val)) {
-              value_.value = (val as any[])
-                .map((x) => {
-                  const cur = displayOptions.find((y) => y[props.dataValueField] === x);
-                  if (cur) {
-                    return cur;
-                  } else {
-                    return undefined;
-                  }
-                })
-                .filter((x) => !!x);
-            } else {
-              const cur = displayOptions.find((x) => x[props.dataValueField] === val);
-              if (cur) {
-                value_.value = cur;
-              } else {
-                value_.value = undefined;
-              }
-            }
-          }
-        } else {
-        }
-      }
+      value_.value = val;
     });
 
     onMounted(() => {
@@ -428,6 +457,7 @@ export const XCombobox = defineComponent({
       dataKeyMap,
       dataValueMap,
       dataTextMap,
+      dataLabelMap,
       onSearch,
       onSelect,
       onChange,
@@ -441,8 +471,9 @@ export const XCombobox = defineComponent({
         ctx.displayOptions.forEach((option) => {
           const key = ctx.dataKeyMap(option);
           const value = ctx.dataValueMap(option);
+          const label = ctx.dataLabelMap(option);
           renderOptions.push(
-            <SelectOption key={key} value={value}>
+            <SelectOption key={key} value={value} title={label}>
               {ctx.$slots.option(option)}
             </SelectOption>
           );
@@ -452,8 +483,9 @@ export const XCombobox = defineComponent({
           const key = ctx.dataKeyMap(option);
           const value = ctx.dataValueMap(option);
           const text = ctx.dataTextMap(option);
+          const label = ctx.dataLabelMap(option);
           renderOptions.push(
-            <SelectOption key={key} value={value}>
+            <SelectOption key={key} value={value} title={label}>
               {text}
             </SelectOption>
           );
@@ -462,11 +494,15 @@ export const XCombobox = defineComponent({
     }
     return ctx.importable ? (
       <AutoComplete
+        size={ctx.size}
         backfill={true}
+        disabled={ctx.disabled}
         allowClear={ctx.$slots?.default ? undefined : ctx.clearable}
         placeholder={ctx.$slots?.default ? undefined : ctx.placeholder}
+        dropdownStyle={ctx.dropdownStyle}
+        dropdownMatchSelectWidth={ctx.dropdownMatchSelectWidth}
+        optionLabelProp='title'
         v-model={[ctx.valueBind, 'value']}
-        optionLabelProp={ctx.optionLabelProp}
         onChange={ctx.onChange}
         onSearch={ctx.searchable ? ctx.onSearch : undefined}
         onSelect={ctx.onSelect}
@@ -474,35 +510,45 @@ export const XCombobox = defineComponent({
           options() {
             return ctx.$slots?.options?.({ options: ctx.displayOptions }) ?? renderOptions;
           }
-        }}
-      >
+        }}>
         {ctx.$slots?.default?.()}
       </AutoComplete>
     ) : (
       <Select
-        showSearch={ctx.searchable}
+        size={ctx.size}
         mode={ctx.mode}
+        labelInValue={false}
         allowClear={ctx.clearable}
+        optionLabelProp='title'
+        optionFilterProp={ctx.dataFilterField}
         placeholder={ctx.placeholder}
         filterOption={false}
-        optionLabelProp={ctx.optionLabelProp}
+        showArrow={true}
+        disabled={ctx.disabled}
+        showSearch={ctx.searchable}
+        dropdownStyle={ctx.dropdownStyle}
+        dropdownMatchSelectWidth={ctx.dropdownMatchSelectWidth}
         v-model={[ctx.valueBind, 'value']}
         onChange={ctx.onChange}
         onSearch={ctx.searchable ? ctx.onSearch : undefined}
         onSelect={ctx.onSelect}
         onDropdownVisibleChange={ctx.onDropdownVisibleChange}
         v-slots={{
+          suffixIcon: ctx.$slots?.suffixIcon
+            ? () => {
+                return ctx.$slots?.suffixIcon?.();
+              }
+            : undefined,
           notFoundContent: () =>
             ctx.loading ? (
               <div class='tw-p-2 tw-text-center'>
                 <Spin size='small' />
               </div>
-            ) : (
-              ''
-            )
-        }}
-      >
-        {ctx.$slots?.options?.({ options: ctx.displayOptions }) ?? renderOptions}
+            ) : !ctx.displayOptions.length ? (
+              <Empty class='ant-empty-small' image={Empty.PRESENTED_IMAGE_SIMPLE} />
+            ) : undefined
+        }}>
+        {ctx.loading ? undefined : ctx.$slots?.options?.({ options: ctx.displayOptions }) ?? renderOptions}
       </Select>
     );
   }

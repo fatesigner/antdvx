@@ -8,7 +8,7 @@ import styles from './transition-collapse.module.less';
  * 折叠/展开过渡，避免具有百分比高度的元素
  */
 export const TransitionCollapse = defineComponent({
-  name: 'transition-collapse',
+  name: 'TransitionCollapse',
   props: {
     appear: {
       type: Boolean,

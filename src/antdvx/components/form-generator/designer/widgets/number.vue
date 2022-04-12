@@ -21,7 +21,6 @@ import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
   components: {
-    // Antd
     [InputNumber.name]: InputNumber
   },
   props: {

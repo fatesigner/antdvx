@@ -1,9 +1,10 @@
 import 'reflect-metadata';
-import { inject, injectable, optional } from 'inversify';
 import { getGUID } from '@fatesigner/utils/random';
+import { UnknownKey } from '@fatesigner/utils/types';
+import { inject, injectable, optional } from 'inversify';
 
 import { ANTDVX_SYMBOLS } from '../symbols';
-import { IStorageService } from '../interfaces/storage.interface';
+import { IStorageService } from '../types';
 
 /**
  * Storage service
@@ -17,23 +18,25 @@ export class StorageService implements IStorageService {
     this.identification = identification ?? getGUID(7);
   }
 
-  set(key, data) {
-    return window.localStorage.setItem(this.identification + '_' + key, JSON.stringify(data));
+  set<T>(key: UnknownKey, data: T) {
+    window.localStorage.setItem(this.identification + '_' + key?.toString(), JSON.stringify(data));
+    return window.localStorage;
   }
 
-  get(key) {
-    const str = window.localStorage.getItem(this.identification + '_' + key);
+  get<T>(key: UnknownKey): T {
+    const str = window.localStorage.getItem(this.identification + '_' + key?.toString());
     if (str) {
       try {
-        return JSON.parse(window.localStorage.getItem(this.identification + '_' + key));
+        return JSON.parse(window.localStorage.getItem(this.identification + '_' + key?.toString())) as T;
       } catch (e) {
-        return null;
+        return undefined;
       }
     }
-    return null;
+    return undefined;
   }
 
-  remove(key) {
-    window.localStorage.removeItem(this.identification + '_' + key);
+  remove(key: UnknownKey) {
+    window.localStorage.removeItem(this.identification + '_' + key?.toString());
+    return window.localStorage;
   }
 }

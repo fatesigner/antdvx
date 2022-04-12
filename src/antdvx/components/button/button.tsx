@@ -4,7 +4,7 @@ import { Button, notification } from 'ant-design-vue';
 import { XButtonProps } from './types';
 
 export const XButton = defineComponent({
-  name: 'x-button',
+  name: 'XButton',
   props: XButtonProps,
   emits: ['click'],
   setup(props: any, { emit }) {
@@ -70,8 +70,7 @@ export const XButton = defineComponent({
           'ant-btn-mini': ctx.size === 'mini',
           'ant-loading': !ctx.spin && ctx.loading_
         }}
-        {...props}
-      >
+        {...props}>
         {ctx.$slots.default?.({ loading: ctx.loading_ })}
       </Button>
     );

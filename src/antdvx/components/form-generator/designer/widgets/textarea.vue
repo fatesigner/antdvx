@@ -20,7 +20,6 @@ import { PropType, defineComponent } from 'vue';
 
 export default defineComponent({
   components: {
-    // Antd
     [Textarea.name]: Textarea
   },
   props: {

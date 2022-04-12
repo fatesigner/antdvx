@@ -59,20 +59,19 @@
 
 <script lang="ts">
 import { groupBy } from '@fatesigner/utils';
-import { Collapse, Form, Input, InputNumber, RadioGroup, Textarea } from 'ant-design-vue';
 import { PropType, computed, defineComponent, ref, toRaw, watch } from 'vue';
+import { Collapse, Form, Input, InputNumber, RadioGroup, Textarea } from 'ant-design-vue';
 
 import { XTabs } from '../../tabs';
 import { ScrollView } from '../../scroll-view';
 
-import { IFormDesignerBinds, IFormDesignerWidget, attributeClassifyDesc } from '../config';
 import { LABEL_ALIGN_OPTIONS, LAYOUT_OPTIONS, WIDGET_SIZE_OPTIONS } from '../constants';
+import { IFormDesignerBinds, IFormDesignerWidget, attributeClassifyDesc } from '../config';
 
 export default defineComponent({
   components: {
     XTabs,
     ScrollView,
-    // Antd
     [Collapse.name]: Collapse,
     [Collapse.Panel.name]: Collapse.Panel,
     [Input.name]: Input,

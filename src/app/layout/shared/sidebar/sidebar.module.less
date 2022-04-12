@@ -1,0 +1,85 @@
+@import '@/app/themes/default';
+
+.header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 8px 24px 8px 24px;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &.fixed {
+    border-bottom: 1px solid #ddd;
+  }
+}
+
+.logo {
+  display: block;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 200ms;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background-color: rgba(197, 220, 250, 0.3);
+  }
+}
+
+.title {
+  margin: 0 0 0 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: default;
+  transition: opacity 300ms ease-in;
+}
+
+.border {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  z-index: 1;
+  width: 3px;
+  cursor: ew-resize;
+}
+
+.septal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -3px;
+  width: 3px;
+  pointer-events: none;
+  content: '';
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.2) 0, rgba(0, 0, 0, 0.2) 1px, rgba(0, 0, 0, 0.1) 0, transparent);
+  opacity: 0.5;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  transition-duration: 0.22s;
+  transition-property: left, opacity, width;
+}
+
+.wrap {
+  position: relative;
+  height: 100%;
+
+  &.notransition {
+    flex: none !important;
+    min-width: initial !important;
+    max-width: initial !important;
+    transition-property: none;
+  }
+
+  &.collapsed {
+    .title {
+      opacity: 0;
+    }
+
+    .border {
+      width: 0;
+    }
+  }
+}

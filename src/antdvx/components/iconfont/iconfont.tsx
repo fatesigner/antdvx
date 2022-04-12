@@ -5,7 +5,7 @@ import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, ANTDVX_ICON_NAMES } from './config';
 
 export const Iconfont = defineComponent({
-  name: 'iconfont',
+  name: 'Iconfont',
   props: IconfontProps,
   setup(props) {
     let comp: Component;

@@ -1,15 +1,19 @@
 import { Empty } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
 import { bindPromiseQueue } from '@fatesigner/utils';
-import { isFunction } from '@fatesigner/utils/type-check';
-import { SpinnerLoading, TransitionZoom } from '@/antdvx';
+import { isFunction, isString } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
+import { IconArrowLeftLine, ScrollView, SpinnerLoading, TransitionZoom } from '@/antdvx';
 
-import { AppFooter } from '@/app/shared/footer';
+import { AppFooter } from '@/app/layout/shared/footer';
 
-import './page-wrapper.less';
+import $styles from './page-wrapper.module.less';
 
+/**
+ * 视图容器
+ */
 export const PageWrapper = defineComponent({
-  name: 'page-wrapper',
+  name: 'PageWrapper',
   props: {
     title: {
       type: String
@@ -18,8 +22,15 @@ export const PageWrapper = defineComponent({
       type: Boolean,
       default: false
     },
-    overflowHidden: {
+    bgGray: {
       type: Boolean,
+      default: false
+    },
+    overflow: {
+      type: String as PropType<'scroll' | 'hidden'>
+    },
+    returnable: {
+      type: [Boolean, String],
       default: false
     },
     loading: {
@@ -35,6 +46,8 @@ export const PageWrapper = defineComponent({
     }
   },
   setup(props, { emit }) {
+    const router = useRouter();
+
     const data = ref();
     const error = ref();
     const initialized = ref(false);
@@ -71,6 +84,15 @@ export const PageWrapper = defineComponent({
         });
     }, true);
 
+    // 回到上一页
+    const returnToPrevious = () => {
+      if (isString(props.returnable)) {
+        router.push({ path: props.returnable as string });
+      } else if (props.returnable) {
+        router.back();
+      }
+    };
+
     const reload = async () => {
       loading_.value = true;
       await load();
@@ -85,7 +107,7 @@ export const PageWrapper = defineComponent({
       }
     });
 
-    return { loading_, initialized, reload };
+    return { loading_, initialized, returnToPrevious, reload };
   },
   render(ctx) {
     const container = [
@@ -102,13 +124,13 @@ export const PageWrapper = defineComponent({
         {!ctx.loading_ && ctx.empty ? (
           <Empty
             class='page-wrapper-empty'
+            image={require('@/assets/img/nodata.png')}
             image-style={{ height: '120px' }}
             v-slots={{
               description() {
                 return <span class='tw-text-sm tw-text-gray-500'>暂无数据</span>;
               }
-            }}
-          >
+            }}>
             {ctx.$slots.empty?.({ initialize: ctx.initialize })}
           </Empty>
         ) : (
@@ -118,18 +140,52 @@ export const PageWrapper = defineComponent({
       !ctx.initialize || ctx.initialized ? ctx.$slots.default?.() : ctx.$slots.skeleton?.()
     ];
 
-    return (
-      <div class={['page-wrapper', ctx.overflowHidden ? 'tw-h-full tw-overflow-hidden' : undefined]}>
-        <div class='page-header'>
-          <div class='page-header-top'>
-            <div class='page-header-title'>{ctx.title ?? ctx.$slots.title?.()}</div>
-            <div class='page-header-actions'>{ctx.$slots.actions?.()}</div>
+    const hasTop = ctx.returnable || ctx.title || ctx.$slots?.title || ctx.$slots?.actions;
+
+    const wrapper = (
+      <div
+        class={[
+          $styles['page-wrapper'],
+          ctx.overflow === 'hidden' ? 'tw-h-full tw-overflow-hidden' : undefined,
+          ctx.bgGray ? $styles['page-bg-gray'] : undefined
+        ]}>
+        {hasTop || ctx.$slots?.header ? (
+          <div class={$styles['page-header']}>
+            {hasTop ? (
+              <div class={$styles['page-header-top']}>
+                <div class={$styles['page-header-title']}>
+                  {[
+                    ctx.returnable ? (
+                      <span class={$styles['page-wrapper-back']} title='Return to previous page' onClick={ctx.returnToPrevious}>
+                        <IconArrowLeftLine />
+                      </span>
+                    ) : (
+                      ''
+                    ),
+                    ctx.$slots.icon?.(),
+                    ctx.title ? <span>{ctx.title}</span> : '',
+                    ctx.$slots.title?.()
+                  ]}
+                </div>
+                <div class={$styles['page-header-actions']}>{ctx.$slots.actions?.()}</div>
+              </div>
+            ) : (
+              ''
+            )}
+            {ctx.$slots.header?.()}
           </div>
-          {ctx.$slots.header?.()}
-        </div>
-        <div class={['page-container', ctx.overflowHidden ? 'tw-overflow-hidden' : undefined]}>{container}</div>
-        {ctx.footer ? <AppFooter /> : ''}
+        ) : undefined}
+        <div class={$styles['page-container']}>{container}</div>
+        {ctx.footer ? <AppFooter /> : undefined}
       </div>
+    );
+
+    return ctx.overflow === 'scroll' ? (
+      <ScrollView fillY scrollY>
+        {wrapper}
+      </ScrollView>
+    ) : (
+      wrapper
     );
   }
 });

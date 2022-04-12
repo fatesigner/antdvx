@@ -45,7 +45,7 @@ const replaceView = function (router: Router, route: RouteLocationNormalizedLoad
  * 组件视图
  */
 export const ComponentView = defineComponent({
-  name: 'component-view',
+  name: 'ComponentView',
   props: {
     animation: {
       type: String as PropType<'horizontal' | 'opacity' | 'slide'>,

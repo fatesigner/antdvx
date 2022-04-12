@@ -27,7 +27,7 @@ npm i -S antdvx
 </template>
 
 <script lang="ts">
-import { XButton } from 'antdvx';
+import { XButton } from '@/antdvx';
 import { defineComponent } from 'vue';
 
 export default defineComponent({

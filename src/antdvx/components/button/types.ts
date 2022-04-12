@@ -119,7 +119,6 @@ export const XButtonProps = {
   title: {
     type: String
   },
-
   // events
   onClick: {
     type: Function
@@ -131,7 +130,7 @@ type IXButtonExportOptionsPromise<T> = (...any) => Promise<T>;
 /**
  * 导出选项
  */
-export interface IXButtonExportOptions<TModel extends Record<string, any> = Record<string, any>> {
+export interface IXButtonExportOptions {
   image?:
     | {
         filename: string;
@@ -159,27 +158,5 @@ export interface IXButtonExportOptions<TModel extends Record<string, any> = Reco
         filename: string;
         target: HTMLElement;
       }>;
-  excel?:
-    | {
-        filename: string;
-        data: any[];
-        columns: {
-          header: string;
-          key: string;
-          template?: (item: TModel, index: number) => string;
-        }[];
-      }
-    | IXButtonExportOptionsPromise<{
-        filename: string;
-        data: any[];
-        columns: {
-          header: string;
-          key: string;
-          template?: (row: TModel, index: number) => string;
-        }[];
-      }>;
+  excel?: () => Promise<void>;
 }
-
-/**
- * 导出选项 Promise
- */

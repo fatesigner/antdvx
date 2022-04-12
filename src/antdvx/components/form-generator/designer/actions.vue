@@ -76,7 +76,6 @@ export default defineComponent({
     CodeEditor,
     ScrollView,
     FormRenderer,
-    // Antd
     [Alert.name]: Alert,
     [Modal.name]: Modal,
     [Button.name]: Button,

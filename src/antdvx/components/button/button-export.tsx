@@ -16,7 +16,7 @@ import { IXButtonExportOptions, XButtonProps } from './types';
  * 导出到 Excel、PDF、JSON、Image
  */
 export const XButtonExport = defineComponent({
-  name: 'x-button-export',
+  name: 'XButtonExport',
   props: {
     ...XButtonProps,
     onlyIcon: {
@@ -107,60 +107,8 @@ export const XButtonExport = defineComponent({
           throw new Error('The json content can not be empty.');
         }
       } else if (key === 'excel') {
-        options_.excel = await loadOptions(props?.options?.excel, options_.excel);
-        const opt = options_?.excel as any;
-        if (opt) {
-          const _excel = await import('exceljs');
-          const ExcelJS = _excel.default;
-
-          const workbook = new ExcelJS.Workbook();
-          const worksheet = workbook.addWorksheet();
-
-          const { filename, data, columns } = opt;
-
-          if (filename) {
-            worksheet.name = filename;
-          }
-
-          if (data.length) {
-            if (columns) {
-              worksheet.columns = columns.map((item) => ({
-                header: item.header,
-                key: item.key
-              }));
-              data.forEach((item, index) => {
-                const newItem = columns.reduce((prev, cur) => {
-                  if (cur.template) {
-                    prev[cur.key] = cur.template(item, index);
-                  } else {
-                    prev[cur.key] = item[cur.key];
-                  }
-                  return prev;
-                }, {});
-                worksheet.addRow(newItem);
-              });
-            } else {
-              worksheet.columns = Object.keys(data[0]).map((key) => ({
-                header: key,
-                key: key
-              }));
-              data.forEach((item) => {
-                worksheet.addRow(item);
-              });
-            }
-          }
-
-          worksheet.getRow(1).font = { bold: true };
-
-          if (worksheet.columns) {
-            worksheet.columns.forEach((column) => {
-              if (column.header) {
-                column.width = column.header.length < 12 ? 12 : column.header.length + 5;
-              }
-            });
-          }
-
-          await download(workbook, filename);
+        if (props?.options?.excel) {
+          await props.options.excel();
         }
       } else if (key === 'pdf') {
         options_.pdf = await loadOptions(props?.options?.pdf, options_.pdf);

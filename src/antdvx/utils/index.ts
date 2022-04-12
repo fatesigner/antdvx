@@ -209,24 +209,3 @@ export function expandSection(el: HTMLElement, callback?: (el: HTMLElement) => v
     }
   });
 }
-
-/**
- * 移动指定集合中的元素位置
- * @param arr
- * @param index
- * @param index2
- */
-export function exchangeItem(arr: any[], index: number, index2: number) {
-  if (index !== index2) {
-    if (index > index2) {
-      const temp = index2;
-      index2 = index;
-      index = temp;
-    }
-    const item = arr?.[index];
-    if (item && arr.length >= index2 - 1) {
-      arr.splice(index2 + 1, 0, item);
-      arr.splice(index, 1);
-    }
-  }
-}

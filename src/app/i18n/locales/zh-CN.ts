@@ -25,23 +25,24 @@ export default {
           title2: '如有不满请联系你领导',
           title3: '或者你可以去',
           back: '回到主页',
-          gotologin: '重新登录',
-          gotohome: '回到主页'
+          gotoLogin: '重新登录',
+          gotoHome: '回到主页'
         }
       },
       passport: {
         login: '登录',
         register: '注册',
-        findPwd: '找回密码'
+        findPwd: '找回密码',
+        logout: '您已退出登录'
       },
       system: {
         menus: '菜单设置'
       },
-      portal: '主页',
-      table: '表格',
-      grid: 'kendo grid'
+      portal: '主页'
     },
     navbar: {
+      exitOut: '退出',
+      updatePassword: '修改密码',
       logOut: '退出登录',
       portal: '主页',
       github: '项目地址',
@@ -73,22 +74,31 @@ export default {
       connectionAbort: '连接服务器超时，检查您的网络设置'
     },
     passport: {
-      title: '系统登录',
-      username: '账号',
-      password: '密码',
-      logIn: '登录',
-      autoLogin: '自动登录',
-      forgetPassword: '忘记密码',
-      register: '注册',
-      backToLogin: '返回登录',
-      submit: '提交',
-      any: '随便填',
-      thirdparty: '第三方登录',
-      thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
-    },
-    notification: {
-      login: '登录成功',
-      logout: '您已退出登录'
+      login: {
+        title: '登录',
+        username: '请输入用户名',
+        password: '请输入密码',
+        rememberMe: '记住我',
+        submit: '登录',
+        any: '随便填',
+        thirdParty: '第三方登录',
+        thirdPartyTips: '本地不能模拟，请结合自己业务进行模拟！！！',
+        message: '登录成功'
+      },
+      updatePassword: {
+        title: '修改密码',
+        forget: '忘记密码?',
+        username: '请输入用户名',
+        oldPassword: '请输入旧密码',
+        newPassword: '请输入新密码',
+        confirmPassword: '确认新密码',
+        backToLogin: '返回登录',
+        submit: '提交',
+        message: {
+          submitSuccess: '密码修改成功',
+          inconsistent: '密码前后不一致'
+        }
+      }
     }
   }
 } as I18nMessagesType;

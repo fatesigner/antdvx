@@ -49,7 +49,6 @@ export default defineComponent({
     XButton,
     IconAddLine,
     IconDeleteBinLine,
-    // Antd
     [Form.Item.name]: Form.Item,
     [Input.name]: Input,
     [InputNumber.name]: InputNumber,

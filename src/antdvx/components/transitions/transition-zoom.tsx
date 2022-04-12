@@ -5,7 +5,7 @@ import { PropType, Transition, defineComponent } from 'vue';
  * 缩放
  */
 export const TransitionZoom = defineComponent({
-  name: 'transition-zoom',
+  name: 'TransitionZoom',
   props: {
     appear: {
       type: Boolean,

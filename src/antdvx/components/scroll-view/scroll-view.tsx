@@ -113,7 +113,7 @@ export interface IScrollViewOptions {
  * 可滚动视图区域, 用于区域滚动
  */
 export const ScrollView = defineComponent({
-  name: 'scroll-view',
+  name: 'ScrollView',
   props: {
     native: {
       type: Boolean,
@@ -605,16 +605,14 @@ export const ScrollView = defineComponent({
           ctx.fillY ? styles.fillY : null,
           ctx.scrollX ? styles.scrollX : null,
           ctx.scrollY ? styles.scrollY : null
-        ]}
-      >
+        ]}>
         {ctx.loading_ || ctx.error ? (
           <TransitionGroup
             enterFromClass={styles['transition-enter-from']}
             enterToClass={styles['transition-enter-to']}
             leaveToClass={styles['transition-leave-to']}
             enterActiveClass={styles['transition-enter-active']}
-            leaveActiveClass={styles['transition-enter-active']}
-          >
+            leaveActiveClass={styles['transition-enter-active']}>
             {ctx.loading_ ? (
               <div class={styles.transition} key='loading'>
                 {ctx.$slots?.loading ? (

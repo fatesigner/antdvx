@@ -10,7 +10,6 @@ import { Radio, RadioGroup } from 'ant-design-vue';
 
 export default defineComponent({
   components: {
-    // Antd
     [Radio.name]: Radio,
     [RadioGroup.name]: RadioGroup
   },

@@ -22,8 +22,6 @@
 <script lang="ts">
 import { PropType, defineComponent, reactive, ref, watch } from 'vue';
 
-import { ScrollView } from '../../scroll-view';
-
 import { IFormDesignerBinds, IFormGeneratorData } from '../config';
 
 import { FormDesignerConfig, analyzeFormDesignerJsonData, getFormDesignerJsonData } from './designer';
@@ -34,9 +32,8 @@ import WidgetActions from './actions.vue';
 import WidgetSettings from './settings.vue';
 
 export default defineComponent({
-  name: 'antd-form-designer',
+  name: 'AntdFormDesigner',
   components: {
-    ScrollView,
     WidgetPanes,
     WidgetActions,
     WidgetForm,

@@ -68,7 +68,6 @@ export default defineComponent({
     XButton,
     ScrollView,
     Draggable,
-    // Antd
     [Form.name]: Form,
     [Form.Item.name]: Form.Item
   },
@@ -103,7 +102,7 @@ export default defineComponent({
     };
 
     const copy = (item: IFormDesignerWidget, index) => {
-      let itemClone = cloneDeep(item) as IFormDesignerBinds['widgets'][number];
+      const itemClone = cloneDeep(item) as IFormDesignerBinds['widgets'][number];
       itemClone.key = FormDesignerConfig.name();
       itemClone.field.name = itemClone.key;
       props.binds.widgets.splice(index + 1, 0, itemClone);
@@ -122,7 +121,7 @@ export default defineComponent({
 
     watch(activatedKey, (val) => {
       if (val) {
-        let item = props.binds.widgets.find((x) => x.key === val);
+        const item = props.binds.widgets.find((x) => x.key === val);
         emit('activatedChange', item);
       } else {
         emit('activatedChange', null);

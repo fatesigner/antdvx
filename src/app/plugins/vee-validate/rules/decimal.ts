@@ -2,26 +2,22 @@
  * decimal
  */
 
-import { defineRule } from 'vee-validate';
-
-defineRule('decimal', (value, ...args) => {
-  const [decimals = '*', separator = '.'] = args;
+export const decimalValidator = (value, [decimals = 0], ctx) => {
   if (value === null || value === undefined || value === '') {
-    return false;
-  }
-  if (Number(decimals) === 0) {
-    const s = /^-?\d*$/.test(value);
-    if (s) {
-      return true;
-    }
-    return `字段必须是数字，且不超过${decimals}位小数`;
-  }
-  const regexPart = decimals === '*' ? '+' : `{1,${decimals}}`;
-  const regex = new RegExp(`^[-+]?\\d*(\\${separator}\\d${regexPart})?([eE]{1}[-]?\\d+)?$`);
-
-  const s2 = regex.test(value);
-  if (s2) {
     return true;
   }
-  return `字段必须是数字`;
-});
+
+  const regex = new RegExp(`^\\d+(\\.\\d{0,${decimals ?? ''}})?$`);
+
+  const s = regex.test(value);
+
+  if (s) {
+    return true;
+  }
+
+  if (decimals === 0) {
+    return `The ${ctx.field ?? 'field'} must be an integer`;
+  }
+
+  return `The ${ctx.field ?? 'field'} should less than ${decimals} digits`;
+};

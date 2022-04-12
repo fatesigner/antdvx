@@ -13,7 +13,7 @@ import { IconArrowLeftSLine, IconArrowRightSLine } from '../iconfont';
  * 可拖拽两栏布局
  */
 export const GridDragable = defineComponent({
-  name: 'grid-dragable',
+  name: 'GridDragable',
   components: {
     IconArrowLeftSLine,
     IconArrowRightSLine
@@ -182,7 +182,7 @@ export const GridDragable = defineComponent({
         drag$ = getDrag$(anchorRef.value).subscribe((pos) => {
           if (pos.width >= limit[0] && pos.width <= limit[1]) {
             currentWidth = pos.width;
-            leftRef.value.style.width = `${pos.width}px`;
+            leftRef.value.style.width = pos.width + 'px';
           }
         });
         // 初始化
