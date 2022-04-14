@@ -1,3 +1,10 @@
+# [1.0.0-alpha.99](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.98...v1.0.0-alpha.99) (2022-04-14)
+
+
+### Features
+
+* update downloadExcel params for XTable ([5542d6b](https://github.com/fatesigner/antdvx/commit/5542d6bf87707454e9ca830accc2bc4577a913f6))
+
 # [1.0.0-alpha.98](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.97...v1.0.0-alpha.98) (2022-04-13)
 
 
