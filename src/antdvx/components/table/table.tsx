@@ -613,7 +613,8 @@ export const XTable = defineComponent({
                         size='small'
                         onClick={() => {
                           clearFilters();
-                        }}>
+                        }}
+                      >
                         {t(i18nMessages.antd.action.reset)}
                       </XButton>
                     </div>
@@ -691,7 +692,7 @@ export const XTable = defineComponent({
     };
 
     // 导出到 Excel
-    const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?) => {
+    const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?, filename?: string, contentType?: string) => {
       const { workbook } = await ExceljsHelper.addWorksheet(undefined, {
         columns: columns_.value
           ?.filter((x) => !!x.excel)
@@ -703,7 +704,7 @@ export const XTable = defineComponent({
           })),
         data: data ?? (overallData as any)
       });
-      await ExceljsHelper.downloadFile(workbook, 'excel');
+      await ExceljsHelper.downloadFile(workbook, filename, contentType);
     };
 
     // update handlers
@@ -1141,7 +1142,8 @@ export const XTable = defineComponent({
                   title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
                   onClick={(e) => {
                     onExpand(record, e);
-                  }}>
+                  }}
+                >
                   {expanded ? <IconCheckboxIndeterminateLine /> : <IconAddBoxLine />}
                 </div>
               );
@@ -1199,7 +1201,8 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
+              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
+            >
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1305,7 +1308,8 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1318,7 +1322,8 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1360,7 +1365,8 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1368,7 +1374,8 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>

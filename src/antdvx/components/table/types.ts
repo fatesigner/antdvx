@@ -172,7 +172,7 @@ export interface IXTableHandlers<TModel extends UnknownType<any> = UnknownType<a
    * 导出到 Excel
    * @param data
    */
-  downloadExcel?: (data?: IXTableModelExtend<TModel>) => Promise<void>;
+  downloadExcel?: (data?: IXTableModelExtend<TModel>, filename?: string, contentType?: string) => Promise<void>;
 
   /**
    * 进入全屏浏览模式
