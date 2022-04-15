@@ -87,7 +87,7 @@ export const ButtonView = defineComponent({
             {
               key: 'value',
               header: '值',
-              type: 'currency',
+              format: 'currency',
               theadStyle: {
                 alignment: {
                   horizontal: 'center'

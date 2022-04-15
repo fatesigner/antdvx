@@ -26,7 +26,7 @@ export const XButton = defineComponent({
       if (props.handler) {
         loading_.value = true;
         props
-          .handler()
+          .handler(e)
           .catch((err) => {
             if (props.notify) {
               notification.error({ message: '', description: err.message });

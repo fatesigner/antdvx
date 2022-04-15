@@ -3,7 +3,7 @@ import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
 /**
  * 附加到 route 记录上的任意数据
  */
-export interface IRouteMeta<TRoleName extends readonly string[] = never> {
+export interface IRouteMeta<TRoleName extends string = string> extends Record<string | number | symbol, unknown> {
   /**
    * 标签，用于描述该页面名称
    */
@@ -19,13 +19,13 @@ export interface IRouteMeta<TRoleName extends readonly string[] = never> {
   /**
    * 允许访问的角色名称列表
    */
-  auth?: TRoleName[number][];
+  auth?: TRoleName[];
 }
 
 /**
  * RouteRecordRaw 接口
  */
-export type IRouteRecordRaw<TRoleName extends readonly string[] = never> = RouteRecordRaw & {
+export type IRouteRecordRaw<TRoleName extends string = string> = RouteRecordRaw & {
   meta?: IRouteMeta<TRoleName>;
   children?: IRouteRecordRaw<TRoleName>[];
 };
@@ -33,6 +33,6 @@ export type IRouteRecordRaw<TRoleName extends readonly string[] = never> = Route
 /**
  * RouteLocationNormalized 接口
  */
-export type IRouteLocationNormalized<TRoleName extends readonly string[] = never> = RouteLocationNormalized & {
+export type IRouteLocationNormalized<TRoleName extends string = string> = Omit<RouteLocationNormalized, 'meta'> & {
   meta?: IRouteMeta<TRoleName>;
 };

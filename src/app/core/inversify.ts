@@ -3,27 +3,21 @@
  * IOC 容器，注入 APP 依赖
  */
 
-import { AxiosResponse } from 'axios';
+import { ANTDVX_SYMBOLS } from '@/antdvx/symbols';
 import { Container, ContainerModule } from 'inversify';
 import { isString } from '@fatesigner/utils/type-check';
-import { AuthServiceConfig, IAuthService, IHttpService, IRole, ISessionService, IStorageService, IUser } from '@/antdvx/types';
+import { AuthServiceConfig, IHttpService, IStorageService } from '@/antdvx/types';
 import { AuthService, HttpService, HttpServiceConfig, SessionService, SessionServiceConfig, StorageService } from '@/antdvx/services';
-import { ANTDVX_SYMBOLS } from '@/antdvx/symbols';
 
-import { IAppUser } from '@/app/types/user';
+import { ENV } from '@/app/core/constants';
 import { i18n, i18nMessages } from '@/app/i18n';
-import { ENV, ROLES } from '@/app/core/constants';
 import { login$, logout$, roleChanged$ } from '@/app/core/events';
-
-// 定义类型
-export type RoleNamesType = typeof ROLES.keys;
-export type UserType = IAppUser<IRole<RoleNamesType>>;
-export type AuthServiceType = IAuthService<UserType>;
-export type SessionServiceType = ISessionService<UserType>;
+import { AuthServiceType, SessionServiceType, UserType } from '@/app/core/types';
 
 // 新建 IOC 容器
 const appDIC = new Container({ defaultScope: 'Singleton' });
 
+// 定义 Antdvx 模块服务
 const antdvxModule = new ContainerModule((bind) => {
   // StorageService
   bind(ANTDVX_SYMBOLS.STORAGE_SERVICE_IDENTIFICATION).toConstantValue(ENV.APP_NAME);
@@ -66,11 +60,11 @@ const antdvxModule = new ContainerModule((bind) => {
   // AuthService
   bind<AuthServiceConfig<UserType>>(ANTDVX_SYMBOLS.AUTH_SERVICE_CONFIG).toConstantValue({
     // 主页地址
-    homePage: 'portal',
+    homePage: 'Portal',
     // 授权界面地址 name
-    authPage: 'login',
+    authPage: 'Login',
     // 授权认证模式
-    authMode: 'client',
+    authMode: 'server',
     // 是否开启重定向模式，登出后将暂存当前地址，登录后重定向至该地址
     redirectEnable: false,
     // 超级管理员角色，该角色将会跳过认证

@@ -31,7 +31,7 @@ export const Antdvx = {
 
     // 配置 pipes
     setAntdvxPipesConfig({
-      dateFormat: 'YYYY-MM-DD',
+      dateFormat: 'yyyy-MM-dd',
       fixed: {
         digits: 2,
         mode: 'round'
@@ -125,8 +125,6 @@ export const Antdvx = {
       }, */
       // 标题栏，尾部添加刷新按钮
       titleSuffix(tbRef) {
-        const s = <div>dd</div>;
-        type dd = typeof s;
         return [
           // <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={tbRef.handler.refresh} />,
           <XTableSettingsPanelButton

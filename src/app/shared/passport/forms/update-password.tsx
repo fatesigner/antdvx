@@ -5,8 +5,8 @@ import { Alert, Form, FormItem, Input, InputPassword, notification } from 'ant-d
 import { IconLockLine, IconLockUnlockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from '@/antdvx';
 
 import { i18nMessages } from '@/app/i18n';
+import { createForm } from '@/app/plugins/vee-validate';
 import { localStorageService } from '@/app/core/services';
-import { createForm, triggerFormSubmit } from '@/app/plugins/vee-validate';
 
 import $styles from '../passport.module.less';
 
@@ -34,7 +34,6 @@ export const UpdatePassword = defineComponent({
   },
   emits: ['back'],
   setup(props, { emit }) {
-    const formRef = ref<any>();
     const submitBtnRef = ref<any>();
 
     // 验证码
@@ -107,14 +106,13 @@ export const UpdatePassword = defineComponent({
     return {
       captcha,
       form,
-      formRef,
       submitBtnRef,
       back
     };
   },
   render(ctx) {
     return (
-      <Form class={$styles.form} ref='formRef' layout='horizontal' labelCol={{ style: { width: '90px' } }} onSubmit={ctx.form.onSubmit}>
+      <Form class={$styles.form} layout='horizontal' labelCol={{ style: { width: '90px' } }}>
         <FormItem>
           <Alert
             type='warning'
@@ -272,9 +270,7 @@ export const UpdatePassword = defineComponent({
             size='large'
             type='primary'
             loading={ctx.form.isSubmitting}
-            onClick={() => {
-              triggerFormSubmit(ctx.formRef.$el);
-            }}>
+            onClick={ctx.form.submit}>
             {ctx.$t(i18nMessages.app.passport.updatePassword.submit)}
           </XButton>
           {ctx.$slots?.extra?.()}

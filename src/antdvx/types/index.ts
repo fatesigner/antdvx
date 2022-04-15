@@ -1,8 +1,10 @@
 // types
-export * from './auth';
 export * from './datasource';
 export * from './menu';
+export * from './permission';
+export * from './role';
 export * from './route';
+export * from './user';
 
 // interfaces
 export * from './auth.interface';

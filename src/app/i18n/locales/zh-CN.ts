@@ -99,6 +99,22 @@ export default {
           inconsistent: '密码前后不一致'
         }
       }
+    },
+    systemSettings: {
+      menu: {
+        add: '添加',
+        edit: '编辑',
+        delete: '删除',
+        upload: '导入',
+        export: '导出',
+        save: '保存',
+        cancel: '取消',
+        root: '根节点',
+        title: '更新角色菜单',
+        titleAdd: '添加菜单',
+        titleUpdate: '更新菜单',
+        duplicatedNameExist: '相同层级下已有相同名称的菜单存在'
+      }
     }
   }
 } as I18nMessagesType;

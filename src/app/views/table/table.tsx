@@ -47,7 +47,6 @@ export const TableView = defineComponent({
     // 主表
     const tbRef = createXTable(
       {
-        autoload: false,
         scroll: {
           x: true
         },
@@ -65,7 +64,10 @@ export const TableView = defineComponent({
             width: 140,
             fixed: 'left',
             sorter: true,
-            sortDirections: ['descend']
+            sortDirections: ['descend'],
+            excel: {
+              // format: 'scientific'
+            }
           },
           {
             title: '用户名 & 账号',
@@ -74,37 +76,48 @@ export const TableView = defineComponent({
             filterMode: 'keywords',
             onFilter(value, record) {
               return record.username.toLowerCase().includes(value.toLowerCase());
-            },
-            excel: {
+            }
+            /* excel: {
               header: 'aaaaaaaaaaaaaaa',
               style: {
                 font: {
+                  bold: true,
                   color: {
                     argb: 'red'
                   },
-                  size: 12
+                  size: 32
                 }
               }
-            }
+            } */
           },
           {
             title: '手机号',
             dataIndex: 'phone',
             width: 120,
             sorter: true
+            /* excel: {
+              format: 'currency',
+              customRender() {
+                return 13362585465;
+              }
+            } */
           },
           {
             title: '邮箱',
             dataIndex: 'email',
             width: 200,
-            sorter: true
+            sorter: true,
+            excel: {
+              // format: 'scientific'
+            }
           },
           {
             title: '地址',
             dataIndex: 'address',
             width: 320,
-            sorter: true,
-            excel: {
+            sorter: true
+            /* excel: {
+              format: 'text',
               style: {
                 font: {
                   color: {
@@ -113,7 +126,7 @@ export const TableView = defineComponent({
                   size: 12
                 }
               }
-            }
+            } */
           },
           {
             title: '创建时间',
@@ -123,6 +136,9 @@ export const TableView = defineComponent({
               return new Date(a.createTime).getTime() - new Date(b.createTime).getTime();
             },
             defaultSortOrder: 'descend'
+            /* excel: {
+              format: 'datetime'
+            } */
           },
           {
             title: '操作',

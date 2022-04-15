@@ -9,7 +9,7 @@ import { i18nMessages } from '@/app/i18n';
 import { authService } from '@/app/core/services';
 import { addExceptionRoute } from '@/app/layout/shared/exception';
 import { login$, logout$, roleChanged$ } from '@/app/core/events';
-import { RoleNamesType } from '@/app/core/inversify';
+import { RoleNamesType, RouteRecordRawType } from '@/app/core/types';
 
 const LayoutEmpty = () => import('@/app/layout/layout-empty').then(({ LayoutEmpty }) => LayoutEmpty);
 const LayoutSidebar = () => import('@/app/layout/layout-sidebar').then(({ LayoutSidebar }) => LayoutSidebar);
@@ -43,7 +43,7 @@ export async function createAppRouter() {
         children: [
           { path: '', redirect: 'portal' },
           {
-            name: 'portal',
+            name: 'Portal',
             path: 'portal',
             component: () => import('./views/portal/portal').then(({ PortalView }) => PortalView),
             meta: {
@@ -51,88 +51,138 @@ export async function createAppRouter() {
             }
           },
           {
-            name: 'async-section',
+            name: 'AsyncSection',
             path: 'async-section',
-            component: () => import('./views/async-section/async-section').then(({ AsyncSectionView }) => AsyncSectionView)
+            component: () => import('./views/async-section/async-section').then(({ AsyncSectionView }) => AsyncSectionView),
+            meta: {
+              label: 'AsyncSection',
+              auth: ['SuperAdmin']
+            }
           },
           {
-            name: 'button',
+            name: 'Button',
             path: 'button',
-            component: () => import('./views/button/button').then(({ ButtonView }) => ButtonView)
+            component: () => import('./views/button/button').then(({ ButtonView }) => ButtonView),
+            meta: {
+              label: 'AsyncSection',
+              auth: ['Admin']
+            }
           },
           {
-            name: 'combobox',
+            name: 'Combobox',
             path: 'combobox',
-            component: () => import('./views/combobox/combobox').then(({ ComboboxView }) => ComboboxView)
+            component: () => import('./views/combobox/combobox').then(({ ComboboxView }) => ComboboxView),
+            meta: {
+              label: 'Combobox'
+            }
           },
           {
-            name: 'echarts',
+            name: 'Echarts',
             path: 'echarts',
-            component: () => import('./views/echarts/echarts').then(({ EchartsView }) => EchartsView)
+            component: () => import('./views/echarts/echarts').then(({ EchartsView }) => EchartsView),
+            meta: {
+              label: 'Echarts'
+            }
           },
           {
-            name: 'grid-dragable',
+            name: 'GridDragable',
             path: 'grid-dragable',
-            component: () => import('./views/grid-dragable/grid-dragable').then(({ GridDragableView }) => GridDragableView)
+            component: () => import('./views/grid-dragable/grid-dragable').then(({ GridDragableView }) => GridDragableView),
+            meta: {
+              label: 'GridDragable'
+            }
           },
           {
-            name: 'iconfont',
+            name: 'Iconfont',
             path: 'iconfont',
-            component: () => import('./views/iconfont/iconfont').then(({ IconfontView }) => IconfontView)
+            component: () => import('./views/iconfont/iconfont').then(({ IconfontView }) => IconfontView),
+            meta: {
+              label: 'Iconfont'
+            }
           },
           {
-            name: 'icons',
+            name: 'Icons',
             path: 'icons',
-            component: () => import('./views/icons/icons').then(({ IconsView }) => IconsView)
+            component: () => import('./views/icons/icons').then(({ IconsView }) => IconsView),
+            meta: {
+              label: 'Icons'
+            }
           },
           {
-            name: 'input',
+            name: 'Input',
             path: 'input',
-            component: () => import('./views/input/input').then(({ InputView }) => InputView)
+            component: () => import('./views/input/input').then(({ InputView }) => InputView),
+            meta: {
+              label: 'Input'
+            }
           },
           {
-            name: 'lazy',
+            name: 'Lazy',
             path: 'lazy',
-            component: () => import('./views/lazy/lazy').then(({ LazyView }) => LazyView)
+            component: () => import('./views/lazy/lazy').then(({ LazyView }) => LazyView),
+            meta: {
+              label: 'Lazy'
+            }
           },
           {
-            name: 'pipes',
+            name: 'Pipes',
             path: 'pipes',
-            component: () => import('./views/pipes/pipes').then(({ PipesView }) => PipesView)
+            component: () => import('./views/pipes/pipes').then(({ PipesView }) => PipesView),
+            meta: {
+              label: 'Pipes'
+            }
           },
           {
-            name: 'popup',
+            name: 'Popup',
             path: 'popup',
-            component: () => import('./views/popup/popup').then(({ PopupView }) => PopupView)
+            component: () => import('./views/popup/popup').then(({ PopupView }) => PopupView),
+            meta: {
+              label: 'Popup'
+            }
           },
           {
-            name: 'scroll-view',
+            name: 'Scrollview',
             path: 'scroll-view',
-            component: () => import('./views/scroll-view/scroll-view').then(({ Scrollview }) => Scrollview)
+            component: () => import('./views/scroll-view/scroll-view').then(({ Scrollview }) => Scrollview),
+            meta: {
+              label: 'Scrollview'
+            }
           },
           {
-            name: 'sticky-section',
+            name: 'StickySection',
             path: 'sticky-section',
-            component: () => import('./views/sticky-section/sticky-section').then(({ StickySectionView }) => StickySectionView)
+            component: () => import('./views/sticky-section/sticky-section').then(({ StickySectionView }) => StickySectionView),
+            meta: {
+              label: 'StickySection'
+            }
           },
           {
-            name: 'table',
+            name: 'Table',
             path: 'table',
-            component: () => import('./views/table/table').then(({ TableView }) => TableView)
+            component: () => import('./views/table/table').then(({ TableView }) => TableView),
+            meta: {
+              label: 'Table'
+            }
           },
           {
-            name: 'tabs',
+            name: 'Tabs',
             path: 'tabs',
-            component: () => import('./views/tabs/tabs').then(({ TabsView }) => TabsView)
+            component: () => import('./views/tabs/tabs').then(({ TabsView }) => TabsView),
+            meta: {
+              label: 'Tabs'
+            }
           },
           {
-            name: 'transitions',
+            name: 'Transitions',
             path: 'transitions',
-            component: () => import('./views/transitions/transitions').then(({ TransitionsView }) => TransitionsView)
+            component: () => import('./views/transitions/transitions').then(({ TransitionsView }) => TransitionsView),
+            meta: {
+              label: 'Transitions'
+            }
           },
           ...prefixRoutes('system-settings', [
             {
-              name: 'systemSettingsPermissions',
+              name: 'Permissions',
               path: 'permissions',
               component: () => import('./views/system-settings/permissions/permissions').then(({ PermissionsView }) => PermissionsView),
               meta: {
@@ -140,7 +190,7 @@ export async function createAppRouter() {
               }
             },
             {
-              name: 'systemSettingsRoles',
+              name: 'Roles',
               path: 'roles',
               component: () => import('./views/system-settings/roles/roles').then(({ RolesView }) => RolesView),
               meta: {
@@ -148,7 +198,7 @@ export async function createAppRouter() {
               }
             },
             {
-              name: 'systemSettingsUsers',
+              name: 'Users',
               path: 'users',
               component: () => import('./views/system-settings/users/users').then(({ UsersView }) => UsersView),
               meta: {
@@ -163,7 +213,7 @@ export async function createAppRouter() {
         component: LayoutEmpty,
         children: [
           {
-            name: 'login',
+            name: 'Login',
             path: 'login',
             component: () => import('./views/passport/passport-generic').then(({ PassportGenericView }) => PassportGenericView),
             meta: {
@@ -174,7 +224,7 @@ export async function createAppRouter() {
           }
         ]
       }
-    ]
+    ] as RouteRecordRawType[]
   });
 
   // 监听用户登录事件
@@ -215,9 +265,9 @@ export async function createAppRouter() {
   // 监听用户角色切换事件，设置不同的主页
   roleChanged$.on((role) => {
     if (role.name === 'Admin') {
-      authService.config.homePage = 'portal';
-    } else if (role.name === 'normal') {
-      authService.config.homePage = 'portal';
+      authService.config.homePage = 'Portal';
+    } else if (role.name === 'SuperAdmin') {
+      authService.config.homePage = 'Portal';
     } else {
       // 匿名用户，设置主页为空
       authService.config.homePage = null;

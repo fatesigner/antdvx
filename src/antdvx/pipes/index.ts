@@ -39,9 +39,9 @@ export interface IAntdvxPipesConfig {
 
 const antdvxPipesConfig: IAntdvxPipesConfig = {
   globalPropertyName: '$pipes',
-  dateFormat: 'YYYY-MM-DD HH:mm:ss',
+  dateFormat: 'yyyy-MM-dd HH:mm:ss',
   currencyFormat: new Intl.NumberFormat('zh-CN', {
-    //style: 'currency',
+    // style: 'currency',
     currency: 'CNY',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2

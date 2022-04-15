@@ -5,7 +5,7 @@ import { IconArrowDownSLine, IconLockLine, IconLogoutBoxLine } from '@/antdvx';
 
 import { i18nMessages } from '@/app/i18n';
 import { AppStore } from '@/app/core/store';
-import { UserType } from '@/app/core/inversify';
+import { UserType } from '@/app/core/types';
 import { login$, logout$ } from '@/app/core/events';
 import { sessionService } from '@/app/core/services';
 
@@ -98,7 +98,8 @@ export const NavUser = defineComponent({
                 </Menu>
               ) : undefined;
             }
-          }}>
+          }}
+        >
           <div class={$styles.dropdown}>
             <div class={$styles.username}>{ctx.currentRole?.[0]}</div>
             <IconArrowDownSLine />
@@ -133,7 +134,8 @@ export const NavUser = defineComponent({
                 </Menu>
               );
             }
-          }}>
+          }}
+        >
           <div class={$styles.dropdown}>
             <div class={$styles.username}>{ctx.user.username}</div>
             <img class={$styles.avatar} src={ctx.user.avatar} alt='' title='' />

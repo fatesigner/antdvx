@@ -139,23 +139,23 @@ export const PipesView = defineComponent({
                 </div>
 
                 <div class='tw-space-y-2'>
-                  <div class='tw-text-gray-500'>YYYY-MM-DD</div>
-                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'YYYY-MM-DD')}</div>
+                  <div class='tw-text-gray-500'>yyyy-MM-dd</div>
+                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'yyyy-MM-dd')}</div>
                 </div>
 
                 <div class='tw-space-y-2'>
-                  <div class='tw-text-gray-500'>YYYY-MM-DD HH:mm:ss</div>
-                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'YYYY-MM-DD HH:mm:ss')}</div>
+                  <div class='tw-text-gray-500'>yyyy-MM-dd HH:mm:ss</div>
+                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'yyyy-MM-dd HH:mm:ss')}</div>
                 </div>
 
                 <div class='tw-space-y-2'>
-                  <div class='tw-text-gray-500'>M/D/YYYY</div>
-                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'M/D/YYYY')}</div>
+                  <div class='tw-text-gray-500'>M/d/yyyy</div>
+                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'M/d/yyyy')}</div>
                 </div>
 
                 <div class='tw-space-y-2'>
-                  <div class='tw-text-gray-500'>ddd, MMM D, YYYY h:mm A</div>
-                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'MMMM D, YYYY h:mm A')}</div>
+                  <div class='tw-text-gray-500'>ddd, MMM d, yyyy h:mm A</div>
+                  <div class='tw-text-gray-700'>{ctx.$pipes.dateFormat(ctx.dateValue, 'ddd, MMM d, yyyy h:mm A')}</div>
                 </div>
               </div>
             </div>

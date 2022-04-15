@@ -46,9 +46,10 @@ export const XButtonDelete = defineComponent({
 
     const trigger = (e) => {
       if (props.handler) {
+        emit('click', e);
         loading_.value = true;
         return props
-          .handler()
+          .handler(e)
           .then(() => {
             if (props.notify) {
               message.success(t(i18nMessages.antd.action.delete.success));
@@ -94,6 +95,9 @@ export const XButtonDelete = defineComponent({
           type={ctx.type}
           color={ctx.color}
           spin={false}
+          onClick={(e) => {
+            ctx.$emit('click', e);
+          }}
           // handler={ctx.handler}
           // notify={ctx.notify}
           title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.delete.title)}

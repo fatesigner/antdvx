@@ -1,6 +1,6 @@
 <template>
   <AFormItem class="tw-mt-2">
-    <div class="tw-mb-2">日期格式（YYYY-MM-DD HH:mm:ss）</div>
+    <div class="tw-mb-2">日期格式（yyyy-MM-dd HH:mm:ss）</div>
     <AAutoComplete class="tw-mb-4" v-model:value="field.date.format" placeholder="输入日期格式" @search="onDateFormatSearch">
       <template #options>
         <a-select-option v-for="format in dateFormatOptions" :key="format">

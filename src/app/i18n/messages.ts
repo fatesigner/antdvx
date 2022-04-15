@@ -99,6 +99,22 @@ export const i18nMessages = createLocaleMessages({
           inconsistent: ''
         }
       }
+    },
+    systemSettings: {
+      menu: {
+        add: '',
+        edit: '',
+        delete: '',
+        upload: '',
+        export: '',
+        save: '',
+        cancel: '',
+        root: '',
+        title: '',
+        titleAdd: '',
+        titleUpdate: '',
+        duplicatedNameExist: ''
+      }
     }
   }
 });

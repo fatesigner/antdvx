@@ -11,7 +11,7 @@ import { IRouteLocationNormalized } from '../types';
  * @param authorizer 是否已授权
  * @constructor
  */
-export function getAccessPermission<TRoleName extends readonly string[]>(
+export function getAccessPermission<TRoleName extends string = string>(
   to: IRouteLocationNormalized<TRoleName>,
   authenticator: () => boolean,
   authorizer: (to: IRouteLocationNormalized<TRoleName>) => boolean

@@ -2,10 +2,8 @@
  * utils
  */
 
-import { IMenu } from '@/antdvx/types';
+import { IMenu, IRouteRecordRaw } from '@/antdvx/types';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
-
-import { IRouteConfig } from '@/app/types/route';
 
 /**
  * 高亮搜索关键字
@@ -51,14 +49,14 @@ export function getOdataQuery(options: { pageNo?: number; pageSize?: number; fil
  * @param routes
  * @param filter
  */
-export async function getMenusFromRoutes(routes: IRouteConfig[], filter?: (router: any) => boolean) {
+export async function getMenusFromRoutes(routes: IRouteRecordRaw[], filter?: (router: any) => boolean) {
   // const strutreeRouters: StructureTree<IRouteConfig> = new StructureTree<IRouteConfig>();
   // 解析路由表
   return routes.reduce((prev, cur, index, parentNodes) => {
     if (cur.name && (!cur?.children || !cur.children?.length)) {
       const menu: IMenu = {
-        id: index + cur.name,
-        name: cur.name,
+        id: index + cur.name.toString(),
+        name: cur.name.toString(),
         label: cur?.meta?.label,
         url: cur.path
       };

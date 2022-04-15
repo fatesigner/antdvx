@@ -1,4 +1,4 @@
-import { IUser, RoleTypeOfUser } from './auth';
+import { IUser, RoleTypeOfUser } from './user';
 
 /**
  * Session 注销结果类型

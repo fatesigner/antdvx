@@ -99,6 +99,22 @@ export default {
           inconsistent: 'Passwords are inconsistent'
         }
       }
+    },
+    systemSettings: {
+      menu: {
+        add: 'Add',
+        edit: 'Edit',
+        delete: 'Delete',
+        upload: 'Upload',
+        export: 'Export',
+        save: 'Save',
+        cancel: 'Cancel',
+        root: 'Root',
+        title: `Update Role's Menu`,
+        titleAdd: 'Add Menu',
+        titleUpdate: 'Update Menu',
+        duplicatedNameExist: 'A menu with the same name already exists at the same level'
+      }
     }
   }
 } as I18nMessagesType;

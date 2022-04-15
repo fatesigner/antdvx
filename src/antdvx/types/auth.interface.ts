@@ -1,6 +1,7 @@
 import { IMenu } from './menu';
+import { NamesTypeOfRole } from './role';
+import { IUser, RoleTypeOfUser } from './user';
 import { IRouteLocationNormalized } from './route';
-import { IUser, NamesTypeOfRole, RoleTypeOfUser } from './auth';
 
 /**
  * 授权、认证服务配置
@@ -70,14 +71,7 @@ export interface IAuthService<
   /**
    * 获取指定角色可访问的路由
    * @param routes
-   * @param roles 指定的角色列表，默认为当前用户所拥有的的角色
+   * @param role 指定的角色，默认为当前用户角色
    */
-  getAuthorizedRoutes(routes: TRoute[], roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]): TRoute[];
-
-  /**
-   * 获取指定角色可访问的菜单
-   * @param menusFromServer 服务端返回的菜单列表
-   * @param roles 指定的角色列表，默认为当前用户所拥有的的角色
-   */
-  getAuthorizedMenus(menusFromServer: TMenu[], roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]): TMenu[];
+  getAuthorizedRoutes(routes: TRoute[], role?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number]): TRoute[];
 }

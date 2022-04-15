@@ -2,9 +2,10 @@
  * echarts
  */
 
-import { isArray, merge, mergeWith } from 'lodash-es';
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
 import * as echarts from 'echarts/core';
+import { isArray, merge, mergeWith } from 'lodash-es';
+import { isNumber } from '@fatesigner/utils/type-check';
 
 export { echarts };
 
@@ -232,52 +233,69 @@ export function getCeilNumber(value) {
 
 /**
  * 获取 chart 间隔数量
- * @param max
- * @param splitNumber
- * @param decimal
- * @param divisible
+ * max 坐标轴刻度最大值;
+ * divisor 限制 interval 可被整除的因数，默认为 1;
+ * fractionDigits 允许的 interval 小数位数，默认为 0;
+ * splitNumber 分割段数，默认为 null 即按照可读性自动分割;
  */
-export function getEchartsSplit(max, splitNumber, decimal = 0, divisible = 5) {
+export function getEchartsSplit(options: {
+  max: number;
+  divisor?: number;
+  fractionDigits?: number;
+  splitNumber?: number;
+  minInterval?: number;
+  maxInterval?: number;
+}) {
   const res = {
-    max: max,
-    interval: 0,
-    splitNumber: 0
+    max: undefined,
+    minInterval: options?.minInterval,
+    interval: undefined,
+    maxInterval: options?.maxInterval,
+    // splitNumber 默认为 5
+    splitNumber: 5
   };
 
-  // 尝试分割
-  res.interval = max / splitNumber;
-
-  // 获取分割的值的小数位数
-  const dig = res.interval.toString().split('.');
-  if (dig.length > 1) {
-    const dec = dig[1];
-    const decLen = dec.length;
-    if (decLen > decimal) {
-      // 进一位
-      if (decimal > 0) {
-        res.interval = parseFloat(dig[0] + '.' + parseInt(dec.substr(0, decimal)) + 1);
-      } else {
-        res.interval = parseInt(dig[0]) + 1;
-      }
-    }
+  let max;
+  if (options?.max && isNumber(options.max)) {
+    max = options.max;
   }
 
-  if (splitNumber > 0 && res.interval > 0) {
-    const ws = res.interval.toString().length;
-    const z = Math.pow(10, ws - 1) * divisible;
-    res.interval = Math.ceil(res.interval / z) * z;
+  let divisor = 1;
+  if (options?.divisor && /^[0-9]+$/.test(options?.divisor?.toString())) {
+    divisor = options.divisor;
+  }
 
-    const num = max / res.interval;
-    res.splitNumber = Math.floor(num);
-    const remainder = num - Math.trunc(num);
-    if (remainder > 0.5) {
-      res.max = res.interval * (res.splitNumber + 2);
-    } else {
-      res.max = res.interval * (res.splitNumber + 1);
+  let fractionDigits = 0;
+  if (/^[0-9]+$/.test(options?.fractionDigits?.toString())) {
+    fractionDigits = options.fractionDigits;
+  }
+
+  if (options?.splitNumber && /^[0-9]+$/.test(options.splitNumber?.toString())) {
+    res.splitNumber = options.splitNumber;
+  }
+
+  if (max) {
+    // 若指定了 max，则对 max 尝试进行分割
+    res.interval = max / (res.splitNumber * divisor);
+
+    const dig = res.interval.toString().split('.');
+    if (dig?.[1]) {
+      // 若间隔值有小数部分，即 max 无法被整除分割
+      if (dig[1].length > fractionDigits) {
+        // 进一位
+        if (fractionDigits > 0) {
+          res.interval = parseFloat(dig[0] + '.' + parseInt(dig[1].substring(0, fractionDigits)) + 1);
+        } else {
+          res.interval = parseInt(dig[0]) + 1;
+        }
+      }
     }
-  } else {
-    res.splitNumber = 1;
-    res.interval = res.max = 5;
+
+    res.interval = res.interval * divisor;
+    // res.splitNumber = Math.ceil(options.max / res.interval);
+
+    // 重新计算 max
+    res.max = res.interval * res.splitNumber;
   }
 
   return res;

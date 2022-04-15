@@ -1,8 +1,10 @@
 import { clone } from 'lodash-es';
+import { useI18n } from 'vue-i18n';
 import { defineComponent, reactive } from 'vue';
 import { ODataHelper } from '@fatesigner/utils/odata';
 import { Input, Modal, Tag, notification } from 'ant-design-vue';
 import {
+  IconMenuAddLine,
   IconShapeLine,
   XButton,
   XButtonAdd,
@@ -23,6 +25,7 @@ import { sysRoleApi } from '@/api';
 import { COMMON_STATUS } from '@/app/core/constants';
 import { sessionService } from '@/app/core/services';
 import { PageWrapper } from '@/app/shared/page-wrapper';
+import { i18nMessages } from '@/app/i18n';
 
 /**
  * RolesView
@@ -30,6 +33,8 @@ import { PageWrapper } from '@/app/shared/page-wrapper';
 export const RolesView = defineComponent({
   name: 'RolesView',
   setup() {
+    const { t } = useI18n();
+
     // 定义查询参数
     const query = reactive({
       keywords: undefined
@@ -52,12 +57,13 @@ export const RolesView = defineComponent({
     // 菜单设置 弹出层
     const menusSettingPopupRef = createXDrawer(
       {
+        title: t(i18nMessages.app.systemSettings.menu.title),
         width: '80%',
         destroyOnClose: true
       },
       () => import('./menus.setting').then(({ MenusSetting }) => ({ default: MenusSetting })),
       {
-        roleid: undefined,
+        roleId: undefined,
         onClose(updated) {
           menusSettingPopupRef.handler.dismiss();
           if (updated) {
@@ -75,7 +81,7 @@ export const RolesView = defineComponent({
       },
       () => import('./permissions.chooser').then(({ PermissionsChooser }) => ({ default: PermissionsChooser })),
       {
-        roleid: undefined,
+        roleId: undefined,
         onClose(updated) {
           permissionsChooserPopupRef.handler.dismiss();
           if (updated) {
@@ -131,7 +137,7 @@ export const RolesView = defineComponent({
                       type='outline'
                       onClick={() => {
                         permissionsChooserPopupRef.options.title = 'Update Permissions';
-                        permissionsChooserPopupRef.compProps.roleid = record.ID;
+                        permissionsChooserPopupRef.compProps.roleId = record.ID;
                         permissionsChooserPopupRef.compProps.onClose = (selectedData) => {
                           permissionsChooserPopupRef.handler.dismiss();
                           if (selectedData) {
@@ -159,23 +165,24 @@ export const RolesView = defineComponent({
                         <span>Permissions</span>
                       </div>
                     </XButton>
-                    {/* <XButton
-                      color='primary'
-                      size='small'
-                      type='outline'
-                      onClick={() => {
-                        menusSettingPopupRef.options.title = 'Update Menus';
-                        menusSettingPopupRef.compProps.roleid = record.ID;
-                        menusSettingPopupRef.compProps.onClose = (selectedData) => {
-                          menusSettingPopupRef.handler.dismiss();
-                        };
-                        menusSettingPopupRef.handler.present();
-                      }}>
-                      <div class='tw-flex tw-items-center tw-gap-2'>
-                        <IconMenuAddLine />
-                        <span>Menus</span>
-                      </div>
-                    </XButton> */}
+                    {
+                      <XButton
+                        color='primary'
+                        size='small'
+                        type='outline'
+                        onClick={() => {
+                          menusSettingPopupRef.compProps.roleId = record.ID;
+                          menusSettingPopupRef.compProps.onClose = () => {
+                            menusSettingPopupRef.handler.dismiss();
+                          };
+                          menusSettingPopupRef.handler.present();
+                        }}>
+                        <div class='tw-flex tw-items-center tw-gap-2'>
+                          <IconMenuAddLine />
+                          <span>Menus</span>
+                        </div>
+                      </XButton>
+                    }
                     <XButtonEdit
                       notify
                       color='blue'

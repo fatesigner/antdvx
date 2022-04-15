@@ -5,7 +5,8 @@
 import { ANTDVX_SYMBOLS } from '@/antdvx';
 import { IHttpService, IStorageService } from '@/antdvx/types';
 
-import { AuthServiceType, SessionServiceType, appDIC } from './inversify';
+import { appDIC } from '@/app/core/inversify';
+import { AuthServiceType, SessionServiceType } from '@/app/core/types';
 
 export const authService = appDIC.get<AuthServiceType>(ANTDVX_SYMBOLS.AUTH_SERVICE);
 

@@ -1,17 +1,20 @@
 import { Field as VeeField } from 'vee-validate';
 import { PropType, defineComponent, ref } from 'vue';
-import { Form, FormItem, Input, SelectOptGroup, SelectOption } from 'ant-design-vue';
+import { Form, FormItem, Input, Modal, SelectOptGroup, SelectOption } from 'ant-design-vue';
 import { TransitionCollapse, XButton, XCombobox, XDrawer, createXDrawer } from '@/antdvx';
 import { IMenu } from '@/antdvx/types';
 
 import { getMenusFromRoutes } from '@/app/utils';
 import { createForm } from '@/app/plugins/vee-validate';
+import { i18nMessages } from '@/app/i18n';
+import { useI18n } from 'vue-i18n';
 
 /**
  * MenusForm
  */
 export const MenusForm = defineComponent({
   props: {
+    parent: Object,
     model: {
       type: Object as PropType<any>,
       default() {
@@ -21,7 +24,7 @@ export const MenusForm = defineComponent({
   },
   emits: ['close'],
   setup(props: any, { emit }) {
-    const wrapRef = ref();
+    const { t } = useI18n();
 
     // 图标选择 弹出层
     const iconChooserPopupRef = createXDrawer(
@@ -54,20 +57,29 @@ export const MenusForm = defineComponent({
         }
       },
       async (values) => {
+        // 判断 children 内是否包含相同 name 的菜单
+        if (props?.parent?.children) {
+          if (props.parent.children.find((x) => x.name === values.name)) {
+            Modal.warning({
+              title: 'Warning',
+              content: t(i18nMessages.app.systemSettings.menu.duplicatedNameExist)
+            });
+            return;
+          }
+        }
         // 提交表单
         emit('close', values);
       }
     );
 
     return {
-      wrapRef,
       iconChooserPopupRef,
       form
     };
   },
   render(ctx) {
     return (
-      <div class='tw-flex tw-flex-col tw-h-full' ref='wrapRef'>
+      <div class='tw-flex tw-flex-col tw-h-full'>
         <div class='tw-flex-1 tw-overflow-y-auto tw-pt-4 tw-pr-8 tw-pb-4 tw-pl-8'>
           <Form class='tw-max-w-md tw-m-auto tw-pr-8' layout='horizontal' labelAlign='right' labelCol={{ style: { width: '120px' } }}>
             <div class='tw-grid tw-grid-cols-12 tw-gap-4'>
@@ -86,7 +98,7 @@ export const MenusForm = defineComponent({
                           dataValueField='name'
                           dataTextField='label'
                           dataFilterField='name'
-                          dataLabelField='url'
+                          dataLabelField='label'
                           placeholder='Select Route Name'
                           value={field.value}
                           optionsLoader={() => {

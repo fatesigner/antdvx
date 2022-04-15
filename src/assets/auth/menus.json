@@ -2,7 +2,7 @@
   {
     "id": "f76020586bf6",
     "label": "首页",
-    "name": "portal",
+    "name": "Portal",
     "url": "/",
     "target": null,
     "icon": "home-2-line"
@@ -17,7 +17,7 @@
       {
         "id": "d79ss90e69zd",
         "label": "图标",
-        "name": "iconfont",
+        "name": "Iconfont",
         "url": "/iconfont",
         "target": null,
         "icon": "code-box-line",
@@ -26,7 +26,7 @@
       {
         "id": "zsg6690e69zd",
         "label": "可滚动视图区域",
-        "name": "scroll-view",
+        "name": "Scrollview",
         "url": "/scroll-view",
         "target": null,
         "icon": "code-box-line",
@@ -35,7 +35,7 @@
       {
         "id": "zf96690e69zd",
         "label": "可拖拽两栏布局",
-        "name": "grid-dragable",
+        "name": "GridDragable",
         "url": "/grid-dragable",
         "target": null,
         "icon": "code-box-line",
@@ -44,7 +44,7 @@
       {
         "id": "sh96690e69zd",
         "label": "异步加载区域",
-        "name": "async-section",
+        "name": "AsyncSection",
         "url": "/async-section",
         "target": null,
         "icon": "code-box-line",
@@ -53,7 +53,7 @@
       {
         "id": "fh96690e69zd",
         "label": "延迟加载",
-        "name": "lazy",
+        "name": "Lazy",
         "url": "/lazy",
         "target": null,
         "icon": "code-box-line",
@@ -62,7 +62,7 @@
       {
         "id": "b796690e69zd",
         "label": "按钮",
-        "name": "button",
+        "name": "Button",
         "url": "/button",
         "target": null,
         "icon": "code-box-line",
@@ -71,7 +71,7 @@
       {
         "id": "d790990e69zd",
         "label": "输入框",
-        "name": "input",
+        "name": "Input",
         "url": "/input",
         "target": null,
         "icon": "code-box-line",
@@ -80,7 +80,7 @@
       {
         "id": "c796690e69zd",
         "label": "下拉列表",
-        "name": "combobox",
+        "name": "Combobox",
         "url": "/combobox",
         "target": null,
         "icon": "code-box-line",
@@ -89,7 +89,7 @@
       {
         "id": "d796690e69sc",
         "label": "弹出框",
-        "name": "popup",
+        "name": "Popup",
         "url": "/popup",
         "target": null,
         "icon": "code-box-line",
@@ -98,7 +98,7 @@
       {
         "id": "fs96690e6975",
         "label": "粘性布局",
-        "name": "sticky-section",
+        "name": "StickySection",
         "url": "/sticky-section",
         "target": null,
         "icon": "code-box-line",
@@ -107,7 +107,7 @@
       {
         "id": "df96690e69sc",
         "label": "过渡（Transitions）",
-        "name": "transitions",
+        "name": "Transitions",
         "url": "/transitions",
         "target": null,
         "icon": "code-box-line",
@@ -116,7 +116,7 @@
       {
         "id": "hd96690e69sc",
         "label": "管道过滤器（pipes）",
-        "name": "pipes",
+        "name": "Pipes",
         "url": "/pipes",
         "target": null,
         "icon": "code-box-line",
@@ -125,7 +125,7 @@
       {
         "id": "F596690e6975",
         "label": "图表（Echarts）",
-        "name": "echarts",
+        "name": "Echarts",
         "url": "/echarts",
         "target": null,
         "icon": "code-box-line",
@@ -134,7 +134,7 @@
       {
         "id": "b796690e6975",
         "label": "表格",
-        "name": "table",
+        "name": "Table",
         "url": "/table",
         "target": null,
         "icon": "code-box-line",
@@ -153,7 +153,7 @@
       {
         "id": "yf96690e6d7z",
         "label": "Permissions",
-        "name": "systemSettingsPermissions",
+        "name": "Permissions",
         "url": "/system-settings/permissions",
         "target": null,
         "icon": "funds-line",
@@ -162,7 +162,7 @@
       {
         "id": "y79g390e6d7z",
         "label": "Roles",
-        "name": "systemSettingsRoles",
+        "name": "Roles",
         "url": "/system-settings/roles",
         "target": null,
         "icon": "file-user-line",
@@ -171,7 +171,7 @@
       {
         "id": "y796690e697z",
         "label": "Users",
-        "name": "systemSettingsUsers",
+        "name": "Users",
         "url": "/system-settings/users",
         "target": null,
         "icon": "user-line",

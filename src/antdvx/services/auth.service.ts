@@ -15,6 +15,18 @@ const defaultConfig: AuthServiceConfig = {
   superRole: []
 };
 
+const strutreeForRoute = new StructureTree<IRouteLocationNormalized>({
+  idKey: 'path',
+  labelKey: 'path',
+  childrenKey: 'children'
+});
+
+const strutreeForMenu = new StructureTree<IMenu>({
+  idKey: 'id',
+  labelKey: 'label',
+  childrenKey: 'children'
+});
+
 /**
  * Auth service
  * 授权、认证服务
@@ -45,16 +57,16 @@ export class AuthService<
       return true;
     }
 
+    if (isNullOrUndefined(roles)) {
+      roles = this._sessionService?.user?.role?.name ? [this._sessionService.user.role.name] : [];
+    }
+
     // 绕过超级管理员角色
-    if (this.config.superRole && this._sessionService?.user?.roles?.some((role) => this.config.superRole.includes(role.name))) {
+    if (roles.length && this.config.superRole?.length && roles.some((role) => this.config.superRole.includes(role))) {
       return true;
     }
 
     if (this.config.authMode === 'client') {
-      if (!roles) {
-        roles = this._sessionService?.user?.roles?.map((x) => x.name) ?? [];
-      }
-
       let routes = [];
       if (to.matched && to.matched.length) {
         // 对于嵌套路由的情况，将从尾部（子路由）开始依次验证
@@ -83,13 +95,17 @@ export class AuthService<
         }
       });
     } else {
-      return this._sessionService.user?.role?.menus?.some?.((menu) => menu.name === to.name);
+      if (to?.meta?.allowAnonymous) {
+        return true;
+      }
+      const c = strutreeForMenu.find(this._sessionService.user?.role?.menus ?? [], (x) => x.name === to.name);
+      return !!c;
     }
   }
 
   authRoles(roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][], authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
     const authorizedRolesNew = [];
-    const length = authorizedRoles && authorizedRoles.length;
+    const length = authorizedRoles?.length ?? 0;
     let temp;
     let temp2 = false;
     for (let i = 0; i < length; i++) {
@@ -111,39 +127,27 @@ export class AuthService<
     };
   }
 
-  getAuthorizedRoutes(routes: TRoute[], roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
-    roles = roles ?? this._sessionService?.user?.roles?.map?.((x) => x.name);
-
-    const strutree = new StructureTree<any>({
-      idKey: 'path',
-      labelKey: 'path',
-      childrenKey: 'children'
-    });
-
-    const d: any[] = strutree.filter(routes, (node) => {
-      return this.isAuthorized(node, roles);
-    });
-
-    return d.filter((x) => x.children.length);
-  }
-
-  getAuthorizedMenus(menusFromServer: TMenu[], roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
-    if (isNullOrUndefined(roles)) {
-      roles = this._sessionService?.user?.roles?.map?.((x) => x.name) ?? [];
-    }
-
-    // 绕过超级管理员角色
-    /* if (this.superRole && roles.includes(this.superRole)) {
-      // 获取当前应用下的所有菜单
-      return GetMenusFromRoutes(RichRoutes);
-    } */
-
+  getAuthorizedRoutes(routes: TRoute[], role?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number]) {
     if (this.config.authMode === 'client') {
       // 客户端授权模式，分析当前路由表以获取菜单
-      return [];
-    }
+      role = role ?? this._sessionService?.user?.role?.name;
 
-    // 服务端授权模式，后端返回菜单
-    return menusFromServer;
+      return strutreeForRoute.filter(routes, (node) => {
+        return this.isAuthorized(node as any, [role]);
+      }) as any[];
+    } else {
+      // 服务端授权模式，分析 sessionService.user.role.menu
+
+      const names = [];
+      strutreeForMenu.forEach(this._sessionService.user.role.menus as TMenu[], (node) => {
+        if (node.name) {
+          names.push(node.name);
+        }
+      });
+
+      return strutreeForRoute.filter(routes as any, (node) => {
+        return names.includes(node.name);
+      });
+    }
   }
 }

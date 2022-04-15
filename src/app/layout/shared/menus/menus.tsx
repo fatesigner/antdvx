@@ -6,6 +6,7 @@ import { StructureTree } from '@fatesigner/utils/structure-tree';
 import { PropType, computed, defineComponent, inject, nextTick, provide, reactive, ref, watch } from 'vue';
 
 import './menus.less';
+import { sessionService } from '@/app/core/services';
 
 const NavMenuItem = defineComponent({
   name: 'NavMenuItem',
@@ -186,16 +187,17 @@ export const NavMenu = defineComponent({
       childrenKey: 'children'
     });
 
-    const menus = ref<IMenu[]>(
+    /* const menus = ref<IMenu[]>(
       strutree.filter(require('@/assets/auth/menus.json'), (node: any) => {
         return !node?.auth || node?.auth;
       })
-    );
+    ); */
+    const menus = ref<IMenu[]>(sessionService?.user?.role?.menus ?? []);
 
     const collapsed = inject<boolean>('collapsed');
 
     let preOpenKeys = [];
-    const openKeys = ref([]);
+    const openKeys = ref(menus.value.flatMap((x) => [x.id, ...(x?.children?.map((x) => x.id) ?? [])]));
     const selectedKeys = ref([]);
 
     provide('openKeys', openKeys);

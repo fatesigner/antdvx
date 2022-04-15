@@ -143,7 +143,7 @@ export const Sidebar = defineComponent({
           <div class='tw-flex-initial'>
             <div class={$styles.header} ref='headerRef'>
               <RouterLink
-                to={{ name: 'portal' }}
+                to={{ name: 'Portal' }}
                 custom
                 v-slots={{
                   default({ href }) {

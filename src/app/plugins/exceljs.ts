@@ -68,6 +68,9 @@ export const Exceljs = {
           defaultRowHeight: 16
         },
         views: [{ showGridLines: true, state: 'frozen', xSplit: 1, ySplit: 1 }]
+      },
+      columnMap(column) {
+        return column;
       }
     });
   }

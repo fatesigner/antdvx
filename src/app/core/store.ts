@@ -1,5 +1,5 @@
 /**
- * store
+ * store for Vue
  */
 
 import { merge } from 'lodash-es';
