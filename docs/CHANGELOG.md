@@ -1,3 +1,10 @@
+# [1.0.0-alpha.100](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.99...v1.0.0-alpha.100) (2022-04-16)
+
+
+### Features
+
+* update auth flow ([fb78087](https://github.com/fatesigner/antdvx/commit/fb78087c88976465683c0f8e9a7446037bf5b939))
+
 # [1.0.0-alpha.99](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.98...v1.0.0-alpha.99) (2022-04-14)
 
 
