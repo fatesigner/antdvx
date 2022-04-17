@@ -1,3 +1,10 @@
+# [1.0.0-alpha.101](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.100...v1.0.0-alpha.101) (2022-04-17)
+
+
+### Features
+
+* update types ([8225211](https://github.com/fatesigner/antdvx/commit/8225211e972c0078bfc8ce3838e8bea652005d66))
+
 # [1.0.0-alpha.100](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.99...v1.0.0-alpha.100) (2022-04-16)
 
 
