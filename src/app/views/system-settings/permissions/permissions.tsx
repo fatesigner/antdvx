@@ -18,9 +18,9 @@ import {
 } from '@/antdvx';
 
 import { sysPermissionApi } from '@/api';
+import { sessionService } from '@/app/core/services';
 import { PageWrapper } from '@/app/shared/page-wrapper';
 import { PERMISSIONS_TYPE } from '@/app/core/constants';
-import { sessionService } from '@/app/core/services';
 
 /**
  * PermissionsView
@@ -76,7 +76,7 @@ export const PermissionsView = defineComponent({
           dataIndex: 'Category',
           width: 140
         },
-        sessionService.user.role.permissions.includes('RolesFullAccess')
+        sessionService.user?.role?.permissions?.includes('RolesFullAccess')
           ? {
               title: 'Operation',
               width: 120,
@@ -140,7 +140,7 @@ export const PermissionsView = defineComponent({
                     sorter?.order
                       ? {
                           name: sorter.columnKey,
-                          operator: sorter.order as any
+                          operator: sorter.order
                         }
                       : undefined
                   ]),
@@ -174,7 +174,7 @@ export const PermissionsView = defineComponent({
           actions() {
             return (
               <div class='tw-flex tw-justify-end tw-gap-2'>
-                {sessionService.user.role.permissions.includes('RolesFullAccess') ? (
+                {sessionService.user?.role?.permissions?.includes('RolesFullAccess') ? (
                   <XButtonAdd
                     color='primary'
                     type='3d'
@@ -182,7 +182,8 @@ export const PermissionsView = defineComponent({
                       ctx.formPopupRef.options.title = 'Add Permission';
                       ctx.formPopupRef.compProps.model = null;
                       ctx.formPopupRef.handler.present();
-                    }}>
+                    }}
+                  >
                     Add
                   </XButtonAdd>
                 ) : undefined}
@@ -218,13 +219,15 @@ export const PermissionsView = defineComponent({
                           };
                         });
                     }
-                  }}>
+                  }}
+                >
                   Export
                 </XButtonExport>
               </div>
             );
           }
-        }}>
+        }}
+      >
         <div class='tw-p-2'>
           <div class='tw-p-2 tw-bg-white'>
             <XTable

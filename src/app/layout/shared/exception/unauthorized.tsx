@@ -21,42 +21,40 @@ export const Unauthorized = defineComponent({
     const router = useRouter();
 
     const back = () => {
-      router.push({ path: '/' });
+      router.push({ name: authService.config.homePage });
     };
 
     const gotoLogin = () => {
       router.replace({ name: authService.config.authPage, query: { redirect: route.fullPath } });
     };
 
-    const gotoDashboard = () => {
+    const gotoHome = () => {
       router.push({ name: authService.config.homePage });
     };
 
     return {
       back,
       gotoLogin,
-      gotoDashboard
+      gotoHome
     };
   },
   render(ctx) {
     return (
       <dl class={$styles.unauthorized}>
         <dt>
-          <XButton type='primary' onClick={ctx.back}>
-            <IconArrowLeftLine />
-            {ctx.$t(i18nMessages.app.route.exception.unauthorized.back)}
-          </XButton>
           <h1 class='text-jumbo text-ginormous'>403</h1>
           <h2>{ctx.$t(i18nMessages.app.route.exception.unauthorized.title)}</h2>
           <h6>{ctx.$t(i18nMessages.app.route.exception.unauthorized.title2)}</h6>
+          <div class='tw-pl-6'>{ctx.$t(i18nMessages.app.route.exception.unauthorized.title3)}:</div>
           <ul class='list-unstyled'>
-            <li>{ctx.$t(i18nMessages.app.route.exception.unauthorized.title3)}:</li>
-            {ctx.$route.name !== 'portal' ? (
+            <li class='link-type'>
+              <a onClick={ctx.back}>{ctx.$t(i18nMessages.app.route.exception.unauthorized.back)}</a>
+            </li>
+            {ctx.$route.name !== authService.config.homePage ? (
               <li class='link-type'>
-                <a onClick={ctx.gotoDashboard}>{ctx.$t(i18nMessages.app.route.exception.unauthorized.gotoHome)}</a>
+                <a onClick={ctx.gotoHome}>{ctx.$t(i18nMessages.app.route.exception.unauthorized.gotoHome)}</a>
               </li>
             ) : undefined}
-
             <li class='link-type'>
               <a onClick={ctx.gotoLogin}>{ctx.$t(i18nMessages.app.route.exception.unauthorized.gotoLogin)}</a>
             </li>

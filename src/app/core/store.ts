@@ -13,14 +13,9 @@ import { ProgressBarStore } from '@/app/shared/progress-bar';
 const storageKey = 'APP_STORE';
 
 // 加载已缓存的数据
-const state: {
-  // 语言
-  lang: LanguageType;
-  theme: 'light' | 'dark';
-  collapsed: boolean;
-} = merge(
+const state = merge(
   {
-    lang: i18n._.global.locale as any,
+    lang: i18n._.global.locale as LanguageType,
     theme: 'light' as 'light' | 'dark',
     collapsed: false
   },

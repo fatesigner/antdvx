@@ -33,4 +33,4 @@ export interface IRole<TRoleName extends string = string> {
 /**
  * 获取角色类型中的名称类型
  */
-export type NamesTypeOfRole<TRole> = TRole extends IRole<infer A> ? A : never;
+export type NamesTypeOfRole<TRole> = TRole extends IRole<infer A> ? A : string;

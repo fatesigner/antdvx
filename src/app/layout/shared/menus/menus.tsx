@@ -5,8 +5,9 @@ import { IMenu } from '@/antdvx/types';
 import { StructureTree } from '@fatesigner/utils/structure-tree';
 import { PropType, computed, defineComponent, inject, nextTick, provide, reactive, ref, watch } from 'vue';
 
-import './menus.less';
 import { sessionService } from '@/app/core/services';
+
+import './menus.less';
 
 const NavMenuItem = defineComponent({
   name: 'NavMenuItem',
@@ -49,76 +50,50 @@ const NavMenuItem = defineComponent({
           {...ctx.$attrs}
           v-slots={{
             title() {
-              /* if (ctx.data.url) {
+              if (ctx.data.url || ctx.data.name) {
                 return (
                   <XRouterLink
-                    to={{ path: ctx.data.url }}
+                    to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.name }}
                     v-slots={{
                       default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
+                        return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
                       }
                     }}
                   />
                 );
-              } else if (ctx.data.name) {
+              } else {
                 return (
-                  <XRouterLink
-                    to={{ name: ctx.data.name }}
-                    v-slots={{
-                      default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
-                      }
-                    }}
-                  />
+                  <div class='tw-flex tw-items-center'>
+                    {ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined}
+                    <span>{ctx.data.label}</span>
+                  </div>
                 );
-              } */
-              return (
-                <div
-                  class='tw-flex tw-items-center'
-                  onClick={() => {
-                    if (ctx.data.url) {
-                      ctx.$router.push({ path: ctx.data.url });
-                    } else if (ctx.data.name) {
-                      ctx.$router.push({ name: ctx.data.name });
-                    }
-                  }}>
-                  {ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined}
-                  <span>{ctx.data.label}</span>
-                </div>
-              );
+              }
             }
-          }}>
+          }}
+        >
           {ctx.data.children.map((item) => {
             if (item.children) {
               return <NavMenuItem key={item.id} data={item} />;
             } else {
               return (
                 <Menu.Item
-                  key={item.name || item.id}
+                  key={item.id}
                   v-slots={{
                     default() {
-                      if (item.url) {
+                      if (item.url || item.name) {
                         return (
                           <XRouterLink
-                            to={{ path: item.url }}
+                            to={item.url ? { path: item.url } : { name: item.name }}
                             v-slots={{
                               default() {
-                                return item.icon ? [<Iconfont name={item.icon} />, <span>{item.label}</span>] : '';
+                                return [item.icon ? <Iconfont name={item.icon} /> : undefined, <span>{item.label}</span>];
                               }
                             }}
                           />
                         );
-                      } else if (item.name) {
-                        return (
-                          <XRouterLink
-                            to={{ name: item.name }}
-                            v-slots={{
-                              default() {
-                                return item.icon ? [<Iconfont name={item.icon} />, <span>{item.label}</span>] : '';
-                              }
-                            }}
-                          />
-                        );
+                      } else {
+                        return [item.icon ? <Iconfont name={item.icon} /> : undefined, <span>{item.label}</span>];
                       }
                     }
                   }}
@@ -132,28 +107,19 @@ const NavMenuItem = defineComponent({
           key={ctx.data.id}
           v-slots={{
             default() {
-              if (ctx.data.url) {
+              if (ctx.data.url || ctx.data.name) {
                 return (
                   <XRouterLink
-                    to={{ path: ctx.data.url }}
+                    to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.name }}
                     v-slots={{
                       default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
+                        return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
                       }
                     }}
                   />
                 );
-              } else if (ctx.data.name) {
-                return (
-                  <XRouterLink
-                    to={{ name: ctx.data.name }}
-                    v-slots={{
-                      default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
-                      }
-                    }}
-                  />
-                );
+              } else {
+                return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
               }
             }
           }}
@@ -194,10 +160,10 @@ export const NavMenu = defineComponent({
     ); */
     const menus = ref<IMenu[]>(sessionService?.user?.role?.menus ?? []);
 
-    const collapsed = inject<boolean>('collapsed');
+    const collapsed = inject('collapsed');
 
-    let preOpenKeys = [];
-    const openKeys = ref(menus.value.flatMap((x) => [x.id, ...(x?.children?.map((x) => x.id) ?? [])]));
+    let preOpenKeys = menus.value?.flatMap((x) => [x.id, ...(x?.children?.map((x) => x.id) ?? [])]) ?? [];
+    const openKeys = ref([]);
     const selectedKeys = ref([]);
 
     provide('openKeys', openKeys);
@@ -210,8 +176,8 @@ export const NavMenu = defineComponent({
     // 监听菜单收缩状态
     watch(
       () => collapsed,
-      (newVal) => {
-        if (newVal) {
+      (newVal: any) => {
+        if (newVal.value) {
           preOpenKeys = openKeys.value.map((x) => x);
           nextTick(() => {
             openKeys.value = [];
@@ -223,6 +189,9 @@ export const NavMenu = defineComponent({
             // openKeys.value.splice(0, openKeys.value.length, ...preOpenKeys);
           });
         }
+      },
+      {
+        immediate: true
       }
     );
 
@@ -273,7 +242,8 @@ export const NavMenu = defineComponent({
           v-models={[
             [ctx.openKeys, 'openKeys'],
             [ctx.selectedKeys, 'selectedKeys']
-          ]}>
+          ]}
+        >
           {ctx.menus.map((item) => (
             <NavMenuItem data={item} inline-indent={16} />
           ))}

@@ -24,7 +24,7 @@ export default {
           title: '你没有权限访问该页面',
           title2: '如有不满请联系你领导',
           title3: '或者你可以去',
-          back: '回到主页',
+          back: '返回上一页',
           gotoLogin: '重新登录',
           gotoHome: '回到主页'
         }
@@ -113,7 +113,17 @@ export default {
         title: '更新角色菜单',
         titleAdd: '添加菜单',
         titleUpdate: '更新菜单',
-        duplicatedNameExist: '相同层级下已有相同名称的菜单存在'
+        duplicatedNameExist: '相同层级下已有相同名称的菜单存在',
+        form: {
+          name: '名称',
+          label: '标签',
+          url: '链接',
+          icon: '图标',
+          target: 'Target'
+        },
+        placeholder: {
+          name: '选择一个路由'
+        }
       }
     }
   }

@@ -46,51 +46,14 @@ export const API_HOSTS = convertModelArrToEnum([
 // 用户角色
 export const ROLES = convertModelArrToEnum([
   {
-    value: 0,
-    text: 'None',
-    name: 'None'
+    value: 'MAdmin',
+    text: 'Master Admin',
+    name: 'MAdmin'
   },
   {
-    value: 1,
-    text: 'Admin',
-    name: 'Admin'
-  },
-  {
-    value: 2,
-    text: 'SuperAdmin',
-    name: 'SuperAdmin'
-  }
-] as const);
-
-// 定义排序方式
-export const SORTORDS = convertModelArrToEnum([
-  {
-    value: 'latest',
-    text: '最新排序',
-    name: 'latest'
-  },
-  {
-    value: 'ASC',
-    text: '从低到高',
-    name: 'ASC'
-  },
-  {
-    value: 'DESC',
-    text: '从高到底',
-    name: 'DESC'
-  }
-] as const);
-
-export const MASTER_DATA_STATUS = convertModelArrToEnum([
-  {
-    value: 0,
-    text: '正常',
-    name: 'enable'
-  },
-  {
-    value: 1,
-    text: '停用',
-    name: 'disabled'
+    value: 'PAdmin',
+    text: 'Project Admin',
+    name: 'PAdmin'
   }
 ] as const);
 

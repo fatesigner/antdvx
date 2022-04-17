@@ -22,10 +22,10 @@ import {
 } from '@/antdvx';
 
 import { sysRoleApi } from '@/api';
+import { i18nMessages } from '@/app/i18n';
 import { COMMON_STATUS } from '@/app/core/constants';
 import { sessionService } from '@/app/core/services';
 import { PageWrapper } from '@/app/shared/page-wrapper';
-import { i18nMessages } from '@/app/i18n';
 
 /**
  * RolesView
@@ -123,7 +123,7 @@ export const RolesView = defineComponent({
           dataIndex: 'Remark',
           width: 150
         },
-        sessionService.user.role.permissions.includes('ExchangeRatesFullAccess')
+        sessionService.user?.role?.permissions?.includes('ExchangeRatesFullAccess')
           ? {
               title: 'Operation',
               width: 90,
@@ -132,7 +132,7 @@ export const RolesView = defineComponent({
                 return (
                   <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
                     <XButton
-                      color='tertiary'
+                      color='purple'
                       size='small'
                       type='outline'
                       onClick={() => {
@@ -159,7 +159,8 @@ export const RolesView = defineComponent({
                           }
                         };
                         permissionsChooserPopupRef.handler.present();
-                      }}>
+                      }}
+                    >
                       <div class='tw-flex tw-items-center tw-gap-2'>
                         <IconShapeLine />
                         <span>Permissions</span>
@@ -167,7 +168,7 @@ export const RolesView = defineComponent({
                     </XButton>
                     {
                       <XButton
-                        color='primary'
+                        color='cyan'
                         size='small'
                         type='outline'
                         onClick={() => {
@@ -176,7 +177,8 @@ export const RolesView = defineComponent({
                             menusSettingPopupRef.handler.dismiss();
                           };
                           menusSettingPopupRef.handler.present();
-                        }}>
+                        }}
+                      >
                         <div class='tw-flex tw-items-center tw-gap-2'>
                           <IconMenuAddLine />
                           <span>Menus</span>
@@ -271,7 +273,7 @@ export const RolesView = defineComponent({
           actions() {
             return (
               <div class='tw-flex tw-justify-end tw-gap-2'>
-                {sessionService.user.role.permissions.includes('RolesFullAccess') ? (
+                {sessionService.user?.role?.permissions?.includes('RolesFullAccess') ? (
                   <XButtonAdd
                     color='primary'
                     type='3d'
@@ -279,7 +281,8 @@ export const RolesView = defineComponent({
                       ctx.formPopupRef.options.title = 'Add Role';
                       ctx.formPopupRef.compProps.model = null;
                       ctx.formPopupRef.handler.present();
-                    }}>
+                    }}
+                  >
                     Add
                   </XButtonAdd>
                 ) : undefined}
@@ -313,13 +316,15 @@ export const RolesView = defineComponent({
                           };
                         });
                     }
-                  }}>
+                  }}
+                >
                   Export
                 </XButtonExport>
               </div>
             );
           }
-        }}>
+        }}
+      >
         <div class='tw-p-2'>
           <div class='tw-p-2 tw-bg-white'>
             <XTable

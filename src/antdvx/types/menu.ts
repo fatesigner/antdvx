@@ -7,9 +7,9 @@ export interface IMenu<TMeta extends UnknownType = never> {
   /**
    * 菜单 ID（主键，需保证唯一性）
    */
-  id: string;
+  id: number | string;
   /**
-   * 菜单名称（对应路由名称，需保证唯一性）
+   * 路由名称，与 App Route 关联，需保证唯一性
    */
   name?: string;
   /**

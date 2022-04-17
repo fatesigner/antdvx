@@ -113,7 +113,17 @@ export default {
         title: `Update Role's Menu`,
         titleAdd: 'Add Menu',
         titleUpdate: 'Update Menu',
-        duplicatedNameExist: 'A menu with the same name already exists at the same level'
+        duplicatedNameExist: 'A menu with the same name already exists at the same level',
+        form: {
+          name: 'Name',
+          label: 'label',
+          url: 'Url',
+          icon: 'Icon',
+          target: 'Target'
+        },
+        placeholder: {
+          name: 'Select a route'
+        }
       }
     }
   }

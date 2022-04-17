@@ -51,14 +51,14 @@ export class AuthService<
     return !!(this._sessionService.user?.username && this._sessionService.user?.accessToken);
   }
 
-  isAuthorized(to: TRoute, roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
+  isAuthorized(to: TRoute, roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]) {
     // 跳过授权界面
     if (!to.name || to.name === this.config.authPage) {
       return true;
     }
 
     if (isNullOrUndefined(roles)) {
-      roles = this._sessionService?.user?.role?.name ? [this._sessionService.user.role.name] : [];
+      roles = this._sessionService?.user?.role?.name ? ([this._sessionService.user.role.name] as NamesTypeOfRole<RoleTypeOfUser<TUser>>[]) : [];
     }
 
     // 绕过超级管理员角色
@@ -103,7 +103,7 @@ export class AuthService<
     }
   }
 
-  authRoles(roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][], authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]) {
+  authRoles(roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[], authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]) {
     const authorizedRolesNew = [];
     const length = authorizedRoles?.length ?? 0;
     let temp;
@@ -127,10 +127,10 @@ export class AuthService<
     };
   }
 
-  getAuthorizedRoutes(routes: TRoute[], role?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number]) {
+  getAuthorizedRoutes(routes: TRoute[], role?: NamesTypeOfRole<RoleTypeOfUser<TUser>>) {
     if (this.config.authMode === 'client') {
       // 客户端授权模式，分析当前路由表以获取菜单
-      role = role ?? this._sessionService?.user?.role?.name;
+      role = role ?? (this._sessionService?.user?.role?.name as NamesTypeOfRole<RoleTypeOfUser<TUser>>);
 
       return strutreeForRoute.filter(routes, (node) => {
         return this.isAuthorized(node as any, [role]);

@@ -113,7 +113,17 @@ export const i18nMessages = createLocaleMessages({
         title: '',
         titleAdd: '',
         titleUpdate: '',
-        duplicatedNameExist: ''
+        duplicatedNameExist: '',
+        form: {
+          name: '',
+          label: '',
+          url: '',
+          icon: '',
+          target: ''
+        },
+        placeholder: {
+          name: ''
+        }
       }
     }
   }

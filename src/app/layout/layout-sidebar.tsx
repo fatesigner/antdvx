@@ -39,7 +39,8 @@ const NavHeader = defineComponent({
             class={$styles.folder}
             onClick={() => {
               ctx.collapsed = !ctx.collapsed;
-            }}>
+            }}
+          >
             <IconMenuLine color='primary' />
           </div>
         </div>
@@ -85,7 +86,9 @@ export const LayoutSidebar = defineComponent({
               <RouterView
                 v-slots={{
                   default({ Component, route }) {
-                    const matchedRoute = route.matched.find((x) => x.components.default.name === Component.type.name) ?? route;
+                    const matchedRoute = Component?.type?.name
+                      ? route?.matched?.find((x) => x?.components?.default?.name === Component.type.name) ?? route
+                      : route;
                     return Component ? (
                       <TransitionSlide>
                         {matchedRoute?.meta?.keepAlive ? (

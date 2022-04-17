@@ -7,7 +7,6 @@ import {
   IXButtonExportOptions,
   IconArrowDownSLine,
   IconFolderLine,
-  IconLink,
   Iconfont,
   XButton,
   XButtonAdd,
@@ -182,6 +181,8 @@ export const MenusSetting = defineComponent({
             // 新增，生成 id
             values.id = getGUID(7);
             parent.children.push(nodeMap(values));
+            // 自动展开
+            tree.expandedKeys = [parent.id, ...tree.expandedKeys];
           } else {
             Object.assign(model, values);
           }
@@ -288,7 +289,7 @@ export const MenusSetting = defineComponent({
           </div>
         ) : (
           [
-            <div class='tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-4 tw-py-2 tw-border-b tw-border-gray-300 tw-shadow-md'>
+            <div class='tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-4 tw-py-2 tw-border-b tw-border-gray-200 tw-shadow-sm'>
               <div class='tw-flex tw-items-center tw-gap-2'>
                 <XButtonUpload
                   color='tertiary'
@@ -304,7 +305,8 @@ export const MenusSetting = defineComponent({
                       } catch (e) {}
                     };
                     reader.readAsText(file);
-                  }}>
+                  }}
+                >
                   {ctx.$t(i18nMessages.app.systemSettings.menu.upload)}
                 </XButtonUpload>
                 <XButtonExport
@@ -319,7 +321,8 @@ export const MenusSetting = defineComponent({
                         };
                       }
                     } as IXButtonExportOptions
-                  }>
+                  }
+                >
                   {ctx.$t(i18nMessages.app.systemSettings.menu.export)}
                 </XButtonExport>
               </div>
@@ -332,7 +335,8 @@ export const MenusSetting = defineComponent({
                   type='3d'
                   onClick={() => {
                     ctx.$emit('close');
-                  }}>
+                  }}
+                >
                   {ctx.$t(i18nMessages.app.systemSettings.menu.cancel)}
                 </XButton>
               </div>

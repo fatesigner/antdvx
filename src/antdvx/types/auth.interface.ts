@@ -26,7 +26,7 @@ export interface AuthServiceConfig<TUser extends IUser = IUser> {
   /**
    * 超级管理员角色，该角色将会跳过认证
    */
-  superRole?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][];
+  superRole?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[];
 }
 
 /**
@@ -49,7 +49,7 @@ export interface IAuthService<
    * @param to
    * @param roles 指定角色组，默认为当前用户的角色组
    */
-  isAuthorized(to: TRoute, roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]): boolean;
+  isAuthorized(to: TRoute, roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]): boolean;
 
   /**
    * 对于指定的角色组，判断给定的角色组是否已授权（即两个集合是否交集）
@@ -61,11 +61,11 @@ export interface IAuthService<
    * unauthorizedRoles：未符合的角色组 若数量和小于指定的角色组 视为 已授权 否则为 未授权
    */
   authRoles(
-    roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][],
-    authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][]
+    roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[],
+    authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]
   ): {
     permissible: boolean;
-    unauthorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number][];
+    unauthorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[];
   };
 
   /**
@@ -73,5 +73,5 @@ export interface IAuthService<
    * @param routes
    * @param role 指定的角色，默认为当前用户角色
    */
-  getAuthorizedRoutes(routes: TRoute[], role?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[number]): TRoute[];
+  getAuthorizedRoutes(routes: TRoute[], role?: NamesTypeOfRole<RoleTypeOfUser<TUser>>): TRoute[];
 }

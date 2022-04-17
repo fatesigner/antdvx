@@ -68,7 +68,7 @@ const antdvxModule = new ContainerModule((bind) => {
     // 是否开启重定向模式，登出后将暂存当前地址，登录后重定向至该地址
     redirectEnable: false,
     // 超级管理员角色，该角色将会跳过认证
-    superRole: ['Admin']
+    superRole: ['MAdmin']
   });
   bind<AuthServiceType>(ANTDVX_SYMBOLS.AUTH_SERVICE).to(AuthService);
 

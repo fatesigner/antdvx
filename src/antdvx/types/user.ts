@@ -49,4 +49,4 @@ export interface IUser<TRole extends IRole = IRole> {
 /**
  * 获取用户类型中的角色类型
  */
-export type RoleTypeOfUser<TUser> = TUser extends IUser<infer A> ? A : never;
+export type RoleTypeOfUser<TUser> = TUser extends IUser<infer A> ? A : IRole;

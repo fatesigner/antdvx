@@ -181,7 +181,7 @@ export const UsersView = defineComponent({
           },
           excel: {}
         },
-        sessionService.user.role.permissions.includes('UserInformationFullAccess')
+        sessionService.user?.role?.permissions?.includes('UserInformationFullAccess')
           ? {
               title: 'Operation',
               width: 90,
@@ -283,7 +283,8 @@ export const UsersView = defineComponent({
                       ctx.formPopupRef.options.title = 'Add User';
                       ctx.formPopupRef.compProps.model = null;
                       ctx.formPopupRef.handler.present();
-                    }}>
+                    }}
+                  >
                     Add
                   </XButtonAdd>
                 ) : undefined}
@@ -308,13 +309,15 @@ export const UsersView = defineComponent({
                           return ctx.tbRef.handler.downloadExcel(res?.data?.Result ?? []);
                         });
                     }
-                  }}>
+                  }}
+                >
                   Export
                 </XButtonExport>
               </div>
             );
           }
-        }}>
+        }}
+      >
         <div class='tw-p-2'>
           <div class='tw-p-2 tw-bg-white'>
             <XTable

@@ -264,9 +264,9 @@ export async function createAppRouter() {
 
   // 监听用户角色切换事件，设置不同的主页
   roleChanged$.on((role) => {
-    if (role.name === 'Admin') {
+    if (role.name === 'MAdmin') {
       authService.config.homePage = 'Portal';
-    } else if (role.name === 'SuperAdmin') {
+    } else if (role.name === 'PAdmin') {
       authService.config.homePage = 'Portal';
     } else {
       // 匿名用户，设置主页为空

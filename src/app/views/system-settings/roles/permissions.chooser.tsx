@@ -15,7 +15,7 @@ export const PermissionsChooser = defineComponent({
     roleid: [Number, String]
   },
   emits: ['close'],
-  setup(props: any) {
+  setup(props) {
     const wrapRef = ref();
 
     const query = reactive({
@@ -76,7 +76,7 @@ export const PermissionsChooser = defineComponent({
                     sorter?.order
                       ? {
                           name: sorter.columnKey,
-                          operator: sorter.order as any
+                          operator: sorter.order
                         }
                       : undefined
                   ]),
@@ -94,12 +94,17 @@ export const PermissionsChooser = defineComponent({
         }
       },
       listeners: {
-        rowSelectChange(keys, rows) {
-          rows.forEach((x) => {
-            if (selectedRows.findIndex((y) => y.ID === x.ID) < 0) {
-              selectedRows.push(x);
+        rowSelect(record) {
+          if (record.checkd) {
+            if (selectedRows.findIndex((y) => y.ID === record.ID) < 0) {
+              selectedRows.push(record);
             }
-          });
+          } else {
+            const index = selectedRows.findIndex((y) => y.ID === record.ID);
+            if (index > -1) {
+              selectedRows.splice(index, 1);
+            }
+          }
         },
         dataChange() {
           updateSelectedKeys();
@@ -189,7 +194,8 @@ export const PermissionsChooser = defineComponent({
             type='primary'
             onClick={() => {
               ctx.tbRef.handler.reload();
-            }}>
+            }}
+          >
             Search
           </XButton>
         </div>
@@ -201,10 +207,10 @@ export const PermissionsChooser = defineComponent({
             color='secondary'
             size='large'
             type='3d'
-            disabled={!ctx.tbRef.options.rowSelection.selectedRowKeys.length}
             onClick={() => {
               ctx.$emit('close', ctx.selectedRows);
-            }}>
+            }}
+          >
             Confirm
           </XButton>
           <XButton
@@ -212,7 +218,8 @@ export const PermissionsChooser = defineComponent({
             type='3d'
             onClick={() => {
               ctx.$emit('close');
-            }}>
+            }}
+          >
             Cancel
           </XButton>
         </div>
