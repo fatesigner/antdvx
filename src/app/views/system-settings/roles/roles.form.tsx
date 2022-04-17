@@ -47,7 +47,7 @@ export const RolesForm = defineComponent({
             } else {
               notification.success({ message: 'Add success' });
             }
-            emit('close', values);
+            emit('close', true);
           })
           .catch((err) => {
             Modal.error({

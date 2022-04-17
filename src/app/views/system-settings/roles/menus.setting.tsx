@@ -302,11 +302,14 @@ export const MenusSetting = defineComponent({
                       try {
                         const menus = JSON.parse(e2.target.result);
                         ctx.updateNodes(menus);
-                      } catch (e) {}
+                      } catch (err) {
+                        Modal.error({
+                          title: err.message
+                        });
+                      }
                     };
                     reader.readAsText(file);
-                  }}
-                >
+                  }}>
                   {ctx.$t(i18nMessages.app.systemSettings.menu.upload)}
                 </XButtonUpload>
                 <XButtonExport
@@ -321,8 +324,7 @@ export const MenusSetting = defineComponent({
                         };
                       }
                     } as IXButtonExportOptions
-                  }
-                >
+                  }>
                   {ctx.$t(i18nMessages.app.systemSettings.menu.export)}
                 </XButtonExport>
               </div>
@@ -335,8 +337,7 @@ export const MenusSetting = defineComponent({
                   type='3d'
                   onClick={() => {
                     ctx.$emit('close');
-                  }}
-                >
+                  }}>
                   {ctx.$t(i18nMessages.app.systemSettings.menu.cancel)}
                 </XButton>
               </div>

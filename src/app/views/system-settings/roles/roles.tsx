@@ -50,7 +50,12 @@ export const RolesView = defineComponent({
       () => import('./roles.form').then(({ RolesForm }) => ({ default: RolesForm })),
       {
         model: null,
-        onClose: null
+        onClose(updated) {
+          formPopupRef.handler.dismiss();
+          if (updated) {
+            tbRef.handler.reload();
+          }
+        }
       }
     );
 
@@ -159,8 +164,7 @@ export const RolesView = defineComponent({
                           }
                         };
                         permissionsChooserPopupRef.handler.present();
-                      }}
-                    >
+                      }}>
                       <div class='tw-flex tw-items-center tw-gap-2'>
                         <IconShapeLine />
                         <span>Permissions</span>
@@ -177,8 +181,7 @@ export const RolesView = defineComponent({
                             menusSettingPopupRef.handler.dismiss();
                           };
                           menusSettingPopupRef.handler.present();
-                        }}
-                      >
+                        }}>
                         <div class='tw-flex tw-items-center tw-gap-2'>
                           <IconMenuAddLine />
                           <span>Menus</span>
@@ -281,8 +284,7 @@ export const RolesView = defineComponent({
                       ctx.formPopupRef.options.title = 'Add Role';
                       ctx.formPopupRef.compProps.model = null;
                       ctx.formPopupRef.handler.present();
-                    }}
-                  >
+                    }}>
                     Add
                   </XButtonAdd>
                 ) : undefined}
@@ -316,15 +318,13 @@ export const RolesView = defineComponent({
                           };
                         });
                     }
-                  }}
-                >
+                  }}>
                   Export
                 </XButtonExport>
               </div>
             );
           }
-        }}
-      >
+        }}>
         <div class='tw-p-2'>
           <div class='tw-p-2 tw-bg-white'>
             <XTable

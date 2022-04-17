@@ -698,7 +698,6 @@ export const XTable = defineComponent({
           ?.map((x) => ({
             key: x.dataIndex,
             header: x.title,
-            customRender: x.customRender,
             ...x?.excel
           })),
         data: data ?? (overallData as any)

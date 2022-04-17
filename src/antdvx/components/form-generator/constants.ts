@@ -25,4 +25,4 @@ export const LABEL_ALIGN_OPTIONS = [
 ];
 
 // 预置的日期格式化列表
-export const DATE_FORMATS = ['yyyy-MM-dd', 'yyyy/MM/dd', 'yyyy-MM-dd HH:mm:ss', 'yyyy/MM/dd HH:mm:ss'];
+export const DATE_FORMATS = ['YYYY-MM-DD', 'YYYY/MM/DD', 'YYYY-MM-DD HH:mm:ss', 'YYYY/MM/DD HH:mm:ss'];

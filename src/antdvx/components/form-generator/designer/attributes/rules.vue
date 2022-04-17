@@ -70,7 +70,7 @@
           <AInputNumber class="tw-w-32" :min="0" :step="1" v-model:value="field.rules.props.number.digits" placeholder="小数位数" />
         </div>
         <div v-else-if="item.value === 'date'">
-          <div class="tw-mb-2">日期格式（yyyy-MM-dd HH:mm:ss）</div>
+          <div class="tw-mb-2">日期格式（YYYY-MM-DD HH:mm:ss）</div>
           <AAutoComplete class="tw-mb-4" v-model:value="field.rules.props.date.format" placeholder="输入日期格式" @search="onDateFormatSearch">
             <template #options>
               <a-select-option v-for="format in dateFormatOptions" :key="format">

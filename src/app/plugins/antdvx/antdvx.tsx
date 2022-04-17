@@ -31,7 +31,7 @@ export const Antdvx = {
 
     // 配置 pipes
     setAntdvxPipesConfig({
-      dateFormat: 'yyyy-MM-dd',
+      dateFormat: 'YYYY-MM-DD',
       fixed: {
         digits: 2,
         mode: 'round'
