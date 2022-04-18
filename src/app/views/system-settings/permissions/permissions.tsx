@@ -43,7 +43,7 @@ export const PermissionsView = defineComponent({
       },
       () => import('./permissions.form').then(({ PermissionsForm }) => ({ default: PermissionsForm })),
       {
-        model: null,
+        model: undefined,
         onClose(updated) {
           formPopupRef.handler.dismiss();
           if (updated) {
@@ -63,18 +63,21 @@ export const PermissionsView = defineComponent({
           title: 'Permission Code',
           dataIndex: 'Code',
           width: 140,
-          sorter: true
+          sorter: true,
+          excel: {}
         },
         {
           title: 'Permission Name',
           dataIndex: 'Name',
           width: 140,
-          sorter: true
+          sorter: true,
+          excel: {}
         },
         {
           title: 'Permission Category',
           dataIndex: 'Category',
-          width: 140
+          width: 140,
+          excel: {}
         },
         sessionService.user?.role?.permissions?.includes('RolesFullAccess')
           ? {
@@ -207,16 +210,7 @@ export const PermissionsView = defineComponent({
                           })
                         })
                         .then((res) => {
-                          return {
-                            filename: 'Permissions',
-                            columns: ctx.tbRef.options.columns
-                              .filter((x) => x.title !== 'Operation')
-                              .map((x) => ({
-                                header: x.title,
-                                key: x.dataIndex
-                              })),
-                            data: res?.data?.Result ?? []
-                          };
+                          return ctx.tbRef.handler.downloadExcel(res?.data?.Result ?? [], 'Permissions');
                         });
                     }
                   }}

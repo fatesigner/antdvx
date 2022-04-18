@@ -91,7 +91,7 @@ export const XButtonExport = defineComponent({
       await timer(300).toPromise();
 
       if (key === 'json') {
-        options_.json = await loadOptions(props?.options?.json, options_.json);
+        options_.json = await loadOptions(props?.options?.json, options_.json).catch(() => {});
         const opt = options_?.json as any;
         if (opt?.content) {
           const url = window.URL.createObjectURL(new Blob([opt.content], { type: 'data:application/json;charset=utf-8' }));
@@ -108,10 +108,10 @@ export const XButtonExport = defineComponent({
         }
       } else if (key === 'excel') {
         if (props?.options?.excel) {
-          await props.options.excel();
+          await props.options.excel().catch(() => {});
         }
       } else if (key === 'pdf') {
-        options_.pdf = await loadOptions(props?.options?.pdf, options_.pdf);
+        options_.pdf = await loadOptions(props?.options?.pdf, options_.pdf).catch(() => {});
         const opt = options_?.pdf as any;
         if (opt?.target) {
           // TODO
@@ -150,13 +150,15 @@ export const XButtonExport = defineComponent({
               }
               return false;
             }
-          }).then((canvas) => {
-            const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-            const a = document.createElement('a');
-            a.setAttribute('download', `${opt.filename || new Date().getTime()}.png`);
-            a.setAttribute('href', image);
-            a.click();
-          });
+          })
+            .then((canvas) => {
+              const image = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+              const a = document.createElement('a');
+              a.setAttribute('download', `${opt.filename || new Date().getTime()}.png`);
+              a.setAttribute('href', image);
+              a.click();
+            })
+            .catch(() => {});
         }
       }
 
@@ -232,7 +234,8 @@ export const XButtonExport = defineComponent({
               ]}
             </Menu>
           )
-        }}>
+        }}
+      >
         <XButton
           block={ctx.block}
           disabled={ctx.disabled}
@@ -246,7 +249,8 @@ export const XButtonExport = defineComponent({
           type={ctx.type}
           color={ctx.color}
           spin={false}
-          title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.export)}>
+          title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.export)}
+        >
           {[
             ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconDownload2Line spin={ctx.loading_} />,
             !ctx.onlyIcon ? <span>{ctx.$t(i18nMessages.antd.action.export)}</span> : ''

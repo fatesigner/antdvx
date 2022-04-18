@@ -116,13 +116,14 @@ export default {
         duplicatedNameExist: 'A menu with the same name already exists at the same level',
         form: {
           name: 'Name',
+          route: 'Route',
           label: 'label',
           url: 'Url',
           icon: 'Icon',
           target: 'Target'
         },
         placeholder: {
-          name: 'Select a route'
+          route: 'Match a app route'
         }
       }
     }

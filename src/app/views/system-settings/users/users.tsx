@@ -1,6 +1,6 @@
 import { clone } from 'lodash-es';
-import { Input, Tag } from 'ant-design-vue';
 import { defineComponent, reactive } from 'vue';
+import { Input, Modal, Tag } from 'ant-design-vue';
 import { ODataHelper } from '@fatesigner/utils/odata';
 import {
   IconMenLine,
@@ -43,7 +43,7 @@ export const UsersView = defineComponent({
       },
       () => import('./users.form').then(({ UsersForm }) => ({ default: UsersForm })),
       {
-        model: null,
+        model: undefined,
         onClose(updated) {
           formPopupRef.handler.dismiss();
           if (updated) {
@@ -62,46 +62,19 @@ export const UsersView = defineComponent({
           title: 'User Code',
           dataIndex: 'Account',
           width: 90,
-          excel: {
-            style: {
-              font: {
-                color: {
-                  argb: 'red'
-                },
-                size: 12
-              }
-            }
-          }
+          excel: {}
         },
         {
           title: 'First Name',
           dataIndex: 'FirstName',
           width: 90,
-          excel: {
-            style: {
-              font: {
-                color: {
-                  argb: 'red'
-                },
-                size: 12
-              }
-            }
-          }
+          excel: {}
         },
         {
           title: 'Last Name',
           dataIndex: 'LastName',
           width: 90,
-          excel: {
-            style: {
-              font: {
-                color: {
-                  argb: 'red'
-                },
-                size: 12
-              }
-            }
-          }
+          excel: {}
         },
         {
           title: 'User Gender',
@@ -165,7 +138,9 @@ export const UsersView = defineComponent({
           width: 110,
           defaultSortOrder: 'descend',
           sorter: true,
-          excel: {}
+          excel: {
+            format: 'datetime'
+          }
         },
         {
           title: 'Status',
@@ -179,7 +154,11 @@ export const UsersView = defineComponent({
               <Tag color='red'>{COMMON_STATUS.desc[record.Status]}</Tag>
             );
           },
-          excel: {}
+          excel: {
+            customRender({ record }) {
+              return COMMON_STATUS.desc[record.Status];
+            }
+          }
         },
         sessionService.user?.role?.permissions?.includes('UserInformationFullAccess')
           ? {
@@ -275,7 +254,7 @@ export const UsersView = defineComponent({
           actions() {
             return (
               <div class='tw-flex tw-justify-end tw-gap-2'>
-                {sessionService.user.role.permissions.includes('UserInformationFullAccess') ? (
+                {sessionService.user?.role?.permissions?.includes('UserInformationFullAccess') ? (
                   <XButtonAdd
                     color='primary'
                     type='3d'
@@ -300,13 +279,16 @@ export const UsersView = defineComponent({
                           ...ODataHelper.getParams({
                             filter: ODataHelper.and(
                               ODataHelper.or(ODataHelper.filter('Name', 'contains', keywords), ODataHelper.filter('Code', 'contains', keywords))
-                            ),
-                            pageNo: 1,
-                            pageSize: 100000
+                            )
                           })
                         })
                         .then((res) => {
-                          return ctx.tbRef.handler.downloadExcel(res?.data?.Result ?? []);
+                          return ctx.tbRef.handler.downloadExcel(res?.data?.Result ?? [], 'Users');
+                        })
+                        .catch((err) => {
+                          Modal.error({
+                            title: err.message
+                          });
                         });
                     }
                   }}

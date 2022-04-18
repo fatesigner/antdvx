@@ -98,7 +98,7 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   content: '';
-  background-color: #1976d2;
+  background-color: #004a96;
   transform: translateX(-300px);
   animation: a-lb 20s linear 3s forwards;
 }

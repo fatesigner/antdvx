@@ -1,4 +1,5 @@
 import { Subscription } from 'rxjs';
+import { useRoute, useRouter } from 'vue-router';
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { Dropdown, Menu, MenuDivider, MenuItem } from 'ant-design-vue';
 import { IconArrowDownSLine, IconLockLine, IconLogoutBoxLine } from '@/antdvx';
@@ -7,7 +8,7 @@ import { i18nMessages } from '@/app/i18n';
 import { AppStore } from '@/app/core/store';
 import { UserType } from '@/app/core/types';
 import { login$, logout$ } from '@/app/core/events';
-import { sessionService } from '@/app/core/services';
+import { authService, sessionService } from '@/app/core/services';
 
 import $styles from './user.module.less';
 
@@ -17,6 +18,9 @@ import $styles from './user.module.less';
 export const NavUser = defineComponent({
   name: 'NavUser',
   setup() {
+    const route = useRoute();
+    const router = useRouter();
+
     let loginOn: Subscription;
     let lougoutOn: Subscription;
 
@@ -37,9 +41,17 @@ export const NavUser = defineComponent({
         sessionService.updateUser({
           role
         });
-        setTimeout(() => {
+        if (route.name === authService.config.homePage) {
           window.location.reload();
-        }, 300);
+        } else {
+          const r = router.resolve({
+            name: authService.config.homePage
+          });
+          if (r) {
+            window.location.href = r.href;
+          }
+          window.location.reload();
+        }
       }
     };
 

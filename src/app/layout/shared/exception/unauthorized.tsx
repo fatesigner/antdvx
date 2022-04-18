@@ -1,6 +1,5 @@
 import { defineComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { IconArrowLeftLine, XButton } from '@/antdvx';
 
 import { i18nMessages } from '@/app/i18n';
 import { authService } from '@/app/core/services';

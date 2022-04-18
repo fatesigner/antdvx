@@ -47,7 +47,7 @@ export async function createAppRouter() {
             path: 'portal',
             component: () => import('./views/portal/portal').then(({ PortalView }) => PortalView),
             meta: {
-              label: i18nMessages.app.route.portal
+              label: 'Portal'
             }
           },
           {

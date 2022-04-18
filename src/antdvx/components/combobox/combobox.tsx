@@ -295,10 +295,20 @@ export const XCombobox = defineComponent({
           displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => props.filter(searchInput, x)));
         } else {
           const _searchInput = searchInput.toLowerCase();
-          if (isNullOrUndefined(props.dataFilterField)) {
-            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x[props.dataTextField].toLowerCase().indexOf(_searchInput) > -1));
+          if (!isNullOrUndefined(props.dataFilterField)) {
+            displayOptions.splice(
+              0,
+              displayOptions.length,
+              ...props.options.filter((x) => x?.[props.dataFilterField]?.toLowerCase()?.indexOf(_searchInput) > -1)
+            );
+          } else if (!isNullOrUndefined(props.dataTextField)) {
+            displayOptions.splice(
+              0,
+              displayOptions.length,
+              ...props.options.filter((x) => x?.[props.dataTextField]?.toLowerCase()?.indexOf(_searchInput) > -1)
+            );
           } else {
-            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x[props.dataFilterField].toLowerCase().indexOf(_searchInput) > -1));
+            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x?.toLowerCase()?.indexOf(_searchInput) > -1));
           }
         }
       } else {
@@ -314,8 +324,10 @@ export const XCombobox = defineComponent({
           .optionsLoader(searchInput)
           .then((res) => {
             props.options.splice(0, props.options.length, ...res);
-            // 执行一次客户端过滤
-            if (!props.serverFilter) {
+            if (props.serverFilter) {
+              displayOptions.splice(0, displayOptions.length, ...props.options);
+            } else {
+              // 执行一次客户端过滤
               filterData();
             }
           })
@@ -510,7 +522,8 @@ export const XCombobox = defineComponent({
           options() {
             return ctx.$slots?.options?.({ options: ctx.displayOptions }) ?? renderOptions;
           }
-        }}>
+        }}
+      >
         {ctx.$slots?.default?.()}
       </AutoComplete>
     ) : (
@@ -547,7 +560,8 @@ export const XCombobox = defineComponent({
             ) : !ctx.displayOptions.length ? (
               <Empty class='ant-empty-small' image={Empty.PRESENTED_IMAGE_SIMPLE} />
             ) : undefined
-        }}>
+        }}
+      >
         {ctx.loading ? undefined : ctx.$slots?.options?.({ options: ctx.displayOptions }) ?? renderOptions}
       </Select>
     );

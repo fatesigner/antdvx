@@ -49,7 +49,7 @@ export const RolesView = defineComponent({
       },
       () => import('./roles.form').then(({ RolesForm }) => ({ default: RolesForm })),
       {
-        model: null,
+        model: undefined,
         onClose(updated) {
           formPopupRef.handler.dismiss();
           if (updated) {
@@ -69,11 +69,8 @@ export const RolesView = defineComponent({
       () => import('./menus.setting').then(({ MenusSetting }) => ({ default: MenusSetting })),
       {
         roleId: undefined,
-        onClose(updated) {
+        onClose() {
           menusSettingPopupRef.handler.dismiss();
-          if (updated) {
-            tbRef.handler.reload();
-          }
         }
       }
     );
@@ -104,12 +101,14 @@ export const RolesView = defineComponent({
         {
           title: 'Role Code',
           dataIndex: 'Code',
-          width: 150
+          width: 150,
+          excel: {}
         },
         {
           title: 'Role Name',
           dataIndex: 'Name',
-          width: 150
+          width: 150,
+          excel: {}
         },
         {
           title: 'Status',
@@ -121,12 +120,18 @@ export const RolesView = defineComponent({
             ) : (
               <Tag color='red'>{COMMON_STATUS.desc[record.Status]}</Tag>
             );
+          },
+          excel: {
+            customRender({ record }) {
+              return COMMON_STATUS.desc[record.Status];
+            }
           }
         },
         {
           title: 'Remark',
           dataIndex: 'Remark',
-          width: 150
+          width: 150,
+          excel: {}
         },
         sessionService.user?.role?.permissions?.includes('ExchangeRatesFullAccess')
           ? {
@@ -137,7 +142,7 @@ export const RolesView = defineComponent({
                 return (
                   <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
                     <XButton
-                      color='purple'
+                      color='primary'
                       size='small'
                       type='outline'
                       onClick={() => {
@@ -164,7 +169,8 @@ export const RolesView = defineComponent({
                           }
                         };
                         permissionsChooserPopupRef.handler.present();
-                      }}>
+                      }}
+                    >
                       <div class='tw-flex tw-items-center tw-gap-2'>
                         <IconShapeLine />
                         <span>Permissions</span>
@@ -172,7 +178,7 @@ export const RolesView = defineComponent({
                     </XButton>
                     {
                       <XButton
-                        color='cyan'
+                        color='tertiary'
                         size='small'
                         type='outline'
                         onClick={() => {
@@ -181,7 +187,8 @@ export const RolesView = defineComponent({
                             menusSettingPopupRef.handler.dismiss();
                           };
                           menusSettingPopupRef.handler.present();
-                        }}>
+                        }}
+                      >
                         <div class='tw-flex tw-items-center tw-gap-2'>
                           <IconMenuAddLine />
                           <span>Menus</span>
@@ -284,7 +291,8 @@ export const RolesView = defineComponent({
                       ctx.formPopupRef.options.title = 'Add Role';
                       ctx.formPopupRef.compProps.model = null;
                       ctx.formPopupRef.handler.present();
-                    }}>
+                    }}
+                  >
                     Add
                   </XButtonAdd>
                 ) : undefined}
@@ -300,31 +308,27 @@ export const RolesView = defineComponent({
                           ...ODataHelper.getParams({
                             filter: ODataHelper.and(
                               ODataHelper.or(ODataHelper.filter('Name', 'contains', keywords), ODataHelper.filter('Code', 'contains', keywords))
-                            ),
-                            pageNo: 1,
-                            pageSize: 100000
+                            )
                           })
                         })
                         .then((res) => {
-                          return {
-                            filename: 'Roles',
-                            columns: ctx.tbRef.options.columns
-                              .filter((x) => x.title !== 'Operation')
-                              .map((x) => ({
-                                header: x.title,
-                                key: x.dataIndex
-                              })),
-                            data: res?.data?.Result ?? []
-                          };
+                          return ctx.tbRef.handler.downloadExcel(res?.data?.Result ?? [], 'Roles');
+                        })
+                        .catch((err) => {
+                          Modal.error({
+                            title: err.message
+                          });
                         });
                     }
-                  }}>
+                  }}
+                >
                   Export
                 </XButtonExport>
               </div>
             );
           }
-        }}>
+        }}
+      >
         <div class='tw-p-2'>
           <div class='tw-p-2 tw-bg-white'>
             <XTable

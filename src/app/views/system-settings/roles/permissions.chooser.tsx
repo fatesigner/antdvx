@@ -12,7 +12,7 @@ import { PERMISSIONS_TYPE } from '@/app/core/constants';
  */
 export const PermissionsChooser = defineComponent({
   props: {
-    roleid: [Number, String]
+    roleId: [Number, String]
   },
   emits: ['close'],
   setup(props) {
@@ -124,7 +124,7 @@ export const PermissionsChooser = defineComponent({
     onMounted(() => {
       sysPermissionApi
         .systemManageSysPermissionroleIdPermissions({
-          roleId: props.roleid as string
+          roleId: props.roleId as string
         })
         .then((res) => {
           selectedRows.splice(0, selectedRows.length, ...(res?.data?.Result ?? []));

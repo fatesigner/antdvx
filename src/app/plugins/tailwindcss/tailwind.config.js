@@ -2,9 +2,14 @@
  * tailwind.config
  */
 
+const isProd = process.env.APP_ENV === 'production';
+
 module.exports = {
-  purge: ['./src/**/*.{html,vue,js,ts,jsx,tsx}'],
-  content: ['./src/**/*.{html,vue,js,ts,jsx,tsx}'],
+  purge: {
+    enabled: isProd,
+    content: ['./node_modules/antdvx/**/*.{html,vue,js,ts,jsx,tsx}', './src/**/*.{html,vue,js,ts,jsx,tsx}']
+  },
+  content: ['./node_modules/antdvx/**/*.{html,vue,js,ts,jsx,tsx}', './src/**/*.{html,vue,js,ts,jsx,tsx}'],
   prefix: 'tw-',
   theme: {
     fontSize: {
@@ -85,7 +90,7 @@ module.exports = {
     extend: {
       colors: {
         // 主色
-        primary: '#002fa7',
+        primary: '#004a96',
         // 辅色
         secondary: '#f67828',
         // 配色

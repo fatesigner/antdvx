@@ -72,7 +72,9 @@ export class SessionService<TUser extends IUser> implements ISessionService<TUse
    */
   async logout(config?: SessionLogoutResult) {
     // 保存上次登录过的用户名
-    this.updateUser(this.getDefaultUser({ username: this.user.username } as any));
+    // this.updateUser(this.getDefaultUser({ username: this.user.username } as any));
+    this.user = this.getDefaultUser({ username: this.user.username } as any);
+    this.saveToLocalStorage();
     this.config?.onLogout?.(config);
     // 因为事件传递需要事件，这里做延迟处理
     await timer(500).toPromise();

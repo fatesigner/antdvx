@@ -9,9 +9,13 @@ export interface IMenu<TMeta extends UnknownType = never> {
    */
   id: number | string;
   /**
-   * 路由名称，与 App Route 关联，需保证唯一性
+   * 菜单名称，需保证唯一性
    */
-  name?: string;
+  name: string;
+  /**
+   * 路由名称，与 App Route 关联
+   */
+  route?: string;
   /**
    * 菜单标签，用于界面显示
    */

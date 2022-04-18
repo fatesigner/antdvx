@@ -668,7 +668,11 @@ module.exports = async function (options) {
   ];
 
   if (isProd) {
-    config.optimization.minimizer.push(new CssMinimizerPlugin());
+    config.optimization.minimizer.push(
+      new CssMinimizerPlugin({
+        parallel: true
+      })
+    );
     config.optimization.minimizer.push(
       new TerserPlugin({
         parallel: true,

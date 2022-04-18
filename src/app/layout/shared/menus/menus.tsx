@@ -50,10 +50,10 @@ const NavMenuItem = defineComponent({
           {...ctx.$attrs}
           v-slots={{
             title() {
-              if (ctx.data.url || ctx.data.name) {
+              if (ctx.data.url || ctx.data.route) {
                 return (
                   <XRouterLink
-                    to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.name }}
+                    to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.route }}
                     v-slots={{
                       default() {
                         return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
@@ -81,10 +81,10 @@ const NavMenuItem = defineComponent({
                   key={item.id}
                   v-slots={{
                     default() {
-                      if (item.url || item.name) {
+                      if (item.url || item.route) {
                         return (
                           <XRouterLink
-                            to={item.url ? { path: item.url } : { name: item.name }}
+                            to={item.url ? { path: item.url } : { name: item.route }}
                             v-slots={{
                               default() {
                                 return [item.icon ? <Iconfont name={item.icon} /> : undefined, <span>{item.label}</span>];
@@ -107,10 +107,10 @@ const NavMenuItem = defineComponent({
           key={ctx.data.id}
           v-slots={{
             default() {
-              if (ctx.data.url || ctx.data.name) {
+              if (ctx.data.url || ctx.data.route) {
                 return (
                   <XRouterLink
-                    to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.name }}
+                    to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.route }}
                     v-slots={{
                       default() {
                         return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
@@ -170,7 +170,7 @@ export const NavMenu = defineComponent({
     provide('selectedKeys', selectedKeys);
 
     const getMenuByName = (name: string) => {
-      return strutree.find(menus.value, (x) => x.name === name);
+      return strutree.find(menus.value, (x) => x.route === name);
     };
 
     // 监听菜单收缩状态

@@ -17,10 +17,10 @@ export const LayoutEmpty = defineComponent({
               <TransitionSlide>
                 {matchedRoute?.meta?.keepAlive ? (
                   <KeepAlive>
-                    <Component key={matchedRoute.fullPath} />
+                    <Component key={route.fullPath} />
                   </KeepAlive>
                 ) : (
-                  <Component key={matchedRoute.fullPath} />
+                  <Component key={route.fullPath} />
                 )}
               </TransitionSlide>
             ) : undefined;

@@ -116,13 +116,14 @@ export const i18nMessages = createLocaleMessages({
         duplicatedNameExist: '',
         form: {
           name: '',
+          route: '',
           label: '',
           url: '',
           icon: '',
           target: ''
         },
         placeholder: {
-          name: ''
+          route: ''
         }
       }
     }

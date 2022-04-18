@@ -1,8 +1,8 @@
 import { useI18n } from 'vue-i18n';
-import { clone, exchangeItem } from '@fatesigner/utils';
+import { clone } from '@fatesigner/utils';
 import { getGUID } from '@fatesigner/utils/random';
-import { Alert, Input, Modal, Spin, Tree, notification } from 'ant-design-vue';
 import { DropEvent } from 'ant-design-vue/es/tree/Tree';
+import { Alert, Modal, Spin, Tree, notification } from 'ant-design-vue';
 import {
   IXButtonExportOptions,
   IconArrowDownSLine,
@@ -153,16 +153,7 @@ export const MenusSetting = defineComponent({
     const presentFormPopup = (parent: any, model?: IMenu) => {
       formPopupRef.options.title = model ? t(i18nMessages.app.systemSettings.menu.titleUpdate) : t(i18nMessages.app.systemSettings.menu.titleAdd);
       formPopupRef.compProps.parent = parent;
-      formPopupRef.compProps.model = model
-        ? ({
-            id: model.id,
-            name: model.name,
-            label: model.label,
-            url: model.url,
-            icon: model.icon,
-            target: model.target
-          } as IMenu)
-        : null;
+      formPopupRef.compProps.model = model ? clone(model) : null;
       formPopupRef.compProps.onClose = (values: IMenu) => {
         formPopupRef.handler.dismiss();
         if (values) {
@@ -309,7 +300,8 @@ export const MenusSetting = defineComponent({
                       }
                     };
                     reader.readAsText(file);
-                  }}>
+                  }}
+                >
                   {ctx.$t(i18nMessages.app.systemSettings.menu.upload)}
                 </XButtonUpload>
                 <XButtonExport
@@ -324,7 +316,8 @@ export const MenusSetting = defineComponent({
                         };
                       }
                     } as IXButtonExportOptions
-                  }>
+                  }
+                >
                   {ctx.$t(i18nMessages.app.systemSettings.menu.export)}
                 </XButtonExport>
               </div>
@@ -337,7 +330,8 @@ export const MenusSetting = defineComponent({
                   type='3d'
                   onClick={() => {
                     ctx.$emit('close');
-                  }}>
+                  }}
+                >
                   {ctx.$t(i18nMessages.app.systemSettings.menu.cancel)}
                 </XButton>
               </div>

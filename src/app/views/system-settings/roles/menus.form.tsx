@@ -51,6 +51,7 @@ export const MenusForm = defineComponent({
           props.model
         ),
         validationSchema: {
+          name: 'required',
           label: 'required'
         }
       },
@@ -81,9 +82,9 @@ export const MenusForm = defineComponent({
         <div class='tw-flex-1 tw-overflow-y-auto tw-pt-4 tw-pr-8 tw-pb-4 tw-pl-8'>
           <Form class='tw-max-w-md tw-m-auto tw-pr-8' layout='horizontal' labelAlign='right' labelCol={{ style: { width: '120px' } }}>
             <div class='tw-grid tw-grid-cols-12 tw-gap-4'>
-              <FormItem class='tw-col-span-12' label={ctx.$t(i18nMessages.app.systemSettings.menu.form.name)}>
+              <FormItem class='tw-col-span-12' label={ctx.$t(i18nMessages.app.systemSettings.menu.form.route)}>
                 <VeeField
-                  name='name'
+                  name='route'
                   v-slots={{
                     default({ field, handleChange, meta, errors }) {
                       return [
@@ -96,8 +97,8 @@ export const MenusForm = defineComponent({
                           dataValueField='name'
                           dataTextField='label'
                           dataFilterField='name'
-                          dataLabelField='label'
-                          placeholder=''
+                          dataLabelField='name'
+                          placeholder={ctx.$t(i18nMessages.app.systemSettings.menu.placeholder.route)}
                           value={field.value}
                           optionsLoader={() => {
                             return getMenusFromRoutes(ctx.$router.getRoutes());
@@ -116,6 +117,7 @@ export const MenusForm = defineComponent({
                           onSelect={({ options, value }) => {
                             const item = options.find((x) => x.name === value);
                             if (item) {
+                              ctx.form.context.setFieldValue('name', item.name);
                               ctx.form.context.setFieldValue('label', item.label);
                               ctx.form.context.setFieldValue('url', item.url);
                             }
@@ -138,7 +140,7 @@ export const MenusForm = defineComponent({
                                   }}
                                 >
                                   {options.map((x, index) => (
-                                    <SelectOption key={x.id} value={x.name} title={x.url}>
+                                    <SelectOption key={x.id} value={x.name} title={x.name}>
                                       <div class='tw-flex tw-items-center tw-gap-2'>
                                         <span class='tw-w-4 tw-text-right tw-overflow-hidden tw-whitespace-normal tw-break-words'>{index + 1}</span>
                                         <span class='tw-w-40 tw-overflow-hidden tw-whitespace-normal tw-break-words'>{x.name}</span>
@@ -150,6 +152,30 @@ export const MenusForm = defineComponent({
                                 </SelectOptGroup>
                               ];
                             }
+                          }}
+                        />,
+                        <TransitionCollapse>
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                        </TransitionCollapse>
+                      ];
+                    }
+                  }}
+                />
+              </FormItem>
+              <FormItem class='tw-col-span-12' label={ctx.$t(i18nMessages.app.systemSettings.menu.form.name)} required>
+                <VeeField
+                  name='name'
+                  v-slots={{
+                    default({ field, handleChange, meta, errors }) {
+                      return [
+                        <Input
+                          class='tw-w-full'
+                          value={field.value}
+                          allowClear={!ctx.form.context.values.route}
+                          readonly={!!ctx.form.context.values.route}
+                          placeholder=''
+                          onChange={(e) => {
+                            handleChange(e);
                           }}
                         />,
                         <TransitionCollapse>
@@ -191,7 +217,8 @@ export const MenusForm = defineComponent({
                       return [
                         <Input
                           class='tw-w-full'
-                          allowClear
+                          allowClear={!ctx.form.context.values.route}
+                          readonly={!!ctx.form.context.values.route}
                           value={field.value}
                           placeholder=''
                           onChange={(e) => {
@@ -213,14 +240,17 @@ export const MenusForm = defineComponent({
                     default({ field, handleChange, meta, errors }) {
                       return [
                         <XCombobox
+                          clearable
                           searchable
+                          serverFilter
                           placeholder=''
                           value={field.value}
                           optionsLoader={async (searchInput) => {
                             if (searchInput) {
-                              return ANTDVX_ICON_NAMES.filter((x) => x.toLowerCase().indexOf(searchInput.toLowerCase()) > -1).slice(50);
+                              searchInput = searchInput.toLowerCase();
+                              return ANTDVX_ICON_NAMES.filter((x) => x?.indexOf(searchInput) > -1).slice(0, 50);
                             }
-                            return ANTDVX_ICON_NAMES.slice(50);
+                            return ANTDVX_ICON_NAMES.slice(0, 50);
                           }}
                           onChange={(e) => {
                             handleChange(e);

@@ -116,13 +116,14 @@ export default {
         duplicatedNameExist: '相同层级下已有相同名称的菜单存在',
         form: {
           name: '名称',
+          route: '路由',
           label: '标签',
           url: '链接',
           icon: '图标',
           target: 'Target'
         },
         placeholder: {
-          name: '选择一个路由'
+          route: '关联一个 App 路由'
         }
       }
     }
