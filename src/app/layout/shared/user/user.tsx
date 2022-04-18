@@ -36,11 +36,7 @@ export const NavUser = defineComponent({
     const updateRole = (e) => {
       if (e.key) {
         currentRole.value = [e.key];
-        user.value.role = e.key;
-        const role = user.value?.roles?.find?.((x) => x.name === e.key);
-        sessionService.updateUser({
-          role
-        });
+        sessionService.updateRole(e.key);
         if (route.name === authService.config.homePage) {
           window.location.reload();
         } else {

@@ -1,5 +1,5 @@
+import { clone } from 'lodash-es';
 import { useI18n } from 'vue-i18n';
-import { clone } from '@fatesigner/utils';
 import { getGUID } from '@fatesigner/utils/random';
 import { DropEvent } from 'ant-design-vue/es/tree/Tree';
 import { Alert, Modal, Spin, Tree, notification } from 'ant-design-vue';

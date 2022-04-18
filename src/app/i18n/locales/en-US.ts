@@ -78,7 +78,7 @@ export default {
         title: 'Sign In',
         username: 'Enter user name',
         password: 'Enter password',
-        rememberMe: 'Remember Me',
+        rememberMe: 'Remember me',
         submit: 'Sign In',
         any: 'Any',
         thirdParty: 'Or connect with',
@@ -92,7 +92,7 @@ export default {
         oldPassword: 'Enter old password',
         newPassword: 'Enter new password',
         confirmPassword: 'Confirm new password',
-        backToLogin: 'Back To Login',
+        backToLogin: 'Back to login',
         submit: 'Submit',
         message: {
           submitSuccess: 'Password updated successfully',

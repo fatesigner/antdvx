@@ -382,23 +382,25 @@ export const XCombobox = defineComponent({
       }
     };
 
-    const onChange = (e) => {
+    const onChange = (e, option) => {
       nextTick(() => {
-        emit('change', e);
+        emit('change', ...[e, props.options]);
       });
     };
 
     const onSelect = (value, option) => {
       nextTick(() => {
-        emit('select', {
-          value,
-          option,
-          options: props.options
-        });
+        emit('select', ...[value, option, props.options]);
         if (props.searchable && !props.importable) {
           searchInput = '';
         }
       });
+    };
+
+    // 设置指定值，触发 onChange 事件
+    const setValue = (value) => {
+      value_.value = value;
+      emit('change', ...[value_.value, props.options]);
     };
 
     watch(
@@ -412,7 +414,7 @@ export const XCombobox = defineComponent({
               value_.value = valueBind.value = val;
             } else {
               if (isArray(val)) {
-                valueBind.value = val.map((x) => x);
+                value_.value = valueBind.value = val.map((x) => x);
               } else {
                 value_.value = valueBind.value = val;
               }
@@ -443,7 +445,9 @@ export const XCombobox = defineComponent({
     ); */
 
     watch(value_, (val) => {
-      emit('update:value', val);
+      nextTick(() => {
+        emit('update:value', val);
+      });
     });
 
     watch(valueBind, (val: string | any[]) => {
@@ -473,7 +477,8 @@ export const XCombobox = defineComponent({
       onSearch,
       onSelect,
       onChange,
-      onDropdownVisibleChange
+      onDropdownVisibleChange,
+      setValue
     };
   },
   render(ctx) {

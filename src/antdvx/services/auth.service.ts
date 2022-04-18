@@ -98,7 +98,7 @@ export class AuthService<
       if (to?.meta?.allowAnonymous) {
         return true;
       }
-      const c = strutreeForMenu.find(this._sessionService.user?.role?.menus ?? [], (x) => x.name === to.name);
+      const c = strutreeForMenu.find(this._sessionService.user?.role?.menus ?? [], (x) => x.route === to.name || x.url === to.path);
       return !!c;
     }
   }

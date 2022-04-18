@@ -1,3 +1,4 @@
+import { NamesTypeOfRole } from './role';
 import { IUser, RoleTypeOfUser } from './user';
 
 /**
@@ -53,7 +54,11 @@ export interface ISessionService<TUser extends IUser> {
    */
   updateUser(user: Partial<TUser>): void;
 
-  updateRole(role: RoleTypeOfUser<TUser>): void;
+  /**
+   * 更新用户角色
+   * @param roleName
+   */
+  updateRole(roleName: NamesTypeOfRole<RoleTypeOfUser<TUser>>): Promise<void>;
 
   /**
    * 验证指定用户信息是否有效（是否为空值或过期）

@@ -5,7 +5,7 @@ import { inject, injectable } from 'inversify';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 import { ANTDVX_SYMBOLS } from '../symbols';
-import { ISessionService, IStorageService, IUser, RoleTypeOfUser, SessionLogoutResult } from '../types';
+import { ISessionService, IStorageService, IUser, NamesTypeOfRole, RoleTypeOfUser, SessionLogoutResult } from '../types';
 
 /**
  * session config
@@ -104,10 +104,15 @@ export class SessionService<TUser extends IUser> implements ISessionService<TUse
     }
   }
 
-  updateRole(role: RoleTypeOfUser<TUser>) {
-    mergeWith(this.user, { currentRole: role }, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
-    this.config?.onRoleChanged?.(role);
-    this.saveToLocalStorage();
+  async updateRole(roleName: NamesTypeOfRole<RoleTypeOfUser<TUser>>) {
+    const role = this.user?.roles?.find?.((x) => x.name === roleName);
+    if (role) {
+      this.user.role = role;
+      this.config?.onRoleChanged?.(role as any);
+      this.saveToLocalStorage();
+    } else {
+      throw new Error(`[Update Role error]: The role named '${roleName}' is not defined`);
+    }
   }
 
   /**
