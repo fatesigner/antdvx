@@ -399,7 +399,7 @@ export const XCombobox = defineComponent({
 
     // 设置指定值，触发 onChange 事件
     const setValue = (value) => {
-      value_.value = value;
+      value_.value = valueBind.value = value;
       emit('change', ...[value_.value, props.options]);
     };
 
