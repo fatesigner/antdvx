@@ -1,3 +1,10 @@
+# [1.0.0-alpha.105](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.104...v1.0.0-alpha.105) (2022-04-19)
+
+
+### Bug Fixes
+
+* fix setValue bug of Combobox component ([f322fcf](https://github.com/fatesigner/antdvx/commit/f322fcffc4042adf4a2d6633369fd9933b2c6113))
+
 # [1.0.0-alpha.104](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.103...v1.0.0-alpha.104) (2022-04-18)
 
 
