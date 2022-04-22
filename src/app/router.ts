@@ -142,8 +142,8 @@ export async function createAppRouter() {
           },
           {
             name: 'Scrollview',
-            path: 'scroll-view',
-            component: () => import('./views/scroll-view/scroll-view').then(({ Scrollview }) => Scrollview),
+            path: 'scrollview',
+            component: () => import('./views/scrollview/scrollview').then(({ Scrollview }) => Scrollview),
             meta: {
               label: 'Scrollview'
             }

@@ -59,19 +59,28 @@ export const Scrollview = defineComponent({
       list3.value.push(...data);
     };
 
-    const initialize = async () => {
-      const data = await loadData()();
-      list.value = data;
+    const initialize = () => {
+      return loadData()().then((data) => {
+        return function () {
+          list.value = data;
+        };
+      });
     };
 
-    const initialize2 = async () => {
-      const data = await loadData()();
-      list2.value = data;
+    const initialize2 = () => {
+      return loadData()().then((data) => {
+        return function () {
+          list2.value = data;
+        };
+      });
     };
 
-    const initialize3 = async () => {
-      const data = await loadData()();
-      list3.value = data;
+    const initialize3 = () => {
+      return loadData()().then((data) => {
+        return function () {
+          list3.value = data;
+        };
+      });
     };
 
     onMounted(() => {

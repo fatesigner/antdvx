@@ -5,7 +5,7 @@
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
 import * as echarts from 'echarts/core';
 import { isArray, merge, mergeWith } from 'lodash-es';
-import { isNumber } from '@fatesigner/utils/type-check';
+import { isNullOrUndefined, isNumber } from '@fatesigner/utils/type-check';
 
 export { echarts };
 
@@ -299,4 +299,24 @@ export function getEchartsSplit(options: {
   }
 
   return res;
+}
+
+/**
+ * 获取 tooltip formatter
+ * @param itemMap
+ */
+export function getEchartsTooltipFormatter(itemMap?: (item: unknown) => number | string) {
+  return (params) => {
+    let res = params.length ? `${params[0].axisValueLabel}<br/>` : '';
+    for (const param of params) {
+      if (!isNullOrUndefined(param.data)) {
+        if (itemMap) {
+          res += itemMap(param);
+        } else {
+          res += `${param.marker}${param.seriesName}：${param.value}<br/>`;
+        }
+      }
+    }
+    return res;
+  };
 }

@@ -1,4 +1,5 @@
 import { Alert } from 'ant-design-vue';
+import { isFunction } from '@fatesigner/utils/type-check';
 import { bindPromiseQueue, debounce } from '@fatesigner/utils';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { ReplaySubject, Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
@@ -106,7 +107,7 @@ export interface IScrollViewOptions {
   /**
    * 初始化函数, 若设置该值, 将会在 onMounted 事件中执行，该函数执行期间, 将会持续显示 loading 层
    */
-  initialize?: () => Promise<any>;
+  initialize?: () => Promise<(scrollViewRef: any) => void>;
 }
 
 /**
@@ -159,13 +160,16 @@ export const ScrollView = defineComponent({
       default: true
     },
     initialize: {
-      type: Function as PropType<() => Promise<any>>
+      type: Function as PropType<() => Promise<(scrollViewRef: any) => void>>
     }
   },
   emits: ['initialized', 'scroll'],
   setup(props: any, { emit }) {
     let resizeObs: ResizeObserver;
     let mutationObs: MutationObserver;
+
+    // 定义变量保存当前 context 引用
+    let context;
 
     // 定义滚动事件 Observable
     const scrollSubject = new ReplaySubject<Event>(0);
@@ -510,23 +514,32 @@ export const ScrollView = defineComponent({
     const load = bindPromiseQueue(() => {
       return props
         ?.initialize()
-        .then((res) => {
+        .then((callback) => {
           error.value = null;
-          emit('initialized', res);
+          return callback;
         })
         .catch((err: Error) => {
           error.value = err.message;
-          console.error(err);
         });
     }, true);
 
     const reload = async () => {
       loading_.value = true;
-      await load();
+      const callback = await load();
       loading_.value = false;
       nextTick().then(() => {
+        // emit('initialized', res);
+        // initialize 完成后执行回调
+        if (isFunction(callback)) {
+          callback(context);
+        }
+        emit('initialized');
         initializeLayout();
       });
+    };
+
+    const setContext = (ctx) => {
+      context = ctx;
     };
 
     onMounted(() => {
@@ -593,10 +606,12 @@ export const ScrollView = defineComponent({
       scrollToBottom,
       horBarClick,
       verBarClick,
-      onScroll
+      onScroll,
+      setContext
     };
   },
   render(ctx) {
+    ctx._setContext(ctx);
     return (
       <div
         class={[
@@ -605,14 +620,16 @@ export const ScrollView = defineComponent({
           ctx.fillY ? styles.fillY : null,
           ctx.scrollX ? styles.scrollX : null,
           ctx.scrollY ? styles.scrollY : null
-        ]}>
+        ]}
+      >
         {ctx.loading_ || ctx.error ? (
           <TransitionGroup
             enterFromClass={styles['transition-enter-from']}
             enterToClass={styles['transition-enter-to']}
             leaveToClass={styles['transition-leave-to']}
             enterActiveClass={styles['transition-enter-active']}
-            leaveActiveClass={styles['transition-enter-active']}>
+            leaveActiveClass={styles['transition-enter-active']}
+          >
             {ctx.loading_ ? (
               <div class={styles.transition} key='loading'>
                 {ctx.$slots?.loading ? (

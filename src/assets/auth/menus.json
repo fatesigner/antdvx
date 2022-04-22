@@ -27,7 +27,7 @@
         "id": "zsg6690e69zd",
         "label": "可滚动视图区域",
         "name": "Scrollview",
-        "url": "/scroll-view",
+        "url": "/scrollview",
         "target": null,
         "icon": "code-box-line",
         "children": []

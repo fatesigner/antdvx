@@ -251,23 +251,23 @@ export const XTable = defineComponent({
         if (sorter?.columnKey) {
           const column = props.options.columns.find((x) => x.dataIndex === sorter.columnKey);
           if (isFunction(column?.sorter)) {
-            if (sorter.order === 'asc') {
+            if (sorter.order === 'asc' || (sorter.order as any) === 'ascend') {
               data = data.sort((a, b) => {
                 return column.sorter(a, b);
               });
-            } else if (sorter.order === 'desc') {
+            } else if (sorter.order === 'desc' || (sorter.order as any) === 'descend') {
               data = data.sort((a, b) => {
                 return column.sorter(b, a);
               });
             }
           } else {
-            if (sorter.order === 'asc') {
+            if (sorter.order === 'asc' || (sorter.order as any) === 'ascend') {
               data = data.sort((a, b) => {
-                return a[sorter.columnKey] - b[sorter.columnKey];
+                return a[sorter.columnKey] > b[sorter.columnKey] ? 1 : a[sorter.columnKey] < b[sorter.columnKey] ? -1 : 0;
               });
-            } else if (sorter.order === 'desc') {
+            } else if (sorter.order === 'desc' || (sorter.order as any) === 'descend') {
               data = data.sort((a, b) => {
-                return b[sorter.columnKey] - a[sorter.columnKey];
+                return b[sorter.columnKey] > a[sorter.columnKey] ? 1 : b[sorter.columnKey] < a[sorter.columnKey] ? -1 : 0;
               });
             }
           }
@@ -613,7 +613,8 @@ export const XTable = defineComponent({
                         size='small'
                         onClick={() => {
                           clearFilters();
-                        }}>
+                        }}
+                      >
                         {t(i18nMessages.antd.action.reset)}
                       </XButton>
                     </div>
@@ -1140,7 +1141,8 @@ export const XTable = defineComponent({
                   title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
                   onClick={(e) => {
                     onExpand(record, e);
-                  }}>
+                  }}
+                >
                   {expanded ? <IconCheckboxIndeterminateLine /> : <IconAddBoxLine />}
                 </div>
               );
@@ -1198,7 +1200,8 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
+              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
+            >
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1304,7 +1307,8 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1317,7 +1321,8 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1359,7 +1364,8 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1367,7 +1373,8 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>
