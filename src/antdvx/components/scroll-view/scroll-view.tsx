@@ -611,7 +611,7 @@ export const ScrollView = defineComponent({
     };
   },
   render(ctx) {
-    ctx._setContext(ctx);
+    ctx.setContext(ctx);
     return (
       <div
         class={[
