@@ -1,3 +1,10 @@
+# [1.0.0-alpha.107](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.106...v1.0.0-alpha.107) (2022-04-22)
+
+
+### Bug Fixes
+
+* fix ScrollView setContext ([83722c4](https://github.com/fatesigner/antdvx/commit/83722c44d8b5bebd77ad6e0c5b792903bfab1898))
+
 # [1.0.0-alpha.106](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.105...v1.0.0-alpha.106) (2022-04-22)
 
 
