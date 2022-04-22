@@ -1,3 +1,10 @@
+# [1.0.0-alpha.106](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.105...v1.0.0-alpha.106) (2022-04-22)
+
+
+### Features
+
+* update ScrollView component ([56bc940](https://github.com/fatesigner/antdvx/commit/56bc940d514f094a5e5114d620b451dbcd31ca1e))
+
 # [1.0.0-alpha.105](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.104...v1.0.0-alpha.105) (2022-04-19)
 
 
