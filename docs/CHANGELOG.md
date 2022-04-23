@@ -1,3 +1,10 @@
+# [1.0.0-alpha.108](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.107...v1.0.0-alpha.108) (2022-04-23)
+
+
+### Bug Fixes
+
+* fix Combobox component ([e8d95d4](https://github.com/fatesigner/antdvx/commit/e8d95d4177ae5d9b2b3d67da0259f2afec1673e4))
+
 # [1.0.0-alpha.107](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.106...v1.0.0-alpha.107) (2022-04-22)
 
 
