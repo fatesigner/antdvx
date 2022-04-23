@@ -299,16 +299,16 @@ export const XCombobox = defineComponent({
             displayOptions.splice(
               0,
               displayOptions.length,
-              ...props.options.filter((x) => x?.[props.dataFilterField]?.toLowerCase()?.indexOf(_searchInput) > -1)
+              ...props.options.filter((x) => x?.[props.dataFilterField]?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1)
             );
           } else if (!isNullOrUndefined(props.dataTextField)) {
             displayOptions.splice(
               0,
               displayOptions.length,
-              ...props.options.filter((x) => x?.[props.dataTextField]?.toLowerCase()?.indexOf(_searchInput) > -1)
+              ...props.options.filter((x) => x?.[props.dataTextField]?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1)
             );
           } else {
-            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x?.toLowerCase()?.indexOf(_searchInput) > -1));
+            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1));
           }
         }
       } else {
@@ -367,17 +367,11 @@ export const XCombobox = defineComponent({
         if (isFunction(props.optionsLoader)) {
           if ((props.reloadOnOpen || ((!displayOptions.length || displayOptions.length !== props.options.length) && !loading.value)) && !loading.value) {
             await loadData();
-            await filterData();
           }
         } else {
           if ((!displayOptions.length || displayOptions.length !== props.options.length) && !loading.value) {
             await loadData();
-            await filterData();
           }
-        }
-      } else {
-        if (isFunction(props.optionsLoader) && props.reloadOnOpen) {
-          displayOptions.splice(0, displayOptions.length);
         }
       }
     };
@@ -523,6 +517,7 @@ export const XCombobox = defineComponent({
         onChange={ctx.onChange}
         onSearch={ctx.searchable ? ctx.onSearch : undefined}
         onSelect={ctx.onSelect}
+        onDropdownVisibleChange={ctx.onDropdownVisibleChange}
         v-slots={{
           options() {
             return ctx.$slots?.options?.({ options: ctx.displayOptions }) ?? renderOptions;
