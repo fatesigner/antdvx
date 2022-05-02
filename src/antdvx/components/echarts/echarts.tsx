@@ -232,70 +232,153 @@ export function getCeilNumber(value) {
 }
 
 /**
+ * 获取指定数值向下取(由指定的底数确定，默认为 10)最接近的整數
+ * @param value
+ * @param radix
+ */
+export function getFloorByRadix(value: number, radix = 10) {
+  // const exe = Math.floor(Math.log(value) / Math.log(radix));
+  // return Math.pow(radix, exe);
+  if (isNumber(value)) {
+    return Math.pow(radix, Math.floor(value).toString().length - 1);
+  }
+  return 0;
+}
+
+function getFloors(value: number) {
+  const floor = getFloorByRadix(value, 10);
+  const base = Math.floor(value / floor);
+  return [base, floor];
+}
+
+function getCeils(value: number) {
+  let floor = getFloorByRadix(value, 10);
+  let base = Math.ceil(value / floor);
+  if (base === 10) {
+    base = 1;
+    floor = floor * 10;
+  }
+  return [base, floor];
+}
+
+/**
  * 获取 chart 间隔数量
  * max 坐标轴刻度最大值;
- * divisor 限制 interval 可被整除的因数，默认为 1;
- * fractionDigits 允许的 interval 小数位数，默认为 0;
+ * digits 允许的 interval 小数位数，默认为 null;
  * splitNumber 分割段数，默认为 null 即按照可读性自动分割;
  */
 export function getEchartsSplit(options: {
   max: number;
-  divisor?: number;
-  fractionDigits?: number;
+  digits?: number;
+  interval?: number;
   splitNumber?: number;
+  maxSplitNumber?: number;
   minInterval?: number;
   maxInterval?: number;
 }) {
+  let max;
+  let interval;
+  let splitNumber;
+
   const res = {
     max: undefined,
-    minInterval: options?.minInterval,
     interval: undefined,
-    maxInterval: options?.maxInterval,
-    // splitNumber 默认为 5
-    splitNumber: 5
+    splitNumber: undefined,
+    minInterval: options?.minInterval,
+    maxInterval: options?.maxInterval
   };
 
-  let max;
   if (options?.max && isNumber(options.max)) {
     max = options.max;
   }
 
-  let divisor = 1;
-  if (options?.divisor && /^[0-9]+$/.test(options?.divisor?.toString())) {
-    divisor = options.divisor;
-  }
-
-  let fractionDigits = 0;
-  if (/^[0-9]+$/.test(options?.fractionDigits?.toString())) {
-    fractionDigits = options.fractionDigits;
+  if (options?.interval && /^[0-9]+$/.test(options.interval?.toString())) {
+    interval = options.interval;
   }
 
   if (options?.splitNumber && /^[0-9]+$/.test(options.splitNumber?.toString())) {
-    res.splitNumber = options.splitNumber;
+    splitNumber = options.splitNumber;
   }
 
-  if (max) {
-    // 若指定了 max，则对 max 尝试进行分割
-    res.interval = max / (res.splitNumber * divisor);
+  if (options?.minInterval && isNumber(options.minInterval)) {
+    res.minInterval = options.minInterval;
+  }
 
-    const dig = res.interval.toString().split('.');
-    if (dig?.[1]) {
-      // 若间隔值有小数部分，即 max 无法被整除分割
-      if (dig[1].length > fractionDigits) {
-        // 进一位
-        if (fractionDigits > 0) {
-          res.interval = parseFloat(dig[0] + '.' + parseInt(dig[1].substring(0, fractionDigits)) + 1);
+  if (options?.maxInterval && isNumber(options.maxInterval)) {
+    res.maxInterval = options.maxInterval;
+  }
+
+  if (!interval || !splitNumber) {
+    if (max) {
+      res.max = options.max;
+      if (interval) {
+        // 若指定了 max，则对 max 尝试进行分割
+        const num = Math.ceil(res.max / interval);
+        res.splitNumber = num || 5;
+        res.interval = interval;
+      } else if (splitNumber) {
+        const interval = res.max / splitNumber;
+        const floor = getFloors(interval);
+        const interval0 = (floor[0] + 0.5) * floor[1];
+        if (interval > interval0) {
+          res.interval = (floor[0] + 1) * floor[1];
         } else {
-          res.interval = parseInt(dig[0]) + 1;
+          res.interval = interval0;
         }
+        res.splitNumber = splitNumber;
+      } else {
+        // 未指定 splitNumber
+        const floor = getCeils(res.max);
+        if (floor[0] === 1) {
+          res.interval = floor[1] / 5;
+        } else if (floor[0] < 4) {
+          res.interval = floor[1] / 2;
+        } else {
+          res.interval = floor[1];
+        }
+
+        if (res.minInterval && res.interval < res.minInterval) {
+          const floor = getFloors(res.minInterval);
+          const interval0 = (floor[0] + 0.5) * floor[1];
+          if (res.minInterval > interval0) {
+            res.interval = (floor[0] + 1) * floor[1];
+          } else if (res.minInterval > floor[0] * floor[1]) {
+            res.interval = interval0;
+          } else {
+            res.interval = res.minInterval;
+          }
+        }
+
+        let digits = 0;
+        if (/^[0-9]+$/.test(options?.digits?.toString())) {
+          digits = options.digits;
+        }
+        const dig = res.interval.toString().split('.');
+        if (dig?.[1]) {
+          // 若间隔值有小数部分，即 max 无法被整除分割
+          if (dig[1].length > digits) {
+            // 进一位
+            if (digits > 0) {
+              res.interval = parseFloat(dig[0] + '.' + parseInt(dig[1].substring(0, digits)) + 1);
+            } else {
+              res.interval = parseInt(dig[0]) + 1;
+            }
+          }
+        }
+
+        res.splitNumber = Math.ceil(res.max / res.interval);
       }
     }
+  }
 
-    res.interval = res.interval * divisor;
-    // res.splitNumber = Math.ceil(options.max / res.interval);
+  // 重新计算 max
+  res.max = res.interval * res.splitNumber;
 
-    // 重新计算 max
-    res.max = res.interval * res.splitNumber;
+  if (!splitNumber) {
+    if (max >= res.max - res.interval / 4) {
+      res.max += res.interval;
+      res.splitNumber += 1;
+    }
   }
 
   return res;

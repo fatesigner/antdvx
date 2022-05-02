@@ -940,7 +940,7 @@ export const XTable = defineComponent({
 
     if (AntdStorageService) {
       // 还原已存储的配置
-      const str = AntdStorageService.get('table_control' + uid) as string;
+      const str = AntdStorageService.get('table_control_' + uid) as string;
       try {
         const { expires, data } = JSON.parse(str);
         if (expires && new Date().getTime() - expires < 3600 * 24 && data?.map) {
@@ -1355,7 +1355,7 @@ export const XTable = defineComponent({
                   if (AntdStorageService) {
                     // 将配置保存至 local storage
                     AntdStorageService.set(
-                      'table_control' + ctx.uid,
+                      'table_control_' + ctx.uid,
                       JSON.stringify({
                         expires: new Date().getTime(),
                         data: ctx.settingsPanelOptions.dataSource

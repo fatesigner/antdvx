@@ -276,7 +276,7 @@ export interface IXTablePropsType<TModel extends UnknownType, TParams extends Un
   scroll?: { x?: boolean | number; y?: boolean | number };
 
   /**
-   * 表格名称，唯一值，用于确定该表格
+   * 表格名称，唯一值
    */
   name?: string;
 
