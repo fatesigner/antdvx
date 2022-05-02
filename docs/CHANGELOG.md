@@ -1,3 +1,10 @@
+# [1.0.0-alpha.109](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.108...v1.0.0-alpha.109) (2022-05-02)
+
+
+### Bug Fixes
+
+* update getEchartsSplit function ([04030d5](https://github.com/fatesigner/antdvx/commit/04030d5083dc76ccad36780869e8872f354bf9f8))
+
 # [1.0.0-alpha.108](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.107...v1.0.0-alpha.108) (2022-04-23)
 
 
