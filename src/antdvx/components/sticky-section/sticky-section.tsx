@@ -1,4 +1,4 @@
-import { PropType, defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { getOffsetAwayFromDocument, scrollTo } from '@fatesigner/utils/document';
 
 import styles from './sticky-section.module.less';
@@ -11,9 +11,7 @@ export const StickySection = defineComponent({
   inheritAttrs: false,
   props: {
     title: String,
-    className: {
-      type: Array as PropType<string[]>
-    },
+    className: String,
     shadowTop: {
       type: Boolean,
       default: false
@@ -24,18 +22,18 @@ export const StickySection = defineComponent({
     }
   },
   setup(props) {
+    let parentEl;
+    let observer: IntersectionObserver;
+
     const topRef = ref();
     const targetRef = ref();
 
     const sticky = ref(false);
-    let parentEl;
 
-    let observer: IntersectionObserver;
-
-    const goto = () => {
+    const scrollToLocation = (duration: number = 100) => {
       if (sticky.value && parentEl) {
         const top = getOffsetAwayFromDocument(topRef.value).top - getOffsetAwayFromDocument(parentEl).top + parentEl.scrollTop;
-        scrollTo(parentEl, 0, top, 100);
+        scrollTo(parentEl, 0, top, duration);
       }
     };
 
@@ -59,11 +57,15 @@ export const StickySection = defineComponent({
         ([e]) => {
           if (e.intersectionRatio === 0) {
             sticky.value = true;
-            targetRef.value.classList.add(...props.className);
+            if (props.className) {
+              targetRef.value.classList.add(...props.className.split(' '));
+            }
           } else {
             // fully intersects
             sticky.value = false;
-            targetRef.value.classList.remove(...props.className);
+            if (props.className) {
+              targetRef.value.classList.remove(...props.className.split(' '));
+            }
           }
           // e.target.classList.toggle(props.stickyClassName, e.intersectionRatio < 1);
         },
@@ -79,7 +81,7 @@ export const StickySection = defineComponent({
       }
     });
 
-    return { topRef, targetRef, sticky, goto };
+    return { topRef, targetRef, sticky, scrollToLocation };
   },
   render(ctx) {
     return [
@@ -89,8 +91,8 @@ export const StickySection = defineComponent({
         ref='targetRef'
         title={ctx.title}
         {...ctx.$attrs}
-        onClick={ctx.goto}>
-        {ctx.$slots.default?.({ sticky: ctx.sticky })}
+      >
+        {ctx.$slots.default?.({ sticky: ctx.sticky, scrollToLocation: ctx.scrollToLocation })}
       </div>
     ];
   }
