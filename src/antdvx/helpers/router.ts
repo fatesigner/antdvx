@@ -2,7 +2,55 @@
  * router
  */
 
+import { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router';
+
 import { IRouteLocationNormalized } from '../types';
+
+/**
+ * 给指定路由的 path 添加 前缀
+ * @param prefix
+ * @param routes
+ */
+export function prefixRoutes(prefix: string, routes: RouteRecordRaw[]) {
+  return routes.map((route) => {
+    route.path = prefix + '/' + route.path;
+    return route;
+  });
+}
+
+/**
+ * 获取指定 Component 的标识，默认为 name，当 name 不存在时，取 __hmrId
+ * @param component
+ */
+export function getComponentName(component: any) {
+  if (component) {
+    return component.type?.name ?? component.type?.__hmrId;
+  }
+  return undefined;
+}
+
+/**
+ * 获取指定 Component 对应的 route 和 key（默认为 route.fullPath），用于 RouterView 的 keepAlive 渲染
+ * @param component
+ * @param route
+ */
+export function getMatchedRoute(component: any, route: RouteLocationNormalizedLoaded) {
+  let key = route.fullPath;
+  const componentName = getComponentName(component);
+  const matchedRoute = componentName ? route?.matched?.find((x) => getComponentName(x?.components?.default) === componentName) : undefined;
+  if (matchedRoute) {
+    // const currentRoute = route.matched[route.matched.length - 1];
+    const path = route.path;
+    const diffPath = path.replace(matchedRoute.path, '');
+    if (diffPath) {
+      key = key.replace(diffPath, '');
+    }
+  }
+  return {
+    matchedRoute: matchedRoute ?? route,
+    key: key || route.fullPath
+  };
+}
 
 /**
  * 给定一个路由，获取其访问权限
