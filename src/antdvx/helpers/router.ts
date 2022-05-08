@@ -2,21 +2,9 @@
  * router
  */
 
-import { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router';
+import { RouteLocationNormalizedLoaded } from 'vue-router';
 
 import { IRouteLocationNormalized } from '../types';
-
-/**
- * 给指定路由的 path 添加 前缀
- * @param prefix
- * @param routes
- */
-export function prefixRoutes(prefix: string, routes: RouteRecordRaw[]) {
-  return routes.map((route) => {
-    route.path = prefix + '/' + route.path;
-    return route;
-  });
-}
 
 /**
  * 获取指定 Component 的标识，默认为 name，当 name 不存在时，取 __hmrId
@@ -24,7 +12,11 @@ export function prefixRoutes(prefix: string, routes: RouteRecordRaw[]) {
  */
 export function getComponentName(component: any) {
   if (component) {
-    return component.type?.name ?? component.type?.__hmrId;
+    if (component.type) {
+      return component.type.name ?? component.type.__hmrId;
+    } else {
+      return component.name ?? component.__hmrId;
+    }
   }
   return undefined;
 }

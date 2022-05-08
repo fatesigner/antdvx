@@ -1,4 +1,5 @@
 import { RouterView } from 'vue-router';
+import { getMatchedRoute } from '@/antdvx/helpers';
 import { IconMenuLine, TransitionSlide } from '@/antdvx';
 import { KeepAlive, computed, defineComponent } from 'vue';
 
@@ -86,17 +87,15 @@ export const LayoutSidebar = defineComponent({
               <RouterView
                 v-slots={{
                   default({ Component, route }) {
-                    const matchedRoute = Component?.type?.name
-                      ? route?.matched?.find((x) => x?.components?.default?.name === Component.type.name) ?? route
-                      : route;
+                    const { key, matchedRoute } = getMatchedRoute(Component, route);
                     return Component ? (
                       <TransitionSlide>
                         {matchedRoute?.meta?.keepAlive ? (
                           <KeepAlive>
-                            <Component key={route.fullPath} />
+                            <Component key={key} />
                           </KeepAlive>
                         ) : (
-                          <Component key={route.fullPath} />
+                          <Component />
                         )}
                       </TransitionSlide>
                     ) : undefined;

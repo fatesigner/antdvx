@@ -10,7 +10,7 @@ export const StickySectionView = defineComponent({
       <PageWrapper title='Sticky Section' overflow='scroll'>
         <StickySection
           class='tw-sticky tw-top-0 tw-bottom-0 tw-z-10'
-          className={['tw-cursor-pointer']}
+          className='tw-cursor-pointer'
           title='Click to show Package'
           shadow-top
           shadow-bottom
@@ -32,7 +32,7 @@ export const StickySectionView = defineComponent({
         </div>
         <StickySection
           class='tw-sticky tw-top-0 tw-bottom-0 tw-z-10'
-          className={['tw-cursor-pointer']}
+          className='tw-cursor-pointer'
           title='Click to show Cost To Complete'
           shadow-top
           shadow-bottom

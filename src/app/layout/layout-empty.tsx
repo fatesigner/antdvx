@@ -1,6 +1,9 @@
 import { RouterView } from 'vue-router';
 import { TransitionSlide } from '@/antdvx';
+import { getMatchedRoute } from '@/antdvx/helpers';
 import { KeepAlive, defineComponent } from 'vue';
+
+import { NavLanguage } from '@/app/layout/shared/language';
 
 /**
  * 空母版页
@@ -9,24 +12,29 @@ export const LayoutEmpty = defineComponent({
   name: 'LayoutEmpty',
   render() {
     return (
-      <RouterView
-        v-slots={{
-          default({ Component, route }) {
-            const matchedRoute = Component?.type?.name ? route?.matched?.find((x) => x?.components?.default?.name === Component.type.name) ?? route : route;
-            return Component ? (
-              <TransitionSlide>
-                {matchedRoute?.meta?.keepAlive ? (
-                  <KeepAlive>
-                    <Component key={route.fullPath} />
-                  </KeepAlive>
-                ) : (
-                  <Component key={route.fullPath} />
-                )}
-              </TransitionSlide>
-            ) : undefined;
-          }
-        }}
-      />
+      <div class='tw-h-full'>
+        <div class='tw-fixed tw-top-4 tw-right-4'>
+          <NavLanguage />
+        </div>
+        <RouterView
+          v-slots={{
+            default({ Component, route }) {
+              const { key, matchedRoute } = getMatchedRoute(Component, route);
+              return Component ? (
+                <TransitionSlide>
+                  {matchedRoute?.meta?.keepAlive ? (
+                    <KeepAlive>
+                      <Component key={key} />
+                    </KeepAlive>
+                  ) : (
+                    <Component />
+                  )}
+                </TransitionSlide>
+              ) : undefined;
+            }
+          }}
+        />
+      </div>
     );
   }
 });

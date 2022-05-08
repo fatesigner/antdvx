@@ -1,7 +1,8 @@
 import { RouterView } from 'vue-router';
 import { ConfigProvider } from 'ant-design-vue';
-import { defineComponent, onMounted, ref } from 'vue';
-import { XDrawer, XModal, createXDrawer, createXModal } from '@/antdvx';
+import { getMatchedRoute } from '@/antdvx/helpers';
+import { KeepAlive, defineComponent, onMounted, ref } from 'vue';
+import { TransitionSlide, XDrawer, XModal, createXDrawer, createXModal } from '@/antdvx';
 
 import { Api } from '@/mocks';
 import { i18n } from '@/app/i18n';
@@ -93,7 +94,24 @@ export const App = defineComponent({
   render(ctx) {
     return (
       <ConfigProvider locale={ctx.locale}>
-        <RouterView />
+        <RouterView
+          v-slots={{
+            default({ Component, route }) {
+              const { key, matchedRoute } = getMatchedRoute(Component, route);
+              return Component ? (
+                <TransitionSlide>
+                  {matchedRoute?.meta?.keepAlive ? (
+                    <KeepAlive>
+                      <Component key={key} />
+                    </KeepAlive>
+                  ) : (
+                    <Component />
+                  )}
+                </TransitionSlide>
+              ) : undefined;
+            }
+          }}
+        />
         <ProgressBar />
         <XDrawer {...ctx.popupRefs.individuation} />
         <XModal {...ctx.popupRefs.updatePassword} />
