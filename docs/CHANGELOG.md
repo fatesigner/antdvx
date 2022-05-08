@@ -1,3 +1,11 @@
+# [1.0.0-alpha.111](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.110...v1.0.0-alpha.111) (2022-05-08)
+
+
+### Features
+
+* add some helpers for vue router ([ca322eb](https://github.com/fatesigner/antdvx/commit/ca322eb985d0203e1f6e6379a007fa3419d27562))
+* add some helpers for vue router ([8e8eccd](https://github.com/fatesigner/antdvx/commit/8e8eccdfd1ac8412b6e9c80c75420fac28647a8a))
+
 # [1.0.0-alpha.110](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.109...v1.0.0-alpha.110) (2022-05-03)
 
 
