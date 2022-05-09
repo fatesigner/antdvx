@@ -1,3 +1,10 @@
+# [1.0.0-alpha.112](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.111...v1.0.0-alpha.112) (2022-05-09)
+
+
+### Features
+
+* update v-echarts component ([69ceb43](https://github.com/fatesigner/antdvx/commit/69ceb43cc4d1d29abb7b75d0f6604dac1fae8731))
+
 # [1.0.0-alpha.111](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.110...v1.0.0-alpha.111) (2022-05-08)
 
 
