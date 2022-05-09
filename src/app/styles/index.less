@@ -2,8 +2,21 @@
 @import '../plugins/tailwindcss/tailwind.less';
 @import '../themes/default.less';
 
+@font-face {
+  font-family: 'D-DIN';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../../assets/fonts/D-DIN/D-DIN.woff2') format('woff2'),
+    url('../../assets/fonts/D-DIN/D-DIN.woff') format('woff');
+  font-display: swap;
+}
+
 [v-cloak] {
   display: none !important;
+}
+
+ul {
+  list-style: none;
 }
 
 #app {
@@ -11,6 +24,8 @@
 }
 
 body {
+  @apply tw-font-normal;
+
   overflow: hidden;
 }
 

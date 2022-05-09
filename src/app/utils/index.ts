@@ -53,7 +53,7 @@ export async function getMenusFromRoutes(routes: IRouteRecordRaw[], filter?: (ro
   // const strutreeRouters: StructureTree<IRouteConfig> = new StructureTree<IRouteConfig>();
   // 解析路由表
   return routes.reduce((prev, cur, index, parentNodes) => {
-    if (cur.name && (!cur?.children || !cur.children?.length)) {
+    if (cur.name) {
       const menu: IMenu = {
         id: index + cur.name.toString(),
         name: cur.name.toString(),

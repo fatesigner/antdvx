@@ -1,5 +1,5 @@
-import { TransitionCollapse, XButtonRefresh } from '@/antdvx';
 import { isFunction, isString } from '@fatesigner/utils/type-check';
+import { ANTDVX_COLORS, TransitionCollapse, XButtonRefresh } from '@/antdvx';
 import { PropType, computed, defineComponent, nextTick, onMounted, ref } from 'vue';
 import { Alert, Checkbox, CheckboxGroup, RadioButton, RadioGroup, Spin } from 'ant-design-vue';
 
@@ -35,6 +35,9 @@ function getDataFieldMap<TModel extends Record<string, any>>(field: string | Dat
 export const CheckGroup = defineComponent({
   name: 'CheckGroup',
   props: {
+    color: {
+      type: String as PropType<typeof ANTDVX_COLORS[number]>
+    },
     multiple: {
       type: Boolean,
       default: false
@@ -85,7 +88,7 @@ export const CheckGroup = defineComponent({
     const handleChange = (e) => {
       nextTick(() => {
         emit('update:value', e);
-        emit('change', e);
+        emit('change', ...[e, options_.value]);
       });
     };
 
@@ -104,7 +107,9 @@ export const CheckGroup = defineComponent({
       } else {
         options_.value = props.options;
       }
-      loading.value = false;
+      setTimeout(() => {
+        loading.value = false;
+      }, 1000);
     };
 
     onMounted(() => {
@@ -166,41 +171,47 @@ export const CheckGroup = defineComponent({
       }
     }
     return (
-      <div class={$styles['check-group']}>
+      <div class={[$styles['check-group'], ctx.color && ANTDVX_COLORS.includes(ctx.color) ? $styles['check-group-' + ctx.color] : undefined]}>
+        {ctx.loading ? <Spin size='small' /> : undefined}
         <TransitionCollapse>
-          {ctx.loading ? (
-            <Spin />
-          ) : ctx.error ? (
+          {!ctx.loading && ctx.error ? (
             <Alert
               type='error'
               v-slots={{
                 description() {
                   return (
-                    <div class='tw-flex tw-flex-wrap tw-gap-1'>
+                    <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-1'>
                       <div>{ctx.error}</div>
-                      <XButtonRefresh onlyIcon type='link' handler={ctx.loadData} />
+                      <XButtonRefresh onlyIcon color='primary' type='link' handler={ctx.loadData} />
                     </div>
                   );
                 }
               }}
             />
-          ) : ctx.multiple ? (
-            <CheckboxGroup
-              value={ctx.value}
-              onChange={(e) => {
-                ctx.handleChange(e.target.value);
-              }}>
-              <div class='tw-flex tw-flex-wrap tw-gap-x-6 tw-gap-y-2'>{ctx.$slots?.options?.({ options: ctx.options_ }) ?? renderOptions}</div>
-            </CheckboxGroup>
-          ) : (
-            <RadioGroup
-              value={ctx.value}
-              onChange={(e) => {
-                ctx.handleChange(e.target.value);
-              }}>
-              {ctx.$slots?.options?.({ options: ctx.options_ }) ?? renderOptions}
-            </RadioGroup>
-          )}
+          ) : undefined}
+        </TransitionCollapse>
+        <TransitionCollapse>
+          {!ctx.loading && !ctx.error ? (
+            ctx.multiple ? (
+              <CheckboxGroup
+                value={ctx.value}
+                onChange={(e) => {
+                  ctx.handleChange(e.target.value);
+                }}
+              >
+                <div class='tw-flex tw-flex-wrap tw-gap-x-6 tw-gap-y-2'>{ctx.$slots?.options?.({ options: ctx.options_ }) ?? renderOptions}</div>
+              </CheckboxGroup>
+            ) : (
+              <RadioGroup
+                value={ctx.value}
+                onChange={(e) => {
+                  ctx.handleChange(e.target.value);
+                }}
+              >
+                {ctx.$slots?.options?.({ options: ctx.options_ }) ?? renderOptions}
+              </RadioGroup>
+            )
+          ) : undefined}
         </TransitionCollapse>
       </div>
     );

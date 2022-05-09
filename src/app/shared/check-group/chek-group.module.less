@@ -2,7 +2,7 @@
 
 .check-group {
   :global(.ant-radio-group) {
-  @apply tw-flex tw-flex-wrap tw-gap-1;
+    @apply tw-flex tw-flex-wrap tw-gap-1;
   }
 
   :global(.ant-radio-button-wrapper) {
@@ -11,8 +11,8 @@
   }
 
   :global(.ant-radio-button-wrapper:hover) {
-    background: #eee;
     color: rgba(0, 0, 0, 0.85);
+    background: #eee;
   }
 
   :global(.ant-radio-button-wrapper:not(:first-child)::before) {
@@ -20,9 +20,38 @@
   }
 
   :global(.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)) {
-    border-left: 1px solid transparent;
-    border-color: transparent;
-    background-image: linear-gradient(180deg, #5693fc, #5cb4f8);
     color: #fff;
+    background-image: linear-gradient(180deg, #5693fc, #5cb4f8);
+    border-color: transparent;
+    border-left: 1px solid transparent;
   }
 }
+
+@colorArr: {
+  primary: @primary-color;
+  secondary: @secondary-color;
+  tertiary: @tertiary-color;
+  success: @success-color;
+  warning: @warning-color;
+  danger: @danger-color;
+  red: @red-color;
+  orange: @orange-color;
+  yellow: @yellow-color;
+  green: @green-color;
+  cyan: @cyan-color;
+  blue: @blue-color;
+  purple: @purple-color;
+}
+
+// Set color
+// ---------------------------------------------------
+each(@colorArr, {
+  .check-group-@{key} {
+    :global(.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)) {
+      border-left: 1px solid transparent;
+      border-color: transparent;
+      background-image: linear-gradient(180deg, ~`colorPalette('@{value}', 5)`, @value);
+      color: #fff;
+    }
+  }
+});

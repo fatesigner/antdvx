@@ -484,8 +484,7 @@ module.exports = async function (options) {
           })
         }
       },
-      {
-        // ohther assets
+      /* {
         test: (function () {
           const exts = loaders.url.test;
           return new RegExp(`\\.(${exts.join('|')})\\??.*$`);
@@ -494,9 +493,13 @@ module.exports = async function (options) {
           loader: 'url-loader',
           options: loaders.url
         }
-      },
+      }, */
       {
-        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        // ohther assets
+        test: (function () {
+          const exts = loaders.url.test;
+          return new RegExp(`\\.(${exts.join('|')})\\??.*$`);
+        })(),
         type: 'asset',
         parser: {
           dataUrlCondition: {

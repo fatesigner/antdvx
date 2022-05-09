@@ -539,7 +539,7 @@ export const EchartsView = defineComponent({
   },
   render(ctx) {
     return (
-      <PageWrapper title='Echarts' overflow='scroll'>
+      <PageWrapper title='Echarts' overflow='scroll' bgGray>
         <div class='tw-grid lg:tw-grid-cols-2 tw-gap-4 tw-p-4'>
           {Object.entries(ctx.charts).map(([key, chart]: any) => (
             <VEcharts

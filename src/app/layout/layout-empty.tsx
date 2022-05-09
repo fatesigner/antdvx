@@ -1,7 +1,7 @@
 import { RouterView } from 'vue-router';
 import { TransitionSlide } from '@/antdvx';
-import { getMatchedRoute } from '@/antdvx/helpers';
 import { KeepAlive, defineComponent } from 'vue';
+import { getMatchedRoute } from '@/antdvx/helpers';
 
 import { NavLanguage } from '@/app/layout/shared/language';
 

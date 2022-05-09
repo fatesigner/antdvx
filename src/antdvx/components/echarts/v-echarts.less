@@ -1,8 +1,8 @@
-.container {
+.v-echarts-container {
   position: relative;
 }
 
-.chart {
+.v-echarts-chart {
   position: absolute;
   top: 0;
   right: 0;
@@ -12,12 +12,12 @@
   height: 100%;
 }
 
-.error {
+.v-echarts-error {
   color: #b02e2e;
   white-space: nowrap;
 }
 
-.transition {
+.v-echarts-transition {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -25,23 +25,23 @@
   transform: translate3d(-50%, -50%, 0);
 }
 
-.transition-enter-from {
+.v-echarts-transition-enter-from {
   opacity: 0;
   transform: translate3d(-50%, -50%, 0) scale(0.7);
 }
 
-.transition-enter-to {
+.v-echarts-transition-enter-to {
   opacity: 1;
   transform: translate3d(-50%, -50%, 0) scale(1);
 }
 
-.transition-leave-to {
+.v-echarts-transition-leave-to {
   opacity: 0;
   transform: translate3d(-50%, -50%, 0) scale(0.6);
 }
 
-.transition-enter-active,
-.transition-leave-active {
+.v-echarts-transition-enter-active,
+.v-echarts-transition-leave-active {
   transition-timing-function: ease-in-out;
   transition-duration: 0.2s;
 }

@@ -53,7 +53,7 @@ export const PassportCore = defineComponent({
               name: x.Code as any,
               label: x.Name,
               menus: menus,
-              permissions: x.Permissions.map((y) => y.Name)
+              permissions: x?.Permissions?.map((y) => y.Name) ?? []
             };
           }) ?? [];
 

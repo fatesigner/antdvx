@@ -33,17 +33,21 @@ export const PassportBgView = defineComponent({
   },
   render() {
     return (
-      <div class={$styles.bg}>
+      <div class={$styles.wrap}>
+        <div class={$styles.bg}>
+          <div class='_md:tw-hidden tw-m-auto tw-space-y-8 tw-p-8'>
+            <div class='tw-text-2xl lg:tw-text-5xl tw-text-white'>{ENV.APP_TITLE}</div>
+            <div class='tw-text-md lg:tw-text-2xl tw-text-white'></div>
+          </div>
+        </div>
         <div class={$styles.container}>
           <div class={$styles.content}>
-            <img class='tw-max-w-full tw-w-100' src={require('@/assets/img/logo.png')} alt={ENV.APP_TITLE} title={ENV.APP_TITLE} />
-            <div class={$styles.title}>Staffing Plan Management System</div>
-            <div class='tw-w-full'>
-              <PassportCore />
+            <img class={$styles.logo} height='46' src={require('@/assets/img/logo.png')} alt={ENV.APP_TITLE} title={ENV.APP_TITLE} />
+            <div class={$styles.title}>{ENV.APP_TITLE}</div>
+            <PassportCore />
+            <div class={$styles.footer}>
+              <AppFooter pure />
             </div>
-          </div>
-          <div class='tw-p-2'>
-            <AppFooter pure />
           </div>
         </div>
       </div>

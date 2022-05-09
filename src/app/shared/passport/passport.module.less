@@ -12,7 +12,8 @@
 }
 
 .form {
-  gap: 1rem;
+  max-width: 360px;
+  margin: auto;
 }
 
 .link {
@@ -21,13 +22,13 @@
 
     &:hover,
     &:focus {
-      color: ~`colorPalette('@{primary-color}', 5)`;
+      color: ~`colorPalette('@{primary-color}', 5) `;
       text-decoration: underline;
     }
 
     &:active,
     &.active {
-      color: ~`colorPalette('@{primary-color}', 7)`
+      color: ~`colorPalette('@{primary-color}', 7) `
     }
   }
 

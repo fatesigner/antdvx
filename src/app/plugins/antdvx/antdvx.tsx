@@ -10,6 +10,7 @@ import {
   XButtonFullscreenExit,
   XButtonRefresh,
   XTableSettingsPanelButton,
+  configureEcharts,
   configureVEcharts,
   configureXTable,
   setRequestAdapter,
@@ -62,6 +63,12 @@ export const Antdvx = {
     document.body.className = classes.filter((x: any) => !!x).join(' ');
 
     // echarts
+    configureEcharts({
+      color: ['#91cc75', '#fac858', '#5470c6', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'],
+      textStyle: {
+        fontFamily: 'a'
+      }
+    });
     configureVEcharts({
       header(chartRef) {
         return (

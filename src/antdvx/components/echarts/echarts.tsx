@@ -4,7 +4,7 @@
 
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
 import * as echarts from 'echarts/core';
-import { isArray, merge, mergeWith } from 'lodash-es';
+import { isArray, mergeWith } from 'lodash-es';
 import { isNullOrUndefined, isNumber } from '@fatesigner/utils/type-check';
 
 export { echarts };
@@ -66,10 +66,15 @@ export function configureEcharts<Opt extends EChartsOption>(
     height?: number;
   }
 ) {
-  Object.assign(defaultConfig, {
-    theme,
-    opts
-  });
+  mergeWith(
+    defaultConfig,
+    {
+      options,
+      theme,
+      opts
+    },
+    (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined)
+  );
 }
 
 /**
@@ -126,7 +131,9 @@ export function getEchartsOptions(
 
   args.push(options);
 
-  return merge.apply(this, args);
+  args.push((objVal, srcVal) => (isArray(objVal) ? srcVal : undefined));
+
+  return mergeWith.apply(this, args);
 }
 
 /**

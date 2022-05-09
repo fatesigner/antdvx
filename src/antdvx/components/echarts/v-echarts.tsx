@@ -10,9 +10,7 @@ import { PropType, TransitionGroup, VNode, computed, defineComponent, onActivate
 
 import { IXButtonExportOptions, XButtonExport, XButtonRefresh } from '../button';
 
-import { EChartsOption, EChartsOptionPromise, EChartsType, LocaleOption, RendererType, createEcharts } from './echarts';
-
-import $styles from './v-echarts.module.less';
+import { EChartsOption, EChartsOptionPromise, EChartsType, LocaleOption, RendererType, createEcharts, getEchartsOptions } from './echarts';
 
 interface EChartsConfig {
   theme?: string;
@@ -260,11 +258,11 @@ export const VEcharts = defineComponent({
           error.value = err.message || '[VEcharts] Options load failed.';
         } else {
           // await analyseImport(r);
-          options_.value = r;
+          options_.value = getEchartsOptions(r) as any;
           error.value = null;
         }
       } else {
-        options_.value = props.options as any;
+        options_.value = getEchartsOptions(props.options) as any;
       }
       if (options_.value) {
         instance.clear();
@@ -330,17 +328,17 @@ export const VEcharts = defineComponent({
     const solts = [];
     if (ctx.loading) {
       solts.push(
-        <div class={$styles.transition} key='loading'>
+        <div class='v-echarts-transition' key='loading'>
           {ctx.$slots?.loading ? ctx.$slots?.loading({ refresh: ctx.refresh }) : <Spin size='large' />}
         </div>
       );
     } else if (ctx.error) {
       solts.push(
-        <div class={$styles.transition} key='error'>
+        <div class='v-echarts-transition' key='error'>
           {ctx.$slots?.error ? (
             ctx.$slots?.error({ error: ctx.error, refresh: ctx.refresh })
           ) : (
-            <div class={$styles.error}>
+            <div class='v-echarts-error'>
               <span>{ctx.error}</span>
               <XButtonRefresh handler={ctx.refresh} only-icon color='primary' size='small' type='link' />
             </div>
@@ -349,7 +347,7 @@ export const VEcharts = defineComponent({
       );
     } else if (ctx.empty) {
       solts.push(
-        <div class={$styles.transition} key='empty'>
+        <div class='v-echarts-transition' key='empty'>
           {ctx.$slots?.empty ? ctx.$slots?.empty({ refresh: ctx.refresh }) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}
         </div>
       );
@@ -366,28 +364,25 @@ export const VEcharts = defineComponent({
             <div class='tw-flex-1'>
               {ctx.$slots?.title ? ctx.$slots.title(ctx) : ctx.title?.el ? ctx.title : <div class='tw-pl-2 tw-pr-2 tw-text-base'>{ctx.title}</div>}
             </div>
-            {ctx.error ? (
-              ''
-            ) : (
+            {ctx.error ? undefined : ctx.refreshable || ctx.exportable ? (
               <div class='tw-flex-initial tw-space-x-2' data-html2canvas-ignore>
-                {ctx.refreshable ? <XButtonRefresh disabled={ctx.loading} color='primary' size='small' type='link' handler={ctx.refresh} /> : ''}
-                {ctx.exportable ? <XButtonExport disabled={ctx.loading} size='small' placement='bottomRight' options={ctx.exportOptions} /> : ''}
+                {ctx.refreshable ? <XButtonRefresh disabled={ctx.loading} color='primary' size='small' type='link' handler={ctx.refresh} /> : undefined}
+                {ctx.exportable ? <XButtonExport disabled={ctx.loading} size='small' placement='bottomRight' options={ctx.exportOptions} /> : undefined}
               </div>
-            )}
+            ) : undefined}
           </div>
-        ) : (
-          ''
-        )}
-        <div class={$styles.container} style={ctx.containerStyles}>
+        ) : undefined}
+        <div class='v-echarts-container' style={ctx.containerStyles}>
           <TransitionGroup
-            enterFromClass={$styles['transition-enter-from']}
-            enterToClass={$styles['transition-enter-to']}
-            leaveToClass={$styles['transition-leave-to']}
-            enterActiveClass={$styles['transition-enter-active']}
-            leaveActiveClass={$styles['transition-enter-active']}>
+            enterFromClass='v-echarts-transition-enter-from'
+            enterToClass='v-echarts-transition-enter-to'
+            leaveToClass='v-echarts-transition-leave-to'
+            enterActiveClass='v-echarts-transition-enter-active'
+            leaveActiveClass='v-echarts-transition-enter-active'
+          >
             {solts}
           </TransitionGroup>
-          <div ref='chartRef' class={[$styles.chart, ctx.empty || !ctx.options_ ? $styles.empty : '']} onTouchstart={ctx.touchstart} />
+          <div ref='chartRef' class='v-echarts-chart' onTouchstart={ctx.touchstart} />
         </div>
       </div>
     );

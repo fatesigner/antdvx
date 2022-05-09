@@ -153,12 +153,12 @@ export const NavMenu = defineComponent({
       childrenKey: 'children'
     });
 
-    /* const menus = ref<IMenu[]>(
-      strutree.filter(require('@/assets/auth/menus.json'), (node: any) => {
+    const menus = ref<IMenu[]>(
+      strutree.filter(require('@/assets/json/menus.json'), (node: any) => {
         return !node?.auth || node?.auth;
       })
-    ); */
-    const menus = ref<IMenu[]>(sessionService?.user?.role?.menus ?? []);
+    );
+    // const menus = ref<IMenu[]>(sessionService?.user?.role?.menus ?? []);
 
     const collapsed = inject('collapsed');
 
