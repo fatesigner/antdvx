@@ -693,7 +693,7 @@ export const XTable = defineComponent({
 
     // 导出到 Excel
     const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?, filename?: string, contentType?: string) => {
-      const { workbook } = await ExceljsHelper.addWorksheet(undefined, {
+      const { worksheet, workbook } = await ExceljsHelper.addWorksheet(undefined, {
         columns: columns_.value
           ?.filter((x) => !!x.excel)
           ?.map((x) => ({
@@ -703,6 +703,7 @@ export const XTable = defineComponent({
           })),
         data: data ?? (overallData as any)
       });
+      await props.options.listeners?.beforeDownloadExcel?.(worksheet, workbook);
       await ExceljsHelper.downloadFile(workbook, filename, contentType);
     };
 

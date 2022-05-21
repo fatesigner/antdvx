@@ -3,6 +3,7 @@
  */
 
 import { VNode } from 'vue';
+import { Workbook, Worksheet } from 'exceljs';
 import { UnknownType } from '@fatesigner/utils/types';
 import { IWorksheetColumn } from '@fatesigner/utils/exceljs';
 import { PaginationProps } from 'ant-design-vue/es/pagination/Pagination';
@@ -265,6 +266,11 @@ export interface IXTableListenersType<TModel extends UnknownType<any> = UnknownT
    * 用户手动选择反选的回调
    */
   readonly rowSelectInvert?: (selectedRows: IXTableModelExtend<TModel>[]) => void;
+
+  /**
+   * 在下载 Excel 之前执行，可在此更新 Excel worksheet 和 workbook 对象
+   */
+  readonly beforeDownloadExcel?: (worksheet: Worksheet, workbook: Workbook) => Promise<void>;
 }
 
 export interface IXTablePropsType<TModel extends UnknownType, TParams extends UnknownType, TMeta extends UnknownType>
