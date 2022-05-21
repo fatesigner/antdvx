@@ -52,6 +52,12 @@ export interface IAuthService<
   isAuthorized(to: TRoute, roles?: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]): boolean;
 
   /**
+   * 判断当前用户是否拥有指定的权限
+   * @param permission 权限
+   */
+  permissible(permission: string);
+
+  /**
    * 对于指定的角色组，判断给定的角色组是否已授权（即两个集合是否交集）
    * @param roles   roles
    * @param {Array} authorizedRoles

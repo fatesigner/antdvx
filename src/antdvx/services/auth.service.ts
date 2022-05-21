@@ -103,6 +103,15 @@ export class AuthService<
     }
   }
 
+  permissible(permission: string) {
+    // 绕过超级管理员角色
+    if (this.config?.superRole?.includes?.(this._sessionService.user?.role?.name as NamesTypeOfRole<RoleTypeOfUser<TUser>>)) {
+      return true;
+    }
+
+    return this._sessionService.user?.role?.permissions?.includes?.(permission);
+  }
+
   authRoles(roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[], authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]) {
     const authorizedRolesNew = [];
     const length = authorizedRoles?.length ?? 0;

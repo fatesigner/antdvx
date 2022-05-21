@@ -18,7 +18,7 @@ import {
 } from '@/antdvx';
 
 import { sysPermissionApi } from '@/api';
-import { sessionService } from '@/app/core/services';
+import { authService, sessionService } from '@/app/core/services';
 import { PageWrapper } from '@/app/shared/page-wrapper';
 import { PERMISSIONS_TYPE } from '@/app/core/constants';
 
@@ -79,7 +79,7 @@ export const PermissionsView = defineComponent({
           width: 140,
           excel: {}
         },
-        sessionService.user?.role?.permissions?.includes('RolesFullAccess')
+        authService.permissible('RolesFullAccess')
           ? {
               title: 'Operation',
               width: 120,
@@ -177,7 +177,7 @@ export const PermissionsView = defineComponent({
           actions() {
             return (
               <div class='tw-flex tw-justify-end tw-gap-2'>
-                {sessionService.user?.role?.permissions?.includes('RolesFullAccess') ? (
+                {authService.permissible('RolesFullAccess') ? (
                   <XButtonAdd
                     color='primary'
                     type='3d'

@@ -24,7 +24,7 @@ import {
 import { sysRoleApi } from '@/api';
 import { i18nMessages } from '@/app/i18n';
 import { COMMON_STATUS } from '@/app/core/constants';
-import { sessionService } from '@/app/core/services';
+import { authService, sessionService } from '@/app/core/services';
 import { PageWrapper } from '@/app/shared/page-wrapper';
 
 /**
@@ -133,7 +133,7 @@ export const RolesView = defineComponent({
           width: 150,
           excel: {}
         },
-        sessionService.user?.role?.permissions?.includes('ExchangeRatesFullAccess')
+        authService.permissible('ExchangeRatesFullAccess')
           ? {
               title: 'Operation',
               width: 90,
@@ -283,7 +283,7 @@ export const RolesView = defineComponent({
           actions() {
             return (
               <div class='tw-flex tw-justify-end tw-gap-2'>
-                {sessionService.user?.role?.permissions?.includes('RolesFullAccess') ? (
+                {authService.permissible('RolesFullAccess') ? (
                   <XButtonAdd
                     color='primary'
                     type='3d'

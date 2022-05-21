@@ -19,7 +19,7 @@ import {
 } from '@/antdvx';
 
 import { sysUserApi } from '@/api';
-import { sessionService } from '@/app/core/services';
+import { authService, sessionService } from '@/app/core/services';
 import { PageWrapper } from '@/app/shared/page-wrapper';
 import { COMMON_STATUS, SEX_STATUS } from '@/app/core/constants';
 
@@ -160,7 +160,7 @@ export const UsersView = defineComponent({
             }
           }
         },
-        sessionService.user?.role?.permissions?.includes('UserInformationFullAccess')
+        authService.permissible('UserInformationFullAccess')
           ? {
               title: 'Operation',
               width: 90,
@@ -254,7 +254,7 @@ export const UsersView = defineComponent({
           actions() {
             return (
               <div class='tw-flex tw-justify-end tw-gap-2'>
-                {sessionService.user?.role?.permissions?.includes('UserInformationFullAccess') ? (
+                {authService.permissible('UserInformationFullAccess') ? (
                   <XButtonAdd
                     color='primary'
                     type='3d'
