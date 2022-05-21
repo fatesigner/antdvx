@@ -1,3 +1,11 @@
+# [1.0.0-alpha.113](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.112...v1.0.0-alpha.113) (2022-05-21)
+
+
+### Features
+
+* add a listener named beforeDownloadExcel for XTable ([bb77ac6](https://github.com/fatesigner/antdvx/commit/bb77ac6d5ec0fa33982f2124ac1ebeff8e9497f6))
+* add permissible function to AuthService ([7d96d8e](https://github.com/fatesigner/antdvx/commit/7d96d8ecede5938dc4a0e57977544d6ed5cf1f75))
+
 # [1.0.0-alpha.112](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.111...v1.0.0-alpha.112) (2022-05-09)
 
 
