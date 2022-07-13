@@ -1133,22 +1133,7 @@ export const XTable = defineComponent({
       defaultExpandedRowKeys: ctx.options.defaultExpandedRowKeys,
       expandedRowKeys: ctx.options.expandedRowKeys,
       expandedRowRender: ctx.options.expandedRowRender,
-      expandIcon:
-        ctx.options.expandIcon ?? ctx.$slots?.expandedRowRender
-          ? function ({ expandable, expanded, needIndentSpaced, onExpand, prefixCls, record }) {
-              return (
-                <div
-                  class={['antdvx-table-expand-icon', expanded ? 'antdvx-table-expand-unfold' : undefined]}
-                  title={expanded ? ctx.$t(i18nMessages.antd.action.fold) : ctx.$t(i18nMessages.antd.action.expand)}
-                  onClick={(e) => {
-                    onExpand(record, e);
-                  }}
-                >
-                  {expanded ? <IconCheckboxIndeterminateLine /> : <IconAddBoxLine />}
-                </div>
-              );
-            }
-          : undefined,
+      expandIcon: ctx.options.expandIcon,
       expandRowByClick: ctx.options.expandRowByClick,
       expandIconColumnIndex: ctx.options.expandIconColumnIndex,
       footer: ctx.options.footer,
