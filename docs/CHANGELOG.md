@@ -1,3 +1,10 @@
+# [1.0.0-alpha.114](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.113...v1.0.0-alpha.114) (2022-07-13)
+
+
+### Features
+
+* remove default expandIcon from XTable ([255d671](https://github.com/fatesigner/antdvx/commit/255d6711e648ed7c9a0844266c36cebe08e4f973))
+
 # [1.0.0-alpha.113](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.112...v1.0.0-alpha.113) (2022-05-21)
 
 
