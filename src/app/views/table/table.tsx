@@ -50,6 +50,8 @@ export const TableView = defineComponent({
         scroll: {
           x: true
         },
+        ignoreTitlePrefix: true,
+        ignoreTitleSuffix: true,
         size: 'small',
         rowKey: 'userid',
         rowSelection: {

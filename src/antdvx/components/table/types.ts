@@ -282,6 +282,15 @@ export interface IXTablePropsType<TModel extends UnknownType, TParams extends Un
   scroll?: { x?: boolean | number; y?: boolean | number };
 
   /**
+   * 忽略全局标题栏（前部）添加的节点
+   */
+  ignoreTitlePrefix?: boolean;
+  /**
+   * 忽略全局标题栏（尾部）添加的节点
+   */
+  ignoreTitleSuffix?: boolean;
+
+  /**
    * 表格名称，唯一值
    */
   name?: string;

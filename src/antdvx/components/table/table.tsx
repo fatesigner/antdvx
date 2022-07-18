@@ -613,8 +613,7 @@ export const XTable = defineComponent({
                         size='small'
                         onClick={() => {
                           clearFilters();
-                        }}
-                      >
+                        }}>
                         {t(i18nMessages.antd.action.reset)}
                       </XButton>
                     </div>
@@ -1063,7 +1062,7 @@ export const XTable = defineComponent({
           <div ref='topRef' class={['tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2', ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2']}>
             <div class={['tw-flex-1', ctx.options.bordered ? undefined : '']}>
               <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
-                {ctx.options?.titlePrefix?.(ctx)}
+                {ctx.options?.ignoreTitlePrefix ? undefined : ctx.options?.titlePrefix?.(ctx)}
                 {ctx.$slots?.title?.({
                   ...slotData,
                   options: ctx.options,
@@ -1072,7 +1071,7 @@ export const XTable = defineComponent({
                   handler: ctx.handler,
                   handleRecordChange: ctx.handleRecordChange
                 })}
-                {ctx.options?.titleSuffix?.(ctx)}
+                {ctx.options?.ignoreTitleSuffix ? undefined : ctx.options?.titleSuffix?.(ctx)}
               </div>
             </div>
             {ctx.options.dataSource.total &&
@@ -1186,8 +1185,7 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
-            >
+              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1293,8 +1291,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1307,8 +1304,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1350,8 +1346,7 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1359,8 +1354,7 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>
