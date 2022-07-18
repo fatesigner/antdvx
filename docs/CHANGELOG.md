@@ -1,3 +1,10 @@
+# [1.0.0-alpha.115](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.114...v1.0.0-alpha.115) (2022-07-18)
+
+
+### Features
+
+* add props to ignore XTable's title prefix and suffix ([d60d273](https://github.com/fatesigner/antdvx/commit/d60d2730987223be0a75c4ef60c677370744acf4))
+
 # [1.0.0-alpha.114](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.113...v1.0.0-alpha.114) (2022-07-13)
 
 
