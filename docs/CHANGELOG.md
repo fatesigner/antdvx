@@ -1,3 +1,10 @@
+# [1.0.0-alpha.116](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.115...v1.0.0-alpha.116) (2022-08-30)
+
+
+### Features
+
+* prevent click event when Widget component is dragging ([c35e2f0](https://github.com/fatesigner/antdvx/commit/c35e2f0bc00286cd67ce0993d13b11a1487b9ce1))
+
 # [1.0.0-alpha.115](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.114...v1.0.0-alpha.115) (2022-07-18)
 
 
