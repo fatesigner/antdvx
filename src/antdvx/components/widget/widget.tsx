@@ -190,7 +190,9 @@ export const Widget = defineComponent({
           zIndex: ctx.zIndex
         }}
         onClick={() => {
-          ctx.$emit('click');
+          if (!ctx.moving) {
+            ctx.$emit('click');
+          }
         }}>
         {ctx.$slots?.default ? ctx.$slots.default() : <div class='antdvx-widget-shadow' />}
       </div>
