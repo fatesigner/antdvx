@@ -1,3 +1,10 @@
+# [1.0.0-alpha.117](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.116...v1.0.0-alpha.117) (2022-10-09)
+
+
+### Features
+
+* add some props for XCombobox component ([d03c852](https://github.com/fatesigner/antdvx/commit/d03c8529dec2625e29a194023e1d00b61b562f48))
+
 # [1.0.0-alpha.116](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.115...v1.0.0-alpha.116) (2022-08-30)
 
 
