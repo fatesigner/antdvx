@@ -199,6 +199,15 @@ export const XCombobox = defineComponent({
       type: Boolean,
       default: false
     },
+    maxTagCount: {
+      type: Number
+    },
+    maxTagTextLength: {
+      type: Number
+    },
+    maxTagPlaceholder: {
+      type: [Object, Function]
+    },
     dropdownMatchSelectWidth: {
       type: Boolean,
       default: true
@@ -508,6 +517,9 @@ export const XCombobox = defineComponent({
         size={ctx.size}
         backfill={true}
         disabled={ctx.disabled}
+        maxTagCount={ctx.maxTagCount}
+        maxTagTextLength={ctx.maxTagTextLength}
+        maxTagPlaceholder={ctx.maxTagPlaceholder}
         allowClear={ctx.$slots?.default ? undefined : ctx.clearable}
         placeholder={ctx.$slots?.default ? undefined : ctx.placeholder}
         dropdownStyle={ctx.dropdownStyle}
@@ -537,6 +549,9 @@ export const XCombobox = defineComponent({
         placeholder={ctx.placeholder}
         filterOption={false}
         showArrow={true}
+        maxTagCount={ctx.maxTagCount}
+        maxTagTextLength={ctx.maxTagTextLength}
+        maxTagPlaceholder={ctx.maxTagPlaceholder}
         disabled={ctx.disabled}
         showSearch={ctx.searchable}
         dropdownStyle={ctx.dropdownStyle}
