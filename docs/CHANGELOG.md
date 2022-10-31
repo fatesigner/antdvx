@@ -1,3 +1,10 @@
+# [1.0.0-alpha.119](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.118...v1.0.0-alpha.119) (2022-10-31)
+
+
+### Features
+
+* update ButtonExport ([d8cb429](https://github.com/fatesigner/antdvx/commit/d8cb429fdde288ecd59fafc6576192e18db82651))
+
 # [1.0.0-alpha.118](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.117...v1.0.0-alpha.118) (2022-10-31)
 
 
