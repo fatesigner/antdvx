@@ -2,7 +2,7 @@ import { notification } from 'ant-design-vue';
 import { defineComponent, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconRefreshLine } from '../iconfont';
+import IconReloadLine from '../iconfont/icons/reload';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
@@ -75,7 +75,7 @@ export const XButtonRefresh = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            <IconRefreshLine spin={ctx.loading_} />,
+            <IconReloadLine spin={ctx.loading_} />,
             ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.refresh)}</span>
           ]
         }}

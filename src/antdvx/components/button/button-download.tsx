@@ -2,7 +2,8 @@ import { notification } from 'ant-design-vue';
 import { defineComponent, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconDownloadLine, IconLoader5Line } from '../iconfont';
+import IconDownloadLine from '../iconfont/icons/download';
+import { IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';

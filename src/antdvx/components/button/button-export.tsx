@@ -8,6 +8,7 @@ import { PropType, computed, defineComponent, reactive, ref } from 'vue';
 import { i18nMessages } from '../../i18n/messages';
 
 import { XButton } from '../button';
+import IconDownloadLine from '../iconfont/icons/download';
 import { IconCodeSSlashLine, IconDownload2Line, IconFileExcel2Line, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
 
 import { IXButtonExportOptions, XButtonProps } from './types';
@@ -252,7 +253,7 @@ export const XButtonExport = defineComponent({
           title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.export)}
         >
           {[
-            ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconDownload2Line spin={ctx.loading_} />,
+            ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconDownloadLine spin={ctx.loading_} />,
             !ctx.onlyIcon ? <span>{ctx.$t(i18nMessages.antd.action.export)}</span> : ''
           ]}
         </XButton>
