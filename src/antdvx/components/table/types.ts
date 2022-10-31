@@ -11,7 +11,7 @@ import { ColumnProps, TableProps, tableProps } from 'ant-design-vue/es/table/int
 
 import { IDataSource, IPaginationParams } from '../../types';
 
-export type IXTableChangeType = 'filter' | 'sorter' | 'pagination';
+export type IXTableChangeType = 'excel' | 'filter' | 'sorter' | 'pagination';
 
 export type IXTableRowKeyFunc<TModel extends UnknownType<any> = UnknownType<any>> = (record: TModel, index: number) => string;
 

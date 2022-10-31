@@ -119,6 +119,7 @@ export const XTable = defineComponent({
     // 当前选中的过滤、筛选条件
     let filters: IXTableFilters<any> = {} as any;
     let sorter: IXTableSorter<any, any> = {} as any;
+    let changeType: IXTableChangeType;
 
     // 表格控制面板 选项
     const settingsPanelOptions = reactive({
@@ -235,7 +236,7 @@ export const XTable = defineComponent({
               filterKeys.every((y) => {
                 const filter = filters?.[y];
                 if (filter?.length) {
-                  const column = props.options.columns.find((z) => z.dataIndex === y);
+                  const column = props.options.columns.find((z) => z?.dataIndex === y);
                   if (isFunction(column?.onFilter)) {
                     return filter.some((z) => column.onFilter(z, x));
                   }
@@ -249,7 +250,7 @@ export const XTable = defineComponent({
 
         // 客户端排序
         if (sorter?.columnKey) {
-          const column = props.options.columns.find((x) => x.dataIndex === sorter.columnKey);
+          const column = props.options.columns.find((x) => x?.dataIndex === sorter.columnKey);
           if (isFunction(column?.sorter)) {
             if (sorter.order === 'asc' || (sorter.order as any) === 'ascend') {
               data = data.sort((a, b) => {
@@ -328,7 +329,9 @@ export const XTable = defineComponent({
               },
               props.params,
               filters,
-              sorter
+              sorter,
+              undefined,
+              changeType
             )
           );
           if (err) {
@@ -448,6 +451,7 @@ export const XTable = defineComponent({
 
     // 刷新数据，将会重置分页
     const reload = async () => {
+      changeType = 'pagination';
       props.options.dataSource.pageNo = 1;
       return refresh();
     };
@@ -613,7 +617,8 @@ export const XTable = defineComponent({
                         size='small'
                         onClick={() => {
                           clearFilters();
-                        }}>
+                        }}
+                      >
                         {t(i18nMessages.antd.action.reset)}
                       </XButton>
                     </div>
@@ -668,21 +673,25 @@ export const XTable = defineComponent({
     // 打开当前表格的设置面板
     const presentSettingsPanel: IXTableHandlers<any>['presentSettingsPanel'] = (onDismissed?: (changed: boolean) => void) => {
       settingsPanelOptions.dataSource = [];
-      props.options.columns.forEach((x, index) => {
-        let fixed;
-        if (isBoolean(x.fixed) && x.fixed) {
-          fixed = 'left';
-        } else {
-          fixed = x.fixed;
-        }
-        settingsPanelOptions.dataSource.push({
-          key: index,
-          columnName: x.title,
-          visible: !x.hidden,
-          width: x.width,
-          fixed
+      props.options.columns
+        .filter((x) => !!x)
+        .forEach((x, index) => {
+          if (x) {
+            let fixed;
+            if (x.fixed && isBoolean(x.fixed)) {
+              fixed = 'left';
+            } else {
+              fixed = x.fixed;
+            }
+            settingsPanelOptions.dataSource.push({
+              key: index,
+              columnName: x.title,
+              visible: !x.hidden,
+              width: x.width,
+              fixed
+            });
+          }
         });
-      });
       settingsPanelOptions.changed = false;
       settingsPanelRef.options.title = t(i18nMessages.antd.table.controlPanel.description);
       return settingsPanelRef.handler.present(() => {
@@ -692,6 +701,30 @@ export const XTable = defineComponent({
 
     // 导出到 Excel
     const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?, filename?: string, contentType?: string) => {
+      if (isNullOrUndefined(data)) {
+        if (isFunction(props.options?.dataSource.transport?.read)) {
+          const [err, res] = await to<any>(
+            props.options.dataSource.transport.read(
+              {
+                pageNo: props.options.dataSource.pageNo,
+                pageSize: props.options.dataSource.pageSize
+              },
+              props.params,
+              filters,
+              sorter,
+              undefined,
+              'excel'
+            )
+          );
+          if (err) {
+            throw err;
+          } else {
+            data = res.data;
+          }
+        } else {
+          data = overallData;
+        }
+      }
       const { worksheet, workbook } = await ExceljsHelper.addWorksheet(undefined, {
         columns: columns_.value
           ?.filter((x) => !!x.excel)
@@ -721,7 +754,10 @@ export const XTable = defineComponent({
         updateColumns,
         selectAll,
         selectInvert,
-        refresh,
+        refresh: function () {
+          changeType = null;
+          return refresh();
+        },
         reload,
         fullscreen,
         fullscreenExit,
@@ -735,6 +771,7 @@ export const XTable = defineComponent({
 
     // 切换 pageIndex
     const onPageChange = async () => {
+      changeType = 'pagination';
       nextTick(() => {
         props.options?.listeners?.change?.({
           type: 'pagination',
@@ -763,6 +800,7 @@ export const XTable = defineComponent({
 
     // 切换 pageSize
     const onPageSizeChange = () => {
+      changeType = 'pagination';
       nextTick(function () {
         // emit event
         props.options?.listeners?.change?.({
@@ -856,15 +894,13 @@ export const XTable = defineComponent({
 
     const onChange = (pagination, filters_: any, sorter_: any, { currentDataSource }) => {
       nextTick(() => {
-        let type: IXTableChangeType;
-
         // 设置 change 类型
         if (JSON.stringify(filters) !== JSON.stringify(filters_)) {
-          type = 'filter';
+          changeType = 'filter';
         } else if (JSON.stringify(sorter) !== JSON.stringify(sorter_)) {
-          type = 'sorter';
+          changeType = 'sorter';
         } else {
-          type = 'pagination';
+          changeType = 'pagination';
         }
 
         // options.orderby.replace('ascend', 'asc').replace('descend', 'desc')
@@ -874,9 +910,9 @@ export const XTable = defineComponent({
         // 过滤
         sorter = sorter_;
 
-        if (type === 'filter') {
+        if (changeType === 'filter') {
           onFilterChange();
-        } else if (type === 'sorter') {
+        } else if (changeType === 'sorter') {
           onSortChange();
         }
 
@@ -945,7 +981,7 @@ export const XTable = defineComponent({
         const { expires, data } = JSON.parse(str);
         if (expires && new Date().getTime() - expires < 3600 * 24 && data?.map) {
           props.options.columns = data.map((x) => {
-            const column = props.options.columns.find((y) => y.title === x.columnName);
+            const column = props.options.columns.find((y) => y?.title === x.columnName);
             if (column) {
               column.fixed = x.fixed;
               column.hidden = !x.visible;
@@ -1185,7 +1221,8 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
+              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
+            >
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1291,7 +1328,8 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1304,7 +1342,8 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1346,7 +1385,8 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1354,7 +1394,8 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>
