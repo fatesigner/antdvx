@@ -458,7 +458,7 @@ export const XCombobox = defineComponent({
     });
 
     onMounted(() => {
-      if (props.autoBind) {
+      if (props.autoBind && !props.disabled) {
         // 初始化时，自动加载数据
         loadData();
       } else {
