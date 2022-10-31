@@ -199,9 +199,7 @@ export const XButtonExport = defineComponent({
                       {ctx.$t(i18nMessages.antd.action.exportToJSON)}
                     </div>
                   </MenuItem>
-                ) : (
-                  ''
-                ),
+                ) : undefined,
                 ctx.pdfVisible ? (
                   <MenuItem key='pdf'>
                     <div class='tw-flex tw-items-center'>
@@ -209,9 +207,7 @@ export const XButtonExport = defineComponent({
                       {ctx.$t(i18nMessages.antd.action.exportToPDF)}
                     </div>
                   </MenuItem>
-                ) : (
-                  ''
-                ),
+                ) : undefined,
                 ctx.imageVisible ? (
                   <MenuItem key='image'>
                     <div class='tw-flex tw-items-center'>
@@ -219,9 +215,7 @@ export const XButtonExport = defineComponent({
                       {ctx.$t(i18nMessages.antd.action.exportToImage)}
                     </div>
                   </MenuItem>
-                ) : (
-                  ''
-                ),
+                ) : undefined,
                 ctx.excelVisible ? (
                   <MenuItem key='excel'>
                     <div class='tw-flex tw-items-center'>
@@ -229,9 +223,7 @@ export const XButtonExport = defineComponent({
                       {ctx.$t(i18nMessages.antd.action.exportToExcel)}
                     </div>
                   </MenuItem>
-                ) : (
-                  ''
-                )
+                ) : undefined
               ]}
             </Menu>
           )
@@ -254,7 +246,7 @@ export const XButtonExport = defineComponent({
         >
           {[
             ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconDownloadLine spin={ctx.loading_} />,
-            !ctx.onlyIcon ? <span>{ctx.$t(i18nMessages.antd.action.export)}</span> : ''
+            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.export)}</span>
           ]}
         </XButton>
       </Dropdown>
