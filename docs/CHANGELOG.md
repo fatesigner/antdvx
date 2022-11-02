@@ -1,3 +1,10 @@
+# [1.0.0-alpha.120](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.119...v1.0.0-alpha.120) (2022-11-02)
+
+
+### Features
+
+* add action params for downloadExcel ([6a2077a](https://github.com/fatesigner/antdvx/commit/6a2077a0384b01b4fe6e673dfa392b7331d4cbbb))
+
 # [1.0.0-alpha.119](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.118...v1.0.0-alpha.119) (2022-10-31)
 
 
