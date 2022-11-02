@@ -647,16 +647,16 @@ export const XTable = defineComponent({
         // const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
         // const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
         /* gsap.to(wrapRef.value, {
-          duration: 0.3,
-          ease: 'power4',
-          padding: 16,
-          top: 0,
-          left: 0,
-          width: vw,
-          height: vh,
-          onComplete() {
-          }
-        }); */
+           duration: 0.3,
+           ease: 'power4',
+           padding: 16,
+           top: 0,
+           left: 0,
+           width: vw,
+           height: vh,
+           onComplete() {
+           }
+         }); */
       }
     };
 
@@ -700,7 +700,7 @@ export const XTable = defineComponent({
     };
 
     // 导出到 Excel
-    const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?, filename?: string, contentType?: string) => {
+    const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?, filename?: string, contentType?: string, action?: string) => {
       if (isNullOrUndefined(data)) {
         if (isFunction(props.options?.dataSource.transport?.read)) {
           const [err, res] = await to<any>(
@@ -713,7 +713,7 @@ export const XTable = defineComponent({
               filters,
               sorter,
               undefined,
-              'excel'
+              action || 'excel'
             )
           );
           if (err) {
