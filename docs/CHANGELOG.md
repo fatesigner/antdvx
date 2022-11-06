@@ -1,3 +1,10 @@
+# [1.0.0-alpha.121](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.120...v1.0.0-alpha.121) (2022-11-06)
+
+
+### Features
+
+* add showHiddenColumn props for Table component ([9233232](https://github.com/fatesigner/antdvx/commit/92332322e80be4147f299b361e12641dfaf49635))
+
 # [1.0.0-alpha.120](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.119...v1.0.0-alpha.120) (2022-11-02)
 
 
