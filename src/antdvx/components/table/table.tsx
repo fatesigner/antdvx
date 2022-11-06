@@ -700,7 +700,13 @@ export const XTable = defineComponent({
     };
 
     // 导出到 Excel
-    const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (data?, filename?: string, contentType?: string, action?: string) => {
+    const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (
+      data?,
+      filename?: string,
+      contentType?: string,
+      action?: string,
+      showHiddenColumn?: boolean
+    ) => {
       if (isNullOrUndefined(data)) {
         if (isFunction(props.options?.dataSource.transport?.read)) {
           const [err, res] = await to<any>(
@@ -726,13 +732,21 @@ export const XTable = defineComponent({
         }
       }
       const { worksheet, workbook } = await ExceljsHelper.addWorksheet(undefined, {
-        columns: columns_.value
-          ?.filter((x) => !!x.excel)
-          ?.map((x) => ({
-            key: x.dataIndex,
-            header: x.title,
-            ...x?.excel
-          })),
+        columns: showHiddenColumn
+          ? props.options.columns
+              ?.filter((x) => !!x.excel)
+              ?.map((x) => ({
+                key: x.dataIndex,
+                header: x.title,
+                ...x?.excel
+              }))
+          : columns_.value
+              ?.filter((x) => !!x.excel)
+              ?.map((x) => ({
+                key: x.dataIndex,
+                header: x.title,
+                ...x?.excel
+              })),
         data: data ?? (overallData as any)
       });
       await props.options.listeners?.beforeDownloadExcel?.(worksheet, workbook);
