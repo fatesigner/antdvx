@@ -1,3 +1,10 @@
+# [1.0.0-alpha.122](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.121...v1.0.0-alpha.122) (2022-11-10)
+
+
+### Features
+
+* add columns params fro Table component ([b03541a](https://github.com/fatesigner/antdvx/commit/b03541a7a3156d985ec715f30ae0452528227953))
+
 # [1.0.0-alpha.121](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.120...v1.0.0-alpha.121) (2022-11-06)
 
 
