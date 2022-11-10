@@ -6,7 +6,7 @@ import to from 'await-to-js';
 import { useI18n } from 'vue-i18n';
 import { mergeWith } from 'lodash-es';
 import { UnknownType } from '@fatesigner/utils/types';
-import { ExceljsHelper } from '@fatesigner/utils/exceljs';
+import { ExceljsHelper, IWorksheetColumn } from '@fatesigner/utils/exceljs';
 import { TableProps } from 'ant-design-vue/es/table/interface';
 import { bindLazyFunc, debounce, exchangeItem } from '@fatesigner/utils';
 import { Checkbox, Input, InputNumber, Pagination, Select, Table, notification } from 'ant-design-vue';
@@ -701,11 +701,13 @@ export const XTable = defineComponent({
 
     // 导出到 Excel
     const downloadExcel: IXTableHandlers<any>['downloadExcel'] = async (
-      data?,
+      data?: any[],
       filename?: string,
       contentType?: string,
       action?: string,
-      showHiddenColumn?: boolean
+      showHiddenColumn?: boolean,
+      columns?: IWorksheetColumn<Record<string, any>>[],
+      dataParse?: (data: any[]) => { data: any[]; columns?: IWorksheetColumn<Record<string, any>>[] }
     ) => {
       if (isNullOrUndefined(data)) {
         if (isFunction(props.options?.dataSource.transport?.read)) {
@@ -731,22 +733,31 @@ export const XTable = defineComponent({
           data = overallData;
         }
       }
+      if (dataParse) {
+        const { data: _data, columns: _columns } = dataParse(data);
+        data = _data;
+        if (_columns) {
+          columns = _columns;
+        }
+      }
       const { worksheet, workbook } = await ExceljsHelper.addWorksheet(undefined, {
-        columns: showHiddenColumn
-          ? props.options.columns
-              ?.filter((x) => !!x.excel)
-              ?.map((x) => ({
-                key: x.dataIndex,
-                header: x.title,
-                ...x?.excel
-              }))
-          : columns_.value
-              ?.filter((x) => !!x.excel)
-              ?.map((x) => ({
-                key: x.dataIndex,
-                header: x.title,
-                ...x?.excel
-              })),
+        columns:
+          columns ||
+          (showHiddenColumn
+            ? props.options.columns
+                ?.filter((x) => !!x.excel)
+                ?.map((x) => ({
+                  key: x.dataIndex,
+                  header: x.title,
+                  ...x?.excel
+                }))
+            : columns_.value
+                ?.filter((x) => !!x.excel)
+                ?.map((x) => ({
+                  key: x.dataIndex,
+                  header: x.title,
+                  ...x?.excel
+                }))),
         data: data ?? (overallData as any)
       });
       await props.options.listeners?.beforeDownloadExcel?.(worksheet, workbook);
