@@ -1,3 +1,10 @@
+# [1.0.0-alpha.124](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.123...v1.0.0-alpha.124) (2023-02-18)
+
+
+### Features
+
+* add Viewgroup component ([d19afae](https://github.com/fatesigner/antdvx/commit/d19afae1c62e83bad81ba76635a936e72b582e1c))
+
 # [1.0.0-alpha.123](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.122...v1.0.0-alpha.123) (2023-02-18)
 
 
