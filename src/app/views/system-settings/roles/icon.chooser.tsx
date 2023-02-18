@@ -1,5 +1,5 @@
-import { Input } from 'ant-design-vue';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
+import { Input } from 'ant-design-vue';
 import { ANTDVX_ICON_NAMES, Iconfont, XButton, XButtonSearch } from 'antdvx';
 
 /**
@@ -20,7 +20,11 @@ export const IconChooser = defineComponent({
     const filter = () => {
       let keywords = query.keywords?.trim()?.toLowerCase();
       keywords = keywords || undefined;
-      icons.splice(0, icons.length, ...ANTDVX_ICON_NAMES.filter((x) => !keywords || x.toLowerCase().indexOf(keywords) > -1).slice(0, 100));
+      icons.splice(
+        0,
+        icons.length,
+        ...ANTDVX_ICON_NAMES.filter((x) => !keywords || x.toLowerCase().indexOf(keywords) > -1).slice(0, 100)
+      );
     };
 
     onMounted(() => {
@@ -36,7 +40,7 @@ export const IconChooser = defineComponent({
   },
   render(ctx) {
     return (
-      <div class='tw-flex tw-flex-col tw-h-full tw-h-96' ref='wrapRef'>
+      <div class='tw-flex tw-h-full tw-h-96 tw-flex-col' ref='wrapRef'>
         <div class='tw-flex tw-items-center tw-gap-2 tw-p-2'>
           <Input
             class='tw-w-full'
@@ -73,16 +77,17 @@ export const IconChooser = defineComponent({
             type='primary'
             onClick={() => {
               ctx.filter();
-            }}>
+            }}
+          >
             Search
           </XButton>
         </div>
-        <div class='tw-flex-1 tw-p-2 tw-overflow-y-auto'>
+        <div class='tw-flex-1 tw-overflow-y-auto tw-p-2'>
           <div class='tw-grid tw-grid-cols-12 tw-gap-2'>
             {ctx.icons.map((x) => (
-              <div class='tw-flex tw-flex-col tw-items-center tw-justify-center tw-gap-2 tw-cursor-pointer'>
+              <div class='tw-flex tw-cursor-pointer tw-flex-col tw-items-center tw-justify-center tw-gap-2'>
                 <Iconfont name={x} />
-                <div class='tw-text-sm tw-text-center'>{x}</div>
+                <div class='tw-text-center tw-text-sm'>{x}</div>
               </div>
             ))}
           </div>

@@ -1,8 +1,9 @@
-import { clone } from 'lodash-es';
 import { defineComponent, reactive } from 'vue';
-import { Input, Modal, Tag } from 'ant-design-vue';
 import { ODataHelper } from '@fatesigner/utils/odata';
+import { Input, Modal, Tag } from 'ant-design-vue';
 import {
+  createXModal,
+  createXTable,
   IconMenLine,
   IconWomenLine,
   XButton,
@@ -13,15 +14,14 @@ import {
   XButtonRefresh,
   XButtonSearch,
   XModal,
-  XTable,
-  createXModal,
-  createXTable
+  XTable
 } from 'antdvx';
+import { clone } from 'lodash-es';
 
 import { sysUserApi } from '@/api';
-import { authService, sessionService } from '@/app/core/services';
-import { PageWrapper } from '@/app/shared/page-wrapper';
 import { COMMON_STATUS, SEX_STATUS } from '@/app/core/constants';
+import { authService } from '@/app/core/services';
+import { PageWrapper } from '@/app/shared/page-wrapper';
 
 /**
  * UsersView
@@ -211,8 +211,13 @@ export default defineComponent({
                 count: 'true',
                 ...ODataHelper.getParams({
                   filter: ODataHelper.and(
-                    ODataHelper.or(ODataHelper.filter('Name', 'contains', keywords), ODataHelper.filter('Code', 'contains', keywords)),
-                    ...Object.keys(filters).map((key) => ODataHelper.filter(key, 'contains', filters?.[key]?.[0] ?? undefined))
+                    ODataHelper.or(
+                      ODataHelper.filter('Name', 'contains', keywords),
+                      ODataHelper.filter('Code', 'contains', keywords)
+                    ),
+                    ...Object.keys(filters).map((key) =>
+                      ODataHelper.filter(key, 'contains', filters?.[key]?.[0] ?? undefined)
+                    )
                   ),
                   orderby: ODataHelper.orderby([
                     sorter.order
@@ -277,7 +282,10 @@ export default defineComponent({
                           count: 'true',
                           ...ODataHelper.getParams({
                             filter: ODataHelper.and(
-                              ODataHelper.or(ODataHelper.filter('Name', 'contains', keywords), ODataHelper.filter('Code', 'contains', keywords))
+                              ODataHelper.or(
+                                ODataHelper.filter('Name', 'contains', keywords),
+                                ODataHelper.filter('Code', 'contains', keywords)
+                              )
                             )
                           })
                         })
@@ -300,7 +308,7 @@ export default defineComponent({
         }}
       >
         <div class='tw-p-2'>
-          <div class='tw-p-2 tw-bg-white'>
+          <div class='tw-bg-white tw-p-2'>
             <XTable
               {...ctx.tbRef}
               v-slots={{
@@ -341,7 +349,13 @@ export default defineComponent({
                       <XButton color='secondary' type='3d' handler={ctx.tbRef.handler.reload}>
                         Search
                       </XButton>
-                      <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={ctx.tbRef.handler.reload} />
+                      <XButtonRefresh
+                        only-icon
+                        color='primary'
+                        size='mini'
+                        type='link'
+                        handler={ctx.tbRef.handler.reload}
+                      />
                     </div>
                   );
                 }

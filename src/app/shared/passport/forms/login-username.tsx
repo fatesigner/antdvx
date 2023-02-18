@@ -1,13 +1,13 @@
-import to from 'await-to-js';
-import { Field as VeeField } from 'vee-validate';
+import { defineComponent, onDeactivated, PropType, reactive, ref, watch } from 'vue';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, onDeactivated, reactive, ref, watch } from 'vue';
 import { Checkbox, Form, FormItem, Input, InputPassword, notification } from 'ant-design-vue';
 import { IconLockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from 'antdvx';
+import to from 'await-to-js';
+import { Field as VeeField } from 'vee-validate';
 
+import { localStorageService } from '@/app/core/services';
 import { i18nMessages } from '@/app/i18n';
 import { createForm } from '@/app/plugins/vee-validate';
-import { localStorageService } from '@/app/core/services';
 
 import $styles from '../passport.module.less';
 
@@ -183,7 +183,9 @@ export default defineComponent({
                     }}
                   />,
                   <TransitionCollapse>
-                    {meta.touched && !meta.valid ? <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.username)}</div> : undefined}
+                    {meta.touched && !meta.valid ? (
+                      <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.username)}</div>
+                    ) : undefined}
                   </TransitionCollapse>
                 ];
               }
@@ -213,7 +215,9 @@ export default defineComponent({
                     }}
                   />,
                   <TransitionCollapse>
-                    {meta.touched && !meta.valid ? <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.password)}</div> : undefined}
+                    {meta.touched && !meta.valid ? (
+                      <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.password)}</div>
+                    ) : undefined}
                   </TransitionCollapse>
                 ];
               }
@@ -242,21 +246,32 @@ export default defineComponent({
         <FormItem>
           <div class='tw-flex tw-items-center tw-justify-between'>
             <div class='tw-flex-initial'>
-              <Checkbox v-model={[ctx.rememberMe_, 'checked']}>{ctx.$t(i18nMessages.app.passport.login.rememberMe)}</Checkbox>
+              <Checkbox v-model={[ctx.rememberMe_, 'checked']}>
+                {ctx.$t(i18nMessages.app.passport.login.rememberMe)}
+              </Checkbox>
             </div>
             <div class='tw-flex-initial'>
               <a
                 class={$styles.link}
                 onClick={() => {
                   ctx.$emit('forgetPasswordClick');
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.app.passport.updatePassword.title)}
               </a>
             </div>
           </div>
         </FormItem>
         <FormItem>
-          <XButton class={$styles.submit} ref='submitBtnRef' block size='large' type='primary' loading={ctx.form.isSubmitting} onClick={ctx.form.submit}>
+          <XButton
+            class={$styles.submit}
+            ref='submitBtnRef'
+            block
+            size='large'
+            type='primary'
+            loading={ctx.form.isSubmitting}
+            onClick={ctx.form.submit}
+          >
             {ctx.$t(i18nMessages.app.passport.login.submit)}
           </XButton>
           {ctx.$slots?.extra?.()}

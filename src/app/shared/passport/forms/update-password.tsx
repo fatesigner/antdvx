@@ -1,12 +1,12 @@
-import to from 'await-to-js';
-import { Field as VeeField } from 'vee-validate';
-import { PropType, defineComponent, onDeactivated, reactive, ref } from 'vue';
+import { defineComponent, onDeactivated, PropType, reactive, ref } from 'vue';
 import { Alert, Form, FormItem, Input, InputPassword, notification } from 'ant-design-vue';
 import { IconLockLine, IconLockUnlockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from 'antdvx';
+import to from 'await-to-js';
+import { Field as VeeField } from 'vee-validate';
 
+import { localStorageService } from '@/app/core/services';
 import { i18nMessages } from '@/app/i18n';
 import { createForm } from '@/app/plugins/vee-validate';
-import { localStorageService } from '@/app/core/services';
 
 import $styles from '../passport.module.less';
 
@@ -119,8 +119,8 @@ export default defineComponent({
               description() {
                 return (
                   <div class='tw-max-w-md'>
-                    The password must contains 8 to 15 characters and special characters, such as %, &, and #. The password must contain types of uppercase
-                    letters, lowercase letters, and digits.
+                    The password must contains 8 to 15 characters and special characters, such as %, &, and #. The
+                    password must contain types of uppercase letters, lowercase letters, and digits.
                   </div>
                 );
               }
@@ -151,7 +151,9 @@ export default defineComponent({
                       }}
                     />,
                     <TransitionCollapse>
-                      {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                      {meta.touched && !meta.valid && errors.length ? (
+                        <div class='invalid-message'>{errors[0]}</div>
+                      ) : undefined}
                     </TransitionCollapse>
                   ];
                 }
@@ -181,7 +183,11 @@ export default defineComponent({
                       }
                     }}
                   />,
-                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}</TransitionCollapse>
+                  <TransitionCollapse>
+                    {meta.touched && !meta.valid && errors.length ? (
+                      <div class='invalid-message'>{errors[0]}</div>
+                    ) : undefined}
+                  </TransitionCollapse>
                 ];
               }
             }}
@@ -209,7 +215,11 @@ export default defineComponent({
                       }
                     }}
                   />,
-                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}</TransitionCollapse>
+                  <TransitionCollapse>
+                    {meta.touched && !meta.valid && errors.length ? (
+                      <div class='invalid-message'>{errors[0]}</div>
+                    ) : undefined}
+                  </TransitionCollapse>
                 ];
               }
             }}
@@ -237,7 +247,11 @@ export default defineComponent({
                       }
                     }}
                   />,
-                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}</TransitionCollapse>
+                  <TransitionCollapse>
+                    {meta.touched && !meta.valid && errors.length ? (
+                      <div class='invalid-message'>{errors[0]}</div>
+                    ) : undefined}
+                  </TransitionCollapse>
                 ];
               }
             }}
@@ -269,7 +283,8 @@ export default defineComponent({
             size='large'
             type='primary'
             loading={ctx.form.isSubmitting}
-            onClick={ctx.form.submit}>
+            onClick={ctx.form.submit}
+          >
             {ctx.$t(i18nMessages.app.passport.updatePassword.submit)}
           </XButton>
           {ctx.$slots?.extra?.()}

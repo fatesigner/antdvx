@@ -1,8 +1,9 @@
-import { clone } from 'lodash-es';
-import { Input } from 'ant-design-vue';
 import { defineComponent, reactive } from 'vue';
 import { ODataHelper } from '@fatesigner/utils/odata';
+import { Input } from 'ant-design-vue';
 import {
+  createXModal,
+  createXTable,
   XButton,
   XButtonAdd,
   XButtonDelete,
@@ -12,15 +13,14 @@ import {
   XButtonSearch,
   XCombobox,
   XModal,
-  XTable,
-  createXModal,
-  createXTable
+  XTable
 } from 'antdvx';
+import { clone } from 'lodash-es';
 
 import { sysPermissionApi } from '@/api';
-import { authService, sessionService } from '@/app/core/services';
-import { PageWrapper } from '@/app/shared/page-wrapper';
 import { PERMISSIONS_TYPE } from '@/app/core/constants';
+import { authService } from '@/app/core/services';
+import { PageWrapper } from '@/app/shared/page-wrapper';
 
 /**
  * PermissionsView
@@ -136,7 +136,9 @@ export default defineComponent({
                       ODataHelper.filter('Name', 'contains', keywords),
                       ODataHelper.filter('Remark', 'contains', keywords)
                     ),
-                    ...Object.keys(filters).map((key) => ODataHelper.filter(key, 'contains', filters?.[key]?.[0] ?? undefined))
+                    ...Object.keys(filters).map((key) =>
+                      ODataHelper.filter(key, 'contains', filters?.[key]?.[0] ?? undefined)
+                    )
                   ),
                   orderby: ODataHelper.orderby([
                     sorter?.order
@@ -222,7 +224,7 @@ export default defineComponent({
         }}
       >
         <div class='tw-p-2'>
-          <div class='tw-p-2 tw-bg-white'>
+          <div class='tw-bg-white tw-p-2'>
             <XTable
               {...ctx.tbRef}
               v-slots={{
@@ -275,7 +277,13 @@ export default defineComponent({
                       <XButton color='secondary' type='3d' handler={ctx.tbRef.handler.reload}>
                         Search
                       </XButton>
-                      <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={ctx.tbRef.handler.reload} />
+                      <XButtonRefresh
+                        only-icon
+                        color='primary'
+                        size='mini'
+                        type='link'
+                        handler={ctx.tbRef.handler.reload}
+                      />
                     </div>
                   );
                 }

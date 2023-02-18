@@ -1,10 +1,9 @@
-import { XButton } from 'antdvx';
+import { defineComponent, PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PropType, defineComponent, shallowReactive } from 'vue';
+import { useViewgroup, Viewgroup, XButton } from 'antdvx';
 
-import { i18nMessages } from '@/app/i18n';
 import { ENV } from '@/app/core/constants';
-import { ISubviewsOptions, Subviews } from 'antdvx/components/subviews';
+import { i18nMessages } from '@/app/i18n';
 
 import LoginUsername from './forms/login-username';
 import UpdatePassword from './forms/update-password';
@@ -47,9 +46,11 @@ export default defineComponent({
   setup(props) {
     const { t } = useI18n();
 
-    const subviews = shallowReactive<ISubviewsOptions>({
-      value: 'login-username',
-      data: [
+    const viewgroup = useViewgroup({
+      keepAlive: true,
+      animation: 'slide',
+      value: 'login',
+      items: [
         {
           name: 'login',
           component: defineComponent({
@@ -86,7 +87,7 @@ export default defineComponent({
             showCaptcha: props.showCaptcha,
             loginSubmit: props.loginSubmit,
             onForgetPasswordClick() {
-              subviews.value = 'updatePassword';
+              viewgroup.options.value = 'updatePassword';
             }
           }
         },
@@ -99,12 +100,12 @@ export default defineComponent({
                   v-slots={{
                     extra() {
                       return (
-                        <div class='tw-flex tw-items-center tw-justify-center tw-mt-4'>
+                        <div class='tw-mt-4 tw-flex tw-items-center tw-justify-center'>
                           <div class='tw-flex-initial'>
                             <a
                               class={$styles.link}
                               onClick={() => {
-                                subviews.value = 'login';
+                                viewgroup.options.value = 'login';
                               }}
                             >
                               {t(i18nMessages.app.passport.updatePassword.backToLogin)}
@@ -128,7 +129,7 @@ export default defineComponent({
             showCaptcha: props.showCaptcha,
             updatePasswordSubmit: props.updatePasswordSubmit,
             onBack() {
-              subviews.value = 'login';
+              viewgroup.options.value = 'login';
             }
           }
         }
@@ -136,13 +137,13 @@ export default defineComponent({
     });
 
     return {
-      subviews
+      viewgroup
     };
   },
   render(ctx) {
     return (
       <div class={$styles.passport}>
-        <Subviews keepAlive animation='slide' data={ctx.subviews.data} value={ctx.subviews.value} />
+        <Viewgroup {...ctx.viewgroup} />
       </div>
     );
   }

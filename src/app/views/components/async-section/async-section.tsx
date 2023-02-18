@@ -1,6 +1,6 @@
-import { timer } from 'rxjs';
 import { defineComponent, ref } from 'vue';
 import { AsyncSection, XButtonRefresh } from 'antdvx';
+import { timer } from 'rxjs';
 
 import { PageWrapper } from '@/app/shared/page-wrapper';
 

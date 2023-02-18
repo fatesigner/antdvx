@@ -1,8 +1,8 @@
-import { Empty, Spin } from 'ant-design-vue';
+import { defineComponent, nextTick, onMounted, PropType, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { bindPromiseQueue } from '@fatesigner/utils';
 import { isFunction, isString } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
+import { Empty, Spin } from 'ant-design-vue';
 import { IconArrowLeftLine, ScrollView, TransitionZoom } from 'antdvx';
 
 import { AppFooter } from '@/app/layout/shared/footer';
@@ -128,7 +128,8 @@ export const PageWrapper = defineComponent({
               description() {
                 return <span class='tw-text-sm tw-text-gray-500'>暂无数据</span>;
               }
-            }}>
+            }}
+          >
             {ctx.$slots.empty?.({ initialize: ctx.initialize })}
           </Empty>
         ) : (
@@ -146,7 +147,8 @@ export const PageWrapper = defineComponent({
           $styles['page-wrapper'],
           ctx.overflow === 'hidden' ? 'tw-h-full tw-overflow-hidden' : undefined,
           ctx.bgGray ? $styles['page-bg-gray'] : undefined
-        ]}>
+        ]}
+      >
         {hasTop || ctx.$slots?.header ? (
           <div class={$styles['page-header']}>
             {hasTop ? (
@@ -154,7 +156,11 @@ export const PageWrapper = defineComponent({
                 <div class={$styles['page-header-title']}>
                   {[
                     ctx.returnable ? (
-                      <span class={$styles['page-wrapper-back']} title='Return to previous page' onClick={ctx.returnToPrevious}>
+                      <span
+                        class={$styles['page-wrapper-back']}
+                        title='Return to previous page'
+                        onClick={ctx.returnToPrevious}
+                      >
                         <IconArrowLeftLine />
                       </span>
                     ) : undefined,

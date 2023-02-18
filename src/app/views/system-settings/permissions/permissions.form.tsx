@@ -1,13 +1,13 @@
-import { PropType, defineComponent } from 'vue';
-import { Field as VeeField } from 'vee-validate';
+import { defineComponent, PropType } from 'vue';
+import { Form, FormItem, Input, Modal, notification, Textarea } from 'ant-design-vue';
 import { TransitionCollapse, XButton } from 'antdvx';
-import { Form, FormItem, Input, Modal, Textarea, notification } from 'ant-design-vue';
+import { Field as VeeField } from 'vee-validate';
 
 import { sysPermissionApi } from '@/api';
 import { SysPermissionInput } from '@/api/models';
-import { CheckGroup } from '@/app/shared/check-group';
 import { PERMISSIONS_TYPE } from '@/app/core/constants';
 import { createForm } from '@/app/plugins/vee-validate';
+import { CheckGroup } from '@/app/shared/check-group';
 
 /**
  * PermissionsForm
@@ -64,9 +64,14 @@ export const PermissionsForm = defineComponent({
   },
   render(ctx) {
     return (
-      <div class='tw-flex tw-flex-col tw-h-full'>
+      <div class='tw-flex tw-h-full tw-flex-col'>
         <div class='tw-flex-1 tw-overflow-y-auto tw-pt-4 tw-pr-8 tw-pb-4 tw-pl-8'>
-          <Form class='tw-max-w-md tw-m-auto tw-pr-8' layout='horizontal' labelAlign='right' labelCol={{ style: { width: '160px' } }}>
+          <Form
+            class='tw-m-auto tw-max-w-md tw-pr-8'
+            layout='horizontal'
+            labelAlign='right'
+            labelCol={{ style: { width: '160px' } }}
+          >
             <div class='tw-grid tw-grid-cols-12 tw-gap-4'>
               <FormItem class='tw-col-span-12' label='Permission Code' required>
                 <VeeField
@@ -83,7 +88,9 @@ export const PermissionsForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -105,7 +112,9 @@ export const PermissionsForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -128,7 +137,9 @@ export const PermissionsForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -150,7 +161,9 @@ export const PermissionsForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -160,7 +173,7 @@ export const PermissionsForm = defineComponent({
             </div>
           </Form>
         </div>
-        <div class='tw-flex tw-justify-end tw-space-x-2 tw-p-4 tw-border-t tw-border-gray-200'>
+        <div class='tw-flex tw-justify-end tw-space-x-2 tw-border-t tw-border-gray-200 tw-p-4'>
           <XButton color='secondary' size='large' type='3d' loading={ctx.form.isSubmitting} onClick={ctx.form.submit}>
             Save
           </XButton>
@@ -169,7 +182,8 @@ export const PermissionsForm = defineComponent({
             type='3d'
             onClick={() => {
               ctx.$emit('close');
-            }}>
+            }}
+          >
             Cancel
           </XButton>
         </div>

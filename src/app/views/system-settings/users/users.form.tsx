@@ -1,13 +1,13 @@
-import { Field as VeeField } from 'vee-validate';
-import { PropType, defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, PropType, ref } from 'vue';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
-import { TransitionCollapse, XButton, XCombobox } from 'antdvx';
 import { Checkbox, CheckboxGroup, Form, FormItem, Input, InputPassword, Modal, notification } from 'ant-design-vue';
+import { TransitionCollapse, XButton, XCombobox } from 'antdvx';
+import { Field as VeeField } from 'vee-validate';
 
 import { sysRoleApi, sysUserApi } from '@/api';
-import { createForm } from '@/app/plugins/vee-validate';
 import { SysUserInput, SysUserOutput } from '@/api/models';
 import { COMMON_STATUS, SEX_STATUS } from '@/app/core/constants';
+import { createForm } from '@/app/plugins/vee-validate';
 
 /**
  * UsersForm
@@ -146,9 +146,14 @@ export const UsersForm = defineComponent({
   },
   render(ctx) {
     return (
-      <div class='tw-flex tw-flex-col tw-h-full'>
+      <div class='tw-flex tw-h-full tw-flex-col'>
         <div class='tw-flex-1 tw-overflow-y-auto tw-pt-4 tw-pr-8 tw-pb-4 tw-pl-8'>
-          <Form class='tw-max-w-md tw-m-auto tw-pr-8' layout='horizontal' labelAlign='right' labelCol={{ style: { width: '140px' } }}>
+          <Form
+            class='tw-m-auto tw-max-w-md tw-pr-8'
+            layout='horizontal'
+            labelAlign='right'
+            labelCol={{ style: { width: '140px' } }}
+          >
             <div class='tw-grid tw-grid-cols-12 tw-gap-4'>
               <FormItem class='tw-col-span-12' label='User Code' required>
                 <VeeField
@@ -166,7 +171,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -189,7 +196,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -212,7 +221,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -240,7 +251,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -263,7 +276,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -286,7 +301,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -304,7 +321,8 @@ export const UsersForm = defineComponent({
                           value={field.value}
                           onChange={(e) => {
                             handleChange(e);
-                          }}>
+                          }}
+                        >
                           <div class='tw-flex tw-flex-wrap tw-gap-x-6 tw-gap-y-2'>
                             {ctx.roles.map((x) => (
                               <div>
@@ -332,7 +350,9 @@ export const UsersForm = defineComponent({
                           }}
                         />, */
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -360,7 +380,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -390,7 +412,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -413,7 +437,9 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
+                          {meta.touched && !meta.valid && errors.length ? (
+                            <div class='invalid-message'>{errors[0]}</div>
+                          ) : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -423,7 +449,7 @@ export const UsersForm = defineComponent({
             </div>
           </Form>
         </div>
-        <div class='tw-flex tw-justify-end tw-space-x-2 tw-p-4 tw-border-t tw-border-gray-200'>
+        <div class='tw-flex tw-justify-end tw-space-x-2 tw-border-t tw-border-gray-200 tw-p-4'>
           <XButton color='secondary' size='large' type='3d' loading={ctx.form.isSubmitting} onClick={ctx.form.submit}>
             Save
           </XButton>
@@ -432,7 +458,8 @@ export const UsersForm = defineComponent({
             type='3d'
             onClick={() => {
               ctx.$emit('close');
-            }}>
+            }}
+          >
             Cancel
           </XButton>
         </div>

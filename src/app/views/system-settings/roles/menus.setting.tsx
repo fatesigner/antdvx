@@ -1,13 +1,15 @@
-import { clone } from 'lodash-es';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getGUID } from '@fatesigner/utils/random';
+import { StructureTree } from '@fatesigner/utils/structure-tree';
+import { Alert, Modal, notification, Spin, Tree } from 'ant-design-vue';
 import { DropEvent } from 'ant-design-vue/es/tree/Tree';
-import { Alert, Modal, Spin, Tree, notification } from 'ant-design-vue';
 import {
-  IXButtonExportOptions,
+  createXModal,
   IconArrowDownSLine,
   IconFolderLine,
   Iconfont,
+  IXButtonExportOptions,
   XButton,
   XButtonAdd,
   XButtonDelete,
@@ -16,17 +18,15 @@ import {
   XButtonRefresh,
   XButtonSave,
   XButtonUpload,
-  XModal,
-  createXModal
+  XModal
 } from 'antdvx';
 import { IMenu } from 'antdvx/types';
-import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { StructureTree } from '@fatesigner/utils/structure-tree';
+import { clone } from 'lodash-es';
 
 import { sysRoleApi } from '@/api';
 import { SysRole } from '@/api/models';
-import { i18nMessages } from '@/app/i18n';
 import { ENV } from '@/app/core/constants';
+import { i18nMessages } from '@/app/i18n';
 
 import $styles from './menus.setting.module.less';
 
@@ -151,7 +151,9 @@ export const MenusSetting = defineComponent({
 
     // 打开菜单表单姐界面
     const presentFormPopup = (parent: any, model?: IMenu) => {
-      formPopupRef.options.title = model ? t(i18nMessages.app.systemSettings.menu.titleUpdate) : t(i18nMessages.app.systemSettings.menu.titleAdd);
+      formPopupRef.options.title = model
+        ? t(i18nMessages.app.systemSettings.menu.titleUpdate)
+        : t(i18nMessages.app.systemSettings.menu.titleAdd);
       formPopupRef.compProps.parent = parent;
       formPopupRef.compProps.model = model ? clone(model) : null;
       formPopupRef.compProps.onClose = (values: IMenu) => {
@@ -268,7 +270,7 @@ export const MenusSetting = defineComponent({
   },
   render(ctx) {
     return (
-      <div class='tw-flex tw-flex-col tw-h-full tw-h-96'>
+      <div class='tw-flex tw-h-full tw-h-96 tw-flex-col'>
         {ctx.loading ? (
           <div class='tw-flex-1 tw-p-16 tw-text-center'>
             <Spin size='large' />
@@ -280,7 +282,7 @@ export const MenusSetting = defineComponent({
           </div>
         ) : (
           [
-            <div class='tw-flex tw-items-center tw-justify-between tw-gap-2 tw-px-4 tw-py-2 tw-border-b tw-border-gray-200 tw-shadow-sm'>
+            <div class='tw-flex tw-items-center tw-justify-between tw-gap-2 tw-border-b tw-border-gray-200 tw-px-4 tw-py-2 tw-shadow-sm'>
               <div class='tw-flex tw-items-center tw-gap-2'>
                 <XButtonUpload
                   color='tertiary'
@@ -336,7 +338,7 @@ export const MenusSetting = defineComponent({
                 </XButton>
               </div>
             </div>,
-            <div class='tw-flex-1 tw-p-2 tw-overflow-y-auto'>
+            <div class='tw-flex-1 tw-overflow-y-auto tw-p-2'>
               <Tree
                 class={$styles['menus-tree']}
                 draggable
@@ -360,7 +362,7 @@ export const MenusSetting = defineComponent({
                   },
                   title(node) {
                     return (
-                      <div class='tw-flex tw-items-center tw-gap-2 tw--mt-0.5'>
+                      <div class='tw--mt-0.5 tw-flex tw-items-center tw-gap-2'>
                         {node.icon ? (
                           <Iconfont color='primary' scale='1.4' name={node.icon} />
                         ) : (node.children && node.children.length) || !node.url ? (
