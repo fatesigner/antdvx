@@ -155,7 +155,7 @@ export const XSteps = defineComponent({
     const statusSlot =
       ctx.$slots?.status ??
       function ({ item, index }) {
-        return [typeSlot({ item, index }), ctx.direction === 'horizontal' ? <div class={$styles.title}>{item.title}</div> : ''];
+        return [typeSlot({ item, index }), ctx.direction === 'horizontal' ? <div class={$styles.title}>{item.title}</div> : undefined];
       };
     return (
       <div class={[$styles.wrap, ctx.pagination ? $styles.pagination : undefined, ctx.selectable ? $styles.selectable : undefined]} ref='wrapRef'>
@@ -196,7 +196,7 @@ export const XSteps = defineComponent({
                     <div class={[$styles.liner, index < ctx.current ? $styles.linec : undefined]} />
                   </div>
                 </div>
-                {ctx.direction === 'vertical' ? <div class='tw-text-center'>{item.title}</div> : ''}
+                {ctx.direction === 'vertical' ? <div class='tw-text-center'>{item.title}</div> : undefined}
                 <div class={[$styles.inner, ctx.selectable && ctx.activated === index ? $styles.activated : undefined]}>{item.content}</div>
               </SwiperSlide>
             );

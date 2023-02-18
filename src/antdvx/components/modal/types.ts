@@ -30,22 +30,22 @@ export interface IXModalPropsType extends Omit<ModalProps, 'afterClose' | 'visib
   /**
    * Modal 弹出事件
    */
-  onPresented: () => void;
+  onPresented?: () => void;
 
   /**
    * Modal 关闭事件
    */
-  onDismissed: () => void;
+  onDismissed?: () => void;
 
   /**
    * 点击确定回调
    */
-  onCancel: (e: any) => void;
+  onCancel?: (e: any) => void;
 
   /**
    * 点击确定回调
    */
-  onOk: (e: any) => void;
+  onOk?: (e: any) => void;
 }
 
 /**

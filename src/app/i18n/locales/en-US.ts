@@ -83,7 +83,8 @@ export default {
         any: 'Any',
         thirdParty: 'Or connect with',
         thirdPartyTips: 'Can not be simulated on i18n, so please combine you own business simulation! ! !',
-        message: 'Login successfully'
+        message: 'Login successfully',
+        sso: 'Sign In with Account'
       },
       updatePassword: {
         title: 'Update password',

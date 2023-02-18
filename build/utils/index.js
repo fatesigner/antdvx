@@ -2,8 +2,14 @@
  * utils
  */
 
+const fs = require('fs');
+const ejs = require('ejs');
 const path = require('path');
+const chalk = require('chalk');
 const hash = require('object-hash');
+const prettier = require('prettier');
+const shortUuid = require('short-uuid');
+const { readFile } = require('fs/promises');
 
 const NODE_ENV_ENUM = {
   DEV: 'development',
@@ -60,6 +66,15 @@ exports.isNull = function (obj) {
  */
 exports.isNullOrUndefined = function (obj) {
   return exports.isNull(obj) || exports.isUndefined(obj);
+};
+
+/**
+ * 判断是否为 number类型
+ * @param obj
+ * @return {boolean}
+ */
+exports.isNumber = function (obj) {
+  return Object.prototype.toString.call(obj) === '[object Number]' && !isNaN(obj);
 };
 
 /**
@@ -213,8 +228,6 @@ exports.getNodeModulesRegexPath = function (moduleName, _path) {
   return null;
 };
 
-const hexDigits = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
 /**
  * 生成指定范围内的随机整数
  * @param min
@@ -223,38 +236,6 @@ const hexDigits = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy
  */
 exports.getRandomNumber = function (min, max) {
   return Math.round(Math.random() * (max - min)) + min;
-};
-
-/**
- * 生成类似 GUID的 随机字符串
- * 说明：全局唯一标识符（GUID，Globally Unique Identifier）也称作 UUID(Universally Unique IDentifier)
- * GUID是一种由算法生成的二进制长度为128位的数字标识符。GUID 的格式为“xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx”，
- * 其中的 x 是 0-9 或 a-f 范围内的一个32位十六进制数。在理想情况下，任何计算机和计算机集群都不会生成两个相同的GUID。
- * GUID 的总数达到了2^128（3.4×10^38）个，所以随机生成两个相同GUID的可能性非常小，但并不为0。
- * @param {number} length
- * @param letter
- * @returns {string} GUID
- */
-exports.getGUID = function (length = 32, letter = false) {
-  const s = [];
-  let standard = false;
-  if (length === 32) {
-    standard = true;
-    length = 36;
-  }
-  for (let i = 0; i < length; i++) {
-    if (letter && i === 0) {
-      s[i] = hexDigits.substr(exports.getRandomNumber(10, hexDigits.length), 1);
-    } else {
-      s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
-    }
-  }
-  if (standard) {
-    s[14] = '4';
-    s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);
-    s[8] = s[13] = s[18] = s[23] = '-';
-  }
-  return s.join('');
 };
 
 /**
@@ -284,7 +265,7 @@ exports.createRandomIdentGetter = function (length = 1, letter = false) {
     // 校验碰撞
     // eslint-disable-next-line no-unmodified-loop-condition
     while (seen.has(ident) || (letter && !/^[a-zA-Z]+/.test(ident))) {
-      ident = exports.getGUID(length, true);
+      ident = shortUuid.generate().substring(0, length, true);
     }
 
     if (key) {
@@ -295,4 +276,200 @@ exports.createRandomIdentGetter = function (length = 1, letter = false) {
 
     return ident;
   };
+};
+
+/**
+ * 首字母大写
+ * @param {string} str
+ * @returns {string} str
+ */
+exports.capitalize = function (str) {
+  return str.substring(0, 1).toUpperCase() + str.substring(1);
+};
+
+/**
+ * 将-连接字符串转换为驼峰式
+ * @param {string} bridge
+ * @returns {string} hump
+ */
+exports.convertBridgeStrToHump = function (bridge) {
+  if (bridge) {
+    return bridge.replace(/-(\w)/g, function (all, letter) {
+      return letter.toUpperCase();
+    });
+  }
+  return '';
+};
+
+/**
+ * 将驼峰式字符串转换为-连接
+ * @param {string} hump
+ * @param {boolean} lowercase
+ * @returns {string} bridge
+ */
+exports.convertHumpStrToBridge = function (hump, lowercase = false) {
+  if (hump) {
+    // 先处理连续大写的情况
+    hump = hump.replace(/([A-Z]{2,})/g, function (match, p1) {
+      return exports.capitalize(p1.substring(0, p1.length - 1).toLowerCase()) + p1.substring(p1.length - 1, p1.length);
+    });
+    let s = hump.replace(/([A-Z])/g, '-$1');
+    if (lowercase && s) {
+      s = s.toLowerCase();
+    }
+    if (s?.[0] === '-') {
+      s = s.substring(1);
+    }
+    return s;
+  }
+  return '';
+};
+
+/**
+ * 将驼峰式字符串转换为空格隔开
+ * @param {string} hump
+ * @param {boolean} lowercase
+ * @returns {string} bridge
+ */
+exports.convertHumpStrToSpace = function (hump, lowercase = false) {
+  if (hump) {
+    // 先处理连续大写的情况
+    if (hump === 'DLA') {
+      console.log(
+        hump.replace(/([A-Z]{2,})/g, function (match, p1) {
+          // p1 is non-digits, p2 digits, and p3 non-alphanumerics
+          return exports.capitalize(p1.substring(0, p1.length - 1).toLowerCase()) + p1.substring(p1.length - 1, p1.length);
+        })
+      );
+    }
+    hump = hump.replace(/([A-Z]{2,})/g, function (match, p1) {
+      return p1.substring(0, p1.length - 1) + ' ' + p1.substring(p1.length - 1, p1.length);
+    });
+    let s = hump.replace(/([A-Z]+)/g, ' $1').replace(/ +/g, ' ');
+    if (lowercase && s) {
+      s = s.toLowerCase();
+    }
+    if (s?.[0] === ' ') {
+      s = s.substring(1);
+    }
+    return s;
+  }
+  return '';
+};
+
+/**
+ * 为字节数添加具体的单位 GB、MB、KB
+ * @param {number} value 字节数
+ * @param {number} digits 指定小数点保留位数，默认为 2
+ * @param {boolean} capital 是否显示为大写的单位
+ * @returns {Array} size
+ */
+exports.convertToBytesUnit = function (value, digits = 2, capital = false) {
+  if (value == null) {
+    return '0 Bytes';
+  }
+  const unitArr = ['bytes', 'kb', 'mb', 'gb', 'tb', 'pb', 'eb', 'zb', 'yb'];
+  const srcsize = parseFloat(value.toString());
+  const index = Math.floor(Math.log(srcsize) / Math.log(1024));
+  let size = srcsize / Math.pow(1024, index);
+
+  if (exports.isNumber(digits)) {
+    size = size.toFixed(digits);
+  }
+
+  let res = size + unitArr[index];
+
+  if (capital) {
+    res = res.toUpperCase();
+  }
+
+  return res;
+};
+
+/**
+ * 使用 prettier 格式化文件内容
+ * @param content
+ */
+exports.formatFile = async function (content) {
+  return new Promise((resolve, reject) => {
+    // eslint-disable-next-line promise/catch-or-return
+    prettier.resolveConfig(process.cwd()).then((options) => {
+      // eslint-disable-next-line promise/always-return
+      if (options) {
+        try {
+          const content_ = prettier.format(content, {
+            ...options,
+            parser: 'typescript'
+          });
+          resolve(content_);
+        } catch (err) {
+          reject(err);
+        }
+      } else {
+        // 未找到 prettier 配置文件，跳过
+        resolve(content);
+      }
+    });
+  });
+};
+
+/**
+ * 写入文件
+ * @returns fileContent
+ */
+exports.writeFileSafely = async function (writeLocation, content, options, format = false) {
+  const dir = path.dirname(writeLocation);
+
+  // 目录不存在，则创建目录
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  // format content
+  if (format) {
+    content = await exports.formatFile(content).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  await fs.promises.writeFile(writeLocation, content, options);
+};
+
+/**
+ * 渲染模板文件
+ * @param variables  变量
+ * @param inputPath  源文件路径
+ * @param outputPath  输出文件路径
+ * @param filename   文件名
+ * @returns fileContent
+ */
+exports.compileTemplate = async function (variables, inputPath, outputPath = '', filename = '', writeOptions) {
+  if (!fs.existsSync(inputPath)) {
+    throw new Error('The file does not exist: ' + inputPath);
+  }
+  const data = await readFile(inputPath, 'utf8').catch((err) => {
+    if (err) {
+      throw err;
+    }
+  });
+  const fn = ejs.compile(data);
+  const content = fn(variables);
+
+  if (outputPath) {
+    // 写入文件
+    await exports
+      .writeFileSafely(outputPath, content, Object.assign({ encoding: 'utf8', flag: 'wx' }, writeOptions))
+      .then(() => {
+        // 创建成功，输出消息
+        const stats = fs.statSync(outputPath);
+        // eslint-disable-next-line promise/always-return
+        console.info(`${chalk.green('Created')} ${filename || outputPath} (${exports.convertToBytesUnit(stats.size)})`);
+      })
+      .catch((err) => {
+        console.log(err.message);
+        console.info(`${chalk.red('Failed')} EEXIST: file already exists, open '${outputPath}'`);
+      });
+  }
+
+  return content;
 };

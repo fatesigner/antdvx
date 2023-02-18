@@ -1,6 +1,6 @@
 import { Input } from 'ant-design-vue';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { ANTDVX_ICON_NAMES, Iconfont, XButton, XButtonSearch } from '@/antdvx';
+import { ANTDVX_ICON_NAMES, Iconfont, XButton, XButtonSearch } from 'antdvx';
 
 /**
  * 图标选择器

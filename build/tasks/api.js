@@ -13,7 +13,11 @@ const { exec } = require('child_process');
 const { convertBridgeStrToHump } = require('../utils');
 
 gulp.task('api', async function () {
+  // 读取文件配置的环境变量
+  const ENV = require('../scripts/get-env')();
   const { API_JSON_PATH, API_SCHEMA, SRC_PATH } = require('../constants');
+
+  const schemaPath = ENV.APP_APIHOST + API_SCHEMA;
 
   let tags = [];
 
@@ -151,10 +155,10 @@ import`
     });
   }
 
-  console.log(`==> Api Schema fetched ${API_SCHEMA}`);
+  console.log(`==> Api Schema fetched ${schemaPath}`);
 
   return instance
-    .get(API_SCHEMA)
+    .get(schemaPath)
     .then((response) => {
       console.log('==> Api Schema fetched successfully');
 

@@ -15,7 +15,7 @@ import {
   XTable,
   createXModal,
   createXTable
-} from '@/antdvx';
+} from 'antdvx';
 
 import { sysPermissionApi } from '@/api';
 import { authService, sessionService } from '@/app/core/services';
@@ -25,8 +25,7 @@ import { PERMISSIONS_TYPE } from '@/app/core/constants';
 /**
  * PermissionsView
  */
-export const PermissionsView = defineComponent({
-  name: 'PermissionsView',
+export default defineComponent({
   setup() {
     // 定义查询参数
     const query = reactive({

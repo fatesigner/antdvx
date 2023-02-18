@@ -2,7 +2,7 @@ import to from 'await-to-js';
 import { Field as VeeField } from 'vee-validate';
 import { PropType, defineComponent, onDeactivated, reactive, ref } from 'vue';
 import { Alert, Form, FormItem, Input, InputPassword, notification } from 'ant-design-vue';
-import { IconLockLine, IconLockUnlockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from '@/antdvx';
+import { IconLockLine, IconLockUnlockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from 'antdvx';
 
 import { i18nMessages } from '@/app/i18n';
 import { createForm } from '@/app/plugins/vee-validate';
@@ -13,8 +13,7 @@ import $styles from '../passport.module.less';
 /**
  * 更新密码
  */
-export const UpdatePassword = defineComponent({
-  name: 'UpdatePassword',
+export default defineComponent({
   props: {
     username: String,
     readonly: {
@@ -119,7 +118,7 @@ export const UpdatePassword = defineComponent({
             v-slots={{
               description() {
                 return (
-                  <div>
+                  <div class='tw-max-w-md'>
                     The password must contains 8 to 15 characters and special characters, such as %, &, and #. The password must contain types of uppercase
                     letters, lowercase letters, and digits.
                   </div>
@@ -152,7 +151,7 @@ export const UpdatePassword = defineComponent({
                       }}
                     />,
                     <TransitionCollapse>
-                      {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                      {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                     </TransitionCollapse>
                   ];
                 }
@@ -182,7 +181,7 @@ export const UpdatePassword = defineComponent({
                       }
                     }}
                   />,
-                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}</TransitionCollapse>
+                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}</TransitionCollapse>
                 ];
               }
             }}
@@ -210,7 +209,7 @@ export const UpdatePassword = defineComponent({
                       }
                     }}
                   />,
-                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}</TransitionCollapse>
+                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}</TransitionCollapse>
                 ];
               }
             }}
@@ -238,7 +237,7 @@ export const UpdatePassword = defineComponent({
                       }
                     }}
                   />,
-                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}</TransitionCollapse>
+                  <TransitionCollapse>{meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}</TransitionCollapse>
                 ];
               }
             }}

@@ -1,8 +1,8 @@
 import { RouterView } from 'vue-router';
 import { ConfigProvider } from 'ant-design-vue';
-import { getMatchedRoute } from '@/antdvx/helpers';
+import { getMatchedRoute } from 'antdvx/helpers';
 import { KeepAlive, defineComponent, onMounted, ref } from 'vue';
-import { TransitionSlide, XDrawer, XModal, createXDrawer, createXModal } from '@/antdvx';
+import { TransitionSlide, XDrawer, XModal, createXDrawer, createXModal } from 'antdvx';
 
 import { Api } from '@/mocks';
 import { i18n } from '@/app/i18n';
@@ -28,7 +28,7 @@ export const App = defineComponent({
           destroyOnClose: true
         },
         () =>
-          import('@/app/shared/passport/forms/update-password').then(({ UpdatePassword }) => {
+          import('@/app/shared/passport/forms/update-password').then(({ default: UpdatePassword }) => {
             return {
               default: defineComponent({
                 props: {

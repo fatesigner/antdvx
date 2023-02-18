@@ -1,6 +1,6 @@
 import { RouterView } from 'vue-router';
-import { getMatchedRoute } from '@/antdvx/helpers';
-import { IconMenuLine, TransitionSlide } from '@/antdvx';
+import { getMatchedRoute } from 'antdvx/helpers';
+import { IconMenuLine, TransitionSlide } from 'antdvx';
 import { KeepAlive, computed, defineComponent } from 'vue';
 
 import { AppStore } from '@/app/core/store';
@@ -60,8 +60,7 @@ const NavHeader = defineComponent({
 /**
  * 侧边导航栏 母版页
  */
-export const LayoutSidebar = defineComponent({
-  name: 'LayoutSidebar',
+export default defineComponent({
   setup() {
     const theme = computed({
       get: () => AppStore.state.theme,

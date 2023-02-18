@@ -2,7 +2,7 @@
  * types 定义业务类型（基于其他变量，如 constants 中定义的集合产生的 keys type）
  */
 
-import { IAuthService, IRole, IRouteRecordRaw, ISessionService, IUser } from '@/antdvx/types';
+import { IAuthService, IRole, IRouteRecordRaw, ISessionService, IUser } from 'antdvx/types';
 
 import { ROLES } from '@/app/core/constants';
 

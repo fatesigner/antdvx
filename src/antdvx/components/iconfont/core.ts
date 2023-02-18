@@ -2,13 +2,13 @@
  * Icon
  */
 
-import Icon from '@ant-design/icons-vue';
 import { defineComponent, h } from 'vue';
-import { Component } from '@vue/runtime-core';
+import Icon from '@ant-design/icons-vue';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
+import { Component } from '@vue/runtime-core';
 
-import { IconfontProps } from './types';
 import { ANTDVX_ICONS_REGISTERED, IAntdvxIconNames } from './config';
+import { IconfontProps } from './types';
 
 /**
  * 创建 icon
@@ -48,7 +48,7 @@ export function createIcon(
               'svg',
               {
                 class: [ctx.spin ? 'anticon-spin' : undefined],
-                name: name,
+                name,
                 'aria-hidden': 'true',
                 focusable: 'false',
                 /* fill: 'currentColor',

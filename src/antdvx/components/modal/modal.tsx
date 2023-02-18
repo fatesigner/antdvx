@@ -1,13 +1,12 @@
-import to from 'await-to-js';
-import { timer } from 'rxjs';
-import { isArray, mergeWith } from 'lodash-es';
-import { Alert, Modal } from 'ant-design-vue';
+import { defineComponent, h, PropType, reactive, ref, shallowRef } from 'vue';
 import { bindLazyFunc } from '@fatesigner/utils';
 import { AsyncComponentLoader } from '@vue/runtime-core';
-import { PropType, defineComponent, h, reactive, ref, shallowRef } from 'vue';
+import { Alert, Modal, Spin } from 'ant-design-vue';
+import to from 'await-to-js';
+import { isArray, mergeWith } from 'lodash-es';
+import { timer } from 'rxjs';
 
 import { XButtonRefresh } from '../button';
-import { SpinnerLoading } from '../loading';
 import { IconCloseLine } from '../iconfont';
 import { ScrollView } from '../scroll-view';
 import { TransitionCollapse, TransitionOpacity, TransitionZoom } from '../transitions';
@@ -30,7 +29,7 @@ const XModalLoading = defineComponent({
     return (
       <div class='tw-flex tw-items-center tw-justify-center'>
         <div class='tw-p-4'>
-          <SpinnerLoading class='tw-align-top' />
+          <Spin class='tw-align-top' />
         </div>
       </div>
     );
@@ -51,7 +50,10 @@ const XModalError = defineComponent({
             type='error'
             show-icon
             v-slots={{
-              message: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+              message: () => [
+                ctx.error,
+                <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />
+              ]
             }}
           />
         </div>
@@ -190,34 +192,54 @@ export const XModal = defineComponent({
       } as IXModalHandlers<any>);
     }
 
-    return { error, loading, visible_, component_, afterClose, loadComponent, reload, present, dismiss, onCancel, onOk };
+    return {
+      error,
+      loading,
+      visible_,
+      component_,
+      afterClose,
+      loadComponent,
+      reload,
+      present,
+      dismiss,
+      onCancel,
+      onOk
+    };
   },
   render(ctx) {
     const content = ctx.options.fullscreen
       ? ctx?.component
         ? [
-            <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
-              <TransitionZoom>{ctx.loading ? <XModalLoading /> : ''}</TransitionZoom>
+            <div class='ant-drwer-center'>
+              <TransitionZoom>{ctx.loading ? <XModalLoading /> : undefined}</TransitionZoom>
             </div>,
-            <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
-              <TransitionZoom>{!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionZoom>
+            <div class='ant-drwer-center'>
+              <TransitionZoom>
+                {!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : undefined}
+              </TransitionZoom>
             </div>,
-            <TransitionOpacity>{!ctx.loading && !ctx.error ? (ctx.component_ ? h(ctx.component_, ctx.compProps) : '') : ''}</TransitionOpacity>
+            <TransitionOpacity>
+              {!ctx.loading && !ctx.error ? (ctx.component_ ? h(ctx.component_, ctx.compProps) : undefined) : undefined}
+            </TransitionOpacity>
           ]
         : ctx.$slots?.default
         ? ctx.$slots?.default()
-        : ''
+        : undefined
       : ctx?.component
       ? [
-          <TransitionCollapse appear={false}>{ctx.loading ? <XModalLoading /> : ''}</TransitionCollapse>,
-          <TransitionCollapse appear={false}>{!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionCollapse>,
+          <TransitionCollapse appear={false}>{ctx.loading ? <XModalLoading /> : undefined}</TransitionCollapse>,
           <TransitionCollapse appear={false}>
-            {!ctx.loading && !ctx.error ? <div class='tw-w-full tw-h-full'>{ctx.component_ ? h(ctx.component_, ctx.compProps) : ''}</div> : ''}
+            {!ctx.loading && !!ctx.error ? <XModalError error={ctx.error} reload={ctx.reload} /> : undefined}
+          </TransitionCollapse>,
+          <TransitionCollapse appear={false}>
+            {!ctx.loading && !ctx.error ? (
+              <div class='tw-h-full tw-w-full'>{ctx.component_ ? h(ctx.component_, ctx.compProps) : undefined}</div>
+            ) : undefined}
           </TransitionCollapse>
         ]
       : ctx.$slots?.default
       ? ctx.$slots?.default()
-      : '';
+      : undefined;
     return (
       <Modal
         afterClose={ctx.afterClose}
@@ -241,7 +263,11 @@ export const XModal = defineComponent({
         title={ctx.options.title}
         visible={ctx.visible_}
         width={ctx.options.width}
-        wrapClassName={[SYMBOLS.BASE_CLASS, ctx.options?.fullscreen ? SYMBOLS.FULLSCREEN_CLASS : undefined, ctx.options?.wrapClassName ?? undefined]
+        wrapClassName={[
+          SYMBOLS.BASE_CLASS,
+          ctx.options?.fullscreen ? SYMBOLS.FULLSCREEN_CLASS : undefined,
+          ctx.options?.wrapClassName ?? undefined
+        ]
           .filter(Boolean)
           .join(' ')}
         zIndex={ctx.options.zIndex}
@@ -250,11 +276,11 @@ export const XModal = defineComponent({
         onCancel={ctx.onCancel}
         onOk={ctx.onOk}
         v-slots={{
-          cancelText: () => (ctx.$slots?.cancelText ? ctx.$slots?.cancelText() : ''),
+          cancelText: () => (ctx.$slots?.cancelText ? ctx.$slots?.cancelText() : undefined),
           closeIcon: () => (ctx.$slots?.closeIcon ? ctx.$slots?.closeIcon() : <IconCloseLine scale='1.2' />),
-          footer: () => (ctx.$slots?.footer ? ctx.$slots?.footer() : ''),
-          okText: () => (ctx.$slots?.okText ? ctx.$slots?.okText() : ''),
-          title: () => (ctx.$slots?.title ? ctx.$slots?.title() : ''),
+          footer: () => (ctx.$slots?.footer ? ctx.$slots?.footer() : undefined),
+          okText: () => (ctx.$slots?.okText ? ctx.$slots?.okText() : undefined),
+          title: () => (ctx.$slots?.title ? ctx.$slots?.title() : undefined),
           default: () =>
             ctx.options.scrollX || ctx.options.scrollY ? (
               <ScrollView fillX fillY native scrollX={ctx.options.scrollX} scrollY={ctx.options.scrollY}>
@@ -295,6 +321,8 @@ export function createXModal<TProps extends Record<string, any>, TComponent exte
     handler,
     component,
     compProps: reactive(compProps ?? {}),
-    options: reactive(mergeWith({}, defaultXModalProps, options, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined)))
+    options: reactive(
+      mergeWith({}, defaultXModalProps, options, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined))
+    )
   } as any;
 }

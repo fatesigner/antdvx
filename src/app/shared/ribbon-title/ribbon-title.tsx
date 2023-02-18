@@ -1,4 +1,4 @@
-import { ANTDVX_COLORS } from '@/antdvx';
+import { ANTDVX_COLORS } from 'antdvx';
 import { PropType, defineComponent, onMounted, ref, watch } from 'vue';
 
 import './ribbon-title.less';
@@ -73,8 +73,8 @@ export const RibbonTitle = defineComponent({
         <div class='ribbon-title-inner'>{ctx.$slots?.default()}</div>
         <div class='ribbon-shadow' />
         {[
-          ctx.position === 'left' || ctx.position === 'both' ? <div class='ribbon-flag-left' /> : '',
-          ctx.position === 'right' || ctx.position === 'both' ? <div class='ribbon-flag-right' /> : ''
+          ctx.position === 'left' || ctx.position === 'both' ? <div class='ribbon-flag-left' /> : undefined,
+          ctx.position === 'right' || ctx.position === 'both' ? <div class='ribbon-flag-right' /> : undefined
         ]}
       </div>
     );

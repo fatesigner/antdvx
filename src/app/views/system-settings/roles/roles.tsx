@@ -19,7 +19,7 @@ import {
   createXDrawer,
   createXModal,
   createXTable
-} from '@/antdvx';
+} from 'antdvx';
 
 import { sysRoleApi } from '@/api';
 import { i18nMessages } from '@/app/i18n';
@@ -30,8 +30,7 @@ import { PageWrapper } from '@/app/shared/page-wrapper';
 /**
  * RolesView
  */
-export const RolesView = defineComponent({
-  name: 'RolesView',
+export default defineComponent({
   setup() {
     const { t } = useI18n();
 

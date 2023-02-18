@@ -2,13 +2,7 @@
  * tailwind.config
  */
 
-const isProd = process.env.APP_ENV === 'production';
-
 module.exports = {
-  purge: {
-    enabled: isProd,
-    content: ['./node_modules/antdvx/**/*.{html,vue,js,ts,jsx,tsx}', './src/**/*.{html,vue,js,ts,jsx,tsx}']
-  },
   content: ['./node_modules/antdvx/**/*.{html,vue,js,ts,jsx,tsx}', './src/**/*.{html,vue,js,ts,jsx,tsx}'],
   prefix: 'tw-',
   theme: {
@@ -206,6 +200,17 @@ module.exports = {
       gridTemplateRows: {
         'auto-fit': 'repeat(auto-fit, minmax(0, 1fr))',
         'auto-fill': 'repeat(auto-fill, minmax(0, 1fr))'
+      },
+      scale: {
+        5: '0.05',
+        10: '0.10',
+        15: '0.15',
+        20: '0.20',
+        25: '0.25',
+        30: '0.30',
+        35: '0.35',
+        40: '0.40',
+        45: '0.45'
       }
     }
   },

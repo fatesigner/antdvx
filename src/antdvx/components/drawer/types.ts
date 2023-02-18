@@ -14,23 +14,23 @@ export interface IXDrawerPropsType {
   /**
    * 是否显示右上角的关闭按钮
    */
-  closable: boolean;
+  closable?: boolean;
   /**
    * 关闭时销毁 Drawer 里的子元素
    */
-  destroyOnClose: boolean;
+  destroyOnClose?: boolean;
   /**
    * 点击蒙层是否允许关闭
    */
-  maskClosable: boolean;
+  maskClosable?: boolean;
   /**
    * 是否展示遮罩
    */
-  mask: boolean;
+  mask?: boolean;
   /**
    * 标题
    */
-  title: string;
+  title?: string;
   /**
    * 高度
    */
@@ -38,15 +38,15 @@ export interface IXDrawerPropsType {
   /**
    * 抽屉的方向
    */
-  placement: 'top' | 'right' | 'bottom' | 'left';
+  placement?: 'top' | 'right' | 'bottom' | 'left';
   /**
    * 是否支持键盘 esc 关闭
    */
-  keyboard: boolean;
+  keyboard?: boolean;
   /**
    * 对话框外层容器的类名
    */
-  wrapClassName: string;
+  wrapClassName?: string;
 
   // Custom
   /**
@@ -57,17 +57,17 @@ export interface IXDrawerPropsType {
   /**
    * Drawer 弹出事件
    */
-  onPresented: () => void;
+  onPresented?: () => void;
 
   /**
    * Drawer 关闭事件
    */
-  onDismissed: () => void;
+  onDismissed?: () => void;
 
   /**
    * 点击遮罩层或右上角叉或取消按钮的回调
    */
-  onClose: (e: any) => void;
+  onClose?: (e: any) => void;
 }
 
 /**

@@ -2,7 +2,7 @@ import { Subscription } from 'rxjs';
 import { useRoute, useRouter } from 'vue-router';
 import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { Dropdown, Menu, MenuDivider, MenuItem } from 'ant-design-vue';
-import { IconArrowDownSLine, IconLockLine, IconLogoutBoxLine } from '@/antdvx';
+import { IconArrowDownSLine, IconLockLine, IconLogoutBoxLine } from 'antdvx';
 
 import { i18nMessages } from '@/app/i18n';
 import { AppStore } from '@/app/core/store';

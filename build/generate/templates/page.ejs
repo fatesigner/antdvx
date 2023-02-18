@@ -1,0 +1,316 @@
+import dayjs from 'dayjs';
+import { Field as VeeField } from 'vee-validate';
+import { ODataHelper } from '@fatesigner/utils/odata';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { createVNode, defineComponent, nextTick, reactive } from 'vue';
+import { DatePicker, Form, FormItem, Input, Modal, notification } from 'ant-design-vue';
+import { TransitionCollapse, XButton, XButtonDelete, XButtonEdit, XButtonExport, XButtonRefresh, XCombobox, XTable, createXTable } from 'antdvx';
+
+import { PageWrapper } from '@/app/shared/page-wrapper';
+
+/**
+ * <%= label %>
+ */
+export default defineComponent({
+  name: '<%= viewName %>',
+  setup() {
+    // 定义查询参数
+    const query = reactive({
+      keywords: undefined
+    });
+
+    const tbRef = createXTable({
+      scroll: {
+        x: true
+      },
+      name: 'StaffingPool',
+      rowKey: 'ID',
+      rowSelection: {
+        selectedRowKeys: [],
+        fixed: 'left'
+      },
+      columns: [
+        {
+          title: 'Name',
+          dataIndex: 'Name',
+          filterMode: 'keywords',
+          width: 200,
+          sorter: true,
+          customRender() {
+            return 'Name';
+          },
+          excel: {}
+        },
+        {
+          title: 'Operation',
+          width: 140,
+          align: 'center',
+          fixed: 'right',
+          customRender({ record }) {
+            return (
+              <div class='tw-flex tw-items-center tw-gap-2'>
+                <XButtonEdit notify color='primary' size='small' type='outline' onClick={() => {}} />
+                <XButtonDelete
+                  confirmed
+                  size='small'
+                  type='outline'
+                  handler={() => {
+                    return Promise.resolve().then(() => {
+                      tbRef.handler.refresh();
+                    });
+                  }}
+                />
+              </div>
+            );
+          }
+        }
+      ],
+      dataSource: {
+        serverPaging: true,
+        transport: {
+          read({ pageNo, pageSize }, params, filters, sorter, model, action) {
+            let keywords = query.keywords?.trim();
+            keywords = keywords || undefined;
+            return Promise.resolve({} as any).then((res) => {
+              return {
+                data: res?.data?.Result ?? [],
+                total: res?.data?.Extras ?? 0
+              };
+            });
+          }
+        }
+      }
+    });
+
+    return {
+      query,
+      tbRef
+    };
+  },
+  render(ctx) {
+    return (
+      <PageWrapper
+        bgGray
+        overflow='hidden'
+        title='<%= label %>'
+        v-slots={{
+          header() {
+            return (
+              <div class='tw-py-2 tw-space-y-4'>
+                <Form layout='horizontal' labelAlign='right' labelCol={{ style: { width: '100px' } }}>
+                  <div class='tw-grid tw-grid-cols-12 tw-gap-x-2 tw-gap-y-2'>
+                    <FormItem class='tw-col-span-2' label='Name'>
+                      <VeeField
+                        name='Name'
+                        label='Name'
+                        v-slots={{
+                          default({ field, handleChange, meta }) {
+                            return [
+                              <XCombobox
+                                autoBind
+                                clearable
+                                searchable
+                                dropdownMatchSelectWidth={false}
+                                placeholder='Choose Name'
+                                options={['Shanghai']}
+                                value={field.value}
+                                onChange={(value) => {
+                                  handleChange(value);
+                                }}
+                              />,
+                              <TransitionCollapse>{meta.touched && !meta.valid ? <div class='invalid-message'>Input</div> : undefined}</TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-2' label='From'>
+                      <VeeField
+                        name='From'
+                        label='From'
+                        v-slots={{
+                          default({ field, handleChange, meta }) {
+                            return [
+                              <DatePicker
+                                class='tw-w-full'
+                                showToday
+                                format='YYYY-MM-DD'
+                                value={field.value}
+                                defaultValue={dayjs().format('YYYY-MM-DD')}
+                                placeholder='Select Date'
+                                onChange={(date, dateStr) => {
+                                  handleChange(dateStr || null);
+                                }}
+                              />,
+                              <TransitionCollapse>{meta.touched && !meta.valid ? <div class='invalid-message'>Input</div> : undefined}</TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-2' label='To'>
+                      <VeeField
+                        name='To'
+                        label='To'
+                        v-slots={{
+                          default({ field, handleChange, meta }) {
+                            return [
+                              <DatePicker
+                                class='tw-w-full'
+                                showToday
+                                format='YYYY-MM-DD'
+                                value={field.value}
+                                defaultValue={dayjs().format('YYYY-MM-DD')}
+                                placeholder='Select Date'
+                                onChange={(date, dateStr) => {
+                                  handleChange(dateStr || null);
+                                }}
+                              />,
+                              <TransitionCollapse>{meta.touched && !meta.valid ? <div class='invalid-message'>Input</div> : undefined}</TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-2' label='Status'>
+                      <VeeField
+                        name='Status'
+                        label='Status'
+                        v-slots={{
+                          default({ field, handleChange, meta }) {
+                            return [
+                              <XCombobox
+                                autoBind
+                                clearable
+                                searchable
+                                dropdownMatchSelectWidth={false}
+                                placeholder='Choose Status'
+                                options={['Unapproved']}
+                                value={field.value}
+                                onChange={(value) => {
+                                  handleChange(value);
+                                }}
+                              />,
+                              <TransitionCollapse>{meta.touched && !meta.valid ? <div class='invalid-message'>Input</div> : undefined}</TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-2' label='Key Words'>
+                      <VeeField
+                        name='Keywords'
+                        label='Keywords'
+                        v-slots={{
+                          default({ field, handleChange, meta }) {
+                            return [
+                              <Input
+                                class='tw-w-full'
+                                allowClear
+                                value={field.value}
+                                placeholder=''
+                                onChange={(e) => {
+                                  handleChange(e);
+                                }}
+                              />,
+                              <TransitionCollapse>{meta.touched && !meta.valid ? <div class='invalid-message'>Input</div> : undefined}</TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                  </div>
+                </Form>
+                <div class='tw-flex tw-flex-wrap tw-items-start tw-gap-2'>
+                  <XButton color='primary' type='3d' onClick={() => {}}>
+                    Search
+                  </XButton>
+                  <XButton type='3d' onClick={() => {}}>
+                    Recalc
+                  </XButton>
+                  <XButton
+                    type='3d'
+                    onClick={() => {
+                      Modal.confirm({
+                        title: 'Confirm',
+                        icon: createVNode(ExclamationCircleOutlined),
+                        content: 'Confirm and approve these data ?',
+                        onOk() {
+                          return new Promise((resolve, reject) => {
+                            setTimeout(resolve, 1000);
+                          })
+                            .then(() => {
+                              notification.success({ message: 'Approve success', duration: 4 });
+                              nextTick(() => {
+                                ctx.tbRef.handler.reload();
+                              });
+                            })
+                            .catch((err) => {
+                              notification.error({ message: err.message });
+                            });
+                        }
+                      });
+                    }}
+                    disabled={!ctx.tbRef.options.rowSelection.selectedRowKeys.length}>
+                    Approve
+                  </XButton>
+                  <XButton
+                    type='3d'
+                    onClick={() => {
+                      Modal.confirm({
+                        title: 'Confirm',
+                        icon: createVNode(ExclamationCircleOutlined),
+                        content: 'Confirm and reject these data ?',
+                        onOk() {
+                          return new Promise((resolve, reject) => {
+                            setTimeout(resolve, 1000);
+                          })
+                            .then(() => {
+                              notification.success({ message: 'Reject success', duration: 4 });
+                              nextTick(() => {
+                                ctx.tbRef.handler.reload();
+                              });
+                            })
+                            .catch((err) => {
+                              notification.error({ message: err.message });
+                            });
+                        }
+                      });
+                    }}
+                    disabled={!ctx.tbRef.options.rowSelection.selectedRowKeys.length}>
+                    Reject
+                  </XButton>
+                  <XButton type='3d' onClick={() => {}}>
+                    View Item
+                  </XButton>
+                  <XButtonExport type='3d' onClick={() => {}}>
+                    Export
+                  </XButtonExport>
+                  <XButton type='3d' onClick={() => {}}>
+                    Clear Invalid Date
+                  </XButton>
+                </div>
+              </div>
+            );
+          }
+        }}>
+        <div class='tw-h-full tw-mt-2 tw-px-2 tw-overflow-y-auto'>
+          <div class='tw-p-2 tw-bg-white'>
+            <XTable
+              {...ctx.tbRef}
+              v-slots={{
+                title() {
+                  return (
+                    <div class='tw-flex tw-items-center tw-gap-2'>
+                      <XButtonRefresh color='primary' size='mini' type='link' handler={ctx.tbRef.handler.reload} />
+                    </div>
+                  );
+                }
+              }}
+            />
+          </div>
+        </div>
+      </PageWrapper>
+    );
+  }
+});

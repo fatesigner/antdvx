@@ -16,7 +16,7 @@ import {
   XTable,
   createXModal,
   createXTable
-} from '@/antdvx';
+} from 'antdvx';
 
 import { sysUserApi } from '@/api';
 import { authService, sessionService } from '@/app/core/services';
@@ -26,8 +26,7 @@ import { COMMON_STATUS, SEX_STATUS } from '@/app/core/constants';
 /**
  * UsersView
  */
-export const UsersView = defineComponent({
-  name: 'UsersView',
+export default defineComponent({
   setup() {
     // 定义查询参数
     const query = reactive({

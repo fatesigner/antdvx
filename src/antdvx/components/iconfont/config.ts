@@ -2276,11 +2276,13 @@ export const ANTDVX_ICON_NAMES = [
   'windy-fill',
   'windy-line'
 ];
-/**
+
+/**
  * Antdvx 图标库名称类型
  */
-export type IAntdvxIconNames = typeof ANTDVX_ICON_NAMES[number];
-/**
+export type IAntdvxIconNames = (typeof ANTDVX_ICON_NAMES)[number];
+
+/**
  * Antdvx 已注册的 icons
  */
 export const ANTDVX_ICONS_REGISTERED: { name: string; comp: Component }[] = [];

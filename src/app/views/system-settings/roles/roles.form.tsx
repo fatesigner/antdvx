@@ -1,6 +1,6 @@
 import { PropType, defineComponent } from 'vue';
 import { Field as VeeField } from 'vee-validate';
-import { TransitionCollapse, XButton, XCombobox } from '@/antdvx';
+import { TransitionCollapse, XButton, XCombobox } from 'antdvx';
 import { Form, FormItem, Input, Modal, Textarea, notification } from 'ant-design-vue';
 
 import { sysRoleApi } from '@/api';
@@ -82,7 +82,7 @@ export const RolesForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -104,7 +104,7 @@ export const RolesForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -132,7 +132,7 @@ export const RolesForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -154,7 +154,7 @@ export const RolesForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }

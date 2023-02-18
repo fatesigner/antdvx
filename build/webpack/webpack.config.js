@@ -16,6 +16,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const AntdDayjsWebpackPlugin = require('antd-dayjs-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
 const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { VueLoaderPlugin } = require('vue-loader/dist/index');
@@ -31,7 +32,15 @@ const WebpackIgnoreNotfoundExportPlugin = require('./plugins/webpack-ignore-notf
 const Utils = require('../utils');
 
 module.exports = async function (options) {
-  const { ENV, SRC_PATH, ROOT_PATH } = require('../constants');
+  // 读取文件配置的环境变量
+  const ENV = require('../scripts/get-env')();
+
+  const { SRC_PATH, ROOT_PATH } = require('../constants');
+
+  // 读取环境变量并输出
+  console.log('````````build mode:', process.env.mode);
+  console.log(ENV);
+  console.log('``````````````````````````````````````````');
 
   options = _.merge({}, options);
 
@@ -600,9 +609,7 @@ module.exports = async function (options) {
       _.merge(
         {
           baseHref: options.baseHref ?? '/',
-          template: options.template,
-          title: process.env.APP_TITLE,
-          url: process.env.APP_WEBHOST
+          template: options.template
         },
         options?.plugins?.HtmlWebpackPlugin
       )
@@ -795,20 +802,27 @@ module.exports = async function (options) {
 
     config.plugins.push(new WebpackManifestPlugin());
 
-    config.plugins.push(
-      new BundleAnalyzerPlugin({
-        // static | server
-        analyzerMode: 'static',
-        analyzerHost: '127.0.0.1',
-        analyzerPort: 9018,
-        reportFilename: '_BundleAnalyzerPlugin.html',
-        defaultSizes: 'parsed',
-        openAnalyzer: false,
-        generateStatsFile: false,
-        statsFilename: 'stats.json',
-        logLevel: 'info'
-      })
-    );
+    if (options?.plugins?.BundleAnalyzerPlugin) {
+      config.plugins.push(
+        new BundleAnalyzerPlugin(
+          Object.assign(
+            {
+              // static | server
+              analyzerMode: 'static',
+              analyzerHost: '127.0.0.1',
+              analyzerPort: 9018,
+              reportFilename: '_BundleAnalyzerPlugin.html',
+              defaultSizes: 'parsed',
+              openAnalyzer: false,
+              generateStatsFile: false,
+              statsFilename: 'stats.json',
+              logLevel: 'info'
+            },
+            options?.plugins?.BundleAnalyzerPlugin
+          )
+        )
+      );
+    }
   }
 
   return config;

@@ -79,7 +79,7 @@ export const XButtonFullscreenExit = defineComponent({
         v-slots={{
           default: () => [
             ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconFullscreenExitLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.fullscreenExit)}</span>
+            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.fullscreenExit)}</span>
           ]
         }}
       />

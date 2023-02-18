@@ -1,7 +1,7 @@
 import { Field as VeeField } from 'vee-validate';
 import { PropType, defineComponent, onMounted, ref } from 'vue';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
-import { TransitionCollapse, XButton, XCombobox } from '@/antdvx';
+import { TransitionCollapse, XButton, XCombobox } from 'antdvx';
 import { Checkbox, CheckboxGroup, Form, FormItem, Input, InputPassword, Modal, notification } from 'ant-design-vue';
 
 import { sysRoleApi, sysUserApi } from '@/api';
@@ -166,7 +166,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -189,7 +189,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -212,7 +212,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -240,7 +240,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -263,7 +263,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -286,7 +286,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -332,7 +332,7 @@ export const UsersForm = defineComponent({
                           }}
                         />, */
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -360,7 +360,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -390,7 +390,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -413,7 +413,7 @@ export const UsersForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }

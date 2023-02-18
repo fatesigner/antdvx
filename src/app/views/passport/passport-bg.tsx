@@ -3,16 +3,14 @@ import { computed, defineComponent } from 'vue';
 
 import { ENV } from '@/app/core/constants';
 import { AppFooter } from '@/app/layout/shared/footer';
-
-import { PassportCore } from './core';
+import PassportCore from '@/app/shared/passport/core';
 
 import $styles from './passport-bg.module.less';
 
 /**
  * 带背景图的登录模板
  */
-export const PassportBgView = defineComponent({
-  name: 'PassportBgView',
+export default defineComponent({
   setup() {
     const route = useRoute();
 

@@ -1,7 +1,7 @@
 import { Input, notification } from 'ant-design-vue';
 import { ODataHelper } from '@fatesigner/utils/odata';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { XButton, XButtonSearch, XCombobox, XTable, createXTable } from '@/antdvx';
+import { XButton, XButtonSearch, XCombobox, XTable, createXTable } from 'antdvx';
 
 import { sysPermissionApi } from '@/api';
 import { SysPermissionOutput } from '@/api/models';

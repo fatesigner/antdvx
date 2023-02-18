@@ -1,4 +1,4 @@
-import { createIcon } from '@/antdvx';
+import { createIcon } from 'antdvx';
 
 export default createIcon('file-edit', {
   viewBox: '0 0 24 24',

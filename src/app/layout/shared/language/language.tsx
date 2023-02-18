@@ -1,4 +1,4 @@
-import { IconGlobalLine } from '@/antdvx';
+import { IconGlobalLine } from 'antdvx';
 import { computed, defineComponent } from 'vue';
 import { Dropdown, Menu, MenuItem } from 'ant-design-vue';
 

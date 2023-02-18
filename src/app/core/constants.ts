@@ -10,16 +10,19 @@ import { CommonStatus } from '@/api/models';
 
 /**
  * environment 环境变量
- * 读取 .env 文件
+ * 读取 window 对象中的 ENV 变量，或者 .env 文件
  */
-export const ENV: IENV = {
-  APP_DEBUG: process.env.APP_DEBUG,
-  APP_LANG: process.env.APP_LANG,
-  APP_NAME: process.env.APP_NAME,
-  APP_TITLE: process.env.APP_TITLE,
-  APP_WEBHOST: process.env.APP_WEBHOST,
-  APP_APIHOST: process.env.APP_APIHOST
-};
+export const ENV: IENV = Object.assign(
+  {
+    APP_DEBUG: process.env.APP_DEBUG,
+    APP_LANG: process.env.APP_LANG,
+    APP_NAME: process.env.APP_NAME,
+    APP_TITLE: process.env.APP_TITLE,
+    APP_WEBHOST: process.env.APP_WEBHOST,
+    APP_APIHOST: process.env.APP_APIHOST
+  },
+  (window as any).ENV as IENV
+);
 
 // 定义可用的 ApiHost 集合，用于动态切换服务端环境
 export const API_HOSTS = convertModelArrToEnum([

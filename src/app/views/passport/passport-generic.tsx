@@ -2,16 +2,14 @@ import { useRoute } from 'vue-router';
 import { computed, defineComponent } from 'vue';
 
 import { ENV } from '@/app/core/constants';
-
-import { PassportCore } from './core';
+import PassportCore from '@/app/shared/passport/core';
 
 import $styles from './passport-generic.module.less';
 
 /**
  * 通用登录模板
  */
-export const PassportGenericView = defineComponent({
-  name: 'PassportGenericView',
+export default defineComponent({
   setup() {
     const route = useRoute();
 

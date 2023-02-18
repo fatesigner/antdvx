@@ -1,9 +1,9 @@
-import { Empty } from 'ant-design-vue';
+import { Empty, Spin } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import { bindPromiseQueue } from '@fatesigner/utils';
 import { isFunction, isString } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
-import { IconArrowLeftLine, ScrollView, SpinnerLoading, TransitionZoom } from '@/antdvx';
+import { IconArrowLeftLine, ScrollView, TransitionZoom } from 'antdvx';
 
 import { AppFooter } from '@/app/layout/shared/footer';
 
@@ -114,11 +114,9 @@ export const PageWrapper = defineComponent({
       <TransitionZoom>
         {ctx.loading_ ? (
           <div class='page-wrapper-loading'>
-            <SpinnerLoading />
+            <Spin />
           </div>
-        ) : (
-          ''
-        )}
+        ) : undefined}
       </TransitionZoom>,
       <TransitionZoom>
         {!ctx.loading_ && ctx.empty ? (
@@ -159,19 +157,15 @@ export const PageWrapper = defineComponent({
                       <span class={$styles['page-wrapper-back']} title='Return to previous page' onClick={ctx.returnToPrevious}>
                         <IconArrowLeftLine />
                       </span>
-                    ) : (
-                      ''
-                    ),
+                    ) : undefined,
                     ctx.$slots.icon?.(),
-                    ctx.title ? <span>{ctx.title}</span> : '',
+                    ctx.title ? <span>{ctx.title}</span> : undefined,
                     ctx.$slots.title?.()
                   ]}
                 </div>
                 <div class={$styles['page-header-actions']}>{ctx.$slots.actions?.()}</div>
               </div>
-            ) : (
-              ''
-            )}
+            ) : undefined}
             {ctx.$slots.header?.()}
           </div>
         ) : undefined}

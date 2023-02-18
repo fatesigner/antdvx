@@ -1,0 +1,81 @@
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+
+import { BaseApiController } from '@/core/modules/api/api.controller';
+import { ApiPaginatedResponse, ODataQuery, ODataQueryWithPage } from '@/core/modules/api/odata.dto';
+import { Create<%= nameUpper %>Dto, Output<%= nameUpper %>Dto, Unique<%= nameUpper %>Dto, Update<%= nameUpper %>Dto } from '@/dtos/<%= name %>';
+
+import { <%= nameUpper %>Service } from './<%= name %>.service';
+
+@ApiTags('<%= name %>')
+@Controller('<%= name %>')
+export class <%= nameUpper %>Controller extends BaseApiController<Unique<%= nameUpper %>Dto, Create<%= nameUpper %>Dto, Update<%= nameUpper %>Dto, Output<%= nameUpper %>Dto> {
+  constructor(private readonly <%= name %>Service: <%= nameUpper %>Service) {
+    super();
+  }
+
+  @ApiBearerAuth()
+  @Post('create')
+  create(@Body() createDto: Create<%= nameUpper %>Dto) {
+    return this.<%= name %>Service.create(createDto);
+  }
+
+  @ApiBearerAuth()
+  @Delete('delete')
+  delete(@Body() uniqueDto: Unique<%= nameUpper %>Dto) {
+    return this.<%= name %>Service.delete(uniqueDto);
+  }
+
+  @ApiBearerAuth()
+  @Delete('deleteMany')
+  @ApiBody({ type: Unique<%= nameUpper %>Dto, isArray: true })
+  deleteMany(@Body() uniqueDto: Unique<%= nameUpper %>Dto[]): Promise<void> {
+    return this.<%= name %>Service.deleteMany(uniqueDto);
+  }
+
+  @ApiBearerAuth()
+  @Get('findMany')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  findMany(@Query() oDataQuery: ODataQuery, @Query() uniqueDto: Unique<%= nameUpper %>Dto) {
+    return this.<%= name %>Service.findMany(oDataQuery, uniqueDto);
+  }
+
+  @ApiBearerAuth()
+  @Get('findManyPaginated')
+  @ApiPaginatedResponse({ model: Output<%= nameUpper %>Dto })
+  findManyPaginated(@Query() oDataQueryWithPage: ODataQueryWithPage, @Query() uniqueDto: Unique<%= nameUpper %>Dto) {
+    return this.<%= name %>Service.findManyPaginated(oDataQueryWithPage, uniqueDto);
+  }
+
+  @ApiBearerAuth()
+  @Get('findOne')
+  findOne(@Query() uniqueDto: Unique<%= nameUpper %>Dto): Promise<Output<%= nameUpper %>Dto> {
+    return this.<%= name %>Service.findOne(uniqueDto);
+  }
+
+  @ApiBearerAuth()
+  @Patch('update')
+  update(@Body() updateDto: Update<%= nameUpper %>Dto): Promise<Output<%= nameUpper %>Dto> {
+    return this.<%= name %>Service.update(updateDto);
+  }
+
+  @ApiBearerAuth()
+  @Patch('updateMany')
+  @ApiBody({ type: Update<%= nameUpper %>Dto, isArray: true })
+  updateMany(@Body() updateDtos: Update<%= nameUpper %>Dto[]): Promise<Output<%= nameUpper %>Dto[]> {
+    return this.<%= name %>Service.updateMany(updateDtos);
+  }
+
+  @ApiBearerAuth()
+  @Patch('upsert')
+  upsert(@Body() updateDto: Update<%= nameUpper %>Dto): Promise<Output<%= nameUpper %>Dto> {
+    return this.<%= name %>Service.upsert(updateDto);
+  }
+
+  @ApiBearerAuth()
+  @Patch('upsertMany')
+  @ApiBody({ type: Update<%= nameUpper %>Dto, isArray: true })
+  upsertMany(@Body() updateDtos: Update<%= nameUpper %>Dto[]): Promise<Output<%= nameUpper %>Dto[]> {
+    return this.<%= name %>Service.upsertMany(updateDtos);
+  }
+}

@@ -1,4 +1,4 @@
-import { Alert } from 'ant-design-vue';
+import { Alert, Spin } from 'ant-design-vue';
 import { isFunction } from '@fatesigner/utils/type-check';
 import { bindPromiseQueue, debounce } from '@fatesigner/utils';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -11,7 +11,6 @@ import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle } from '../../utils';
 
 import { XButtonRefresh } from '../button';
-import { SpinnerLoading } from '../loading';
 
 const styles = {
   wrap: 'antdvx-scroll-wrap',
@@ -153,14 +152,15 @@ export const ScrollView = defineComponent({
       type: String
     },
     loadingSize: {
-      type: String as PropType<IScrollViewOptions['loadingSize']>
+      type: String as PropType<IScrollViewOptions['loadingSize']>,
+      default: 'large'
     },
     immediate: {
       type: Boolean,
       default: true
     },
     initialize: {
-      type: Function as PropType<() => Promise<(scrollViewRef: any) => void>>
+      type: Function as PropType<() => Promise<(scrollViewRef: any) => void | void>>
     }
   },
   emits: ['initialized', 'scroll'],
@@ -620,16 +620,14 @@ export const ScrollView = defineComponent({
           ctx.fillY ? styles.fillY : null,
           ctx.scrollX ? styles.scrollX : null,
           ctx.scrollY ? styles.scrollY : null
-        ]}
-      >
+        ]}>
         {ctx.loading_ || ctx.error ? (
           <TransitionGroup
             enterFromClass={styles['transition-enter-from']}
             enterToClass={styles['transition-enter-to']}
             leaveToClass={styles['transition-leave-to']}
             enterActiveClass={styles['transition-enter-active']}
-            leaveActiveClass={styles['transition-enter-active']}
-          >
+            leaveActiveClass={styles['transition-enter-active']}>
             {ctx.loading_ ? (
               <div class={styles.transition} key='loading'>
                 {ctx.$slots?.loading ? (
@@ -638,9 +636,9 @@ export const ScrollView = defineComponent({
                   <div class={styles.loading}>
                     <div class='tw-space-y-2'>
                       <div class='tw-text-center'>
-                        <SpinnerLoading size={ctx.loadingSize} />
+                        <Spin size={ctx.loadingSize} />
                       </div>
-                      {ctx.loadingText ? <div class='tw-mt-5 tw-text-center'>{ctx.loadingText}</div> : ''}
+                      {ctx.loadingText ? <div class='tw-mt-5 tw-text-center'>{ctx.loadingText}</div> : undefined}
                     </div>
                   </div>
                 )}
@@ -662,30 +660,22 @@ export const ScrollView = defineComponent({
                   </div>
                 )}
               </div>
-            ) : (
-              ''
-            )}
+            ) : undefined}
           </TransitionGroup>
-        ) : (
-          ''
-        )}
+        ) : undefined}
         <div class={[styles.view, ctx.native ? null : styles.hideScrollbar]} ref='viewRef' onScroll={ctx.onScroll}>
           {[
-            !ctx.loading_ && !ctx.error ? [ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })] : '',
+            !ctx.loading_ && !ctx.error ? [ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })] : undefined,
             !ctx.native && ctx.scrollX ? (
               <div class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]} onClick={ctx.horBarClick}>
                 <div class={styles.thumb} ref='horThumbRef' />
               </div>
-            ) : (
-              ''
-            ),
+            ) : undefined,
             !ctx.native && ctx.scrollY ? (
               <div class={[styles.bar, styles.vertical, ctx.autohide ? styles.hidden : null]} onClick={ctx.verBarClick}>
                 <div class={styles.thumb} ref='verThumbRef' />
               </div>
-            ) : (
-              ''
-            )
+            ) : undefined
           ]}
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { defineComponent } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 import { i18nMessages } from '@/app/i18n';
 import { authService } from '@/app/core/services';

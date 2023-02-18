@@ -13,12 +13,19 @@ import { IRouteLocationNormalized } from '../types';
 export function getComponentName(component: any) {
   if (component) {
     if (component.type) {
-      return component.type.name ?? component.type.__hmrId;
-    } else {
-      return component.name ?? component.__hmrId;
+      if (component.type.name) {
+        return component.type.name;
+      } else if (component.type.__hmrId) {
+        return component.type.__hmrId;
+      }
+      return component.type
+    } else if (component.name) {
+      return component.name;
+    } else if (component.__hmrId) {
+      return component.__hmrId;
     }
   }
-  return undefined;
+  return component;
 }
 
 /**
@@ -29,7 +36,9 @@ export function getComponentName(component: any) {
 export function getMatchedRoute(component: any, route: RouteLocationNormalizedLoaded) {
   let key = route.fullPath;
   const componentName = getComponentName(component);
-  const matchedRoute = componentName ? route?.matched?.find((x) => getComponentName(x?.components?.default) === componentName) : undefined;
+  const matchedRoute = componentName ? route?.matched?.find((x) => {
+    return getComponentName(x?.components?.default) === componentName;
+  }) : undefined;
   if (matchedRoute) {
     // const currentRoute = route.matched[route.matched.length - 1];
     const path = route.path;

@@ -76,7 +76,7 @@ export const XButtonRefresh = defineComponent({
         v-slots={{
           default: () => [
             <IconReloadLine spin={ctx.loading_} />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.refresh)}</span>
+            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.refresh)}</span>
           ]
         }}
       />

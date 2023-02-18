@@ -1,12 +1,11 @@
-import { gsap } from 'gsap';
+import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, watch } from 'vue';
 import { debounce } from '@fatesigner/utils';
 import { isBoolean } from '@fatesigner/utils/type-check';
+import { gsap } from 'gsap';
 import { animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { PropType, defineComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 import { getEventArgs } from '../../utils';
-
 import { IconArrowLeftSLine, IconArrowRightSLine } from '../iconfont';
 
 /**
@@ -141,7 +140,8 @@ export const GridDragable = defineComponent({
         .pipe(
           filter(() => !collapsed_.value),
           tap(() => {
-            dragArgs.initialPos.width = parseInt(getComputedStyle(leftRef.value, null).getPropertyValue('width').replace('px', '')) ?? 0;
+            dragArgs.initialPos.width =
+              parseInt(getComputedStyle(leftRef.value, null).getPropertyValue('width').replace('px', '')) ?? 0;
           }),
           switchMap((start: any) =>
             mousemove$.pipe(
@@ -213,20 +213,24 @@ export const GridDragable = defineComponent({
   },
   render(ctx) {
     return (
-      <div class={['grid-dragable-wrap', ctx.collapsed_ ? 'grid-dragable-collapsed' : '']}>
+      <div class={['grid-dragable-wrap', ctx.collapsed_ ? 'grid-dragable-collapsed' : undefined]}>
         <div class='grid-dragable-left' ref='leftRef'>
-          <div class='grid-dragable-left-content'>{ctx.$slots?.left ? ctx.$slots?.left() : ''}</div>
+          <div class='grid-dragable-left-content'>{ctx.$slots?.left ? ctx.$slots?.left() : undefined}</div>
           <div class='grid-dragable-septal'>
             <div class='grid-dragable-septal-line' />
             <div class='grid-dragable-septal-zine' ref='anchorRef'>
               <div class='grid-dragable-septal-ziner' />
             </div>
-            <button class='grid-dragable-button-toggle' type='button' title={ctx.collapsed_ ? 'Unfold' : 'Collaps'} onClick={ctx.onCollapsedClick}>
+            <button
+              class='grid-dragable-button-toggle'
+              type='button'
+              title={ctx.collapsed_ ? 'Unfold' : 'Collaps'}
+              onClick={ctx.onCollapsedClick}>
               <IconArrowLeftSLine ref='anchorIconRef' scale='1.1' />
             </button>
           </div>
         </div>
-        <div class='grid-dragable-right'>{ctx.$slots?.right ? ctx.$slots?.right() : ''}</div>
+        <div class='grid-dragable-right'>{ctx.$slots?.right ? ctx.$slots?.right() : undefined}</div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import { RouterLink } from 'vue-router';
 import { LayoutSider } from 'ant-design-vue';
-import { ScrollView } from '@/antdvx';
-import { getEventArgs } from '@/antdvx/utils';
+import { ScrollView } from 'antdvx';
+import { getEventArgs } from 'antdvx/utils';
 import { addClass, removeClass } from '@fatesigner/utils/document';
 import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { computed, defineComponent, onBeforeUnmount, onMounted, provide, ref } from 'vue';

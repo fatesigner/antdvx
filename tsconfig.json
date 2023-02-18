@@ -42,6 +42,12 @@
     "baseUrl": ".",
     "rootDir": "./src",
     "paths": {
+      "antdvx": [
+        "src/antdvx"
+      ],
+      "antdvx/*": [
+        "src/antdvx/*"
+      ],
       "@/*": [
         "src/*"
       ]

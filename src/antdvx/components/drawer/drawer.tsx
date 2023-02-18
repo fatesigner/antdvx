@@ -1,13 +1,12 @@
-import to from 'await-to-js';
-import { timer } from 'rxjs';
-import { isArray, mergeWith } from 'lodash-es';
-import { Alert, Drawer } from 'ant-design-vue';
+import { defineComponent, h, PropType, reactive, ref, shallowRef } from 'vue';
 import { bindLazyFunc } from '@fatesigner/utils';
 import { AsyncComponentLoader } from '@vue/runtime-core';
-import { PropType, defineComponent, h, reactive, ref, shallowRef } from 'vue';
+import { Alert, Drawer, Spin } from 'ant-design-vue';
+import to from 'await-to-js';
+import { isArray, mergeWith } from 'lodash-es';
+import { timer } from 'rxjs';
 
 import { XButtonRefresh } from '../button';
-import { SpinnerLoading } from '../loading';
 import { ScrollView } from '../scroll-view';
 import { TransitionOpacity, TransitionZoom } from '../transitions';
 
@@ -28,7 +27,7 @@ const XDrawerLoading = defineComponent({
   render() {
     return (
       <div class='tw-p-4'>
-        <SpinnerLoading class='tw-align-top' />
+        <Spin class='tw-align-top' />
       </div>
     );
   }
@@ -47,7 +46,10 @@ const XDrawerError = defineComponent({
           type='error'
           show-icon
           v-slots={{
-            message: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+            message: () => [
+              ctx.error,
+              <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />
+            ]
           }}
         />
       </div>
@@ -187,22 +189,37 @@ export const XDrawer = defineComponent({
       } as IXDrawerHandlers<any>);
     }
 
-    return { error, loading, visible_, component_, afterVisibleChange, loadComponent, reload, present, dismiss, onClose };
+    return {
+      error,
+      loading,
+      visible_,
+      component_,
+      afterVisibleChange,
+      loadComponent,
+      reload,
+      present,
+      dismiss,
+      onClose
+    };
   },
   render(ctx) {
     const content = ctx?.component
       ? [
-          <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
-            <TransitionZoom>{ctx.loading ? <XDrawerLoading /> : ''}</TransitionZoom>
+          <div class='ant-drwer-center'>
+            <TransitionZoom>{ctx.loading ? <XDrawerLoading /> : undefined}</TransitionZoom>
           </div>,
-          <div class='tw-absolute tw-top-1/2 tw-left-1/2 tw-transform tw--translate-x-1/2 tw--translate-y-1/2'>
-            <TransitionZoom>{!ctx.loading && !!ctx.error ? <XDrawerError error={ctx.error} reload={ctx.reload} /> : ''}</TransitionZoom>
+          <div class='ant-drwer-center'>
+            <TransitionZoom>
+              {!ctx.loading && !!ctx.error ? <XDrawerError error={ctx.error} reload={ctx.reload} /> : undefined}
+            </TransitionZoom>
           </div>,
-          <TransitionOpacity>{!ctx.loading && !ctx.error ? (ctx.component_ ? h(ctx.component_, ctx.compProps) : '') : ''}</TransitionOpacity>
+          <TransitionOpacity>
+            {!ctx.loading && !ctx.error ? (ctx.component_ ? h(ctx.component_, ctx.compProps) : undefined) : undefined}
+          </TransitionOpacity>
         ]
       : ctx.$slots?.default
       ? ctx.$slots?.default()
-      : '';
+      : undefined;
     return (
       <Drawer
         closable={ctx.options.closable}
@@ -213,7 +230,11 @@ export const XDrawer = defineComponent({
         maskStyle={ctx.options.maskStyle}
         title={ctx.options.title}
         visible={ctx.visible_}
-        wrapClassName={[SYMBOLS.BASE_CLASS, ctx.options?.fullscreen ? SYMBOLS.FULLSCREEN_CLASS : undefined, ctx.options?.wrapClassName ?? undefined]
+        wrapClassName={[
+          SYMBOLS.BASE_CLASS,
+          ctx.options?.fullscreen ? SYMBOLS.FULLSCREEN_CLASS : undefined,
+          ctx.options?.wrapClassName ?? undefined
+        ]
           .filter(Boolean)
           .join(' ')}
         wrapStyle={ctx.options.wrapStyle}
@@ -229,8 +250,8 @@ export const XDrawer = defineComponent({
         keyboard={ctx.options.keyboard}
         onClose={ctx.onClose}
         v-slots={{
-          title: () => (ctx.$slots?.title ? ctx.$slots?.title() : ''),
-          handle: () => (ctx.$slots?.handle ? ctx.$slots?.handle() : ''),
+          title: () => (ctx.$slots?.title ? ctx.$slots?.title() : undefined),
+          handle: () => (ctx.$slots?.handle ? ctx.$slots?.handle() : undefined),
           default: () =>
             ctx.options.scrollX || ctx.options.scrollY ? (
               <ScrollView fillX fillY native scrollX={ctx.options.scrollX} scrollY={ctx.options.scrollY}>
@@ -271,6 +292,8 @@ export function createXDrawer<TProps extends Record<string, any>, TComponent ext
     handler,
     component,
     compProps: reactive(compProps ?? {}),
-    options: reactive(mergeWith({}, defaultXDrawerProps, options, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined)))
+    options: reactive(
+      mergeWith({}, defaultXDrawerProps, options, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined))
+    )
   } as any;
 }

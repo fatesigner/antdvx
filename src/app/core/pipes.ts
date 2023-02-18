@@ -2,7 +2,7 @@
  * 全局过滤器
  */
 
-import { AntdvxPipes } from '@/antdvx/pipes';
+import { AntdvxPipes } from 'antdvx/pipes';
 
 export const Pipes = {
   install(app) {

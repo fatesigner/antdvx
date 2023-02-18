@@ -15,8 +15,8 @@ import {
   configureXTable,
   setRequestAdapter,
   setStorageService
-} from '@/antdvx';
-import { setAntdvxPipesConfig } from '@/antdvx/pipes';
+} from 'antdvx';
+import { setAntdvxPipesConfig } from 'antdvx/pipes';
 
 import { i18n } from '@/app/i18n';
 import { httpService, localStorageService } from '@/app/core/services';
@@ -66,7 +66,7 @@ export const Antdvx = {
     configureEcharts({
       color: ['#91cc75', '#fac858', '#5470c6', '#ee6666', '#73c0de', '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc'],
       textStyle: {
-        fontFamily: 'a'
+        fontFamily: `-apple-system, BlinkMacSystemFont, Roboto, 'Noto Sans', 'Liberation Sans', 'PingFang SC', 'Hiragino Sans GB', 'Heiti SC', 'Microsoft Jhenghei', 'WenQuanYi Micro Hei', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'`
       }
     });
     configureVEcharts({
@@ -87,8 +87,12 @@ export const Antdvx = {
               ''
             ) : (
               <div class='tw-flex-initial tw-space-x-2'>
-                {chartRef.refreshable ? <XButtonRefresh disabled={chartRef.loading} color='primary' size='small' type='link' handler={chartRef.refresh} /> : ''}
-                {chartRef.exportable ? <XButtonExport disabled={chartRef.loading} size='small' placement='bottomRight' options={chartRef.exportOptions} /> : ''}
+                {chartRef.refreshable ? (
+                  <XButtonRefresh disabled={chartRef.loading} color='primary' size='small' type='link' handler={chartRef.refresh} />
+                ) : undefined}
+                {chartRef.exportable ? (
+                  <XButtonExport disabled={chartRef.loading} size='small' placement='bottomRight' options={chartRef.exportOptions} />
+                ) : undefined}
               </div>
             )}
           </div>
@@ -101,10 +105,10 @@ export const Antdvx = {
         size: 'small',
         showLessItems: true,
         showQuickJumper: false,
-        pageSizeOptions: ['50', '100', '200', '500', '10000']
+        pageSizeOptions: ['10', '20', '50', '100', '200', '500', '10000']
       },
       dataSource: {
-        pageSize: 10000
+        pageSize: 50
       },
       locale: {
         emptyText: (
@@ -141,12 +145,17 @@ export const Antdvx = {
             type='link'
             handler={() => {
               return tbRef.handler.presentSettingsPanel();
-            }}
-          />,
+            }}>
+            Setting
+          </XTableSettingsPanelButton>,
           tbRef.options.isFullscreen ? (
-            <XButtonFullscreenExit only-icon color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreenExit} />
+            <XButtonFullscreenExit only-icon color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreenExit}>
+              Exit Fullscreen
+            </XButtonFullscreenExit>
           ) : (
-            <XButtonFullscreen only-icon color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreen} />
+            <XButtonFullscreen color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreen}>
+              Fullscreen
+            </XButtonFullscreen>
           )
         ];
       }
@@ -155,11 +164,11 @@ export const Antdvx = {
     const loadLang = async (lang) => {
       // 导入 language，非中文环境统一使用英文
       if (lang === 'zh-CN') {
-        return import('@/antdvx/i18n/locales/zh-CN').then((res) => {
+        return import('antdvx/i18n/locales/zh-CN').then((res) => {
           return res.default;
         });
       } else {
-        return import('@/antdvx/i18n/locales/en-US').then((res) => {
+        return import('antdvx/i18n/locales/en-US').then((res) => {
           return res.default;
         });
       }

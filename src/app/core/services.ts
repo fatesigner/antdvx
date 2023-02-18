@@ -2,8 +2,8 @@
  * App 服务实例
  */
 
-import { ANTDVX_SYMBOLS } from '@/antdvx';
-import { IHttpService, IStorageService } from '@/antdvx/types';
+import { ANTDVX_SYMBOLS } from 'antdvx';
+import { IHttpService, IStorageService } from 'antdvx/types';
 
 import { appDIC } from '@/app/core/inversify';
 import { AuthServiceType, SessionServiceType } from '@/app/core/types';

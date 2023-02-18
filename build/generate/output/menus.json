@@ -1,0 +1,184 @@
+[
+  {
+    "id": "f76020586bf6",
+    "name": "Portal",
+    "label": "Portal",
+    "url": "/portal",
+    "icon": "home-2-line",
+    "target": null,
+    "children": []
+  },
+  {
+    "id": "ed9d4d63a0d2",
+    "name": "Components",
+    "label": "Components",
+    "url": null,
+    "icon": "code-box-line",
+    "target": null,
+    "children": [
+      {
+        "id": "d79ss90e69zd",
+        "name": "Iconfont",
+        "label": "Iconfont",
+        "url": "/components/iconfont",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "zsg6690e69zd",
+        "name": "Scrollview",
+        "label": "Scrollview",
+        "url": "/components/scrollview",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "zf96690e69zd",
+        "name": "GridDragable",
+        "label": "Grid Dragable",
+        "url": "/components/grid-dragable",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "sh96690e69zd",
+        "name": "AsyncSection",
+        "label": "Async Section",
+        "url": "/components/async-section",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "fh96690e69zd",
+        "name": "Lazy",
+        "label": "Lazy",
+        "url": "/components/lazy",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "b796690e69zd",
+        "name": "Button",
+        "label": "Button",
+        "url": "/components/button",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "d790990e69zd",
+        "name": "Input",
+        "label": "Input",
+        "url": "/components/input",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "c796690e69zd",
+        "name": "Combobox",
+        "label": "Combobox",
+        "url": "/components/combobox",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "d796690e69sc",
+        "name": "Popup",
+        "label": "Popup",
+        "url": "/components/popup",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "fs96690e6975",
+        "name": "StickySection",
+        "label": "Sticky Section",
+        "url": "/components/sticky-section",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "df96690e69sc",
+        "name": "Transitions",
+        "label": "Transitions",
+        "url": "/components/transitions",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "hd96690e69sc",
+        "name": "Pipes",
+        "label": "Pipes",
+        "url": "/components/pipes",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "F596690e6975",
+        "name": "Echarts",
+        "label": "Echarts",
+        "url": "/components/echarts",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      },
+      {
+        "id": "b796690e6975",
+        "name": "Table",
+        "label": "Table",
+        "url": "/components/table",
+        "icon": "code-box-line",
+        "target": null,
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "yd9d4d63a0dy",
+    "name": "SystemSettings",
+    "label": "System Settings",
+    "url": null,
+    "icon": "settings-line",
+    "target": null,
+    "children": [
+      {
+        "id": "yf96690e6d7z",
+        "name": "Permissions",
+        "label": "Permissions",
+        "url": "/system-settings/permissions",
+        "icon": "funds-line",
+        "target": "_self",
+        "children": []
+      },
+      {
+        "id": "y79g390e6d7z",
+        "name": "Roles",
+        "label": "Roles",
+        "url": "/system-settings/roles",
+        "icon": "file-user-line",
+        "target": "_self",
+        "children": []
+      },
+      {
+        "id": "y796690e697z",
+        "name": "Users",
+        "label": "Users",
+        "url": "/system-settings/users",
+        "icon": "user-line",
+        "target": "_self",
+        "children": []
+      }
+    ]
+  }
+]

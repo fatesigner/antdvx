@@ -4,19 +4,19 @@
 
 const gulp = require('gulp');
 const spawn = require('cross-spawn');
-const rimraf = require('rimraf');
+
+const clean = require('./clean');
 
 gulp.task(
   'webpack',
-  gulp.series(async function () {
-    const { EXAMPLE_PATH } = require('../constants');
-
+  gulp.series('clean', async function () {
     const i = process.argv.indexOf('--serve');
     if (i > -1) {
       // webpack serve --config webpack.config.js --hot --progress
       spawn.sync('webpack serve', ['--config', 'webpack.config.js', '--hot', '--progress'], { stdio: 'inherit' });
     } else {
-      rimraf.sync(EXAMPLE_PATH);
+      // run clean
+      await clean();
       // webpack --config webpack.config.js
       spawn.sync('webpack', ['--config', 'webpack.config.js'], { stdio: 'inherit' });
     }

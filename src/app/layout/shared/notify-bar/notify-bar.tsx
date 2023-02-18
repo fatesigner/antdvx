@@ -1,5 +1,5 @@
 import { defineComponent, ref } from 'vue';
-import { IconNotificationLine } from '@/antdvx';
+import { IconNotificationLine } from 'antdvx';
 import { Avatar, Badge, Dropdown, List, ListItem, ListItemMeta, TabPane, Tabs, Tag } from 'ant-design-vue';
 
 import $styles from './notify-bar.module.less';

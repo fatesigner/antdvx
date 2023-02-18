@@ -83,7 +83,8 @@ export default {
         any: '随便填',
         thirdParty: '第三方登录',
         thirdPartyTips: '本地不能模拟，请结合自己业务进行模拟！！！',
-        message: '登录成功'
+        message: '登录成功',
+        sso: 'SSO 登录'
       },
       updatePassword: {
         title: '修改密码',

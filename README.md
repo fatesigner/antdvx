@@ -27,7 +27,7 @@ npm i -S antdvx
 </template>
 
 <script lang="ts">
-import { XButton } from '@/antdvx';
+import { XButton } from 'antdvx';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -75,8 +75,8 @@ npm run lint
 │   └── pre-commit                           // 提交消息前，执行 lint-staged
 ├── build                                    // build 目录，放置打包、编译的脚本
 │   ├── scripts                              // 构建脚本
-│   │   ├── env-cmd.js                       // 读取 .env 文件并加载环境变量至 process.env 中
-│   │   └── from-env.js                      // 读取 .env 文件并导出环境变量
+│   │   ├── set-cmd.js                       // 读取 .env 文件并加载环境变量至 process.env 中
+│   │   └── get-env.js                       // 读取 .env 文件并导出环境变量
 │   ├── tasks                                // Gulp 任务
 │   │   ├── api.js                           // 生成 api 目录，使用 openapi-generator
 │   │   ├── clean.js                         // 清空 dist 目录

@@ -83,7 +83,8 @@ export const i18nMessages = createLocaleMessages({
         any: '',
         thirdParty: '',
         thirdPartyTips: '',
-        message: ''
+        message: '',
+        sso: ''
       },
       updatePassword: {
         title: '',

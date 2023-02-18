@@ -1,9 +1,8 @@
-import { Alert } from 'ant-design-vue';
+import { defineComponent, nextTick, onMounted, PropType, ref, watch } from 'vue';
 import { bindPromiseQueue } from '@fatesigner/utils';
-import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
+import { Alert, Spin } from 'ant-design-vue';
 
 import { XButtonRefresh } from '../button';
-import { SpinnerLoading } from '../loading';
 import { TransitionCollapse } from '../transitions';
 
 import { IAsAsyncSectionProps } from './types';
@@ -24,7 +23,7 @@ export const AsyncSection = defineComponent({
     },
     loadingSize: {
       type: String as PropType<IAsAsyncSectionProps<any, any>['size']>,
-      default: 'small'
+      default: 'default'
     },
     immediate: {
       type: Boolean,
@@ -105,15 +104,13 @@ export const AsyncSection = defineComponent({
             ) : (
               <div class='tw-space-y-2'>
                 <div class='tw-text-center'>
-                  <SpinnerLoading class='tw-align-top' size={ctx.loadingSize} />
+                  <Spin class='tw-align-top' size={ctx.loadingSize} />
                 </div>
-                {ctx.loadingText ? <div class='tw-text-center tw-mt-5'>{ctx.loadingText}</div> : ''}
+                {ctx.loadingText ? <div class='tw-mt-5 tw-text-center'>{ctx.loadingText}</div> : undefined}
               </div>
             )}
           </div>
-        ) : (
-          ''
-        )}
+        ) : undefined}
       </TransitionCollapse>,
       <TransitionCollapse appear={false}>
         {!ctx.loading_ && ctx.error ? (
@@ -125,17 +122,20 @@ export const AsyncSection = defineComponent({
                 type='error'
                 closable
                 v-slots={{
-                  message: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+                  message: () => [
+                    ctx.error,
+                    <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />
+                  ]
                 }}
               />
             )}
           </div>
-        ) : (
-          ''
-        )}
+        ) : undefined}
       </TransitionCollapse>,
       <TransitionCollapse appear={false}>
-        {ctx.initialized ? <div {...ctx.$attrs}>{ctx.$slots.default?.({ data: ctx.data, loading: ctx.loading_, reload: ctx.load })}</div> : ''}
+        {ctx.initialized ? (
+          <div {...ctx.$attrs}>{ctx.$slots.default?.({ data: ctx.data, loading: ctx.loading_, reload: ctx.load })}</div>
+        ) : undefined}
       </TransitionCollapse>
     ];
   }

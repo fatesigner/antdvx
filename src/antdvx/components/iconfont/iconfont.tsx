@@ -1,8 +1,8 @@
-import { Component, h } from '@vue/runtime-core';
 import { defineAsyncComponent, defineComponent } from 'vue';
+import { Component, h } from '@vue/runtime-core';
 
+import { ANTDVX_ICON_NAMES, ANTDVX_ICONS_REGISTERED } from './config';
 import { IconfontProps } from './types';
-import { ANTDVX_ICONS_REGISTERED, ANTDVX_ICON_NAMES } from './config';
 
 export const Iconfont = defineComponent({
   name: 'Iconfont',

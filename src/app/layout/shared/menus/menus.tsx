@@ -1,9 +1,9 @@
+import { IMenu } from 'antdvx/types';
 import { Menu } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Iconfont, ScrollView, XRouterLink } from '@/antdvx';
-import { IMenu } from '@/antdvx/types';
+import { Iconfont, ScrollView, XRouterLink } from 'antdvx';
 import { StructureTree } from '@fatesigner/utils/structure-tree';
-import { PropType, computed, defineComponent, inject, nextTick, provide, reactive, ref, watch } from 'vue';
+import { PropType, computed, defineComponent, inject, provide, reactive, ref, watch } from 'vue';
 
 import { sessionService } from '@/app/core/services';
 
@@ -20,7 +20,8 @@ const NavMenuItem = defineComponent({
   setup(props) {
     const router = useRouter();
 
-    const collapsed = inject('collapsed');
+    // const collapsed = inject('collapsed');
+    const mode = inject('mode');
     const openKeys = inject('openKeys');
     const selectedKeys = inject('selectedKeys');
 
@@ -35,7 +36,8 @@ const NavMenuItem = defineComponent({
 
     return {
       visible,
-      collapsed,
+      // collapsed,
+      mode,
       openKeys,
       selectedKeys,
       clickMenuItem
@@ -49,14 +51,23 @@ const NavMenuItem = defineComponent({
           popupClassName='nav-menu-popup'
           {...ctx.$attrs}
           v-slots={{
+            icon:
+              ctx.mode === 'horizontal'
+                ? undefined
+                : () => {
+                    return ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined;
+                  },
             title() {
-              if (ctx.data.url || ctx.data.route) {
+              if (!ctx.data.children?.length && (ctx.data.url || ctx.data.route)) {
                 return (
                   <XRouterLink
                     to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.route }}
                     v-slots={{
                       default() {
-                        return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
+                        return [
+                          ctx.mode === 'horizontal' ? ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined : undefined,
+                          <span>{ctx.data.label}</span>
+                        ];
                       }
                     }}
                   />
@@ -64,14 +75,13 @@ const NavMenuItem = defineComponent({
               } else {
                 return (
                   <div class='tw-flex tw-items-center'>
-                    {ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined}
+                    {ctx.mode === 'horizontal' ? ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined : undefined}
                     <span>{ctx.data.label}</span>
                   </div>
                 );
               }
             }
-          }}
-        >
+          }}>
           {ctx.data.children.map((item) => {
             if (item.children) {
               return <NavMenuItem key={item.id} data={item} />;
@@ -87,13 +97,13 @@ const NavMenuItem = defineComponent({
                             to={item.url ? { path: item.url } : { name: item.route }}
                             v-slots={{
                               default() {
-                                return [item.icon ? <Iconfont name={item.icon} /> : undefined, <span>{item.label}</span>];
+                                return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{item.label}</span>];
                               }
                             }}
                           />
                         );
                       } else {
-                        return [item.icon ? <Iconfont name={item.icon} /> : undefined, <span>{item.label}</span>];
+                        return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{item.label}</span>];
                       }
                     }
                   }}
@@ -106,6 +116,12 @@ const NavMenuItem = defineComponent({
         <Menu.Item
           key={ctx.data.id}
           v-slots={{
+            icon:
+              ctx.mode === 'horizontal'
+                ? undefined
+                : () => {
+                    return ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined;
+                  },
             default() {
               if (ctx.data.url || ctx.data.route) {
                 return (
@@ -113,13 +129,16 @@ const NavMenuItem = defineComponent({
                     to={ctx.data.url ? { path: ctx.data.url } : { name: ctx.data.route }}
                     v-slots={{
                       default() {
-                        return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
+                        return [
+                          ctx.mode === 'horizontal' ? ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined : undefined,
+                          <span>{ctx.data.label}</span>
+                        ];
                       }
                     }}
                   />
                 );
               } else {
-                return [ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined, <span>{ctx.data.label}</span>];
+                return [ctx.mode === 'horizontal' ? ctx.data.icon ? <Iconfont name={ctx.data.icon} /> : undefined : undefined, <span>{ctx.data.label}</span>];
               }
             }
           }}
@@ -153,41 +172,73 @@ export const NavMenu = defineComponent({
       childrenKey: 'children'
     });
 
-    const menus = ref<IMenu[]>(
+    /* const menus = ref<IMenu[]>(
       strutree.filter(require('@/assets/json/menus.json'), (node: any) => {
         return !node?.auth || node?.auth;
       })
-    );
-    // const menus = ref<IMenu[]>(sessionService?.user?.role?.menus ?? []);
+    ); */
 
-    const collapsed = inject('collapsed');
+    const menus = ref<IMenu[]>(sessionService?.user?.role?.menus ?? []);
 
-    let preOpenKeys = menus.value?.flatMap((x) => [x.id, ...(x?.children?.map((x) => x.id) ?? [])]) ?? [];
+    // const openKeys = ref(menus.value.flatMap((x) => [x.id, ...(x?.children?.map((x) => x.id) ?? [])]));
     const openKeys = ref([]);
     const selectedKeys = ref([]);
 
+    provide('mode', props.mode);
     provide('openKeys', openKeys);
     provide('selectedKeys', selectedKeys);
 
-    const getMenuByName = (name: string) => {
-      return strutree.find(menus.value, (x) => x.route === name);
+    const getMenuByName = (names: string[]) => {
+      let name;
+      let node: ReturnType<typeof strutree.find>;
+      do {
+        name = names.pop();
+        if (name) {
+          node = strutree.find(menus.value, (x) => x.name === name);
+          if (node) {
+            break;
+          }
+        }
+      } while (name);
+
+      return node;
     };
 
-    // 监听菜单收缩状态
+    // 页面切换后，将菜单滚动至中心位置
+    const scrollToCenter = (menu: any) => {
+      if (!scrollViewRef.value) {
+        return;
+      }
+      let $activatedMenuItem: HTMLElement;
+      if (menu.parentNodes?.length) {
+        $activatedMenuItem = document.querySelector(`[data-submenu-id='${menu.parentNodes[0].id}']`);
+      } else {
+        $activatedMenuItem = document.querySelector(`[data-menu-id='${menu.node.id}']`);
+      }
+      if ($activatedMenuItem) {
+        let left = 0;
+        if ($activatedMenuItem.offsetLeft > 10) {
+          // 当前 menuItem 中心距视窗左侧的距离
+          left = $activatedMenuItem.offsetLeft + $activatedMenuItem.offsetWidth / 2 - scrollViewRef.value.viewRef.offsetWidth / 2;
+          // 距容器中心点的距离
+          // const diff = left - scrollViewRef.value.viewRef.offsetWidth / 2;
+          // const scrollLeft = scrollViewRef.value.viewRef.scrollLeft + diff;
+        }
+        scrollViewRef.value.scrollTo(left, 0, 300);
+      }
+    };
+
+    // 跟随页面路由变化，切换菜单选中状态
     watch(
-      () => collapsed,
-      (newVal: any) => {
-        if (newVal.value) {
-          preOpenKeys = openKeys.value.map((x) => x);
-          nextTick(() => {
-            openKeys.value = [];
-            // openKeys.value.splice(0, openKeys.value.length);
-          });
+      () => route.fullPath,
+      () => {
+        const menu = getMenuByName(route.matched.map((x) => x?.name?.toString()));
+        if (menu?.node) {
+          selectedKeys.value = [menu.node.id];
+          openKeys.value = Array.from(new Set([...menus.value.map((x) => x.id), ...menu.parentNodes.map((x) => x.id), ...openKeys.value]));
+          scrollToCenter(menu);
         } else {
-          nextTick(() => {
-            openKeys.value = preOpenKeys;
-            // openKeys.value.splice(0, openKeys.value.length, ...preOpenKeys);
-          });
+          openKeys.value = menus.value.map((x) => x.id);
         }
       },
       {
@@ -195,26 +246,15 @@ export const NavMenu = defineComponent({
       }
     );
 
-    // 跟随页面路由变化，切换菜单选中状态
     watch(
-      () => route.fullPath,
-      () => {
-        const menu = getMenuByName(route.name as string);
-        if (menu?.node) {
-          selectedKeys.value = [menu.node.id];
-          menu.parentNodes
-            .map((x) => x.id)
-            .forEach((x) => {
-              if (collapsed) {
-                if (!preOpenKeys.includes(x)) {
-                  preOpenKeys.push(x);
-                }
-              } else {
-                if (!openKeys.value.includes(x)) {
-                  openKeys.value.push(x);
-                }
-              }
-            });
+      () => props.mode,
+      (val) => {
+        if (val === 'horizontal') {
+          document.body.classList.add('nav-menu-horizontal');
+          document.body.classList.remove('nav-menu-vertical');
+        } else {
+          document.body.classList.add('nav-menu-vertical');
+          document.body.classList.remove('nav-menu-horizontal');
         }
       },
       {
@@ -230,25 +270,39 @@ export const NavMenu = defineComponent({
     };
   },
   render(ctx) {
-    return (
-      <ScrollView fillY scrollY>
+    return ctx.mode === 'horizontal' ? (
+      <ScrollView scrollX fillX ref='scrollViewRef'>
         <Menu
-          class='sidebar-menu'
+          class='nav-menu'
           disabledOverflow={true}
           // triggerSubMenuAction='click'
           mode={ctx.mode}
           theme={ctx.theme}
-          inlineIndent={16}
+          inlineIndent={0}
           v-models={[
             [ctx.openKeys, 'openKeys'],
             [ctx.selectedKeys, 'selectedKeys']
-          ]}
-        >
+          ]}>
           {ctx.menus.map((item) => (
             <NavMenuItem data={item} inline-indent={16} />
           ))}
         </Menu>
       </ScrollView>
+    ) : (
+      <Menu
+        class='nav-menu'
+        disabledOverflow={true}
+        // triggerSubMenuAction='click'
+        mode={ctx.mode}
+        theme={ctx.theme}
+        v-models={[
+          [ctx.openKeys, 'openKeys'],
+          [ctx.selectedKeys, 'selectedKeys']
+        ]}>
+        {ctx.menus.map((item) => (
+          <NavMenuItem data={item} inline-indent={16} />
+        ))}
+      </Menu>
     );
   }
 });

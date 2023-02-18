@@ -5,8 +5,7 @@ import { PageWrapper } from '@/app/shared/page-wrapper';
 /**
  * 主页
  */
-export const PortalView = defineComponent({
-  name: 'PortalView',
+export default defineComponent({
   setup() {
     return {};
   },

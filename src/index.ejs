@@ -9,19 +9,19 @@
   <meta http-equiv="Content-Security-Policy" />
   <meta name="description" content="<%= htmlWebpackPlugin.options.title %>" />
   <% if (htmlWebpackPlugin.options.baseHref) { %>
-    <base href="<%= htmlWebpackPlugin.options.baseHref %>" target="_self">
+  <base href="<%= htmlWebpackPlugin.options.baseHref %>" target="_self">
   <% } %>
   <% if (!htmlWebpackPlugin.options.baseHref) { %>
-    <base target="_self">
+  <base target="_self">
   <% } %>
-  <link rel="canonical" href="<%= htmlWebpackPlugin.options.url %>"/>
+  <link rel="canonical" href="<%= htmlWebpackPlugin.options.canonical %>" />
   <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
   <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
 <body>
-<noscript>
-  <strong>Please enable JavaScript to continue.</strong>
-</noscript>
-<div id="app"></div>
+  <noscript>
+    <strong>Please enable JavaScript to continue.</strong>
+  </noscript>
+  <div id="app"></div>
 </body>
 </html>

@@ -3,8 +3,8 @@
  */
 
 import { merge } from 'lodash-es';
-import { createStore } from '@/antdvx/helpers';
-import { IXDrawerRefType, IXModalRefType } from '@/antdvx';
+import { createStore } from 'antdvx/helpers';
+import { IXDrawerRefType, IXModalRefType } from 'antdvx';
 
 import { LanguageType, i18n } from '@/app/i18n';
 import { localStorageService } from '@/app/core/services';

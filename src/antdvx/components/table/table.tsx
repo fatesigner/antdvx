@@ -215,20 +215,10 @@ export const XTable = defineComponent({
 
     // 处理数据，过滤、分页、筛选
     const processData = () => {
-      if (props.options?.dataSource?.serverPaging) {
-        currentData = overallData;
+      let data = overallData.slice(0, overallData.length);
 
-        // 服务端分页
-        props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...currentData);
-
-        // emit event
-        nextTick(() => {
-          props.options?.listeners?.dataChange?.(props.options.dataSource.data);
-        });
-      } else {
-        let data = overallData.slice(0, overallData.length);
-
-        // 客户端过滤
+      // 是否执行客户端过滤
+      if (!props.options?.dataSource?.serverFiltering) {
         if (filters) {
           const filterKeys = Object.keys(filters);
           if (filterKeys?.length) {
@@ -247,8 +237,10 @@ export const XTable = defineComponent({
             );
           }
         }
+      }
 
-        // 客户端排序
+      // 是否执行客户端排序
+      if (!props.options?.dataSource?.serverSorting) {
         if (sorter?.columnKey) {
           const column = props.options.columns.find((x) => x?.dataIndex === sorter.columnKey);
           if (isFunction(column?.sorter)) {
@@ -273,11 +265,17 @@ export const XTable = defineComponent({
             }
           }
         }
+      }
 
-        currentData = data;
+      currentData = data;
 
+      // 分页
+      if (props.options?.dataSource?.serverPaging) {
+        // 服务端分页
+        props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...currentData);
+      } else {
         // 客户端分页
-        props.options.dataSource.total = currentData.length;
+        props.options.dataSource.total = data.length;
         if (props.options?.pagination && props.options.dataSource?.pageSize) {
           props.options.dataSource.data.splice(
             0,
@@ -290,12 +288,12 @@ export const XTable = defineComponent({
         } else {
           props.options.dataSource.data.splice(0, props.options.dataSource.data.length, ...currentData);
         }
-
-        // emit event
-        nextTick(() => {
-          props.options?.listeners?.dataChange?.(props.options.dataSource.data);
-        });
       }
+
+      // emit event
+      nextTick(() => {
+        props.options?.listeners?.dataChange?.(props.options.dataSource.data);
+      });
 
       // 重置 rowSlections
       if (props.options?.rowSelection) {
@@ -617,8 +615,7 @@ export const XTable = defineComponent({
                         size='small'
                         onClick={() => {
                           clearFilters();
-                        }}
-                      >
+                        }}>
                         {t(i18nMessages.antd.action.reset)}
                       </XButton>
                     </div>
@@ -1121,7 +1118,7 @@ export const XTable = defineComponent({
       solts.title = function (slotData) {
         return (
           <div ref='topRef' class={['tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2', ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2']}>
-            <div class={['tw-flex-1', ctx.options.bordered ? undefined : '']}>
+            <div class='tw-flex-1'>
               <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
                 {ctx.options?.ignoreTitlePrefix ? undefined : ctx.options?.titlePrefix?.(ctx)}
                 {ctx.$slots?.title?.({
@@ -1160,9 +1157,7 @@ export const XTable = defineComponent({
                   onShowSizeChange={ctx.onPageSizeChange}
                 />
               </div>
-            ) : (
-              ''
-            )}
+            ) : undefined}
           </div>
         );
       };
@@ -1246,8 +1241,7 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}
-            >
+              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1268,9 +1262,7 @@ export const XTable = defineComponent({
                 onShowSizeChange={ctx.onPageSizeChange}
               />
             </div>
-          ) : (
-            ''
-          )
+          ) : undefined
         ]}
         <div class='ant-table-x-floater'>
           <XButtonFullscreenExit
@@ -1353,8 +1345,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1367,8 +1358,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1410,8 +1400,7 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1419,8 +1408,7 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>

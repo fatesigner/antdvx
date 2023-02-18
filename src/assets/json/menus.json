@@ -1,180 +1,182 @@
 [
   {
     "id": "f76020586bf6",
-    "label": "首页",
     "name": "Portal",
-    "url": "/",
+    "label": "Portal",
+    "url": "/portal",
+    "icon": "home-2-line",
     "target": null,
-    "icon": "home-2-line"
+    "children": []
   },
   {
     "id": "ed9d4d63a0d2",
-    "label": "基础组件",
+    "name": "Components",
+    "label": "Components",
     "url": null,
-    "target": null,
     "icon": "code-box-line",
+    "target": null,
     "children": [
       {
         "id": "d79ss90e69zd",
-        "label": "图标",
         "name": "Iconfont",
-        "url": "/iconfont",
-        "target": null,
+        "label": "Iconfont",
+        "url": "/components/iconfont",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "zsg6690e69zd",
-        "label": "可滚动视图区域",
         "name": "Scrollview",
-        "url": "/scrollview",
-        "target": null,
+        "label": "Scrollview",
+        "url": "/components/scrollview",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "zf96690e69zd",
-        "label": "可拖拽两栏布局",
         "name": "GridDragable",
-        "url": "/grid-dragable",
-        "target": null,
+        "label": "Grid Dragable",
+        "url": "/components/grid-dragable",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "sh96690e69zd",
-        "label": "异步加载区域",
         "name": "AsyncSection",
-        "url": "/async-section",
-        "target": null,
+        "label": "Async Section",
+        "url": "/components/async-section",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "fh96690e69zd",
-        "label": "延迟加载",
         "name": "Lazy",
-        "url": "/lazy",
-        "target": null,
+        "label": "Lazy",
+        "url": "/components/lazy",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "b796690e69zd",
-        "label": "按钮",
         "name": "Button",
-        "url": "/button",
-        "target": null,
+        "label": "Button",
+        "url": "/components/button",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "d790990e69zd",
-        "label": "输入框",
         "name": "Input",
-        "url": "/input",
-        "target": null,
+        "label": "Input",
+        "url": "/components/input",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "c796690e69zd",
-        "label": "下拉列表",
         "name": "Combobox",
-        "url": "/combobox",
-        "target": null,
+        "label": "Combobox",
+        "url": "/components/combobox",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "d796690e69sc",
-        "label": "弹出框",
         "name": "Popup",
-        "url": "/popup",
-        "target": null,
+        "label": "Popup",
+        "url": "/components/popup",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "fs96690e6975",
-        "label": "粘性布局",
         "name": "StickySection",
-        "url": "/sticky-section",
-        "target": null,
+        "label": "Sticky Section",
+        "url": "/components/sticky-section",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "df96690e69sc",
-        "label": "过渡（Transitions）",
         "name": "Transitions",
-        "url": "/transitions",
-        "target": null,
+        "label": "Transitions",
+        "url": "/components/transitions",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "hd96690e69sc",
-        "label": "管道过滤器（pipes）",
         "name": "Pipes",
-        "url": "/pipes",
-        "target": null,
+        "label": "Pipes",
+        "url": "/components/pipes",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "F596690e6975",
-        "label": "图表（Echarts）",
         "name": "Echarts",
-        "url": "/echarts",
-        "target": null,
+        "label": "Echarts",
+        "url": "/components/echarts",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       },
       {
         "id": "b796690e6975",
-        "label": "表格",
         "name": "Table",
-        "url": "/table",
-        "target": null,
+        "label": "Table",
+        "url": "/components/table",
         "icon": "code-box-line",
+        "target": null,
         "children": []
       }
     ]
   },
   {
     "id": "yd9d4d63a0dy",
-    "label": "系统设置",
-    "name": null,
+    "name": "SystemSettings",
+    "label": "System Settings",
     "url": null,
-    "target": null,
     "icon": "settings-line",
+    "target": null,
     "children": [
       {
         "id": "yf96690e6d7z",
-        "label": "Permissions",
         "name": "Permissions",
+        "label": "Permissions",
         "url": "/system-settings/permissions",
-        "target": null,
         "icon": "funds-line",
+        "target": "_self",
         "children": []
       },
       {
         "id": "y79g390e6d7z",
-        "label": "Roles",
         "name": "Roles",
+        "label": "Roles",
         "url": "/system-settings/roles",
-        "target": null,
         "icon": "file-user-line",
+        "target": "_self",
         "children": []
       },
       {
         "id": "y796690e697z",
-        "label": "Users",
         "name": "Users",
+        "label": "Users",
         "url": "/system-settings/users",
-        "target": null,
         "icon": "user-line",
+        "target": "_self",
         "children": []
       }
     ]

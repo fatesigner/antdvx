@@ -4,15 +4,18 @@
 
 const path = require('path');
 
-const { EXAMPLE_PATH, SRC_PATH } = require('./build/constants');
+const { SRC_PATH, OUTPUT_PATH } = require('./build/constants');
 const webpackConfig = require('./build/webpack/webpack.config');
+
+// 读取文件配置的环境变量
+const ENV = require('./build/scripts/get-env')();
 
 module.exports = webpackConfig({
   entry: {
     app: path.join(SRC_PATH, 'main.ts')
   },
   template: path.join(SRC_PATH, 'index.ejs'),
-  outputPath: EXAMPLE_PATH,
+  outputPath: OUTPUT_PATH,
   publicPath: '',
   baseHref: '',
   less: {
@@ -44,6 +47,7 @@ module.exports = webpackConfig({
     }, */
   },
   alias: {
+    antdvx: path.join(SRC_PATH, 'antdvx'),
     // vue$: 'vue/dist/vue.esm-bundler.js',
     vue$: 'vue/dist/vue.runtime.esm-bundler.js',
     'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
@@ -86,11 +90,36 @@ module.exports = webpackConfig({
     WebpackExternalEntryPlugin: {
       entry: {}
     },
+    HtmlWebpackPlugin: {
+      minify: true,
+      title: ENV.APP_TITLE,
+      canonical: ENV.APP_TITLE
+    },
     WebpackHtmlEmbedSourcePlugin: {
-      prependHead: [path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.css')],
+      prependHead: [
+        // 将 ENV 写入 index.html
+        {
+          tagName: 'script',
+          minify: true,
+          content: `window.ENV = ${JSON.stringify(ENV, null, 2)};`
+        },
+        {
+          tagName: 'style',
+          minify: true,
+          path: path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.css')
+        }
+      ],
       prependBody: [
-        path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.html'),
-        path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.js')
+        {
+          tagName: 'html',
+          minify: true,
+          path: path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.html')
+        },
+        {
+          tagName: 'script',
+          minify: true,
+          path: path.join(SRC_PATH, 'app/shared/splash-screen/dist/splash-screen.js')
+        }
       ],
       tests: [
         // 将 runtime.js 输出到 index.html

@@ -1,4 +1,4 @@
-import { IconCheckLine } from '@/antdvx';
+import { IconCheckLine } from 'antdvx';
 import { computed, defineComponent } from 'vue';
 
 import { AppStore } from '@/app/core/store';
@@ -52,7 +52,7 @@ export const IndividuationDrawer = defineComponent({
                 ctx.setTheme(x.name);
               }}>
               <img src={x.bg} alt='' title={x.title} />
-              {ctx.theme === x.name ? <IconCheckLine class='tw-absolute tw-right-2 tw-bottom-2' color='danger' scale={1.2} /> : ''}
+              {ctx.theme === x.name ? <IconCheckLine class='tw-absolute tw-right-2 tw-bottom-2' color='danger' scale={1.2} /> : undefined}
             </div>
           ))}
         </div>

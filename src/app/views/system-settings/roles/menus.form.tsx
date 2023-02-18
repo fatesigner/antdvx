@@ -1,9 +1,9 @@
 import { useI18n } from 'vue-i18n';
-import { IMenu } from '@/antdvx/types';
+import { IMenu } from 'antdvx/types';
 import { PropType, defineComponent } from 'vue';
 import { Field as VeeField } from 'vee-validate';
 import { Form, FormItem, Input, Modal, SelectOptGroup, SelectOption } from 'ant-design-vue';
-import { ANTDVX_ICON_NAMES, Iconfont, TransitionCollapse, XButton, XCombobox, XDrawer, createXDrawer } from '@/antdvx';
+import { ANTDVX_ICON_NAMES, Iconfont, TransitionCollapse, XButton, XCombobox, XDrawer, createXDrawer } from 'antdvx';
 
 import { i18nMessages } from '@/app/i18n';
 import { getMenusFromRoutes } from '@/app/utils';
@@ -155,7 +155,7 @@ export const MenusForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -179,7 +179,7 @@ export const MenusForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -202,7 +202,7 @@ export const MenusForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -226,7 +226,7 @@ export const MenusForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -293,7 +293,7 @@ export const MenusForm = defineComponent({
                           </XButton>
                         </div>, */
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }
@@ -334,7 +334,7 @@ export const MenusForm = defineComponent({
                           }}
                         />,
                         <TransitionCollapse>
-                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : ''}
+                          {meta.touched && !meta.valid && errors.length ? <div class='invalid-message'>{errors[0]}</div> : undefined}
                         </TransitionCollapse>
                       ];
                     }

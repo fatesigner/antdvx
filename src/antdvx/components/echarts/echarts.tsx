@@ -3,9 +3,9 @@
  */
 
 // 引入 echarts 核心模块，核心模块提供了 echarts 使用必须要的接口。
+import { isNullOrUndefined, isNumber } from '@fatesigner/utils/type-check';
 import * as echarts from 'echarts/core';
 import { isArray, mergeWith } from 'lodash-es';
-import { isNullOrUndefined, isNumber } from '@fatesigner/utils/type-check';
 
 export { echarts };
 

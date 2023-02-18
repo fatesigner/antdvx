@@ -72,10 +72,8 @@ export const XButtonSpin = defineComponent({
             <div class='ant-btn-spin-loading'>
               <Spin size={ctx.size} />
             </div>
-          ) : (
-            ''
-          ),
-          ctx.$slots?.default ? ctx.$slots?.default() : ''
+          ) : undefined,
+          ctx.$slots?.default ? ctx.$slots?.default() : undefined
         ]}
       </div>
     );

@@ -66,42 +66,71 @@ module.exports = class WebpackHtmlEmbedSourcePlugin {
     return tag;
   }
 
+  getAssetContentWithTag(content, tagName) {
+    if (tagName === 'script') {
+      return `<script>${content}</script>`;
+    } else if (tagName === 'style') {
+      return `<style>${content}</style>`;
+    } else if (tagName === 'html') {
+      return content;
+    }
+  }
+
   async updateTag(html, headTags, bodyTags) {
     const $ = cheerio.load(html);
     const $body = $('body');
     const cleanCSS = new CleanCSS({});
 
+    const getAssetContent = async function (asset) {
+      if (asset.tagName === 'style') {
+        if (asset.path) {
+          const content = await Fs.readFileSync(asset.path, 'utf8');
+          return asset.minify ? cleanCSS.minify(content).styles : content;
+        } else if (asset.content) {
+          return asset.minify ? cleanCSS.minify(asset.content).styles : asset.content;
+        }
+      } else if (asset.tagName === 'script') {
+        if (asset.path) {
+          const content = await Fs.readFileSync(asset.path, 'utf8');
+          if (asset.minify) {
+            const result = await minify(content);
+            return result.code;
+          }
+          return content;
+        } else if (asset.content) {
+          if (asset.minify) {
+            const result = await minify(asset.content);
+            return result.code;
+          }
+          return asset.content;
+        }
+      } else if (asset.tagName === 'html') {
+        if (asset.path) {
+          const content = await Fs.readFileSync(asset.path, 'utf8');
+          return content;
+        } else if (asset.content) {
+          return asset.content;
+        }
+      }
+    };
+
     if (headTags) {
       for await (const asset of this.options.prependHead.slice().reverse()) {
-        if (REG_CSS.test(asset)) {
-          const source = await Fs.readFileSync(asset, 'utf8');
+        const content = await getAssetContent(asset);
+        if (asset.tagName !== 'html') {
           headTags.unshift({
-            tagName: 'style',
-            innerHTML: cleanCSS.minify(source).styles,
-            closeTag: true
-          });
-        } else if (REG_JS.test(file)) {
-          const source = await Fs.readFileSync(file, 'utf8');
-          headTags.unshift({
-            tagName: 'script',
-            innerHTML: minify(source).code,
+            tagName: asset.tagName,
+            innerHTML: content,
             closeTag: true
           });
         }
       }
       for await (const asset of this.options.appendHead) {
-        if (REG_CSS.test(asset)) {
-          const source = await Fs.readFileSync(asset, 'utf8');
+        const content = await getAssetContent(asset);
+        if (asset.tagName !== 'html') {
           headTags.push({
-            tagName: 'style',
-            innerHTML: cleanCSS.minify(source).styles,
-            closeTag: true
-          });
-        } else if (REG_JS.test(file)) {
-          const source = await Fs.readFileSync(file, 'utf8');
-          headTags.push({
-            tagName: 'script',
-            innerHTML: minify(source).code,
+            tagName: asset.tagName,
+            innerHTML: content,
             closeTag: true
           });
         }
@@ -110,41 +139,12 @@ module.exports = class WebpackHtmlEmbedSourcePlugin {
 
     if (bodyTags) {
       for await (const asset of this.options.prependBody.slice().reverse()) {
-        if (REG_CSS.test(asset)) {
-          const source = await Fs.readFileSync(asset, 'utf8');
-          bodyTags.unshift({
-            tagName: 'style',
-            innerHTML: cleanCSS.minify(source).styles,
-            closeTag: true
-          });
-        } else if (REG_JS.test(asset)) {
-          const source = await Fs.readFileSync(asset, 'utf8');
-          bodyTags.unshift({
-            tagName: 'script',
-            innerHTML: minify(source).code,
-            closeTag: true
-          });
-        } else if (REG_HTML.test(asset)) {
-          const source = await Fs.readFileSync(asset, 'utf8');
-          $body.prepend(source);
-        }
+        const content = await getAssetContent(asset);
+        $body.prepend(this.getAssetContentWithTag(content, asset.tagName));
       }
       for await (const asset of this.options.appendBody) {
-        if (REG_CSS.test(asset)) {
-          const source = await Fs.readFileSync(asset, 'utf8');
-          bodyTags.push({
-            tagName: 'style',
-            innerHTML: cleanCSS.minify(source).styles,
-            closeTag: true
-          });
-        } else if (REG_JS.test(file)) {
-          const source = await Fs.readFileSync(asset, 'utf8');
-          bodyTags.push({
-            tagName: 'script',
-            innerHTML: minify(source).code,
-            closeTag: true
-          });
-        }
+        const content = await getAssetContent(asset);
+        $body.apend(this.getAssetContentWithTag(content, asset.tagName));
       }
     }
 
@@ -172,8 +172,10 @@ module.exports = class WebpackHtmlEmbedSourcePlugin {
         });
 
         hooks.afterTemplateExecution.tapAsync(`${pluginName}_afterTemplateExecution`, (data, callback) => {
+          // eslint-disable-next-line promise/catch-or-return, promise/always-return
           this.updateTag(data.html, data.headTags, data.bodyTags).then((html) => {
             data.html = html;
+            // eslint-disable-next-line promise/no-callback-in-promise
             callback();
           });
         });

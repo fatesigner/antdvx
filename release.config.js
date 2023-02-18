@@ -28,13 +28,20 @@ module.exports = {
   debug: true,
   dryRun: false,
   preset: 'angular',
-  branches: ['+([0-9])?(.{+([0-9]),x}).x', 'master', 'next', 'next-major', { name: 'beta', prerelease: true }, { name: 'alpha', prerelease: true }],
+  branches: [
+    '+([0-9])?(.{+([0-9]),x}).x',
+    'master',
+    'next',
+    'next-major',
+    { name: 'beta', prerelease: true },
+    { name: 'alpha', prerelease: true }
+  ],
   plugins: [
     [
       '@semantic-release/commit-analyzer',
       {
         preset: 'angular',
-        releaseRules: releaseRules,
+        releaseRules,
         parserOpts: {
           // mergePattern: 'Merged PR .*:',
           // the commits that contain BREAKING CHANGE or BREAKING CHANGES in their body will be considered breaking changes.

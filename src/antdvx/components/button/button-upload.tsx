@@ -155,7 +155,7 @@ export const XButtonUpload = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconUploadLine /> : '',
+            ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconUploadLine /> : undefined,
             ctx.$slots?.default ? ctx.$slots?.default({ loading: ctx.loading_ }) : <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
           ]
         }}

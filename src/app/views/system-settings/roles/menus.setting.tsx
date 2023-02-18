@@ -18,8 +18,8 @@ import {
   XButtonUpload,
   XModal,
   createXModal
-} from '@/antdvx';
-import { IMenu } from '@/antdvx/types';
+} from 'antdvx';
+import { IMenu } from 'antdvx/types';
 import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { StructureTree } from '@fatesigner/utils/structure-tree';
 

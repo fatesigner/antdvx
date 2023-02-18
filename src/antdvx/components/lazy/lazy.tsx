@@ -2,12 +2,10 @@
  * lazy
  */
 
-import { Alert } from 'ant-design-vue';
+import { AsyncComponentOptions, defineAsyncComponent as defineAsyncComponent_, defineComponent, PropType } from 'vue';
 import { isFunction } from '@fatesigner/utils/type-check';
 import { AsyncComponentLoader, Component, ComponentPublicInstance } from '@vue/runtime-core';
-import { AsyncComponentOptions, PropType, defineAsyncComponent as defineAsyncComponent_, defineComponent } from 'vue';
-
-import { SpinnerLoading } from '../loading';
+import { Alert, Spin } from 'ant-design-vue';
 
 interface ILazyComponentOptions {
   width?: number | string;
@@ -46,7 +44,7 @@ const Loading = function (options?: ILazyComponentOptions) {
       return (
         <div style={{ width: options?.width, height: options?.height }}>
           <div class='tw-inline-block tw-p-4'>
-            <SpinnerLoading class='tw-align-top' size='small' />
+            <Spin class='tw-align-top' />
           </div>
         </div>
       );

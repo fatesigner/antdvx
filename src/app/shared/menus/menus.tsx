@@ -1,9 +1,9 @@
 import { Menu } from 'ant-design-vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Iconfont, ScrollView, XRouterLink } from '@/antdvx';
+import { Iconfont, ScrollView, XRouterLink } from 'antdvx';
 import { StructureTree } from '@fatesigner/utils/structure-tree';
 import { PropType, computed, defineComponent, inject, onMounted, provide, reactive, ref, watch } from 'vue';
-import { IMenu } from '@/antdvx/types';
+import { IMenu } from 'antdvx/types';
 
 import './menus.less';
 
@@ -58,7 +58,7 @@ const NavMenuItem = defineComponent({
                     to={{ path: ctx.data.url }}
                     v-slots={{
                       default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
+                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : undefined;
                       }
                     }}
                   />
@@ -69,7 +69,7 @@ const NavMenuItem = defineComponent({
                     to={{ name: ctx.data.name }}
                     v-slots={{
                       default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
+                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : undefined;
                       }
                     }}
                   />
@@ -109,7 +109,7 @@ const NavMenuItem = defineComponent({
                             to={{ path: item.url }}
                             v-slots={{
                               default() {
-                                return item.icon ? [<Iconfont name={item.icon} />, <span>{item.label}</span>] : '';
+                                return item.icon ? [<Iconfont name={item.icon} />, <span>{item.label}</span>] : undefined;
                               }
                             }}
                           />
@@ -120,7 +120,7 @@ const NavMenuItem = defineComponent({
                             to={{ name: item.name }}
                             v-slots={{
                               default() {
-                                return item.icon ? [<Iconfont name={item.icon} />, <span>{item.label}</span>] : '';
+                                return item.icon ? [<Iconfont name={item.icon} />, <span>{item.label}</span>] : undefined;
                               }
                             }}
                           />
@@ -144,7 +144,7 @@ const NavMenuItem = defineComponent({
                     to={{ path: ctx.data.url }}
                     v-slots={{
                       default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
+                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : undefined;
                       }
                     }}
                   />
@@ -155,7 +155,7 @@ const NavMenuItem = defineComponent({
                     to={{ name: ctx.data.name }}
                     v-slots={{
                       default() {
-                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : '';
+                        return ctx.data.icon ? [<Iconfont name={ctx.data.icon} />, <span>{ctx.data.label}</span>] : undefined;
                       }
                     }}
                   />

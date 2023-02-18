@@ -1,9 +1,8 @@
-import { Subscription, fromEvent } from 'rxjs';
+import { defineComponent, nextTick, onMounted, PropType, ref, watch } from 'vue';
 import { scrollTo } from '@fatesigner/utils/document';
-import { PropType, defineComponent, nextTick, onMounted, ref, watch } from 'vue';
+import { fromEvent, Subscription } from 'rxjs';
 
 import { i18nMessages } from '../../i18n/messages';
-
 import { IconArrowUpLine } from '../iconfont';
 import { Widget, WidgetProps } from '../widget';
 

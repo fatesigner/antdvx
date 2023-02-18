@@ -3,7 +3,7 @@ import { Field as VeeField } from 'vee-validate';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 import { PropType, defineComponent, onDeactivated, reactive, ref, watch } from 'vue';
 import { Checkbox, Form, FormItem, Input, InputPassword, notification } from 'ant-design-vue';
-import { IconLockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from '@/antdvx';
+import { IconLockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from 'antdvx';
 
 import { i18nMessages } from '@/app/i18n';
 import { createForm } from '@/app/plugins/vee-validate';
@@ -17,8 +17,7 @@ const PASSPORT_REMEMBERME_CHECKED = 'PASSPORT_REMEMBERME_CHECKED';
 /**
  * 用户名、密码登录
  */
-export const LoginUsername = defineComponent({
-  name: 'LoginUsername',
+export default defineComponent({
   props: {
     rememberMe: {
       type: Boolean,
@@ -184,7 +183,7 @@ export const LoginUsername = defineComponent({
                     }}
                   />,
                   <TransitionCollapse>
-                    {meta.touched && !meta.valid ? <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.username)}</div> : ''}
+                    {meta.touched && !meta.valid ? <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.username)}</div> : undefined}
                   </TransitionCollapse>
                 ];
               }
@@ -214,7 +213,7 @@ export const LoginUsername = defineComponent({
                     }}
                   />,
                   <TransitionCollapse>
-                    {meta.touched && !meta.valid ? <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.password)}</div> : ''}
+                    {meta.touched && !meta.valid ? <div class='invalid-message'>{ctx.$t(i18nMessages.app.passport.login.password)}</div> : undefined}
                   </TransitionCollapse>
                 ];
               }

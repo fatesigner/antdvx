@@ -1,5 +1,5 @@
 import { isFunction, isString } from '@fatesigner/utils/type-check';
-import { ANTDVX_COLORS, TransitionCollapse, XButtonRefresh } from '@/antdvx';
+import { ANTDVX_COLORS, TransitionCollapse, XButtonRefresh } from 'antdvx';
 import { PropType, computed, defineComponent, nextTick, onMounted, ref } from 'vue';
 import { Alert, Checkbox, CheckboxGroup, RadioButton, RadioGroup, Spin } from 'ant-design-vue';
 

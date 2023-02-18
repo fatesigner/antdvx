@@ -12,8 +12,7 @@
 }
 
 .form {
-  max-width: 360px;
-  margin: auto;
+  gap: 1rem;
 }
 
 .link {
@@ -22,13 +21,13 @@
 
     &:hover,
     &:focus {
-      color: ~`colorPalette('@{primary-color}', 5) `;
+      color: ~`colorPalette('@{primary-color}', 5)`;
       text-decoration: underline;
     }
 
     &:active,
     &.active {
-      color: ~`colorPalette('@{primary-color}', 7) `
+      color: ~`colorPalette('@{primary-color}', 7)`
     }
   }
 
@@ -38,5 +37,5 @@
 }
 
 .submit {
-  @apply tw-pt-3 tw-pb-3 tw-text-base tw-h-auto;
+  @apply tw-pt-2 tw-pb-2 tw-text-base tw-h-auto;
 }

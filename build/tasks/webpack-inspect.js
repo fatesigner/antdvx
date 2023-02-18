@@ -12,8 +12,12 @@ gulp.task('webpack-inspect', async function () {
   const { orderObject, isProd } = require('../utils');
   const webpackConfig = require('../../webpack.config');
 
-  webpackConfig.then((config) => {
-    const outputFile = isProd() ? 'webpack.prod.config.json' : 'webpack.dev.config.json';
-    fs.writeFileSync(path.join(ROOT_PATH, outputFile), JSON.stringify(orderObject(config), null, 2));
-  });
+  webpackConfig
+    .then((config) => {
+      const outputFile = isProd() ? 'webpack.prod.config.json' : 'webpack.dev.config.json';
+      return fs.writeFileSync(path.join(ROOT_PATH, outputFile), JSON.stringify(orderObject(config), null, 2));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });

@@ -2,7 +2,7 @@
  * utils
  */
 
-import { IMenu, IRouteRecordRaw } from '@/antdvx/types';
+import { IMenu, IRouteRecordRaw } from 'antdvx/types';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 
 /**

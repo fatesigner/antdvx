@@ -6,7 +6,7 @@ import to from 'await-to-js';
 import { debounce } from '@fatesigner/utils';
 import { Empty, Spin } from 'ant-design-vue';
 import { isFunction } from '@fatesigner/utils/type-check';
-import { PropType, TransitionGroup, VNode, computed, defineComponent, onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
+import { PropType, TransitionGroup, VNode, computed, defineComponent, nextTick, onActivated, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { IXButtonExportOptions, XButtonExport, XButtonRefresh } from '../button';
 
@@ -125,6 +125,11 @@ export const VEcharts = defineComponent({
     height: {
       type: [Number, String] as PropType<number | 'auto'>
     },
+    // 自动加载，默认为 true
+    autoload: {
+      type: Boolean,
+      default: true
+    },
     autoresize: {
       type: Boolean,
       default: true
@@ -222,7 +227,7 @@ export const VEcharts = defineComponent({
       };
     })();
 
-    const initialize = async () => {
+    const initialize = async (ignoreLoad = false) => {
       loading.value = true;
 
       instance = await createEcharts(
@@ -238,7 +243,7 @@ export const VEcharts = defineComponent({
         )
       );
 
-      await setOption();
+      await setOption(ignoreLoad);
 
       loading.value = false;
       initialized.value = true;
@@ -248,11 +253,11 @@ export const VEcharts = defineComponent({
       emit('initialized', instance);
     };
 
-    const setOption = async () => {
+    const setOption = async (ignoreLoad = false) => {
       loading.value = true;
 
       // 若提供的 options 参数为函数，异步获取 options
-      if (isFunction(props.options)) {
+      if (!ignoreLoad && isFunction(props.options)) {
         const [err, r] = await to((props.options as EChartsOptionPromise)());
         if (err) {
           error.value = err.message || '[VEcharts] Options load failed.';
@@ -264,12 +269,15 @@ export const VEcharts = defineComponent({
       } else {
         options_.value = getEchartsOptions(props.options) as any;
       }
-      if (options_.value) {
-        instance.clear();
-        instance.setOption(options_.value);
-      }
 
       loading.value = false;
+
+      if (options_.value && instance) {
+        nextTick(function () {
+          instance.clear();
+          instance.setOption(options_.value);
+        });
+      }
     };
 
     watch(
@@ -283,7 +291,7 @@ export const VEcharts = defineComponent({
     );
 
     onMounted(() => {
-      initialize().then(() => {
+      initialize(!props.autoload).then(() => {
         resizeSubsciber.start();
       });
     });
@@ -305,6 +313,10 @@ export const VEcharts = defineComponent({
       resizeSubsciber.stop();
     });
 
+    const refresh = () => {
+      return setOption();
+    };
+
     const getChartElement = () => {
       return chartRef.value;
     };
@@ -319,7 +331,7 @@ export const VEcharts = defineComponent({
       initialized,
       error,
       resize,
-      refresh: setOption,
+      refresh,
       getChartElement,
       touchstart
     };
@@ -378,8 +390,7 @@ export const VEcharts = defineComponent({
             enterToClass='v-echarts-transition-enter-to'
             leaveToClass='v-echarts-transition-leave-to'
             enterActiveClass='v-echarts-transition-enter-active'
-            leaveActiveClass='v-echarts-transition-enter-active'
-          >
+            leaveActiveClass='v-echarts-transition-enter-active'>
             {solts}
           </TransitionGroup>
           <div ref='chartRef' class='v-echarts-chart' onTouchstart={ctx.touchstart} />

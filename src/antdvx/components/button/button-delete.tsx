@@ -104,7 +104,7 @@ export const XButtonDelete = defineComponent({
           v-slots={{
             default: () => [
               ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconDeleteBinLine />,
-              ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
+              ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
             ]
           }}
         />
@@ -130,7 +130,7 @@ export const XButtonDelete = defineComponent({
         v-slots={{
           default: () => [
             ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconDeleteBinLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? '' : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
+            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
           ]
         }}
       />

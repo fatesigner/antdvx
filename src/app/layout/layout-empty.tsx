@@ -1,15 +1,14 @@
 import { RouterView } from 'vue-router';
-import { TransitionSlide } from '@/antdvx';
+import { TransitionSlide } from 'antdvx';
 import { KeepAlive, defineComponent } from 'vue';
-import { getMatchedRoute } from '@/antdvx/helpers';
+import { getMatchedRoute } from 'antdvx/helpers';
 
 import { NavLanguage } from '@/app/layout/shared/language';
 
 /**
  * 空母版页
  */
-export const LayoutEmpty = defineComponent({
-  name: 'LayoutEmpty',
+export default defineComponent({
   render() {
     return (
       <div class='tw-h-full'>
