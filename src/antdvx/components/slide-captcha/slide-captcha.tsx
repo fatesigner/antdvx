@@ -1,15 +1,21 @@
-import dayjs from 'dayjs';
-import to from 'await-to-js';
+import { computed, defineComponent, onBeforeUnmount, onMounted, PropType, reactive, ref, Teleport, watch } from 'vue';
 import { addClass, removeClass } from '@fatesigner/utils/document';
+import to from 'await-to-js';
+import dayjs from 'dayjs';
+import { animationFrameScheduler, fromEvent, merge, Subscription } from 'rxjs';
 import { map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
-import { PropType, Teleport, computed, defineComponent, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
-
 import { XButton } from '../button';
 import { IconCheckLine, IconCloseLine, IconRefreshLine } from '../iconfont';
+
+const defaultImages = [
+  require('./assets/1.jpg'),
+  require('./assets/2.jpg'),
+  require('./assets/3.jpg'),
+  require('./assets/4.jpg')
+];
 
 /**
  * 验证码弹出层
@@ -120,7 +126,14 @@ const SlideModal = defineComponent({
       ctx.lineTo(coordinate.x + chunk.size, coordinate.y);
 
       if (style.direction === 'right') {
-        ctx.arc(coordinate.x + chunk.size, coordinate.y + chunk.size / 2, chunk.radius, 1.5 * chunk.PI, 0.5 * chunk.PI, style.type === 'inner');
+        ctx.arc(
+          coordinate.x + chunk.size,
+          coordinate.y + chunk.size / 2,
+          chunk.radius,
+          1.5 * chunk.PI,
+          0.5 * chunk.PI,
+          style.type === 'inner'
+        );
       }
 
       ctx.lineTo(coordinate.x + chunk.size, coordinate.y + chunk.size);
@@ -186,55 +199,56 @@ const SlideModal = defineComponent({
         loading.value = true;
 
         // Load img from prop images of random
-        const [err, img] = await to(loadImage(props.images[randomNumberInRange(0, props.images.length - 1)]));
+        let [err, img] = await to(loadImage(props.images[randomNumberInRange(0, props.images.length - 1)]));
 
         loading.value = false;
 
         if (err) {
-          alert(err?.message || 'Failed to load the background image.');
-        } else {
-          const ctx = canvasRef.value.getContext('2d');
-          const ctxChunk = canvasChunkRef.value.getContext('2d');
-
-          canvasRef.value.width = canvasRef.value.offsetWidth;
-          canvasRef.value.height = canvasRef.value.offsetHeight;
-          canvasChunkRef.value.width = canvasRef.value.offsetWidth;
-          canvasChunkRef.value.height = canvasRef.value.offsetHeight;
-
-          drawBackground(ctx, img);
-
-          chunk.real = chunk.size + chunk.radius * 2 + 2;
-
-          ctx.beginPath();
-          ctx.fillStyle = '#fff';
-          ctx.shadowColor = 'transparent';
-          ctx.shadowBlur = 0;
-          ctx.closePath();
-
-          ctxChunk.save();
-          ctxChunk.globalCompositeOperation = 'destination-over';
-
-          const x = randomNumberInRange(chunk.real + 20, canvasRef.value.width - (chunk.real + 20));
-          const y = randomNumberInRange(55, canvasRef.value.height - 55);
-
-          const style = getChunkStyle();
-
-          coordinate.x = x;
-          coordinate.y = y;
-
-          await drawChunk(ctx, style, 'fill');
-          await drawChunk(ctxChunk, style, 'clip');
-
-          ctxChunk.drawImage(img, 0, 0, canvasRef.value.width, canvasRef.value.height);
-
-          const coordinateY = coordinate.y - chunk.radius * 2 + 1;
-          const imageData = ctxChunk.getImageData(coordinate.x, coordinateY, chunk.real, chunk.real);
-
-          canvasChunkRef.value.width = chunk.real;
-
-          ctxChunk.putImageData(imageData, coordinate.offset, coordinateY);
-          ctxChunk.restore();
+          // 若外部提供的 image 加载失败，则加载默认提供的 image
+          img = await loadImage(defaultImages[randomNumberInRange(0, defaultImages.length - 1)]);
         }
+
+        const ctx = canvasRef.value.getContext('2d');
+        const ctxChunk = canvasChunkRef.value.getContext('2d');
+
+        canvasRef.value.width = canvasRef.value.offsetWidth;
+        canvasRef.value.height = canvasRef.value.offsetHeight;
+        canvasChunkRef.value.width = canvasRef.value.offsetWidth;
+        canvasChunkRef.value.height = canvasRef.value.offsetHeight;
+
+        drawBackground(ctx, img);
+
+        chunk.real = chunk.size + chunk.radius * 2 + 2;
+
+        ctx.beginPath();
+        ctx.fillStyle = '#fff';
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.closePath();
+
+        ctxChunk.save();
+        ctxChunk.globalCompositeOperation = 'destination-over';
+
+        const x = randomNumberInRange(chunk.real + 20, canvasRef.value.width - (chunk.real + 20));
+        const y = randomNumberInRange(55, canvasRef.value.height - 55);
+
+        const style = getChunkStyle();
+
+        coordinate.x = x;
+        coordinate.y = y;
+
+        await drawChunk(ctx, style, 'fill');
+        await drawChunk(ctxChunk, style, 'clip');
+
+        ctxChunk.drawImage(img, 0, 0, canvasRef.value.width, canvasRef.value.height);
+
+        const coordinateY = coordinate.y - chunk.radius * 2 + 1;
+        const imageData = ctxChunk.getImageData(coordinate.x, coordinateY, chunk.real, chunk.real);
+
+        canvasChunkRef.value.width = chunk.real;
+
+        ctxChunk.putImageData(imageData, coordinate.offset, coordinateY);
+        ctxChunk.restore();
 
         loading.value = false;
       }
@@ -272,7 +286,8 @@ const SlideModal = defineComponent({
       return mousedown$
         .pipe(
           tap(() => {
-            dragArgs.initialPos.left = parseInt(getComputedStyle($drag, null).getPropertyValue('left').replace('px', '')) ?? 0;
+            dragArgs.initialPos.left =
+              parseInt(getComputedStyle($drag, null).getPropertyValue('left').replace('px', '')) ?? 0;
             dragArgs.timeStart = Date.now();
             addClass($drag, 'slide-modal-hidden');
           }),
@@ -292,7 +307,10 @@ const SlideModal = defineComponent({
                   tap(async () => {
                     dragSpendedTime.value = dayjs.duration(Date.now() - dragArgs.timeStart).asSeconds() + 's';
                     // validate
-                    const _x = Math.round((parseInt(getComputedStyle($drag, null).getPropertyValue('left').replace('px', '')) ?? 0) + coordinate.offset);
+                    const _x = Math.round(
+                      (parseInt(getComputedStyle($drag, null).getPropertyValue('left').replace('px', '')) ?? 0) +
+                        coordinate.offset
+                    );
                     removeClass(sliderRef.value, 'slide-modal-hidden');
                     if (coordinate.x - props.precision <= _x && _x <= coordinate.x + props.precision) {
                       // successful
@@ -366,7 +384,10 @@ const SlideModal = defineComponent({
   },
   render(ctx) {
     return (
-      <div class={['slide-modal-wrap', ctx.theme === 'dark' ? 'slide-modal-dark' : 'slide-modal-light']} style={ctx.wrapStyle}>
+      <div
+        class={['slide-modal-wrap', ctx.theme === 'dark' ? 'slide-modal-dark' : 'slide-modal-light']}
+        style={ctx.wrapStyle}
+      >
         <dl class='slide-modal-arrow'>
           <dt />
           <dd />
@@ -447,7 +468,7 @@ export const SlideCaptcha = defineComponent({
     },
     images: {
       type: Array as PropType<string[]>,
-      default: () => [require('./assets/1.jpg'), require('./assets/2.jpg'), require('./assets/3.jpg'), require('./assets/4.jpg')]
+      default: () => defaultImages
     },
     backgroundSize: {
       type: String as PropType<'contain' | 'cover'>,
@@ -507,8 +528,8 @@ export const SlideCaptcha = defineComponent({
         const top = rect.top;
         const left = rect.left;
         return {
-          top: top,
-          left: left
+          top,
+          left
         };
       }
       return {
@@ -587,8 +608,11 @@ export const SlideCaptcha = defineComponent({
         ref='wrap'
         {...ctx.$attrs}
         class={['slide-captcha-wrap', ctx.valid ? 'slide-captcha-valid' : undefined]}
-        title={ctx.valid ? ctx.$t(i18nMessages.antd.slideCaptcha.validText) : ctx.$t(i18nMessages.antd.slideCaptcha.tip)}
-        onClick={ctx.presentCaptchaModal}>
+        title={
+          ctx.valid ? ctx.$t(i18nMessages.antd.slideCaptcha.validText) : ctx.$t(i18nMessages.antd.slideCaptcha.tip)
+        }
+        onClick={ctx.presentCaptchaModal}
+      >
         {inner}
       </div>,
       <Teleport to='body'>
