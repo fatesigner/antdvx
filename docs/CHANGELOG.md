@@ -1,3 +1,10 @@
+# [1.0.0-alpha.125](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.124...v1.0.0-alpha.125) (2023-02-27)
+
+
+### Features
+
+* update SlideCaptcha error message ([fffa1f9](https://github.com/fatesigner/antdvx/commit/fffa1f91287e8f5cf6a9cd0c115451ea38b58f57))
+
 # [1.0.0-alpha.124](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.123...v1.0.0-alpha.124) (2023-02-18)
 
 
