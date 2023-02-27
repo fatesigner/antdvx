@@ -1,8 +1,8 @@
-import { timer } from 'rxjs';
 import { defineComponent } from 'vue';
 import { Checkbox, Input, Modal } from 'ant-design-vue';
 import {
-  IXButtonExportOptions,
+  createXModal,
+  createXTable,
   IconUserSharedLine,
   XButton,
   XButtonAdd,
@@ -12,13 +12,12 @@ import {
   XButtonRefresh,
   XButtonSearch,
   XModal,
-  XTable,
-  createXModal,
-  createXTable
+  XTable
 } from 'antdvx';
+import { timer } from 'rxjs';
 
-import { Api } from '@/mocks';
 import { PageWrapper } from '@/app/shared/page-wrapper';
+import { Api } from '@/mocks';
 
 export default defineComponent({
   setup() {
@@ -286,9 +285,6 @@ export default defineComponent({
                   }
                 },
                 {
-                  keywords: null
-                },
-                {
                   add() {
                     return (parent._expandedRef as any).handler.addData(0, {
                       userid: '',
@@ -315,18 +311,6 @@ export default defineComponent({
         }
       },
       {
-        keywords: undefined,
-        exportOptions: {
-          image: {
-            filename: 'dasdas',
-            target: document.body
-          },
-          excel() {
-            return tbRef.handler.downloadExcel();
-          }
-        } as IXButtonExportOptions
-      },
-      {
         // 显示授权框
         showAuthModal(row: any) {
           authPopupRef.options.title = `${row?.userid} - ${row?.username}`;
@@ -334,7 +318,7 @@ export default defineComponent({
           authPopupRef.handler.present();
         },
         add() {
-          return tbRef.handler.addData(0, {
+          return tbRef.addData(0, {
             userid: '',
             username: ''
           });
@@ -346,17 +330,17 @@ export default defineComponent({
         },
         del(record: any) {
           return async () => {
-            return Api.deleteUser(record.userid, tbRef.handler.getSelectedData()).then(() => {
+            return Api.deleteUser(record.userid, tbRef.getSelectedData()).then(() => {
               if (!tbRef.options.dataSource.data.length) {
-                tbRef.handler.refresh();
+                tbRef.refresh();
               }
             });
           };
         },
         async delAll() {
-          console.log(tbRef.handler.getAllData());
-          console.log(tbRef.handler.getCurrentData());
-          console.log(tbRef.handler.getSelectedData());
+          console.log(tbRef.getAllData());
+          console.log(tbRef.getCurrentData());
+          console.log(tbRef.getSelectedData());
           Modal.success({
             title: '已选中以下数据',
             content: JSON.stringify(tbRef.options.rowSelection.selectedRowKeys, null, 2)
@@ -374,7 +358,7 @@ export default defineComponent({
     return (
       <PageWrapper title='Table' overflow='scroll'>
         <div class='tw-h-full tw-p-2'>
-          <div class='tw-h-full tw-p-4 tw-bg-white'>
+          <div class='tw-h-full tw-bg-white tw-p-4'>
             <XTable
               {...ctx.tbRef}
               v-slots={{
@@ -388,12 +372,12 @@ export default defineComponent({
                         onChange={(e) => {
                           if (!e.target.value) {
                             // 点击 clear，重新加载数据
-                            ctx.tbRef.handler.reload();
+                            ctx.tbRef.reload();
                           }
                         }}
                         onKeydown={(e) => {
                           if (e.key === 'Enter') {
-                            ctx.tbRef.handler.reload();
+                            ctx.tbRef.reload();
                           }
                         }}
                         placeholder='搜索用户名...'
@@ -416,7 +400,12 @@ export default defineComponent({
                         搜索
                       </XButtonSearch>
                       <XButtonAdd onClick={methods.add} />
-                      <XButtonDelete disabled={!options.rowSelection.selectedRowKeys.length} color='danger' type='outline' handler={methods.delAll} />
+                      <XButtonDelete
+                        disabled={!options.rowSelection.selectedRowKeys.length}
+                        color='danger'
+                        type='outline'
+                        handler={methods.delAll}
+                      />
                       <Checkbox v-model={[options.dataSource.serverPaging, 'checked']}>服务端分页</Checkbox>
                       <Checkbox v-model={[options.autoScroll, 'checked']}>自适应高度</Checkbox>
                       <XButtonExport type='3d' options={params.exportOptions} />

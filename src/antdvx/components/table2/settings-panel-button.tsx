@@ -1,7 +1,8 @@
-import { defineComponent, ref, watch } from 'vue';
 import { notification } from 'ant-design-vue';
+import { defineComponent, ref, watch } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
+
 import { XButton } from '../button';
 import { XButtonProps } from '../button/types';
 import { IconListSettingsLine, IconLoader5Line } from '../iconfont';
@@ -78,11 +79,7 @@ export const XTableSettingsPanelButton = defineComponent({
         v-slots={{
           default: () => [
             ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconListSettingsLine />,
-            ctx.$slots?.default ? (
-              ctx.$slots?.default()
-            ) : ctx.onlyIcon ? undefined : (
-              <span>{ctx.$t(i18nMessages.antd.table.controlPanel.title)}</span>
-            )
+            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.table.controlPanel.title)}</span>
           ]
         }}
       />

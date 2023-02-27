@@ -2,15 +2,15 @@
  * router
  */
 
-import { getAccessPermission } from 'antdvx/helpers';
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { getAccessPermission } from 'antdvx/helpers';
 
-import routesConfig from '@/app/router/config';
-import { i18n, i18nMessages } from '@/app/i18n';
-import { authService } from '@/app/core/services';
-import { addExceptionRoute } from '@/app/layout/shared/exception';
 import { login$, logout$, roleChanged$ } from '@/app/core/events';
+import { authService } from '@/app/core/services';
 import { RoleNamesType, RouteRecordRawType } from '@/app/core/types';
+import { i18n, i18nMessages } from '@/app/i18n';
+import { addExceptionRoute } from '@/app/layout/shared/exception';
+import routesConfig from '@/app/router/config';
 
 const LayoutEmpty = () => import('@/app/layout/layout-empty');
 const LayoutSidebar = () => import('@/app/layout/layout-sidebar');
@@ -72,7 +72,9 @@ export async function createAppRouter() {
   // 监听用户注销事件
   logout$.on((event) => {
     // 重定向至授权界面
-    const error = event?.expired ? event?.message || i18n._.global.tc(i18nMessages.app.http.unauthenticated) : undefined;
+    const error = event?.expired
+      ? event?.message || i18n._.global.tc(i18nMessages.app.http.unauthenticated)
+      : undefined;
     if (router.currentRoute?.value.name === authService.config.homePage) {
       router.replace({ name: authService.config.authPage });
     } else {

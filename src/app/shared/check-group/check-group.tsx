@@ -1,7 +1,7 @@
+import { computed, defineComponent, nextTick, onMounted, PropType, ref } from 'vue';
 import { isFunction, isString } from '@fatesigner/utils/type-check';
-import { ANTDVX_COLORS, TransitionCollapse, XButtonRefresh } from 'antdvx';
-import { PropType, computed, defineComponent, nextTick, onMounted, ref } from 'vue';
 import { Alert, Checkbox, CheckboxGroup, RadioButton, RadioGroup, Spin } from 'ant-design-vue';
+import { ANTDVX_COLORS, TransitionCollapse, XButtonRefresh } from 'antdvx';
 
 import $styles from './chek-group.module.less';
 
@@ -36,7 +36,7 @@ export const CheckGroup = defineComponent({
   name: 'CheckGroup',
   props: {
     color: {
-      type: String as PropType<typeof ANTDVX_COLORS[number]>
+      type: String as PropType<(typeof ANTDVX_COLORS)[number]>
     },
     multiple: {
       type: Boolean,
@@ -171,7 +171,11 @@ export const CheckGroup = defineComponent({
       }
     }
     return (
-      <div class={[$styles['check-group'], ctx.color && ANTDVX_COLORS.includes(ctx.color) ? $styles['check-group-' + ctx.color] : undefined]}>
+      <div
+        class={[
+          $styles['check-group'],
+          ctx.color && ANTDVX_COLORS.includes(ctx.color) ? $styles['check-group-' + ctx.color] : undefined
+        ]}>
         {ctx.loading ? <Spin size='small' /> : undefined}
         <TransitionCollapse>
           {!ctx.loading && ctx.error ? (
@@ -196,18 +200,18 @@ export const CheckGroup = defineComponent({
               <CheckboxGroup
                 value={ctx.value}
                 onChange={(e) => {
-                  ctx.handleChange(e.target.value);
-                }}
-              >
-                <div class='tw-flex tw-flex-wrap tw-gap-x-6 tw-gap-y-2'>{ctx.$slots?.options?.({ options: ctx.options_ }) ?? renderOptions}</div>
+                  ctx.handleChange(e);
+                }}>
+                <div class='tw-flex tw-flex-wrap tw-gap-x-6 tw-gap-y-2'>
+                  {ctx.$slots?.options?.({ options: ctx.options_ }) ?? renderOptions}
+                </div>
               </CheckboxGroup>
             ) : (
               <RadioGroup
                 value={ctx.value}
                 onChange={(e) => {
                   ctx.handleChange(e.target.value);
-                }}
-              >
+                }}>
                 {ctx.$slots?.options?.({ options: ctx.options_ }) ?? renderOptions}
               </RadioGroup>
             )

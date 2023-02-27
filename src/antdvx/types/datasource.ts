@@ -56,7 +56,7 @@ export type IDatasourceTransportReadMethod<
   filters: TFilters,
   sorter: TSorter,
   model: TModel,
-  action: 'excel' | 'filter' | 'sorter' | 'pagination'
+  action: 'excel' | 'filter' | 'sorter' | 'pagination' | string
 ) => Promise<{
   data: TModel[];
   total?: number;

@@ -13,9 +13,9 @@ const TransitionsView = () => import('../views/components/transitions/transition
 const PipesView = () => import('../views/components/pipes/pipes');
 const EchartsView = () => import('../views/components/echarts/echarts');
 const TableView = () => import('../views/components/table/table');
-const PermissionsView = () => import('../views/system-settings/permissions/permissions');
+/* const PermissionsView = () => import('../views/system-settings/permissions/permissions');
 const RolesView = () => import('../views/system-settings/roles/roles');
-const UsersView = () => import('../views/system-settings/users/users');
+const UsersView = () => import('../views/system-settings/users/users'); */
 export default [
   {
     name: 'Portal',
@@ -163,36 +163,6 @@ export default [
     component: TableView,
     meta: {
       label: 'Table',
-      keepAlive: true
-    },
-    children: []
-  },
-  {
-    name: 'Permissions',
-    path: 'system-settings/permissions',
-    component: PermissionsView,
-    meta: {
-      label: 'Permissions',
-      keepAlive: true
-    },
-    children: []
-  },
-  {
-    name: 'Roles',
-    path: 'system-settings/roles',
-    component: RolesView,
-    meta: {
-      label: 'Roles',
-      keepAlive: true
-    },
-    children: []
-  },
-  {
-    name: 'Users',
-    path: 'system-settings/users',
-    component: UsersView,
-    meta: {
-      label: 'Users',
       keepAlive: true
     },
     children: []

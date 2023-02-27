@@ -56,7 +56,7 @@ export default defineComponent({
                   type='outline'
                   handler={() => {
                     return Promise.resolve().then(() => {
-                      tbRef.handler.refresh();
+                      tbRef.refresh();
                     });
                   }}
                 />
@@ -242,7 +242,7 @@ export default defineComponent({
                             .then(() => {
                               notification.success({ message: 'Approve success', duration: 4 });
                               nextTick(() => {
-                                ctx.tbRef.handler.reload();
+                                ctx.tbRef.reload();
                               });
                             })
                             .catch((err) => {
@@ -268,7 +268,7 @@ export default defineComponent({
                             .then(() => {
                               notification.success({ message: 'Reject success', duration: 4 });
                               nextTick(() => {
-                                ctx.tbRef.handler.reload();
+                                ctx.tbRef.reload();
                               });
                             })
                             .catch((err) => {
@@ -302,7 +302,7 @@ export default defineComponent({
                 title() {
                   return (
                     <div class='tw-flex tw-items-center tw-gap-2'>
-                      <XButtonRefresh color='primary' size='mini' type='link' handler={ctx.tbRef.handler.reload} />
+                      <XButtonRefresh color='primary' size='mini' type='link' handler={ctx.tbRef.reload} />
                     </div>
                   );
                 }

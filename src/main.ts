@@ -4,21 +4,20 @@
 
 import { createApp } from 'vue';
 import nprogress from 'nprogress';
-import 'nprogress/nprogress.css';
 
 // App
 import { App } from '@/app/app';
-import { Pipes } from '@/app/core/pipes';
-import { createAppRouter } from '@/app/router';
 import { Directives } from '@/app/core/directives';
-
+import { Pipes } from '@/app/core/pipes';
 // Plugins
 import { i18n } from '@/app/i18n';
-import { Dayjs } from '@/app/plugins/dayjs';
 import { Antdvx } from '@/app/plugins/antdvx';
+import { Dayjs } from '@/app/plugins/dayjs';
 import { Exceljs } from '@/app/plugins/exceljs';
 import { VeeValidate } from '@/app/plugins/vee-validate';
+import { createAppRouter } from '@/app/router';
 
+import 'nprogress/nprogress.css';
 // Styles
 import '@/app/styles/index.less';
 
