@@ -48,6 +48,7 @@ export default {
     slideCaptcha: {
       tip: '点击按钮进行验证',
       handingTip: '请移动滑块，完成验证',
+      imageFailed: '系统已更新,请按F5刷新浏览器。',
       loading: '正在加载验证码',
       slider: '拖动左边滑块完成上方拼图',
       validText: '已通过验证',

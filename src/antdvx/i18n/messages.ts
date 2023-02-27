@@ -48,6 +48,7 @@ export const i18nMessages = createLocaleMessages({
     slideCaptcha: {
       tip: '',
       handingTip: '',
+      imageFailed: '',
       loading: '',
       slider: '',
       validText: '',

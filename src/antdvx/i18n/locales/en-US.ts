@@ -48,6 +48,7 @@ export default {
     slideCaptcha: {
       tip: 'Click the button to verify',
       handingTip: 'Please move the slider to complete the verification',
+      imageFailed: 'The system has been updated, please press F5 to refresh the browser',
       loading: 'Loading the captcha',
       slider: 'Drag the left slider to complete the top puzzle',
       validText: 'Passed the verification',
