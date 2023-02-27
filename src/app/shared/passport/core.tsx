@@ -1,13 +1,13 @@
+import { defineComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { StructureTree } from '@fatesigner/utils/structure-tree';
+import { message, notification } from 'ant-design-vue';
 import to from 'await-to-js';
 import { of, timer } from 'rxjs';
-import { useI18n } from 'vue-i18n';
-import { defineComponent } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { message, notification } from 'ant-design-vue';
-import { StructureTree } from '@fatesigner/utils/structure-tree';
 
-import { i18nMessages } from '@/app/i18n';
 import { authService, sessionService } from '@/app/core/services';
+import { i18nMessages } from '@/app/i18n';
 
 import Passport from './passport';
 
@@ -166,13 +166,13 @@ export default defineComponent({
               id: x.ID,
               name: x.Code as any,
               label: x.Name,
-              menus: menus,
+              menus,
               permissions: x?.Permissions?.map((y) => y.Name) ?? []
             };
           }) ?? [];
 
         // 默认第一个角色
-        let role = roles?.[0] as any;
+        const role = roles?.[0] as any;
 
         sessionService.login({
           userid: res.data.Result.User?.ID,
@@ -181,9 +181,9 @@ export default defineComponent({
           avatar: require('@/assets/img/avatar_default.png'),
           // accessToken 有效时间 24 天
           tokenExpirationTime: new Date().getTime() + 24 * 60 * 60 * 1000,
-          // accessToken: '',
-          role: role,
-          roles: roles
+          accessToken: 'zzzz',
+          role,
+          roles
         });
 
         // 跳转至 redirect 或者 主页

@@ -4,7 +4,7 @@ import { isArray, mergeWith } from 'lodash-es';
 
 import { AntdvxTable, AntdvxTableProps } from './types';
 
-export const defaultXTableProps: AntdvxTableProps = {
+export const defaultXTableProps: Partial<AntdvxTableProps> = {
   autoload: true,
   loading: false,
   // scroll: { x: true },
