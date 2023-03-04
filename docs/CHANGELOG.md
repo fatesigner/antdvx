@@ -1,3 +1,10 @@
+# [1.0.0-alpha.126](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.125...v1.0.0-alpha.126) (2023-03-04)
+
+
+### Features
+
+* update permission in authService ([973695a](https://github.com/fatesigner/antdvx/commit/973695addebb2d302927ef4e4fe8140856599328))
+
 # [1.0.0-alpha.125](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.124...v1.0.0-alpha.125) (2023-02-27)
 
 
