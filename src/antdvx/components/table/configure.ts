@@ -7,11 +7,9 @@ import { AntdvxTable, AntdvxTableProps } from './types';
 export const defaultXTableProps: Partial<AntdvxTableProps> = {
   autoload: true,
   loading: false,
+  dataSource: [],
   // scroll: { x: true },
-  dataSource: {
-    data: [],
-    pageNo: 1,
-    pageSize: 10,
+  dataSchema: {
     schema: {
       data: 'data',
       total: 'total'

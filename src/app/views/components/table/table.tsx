@@ -1,9 +1,9 @@
 import { defineComponent, onMounted } from 'vue';
-import { Checkbox, Input, Modal } from 'ant-design-vue';
+import { Checkbox, Input, Modal, TableSummaryCell, TableSummaryRow, TypographyText } from 'ant-design-vue';
 import {
   createXModal,
-  createXTable,
   IconUserSharedLine,
+  useXTable,
   XButton,
   XButtonAdd,
   XButtonDelete,
@@ -43,21 +43,108 @@ export default defineComponent({
     );
 
     // 主表
-    const tbRef = createXTable(
+    const tbRef = useXTable(
       {
+        scroll: {
+          x: true
+        },
         columns: [
           {
-            title: 'dddd',
             dataIndex: 'userid',
             width: 140,
             fixed: 'left',
             sorter: true,
             sortDirections: ['descend'],
             excel: {
-              // format: 'scientific'
+              format: 'scientific'
+            }
+          },
+          {
+            title: '用户名 & 账号',
+            dataIndex: 'username',
+            width: 120,
+            onFilter(value: any, record: any) {
+              return record.username.toLowerCase().includes(value.toLowerCase());
+            },
+            excel: {
+              header: 'aaaaaaaaaaaaaaa',
+              style: {
+                font: {
+                  bold: true,
+                  color: {
+                    argb: 'red'
+                  },
+                  size: 32
+                }
+              }
+            }
+          },
+          {
+            title: '手机号',
+            dataIndex: 'phone',
+            width: 120,
+            sorter: true,
+            excel: {
+              format: 'currency',
+              customRender() {
+                return 13362585465;
+              }
+            }
+          },
+          {
+            title: '邮箱',
+            dataIndex: 'email',
+            width: 200,
+            sorter: true,
+            excel: {
+              format: 'scientific'
+            }
+          },
+          {
+            title: '地址',
+            dataIndex: 'address',
+            width: 320,
+            sorter: true,
+            excel: {
+              format: 'text',
+              style: {
+                font: {
+                  color: {
+                    argb: 'red'
+                  },
+                  size: 12
+                }
+              }
+            }
+          },
+          {
+            title: '创建时间',
+            dataIndex: 'createTime',
+            width: 140,
+            sorter(a: any, b: any) {
+              return new Date(a.createTime).getTime() - new Date(b.createTime).getTime();
+            },
+            defaultSortOrder: 'descend',
+            excel: {
+              format: 'datetime'
             }
           }
-        ]
+        ],
+        dataSchema: {
+          serverPaging: false,
+          transport: {
+            read() {
+              /* if (tbRef.options.dataSource.serverPaging) {
+                return Api.getUsers({ keywords, pageNo, pageSize, filters, sorter }).then((res) => {
+                  return res;
+                });
+              } */
+              return Api.getUsers({ keywords: '' }).then((res) => {
+                return res;
+              });
+            }
+          }
+        }
       },
       {
         // 显示授权框
@@ -98,8 +185,11 @@ export default defineComponent({
       }
     );
 
+    tbRef.updateColumns();
+
     onMounted(() => {
       // tbRef.refresh();
+      tbRef.updateColumns();
     });
 
     return () => {
@@ -111,28 +201,62 @@ export default defineComponent({
             title() {
               return <div>dd</div>;
             }
-          }}
-        >
+          }}>
           <div class='tw-h-full tw-p-2'>
             <div class='tw-h-full tw-bg-white tw-p-4'>
               <button
                 onClick={() => {
-                  tbRef.refresh();
-                }}
-              >
+                  tbRef.updateColumns();
+                }}>
                 Refresh
               </button>
               <tbRef.Table
-                class='tw-twe'
+                class='tw-p-4'
                 name='ffff'
                 v-slots={{
-                  title({ options, params, handler, methods }) {
+                  summary() {
+                    return [
+                      <TableSummaryRow>
+                        <TableSummaryCell>Total</TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText type='danger'>111</TypographyText>
+                        </TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText>111</TypographyText>
+                        </TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText>111</TypographyText>
+                        </TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText>111</TypographyText>
+                        </TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText>111</TypographyText>
+                        </TableSummaryCell>
+                      </TableSummaryRow>,
+                      <TableSummaryRow>
+                        <TableSummaryCell>Balance</TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText type='danger'>222</TypographyText>
+                        </TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText>222</TypographyText>
+                        </TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText>222</TypographyText>
+                        </TableSummaryCell>
+                        <TableSummaryCell>
+                          <TypographyText>222</TypographyText>
+                        </TableSummaryCell>
+                      </TableSummaryRow>
+                    ];
+                  },
+                  title(ddd) {
                     return (
                       <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
                         <Input
                           class='tw-w-40 sm:tw-w-52'
                           allowClear
-                          v-model={[params.keywords, 'value']}
                           onChange={(e) => {
                             if (!e.target.value) {
                               // 点击 clear，重新加载数据
@@ -153,27 +277,17 @@ export default defineComponent({
                                   size='mini'
                                   type='link'
                                   onClick={() => {
-                                    handler.reload();
+                                    tbRef.reload();
                                   }}
                                 />
                               );
                             }
                           }}
                         />
-                        <XButtonSearch color='secondary' type='3d' handler={handler.reload}>
+                        <XButtonSearch color='secondary' type='3d' handler={tbRef.reload}>
                           搜索
                         </XButtonSearch>
-                        <XButtonAdd onClick={methods.add} />
-                        <XButtonDelete
-                          disabled={!options.rowSelection.selectedRowKeys.length}
-                          color='danger'
-                          type='outline'
-                          handler={methods.delAll}
-                        />
-                        <Checkbox v-model={[options.dataSource.serverPaging, 'checked']}>服务端分页</Checkbox>
-                        <Checkbox v-model={[options.autoScroll, 'checked']}>自适应高度</Checkbox>
-                        <XButtonExport type='3d' options={params.exportOptions} />
-                        <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={handler.reload} />
+                        <XButtonAdd />
                       </div>
                     );
                   }

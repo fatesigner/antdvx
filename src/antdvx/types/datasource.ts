@@ -43,7 +43,9 @@ export type IDataSourceRequestOptions<TParams extends UnknownType = UnknownType>
   dataType?: 'json' | 'jsonp';
 };
 
-export type IHttpAdapter<TOptions extends IDataSourceRequestOptions = IDataSourceRequestOptions> = (options: TOptions) => Promise<unknown>;
+export type IHttpAdapter<TOptions extends IDataSourceRequestOptions = IDataSourceRequestOptions> = (
+  options: TOptions
+) => Promise<unknown>;
 
 export type IDatasourceTransportReadMethod<
   TModel extends UnknownType<any> = UnknownType<any>,
@@ -51,40 +53,37 @@ export type IDatasourceTransportReadMethod<
   TFilters extends UnknownType<unknown[]> = never,
   TSorter extends object = never
 > = (
-  pagination: IPaginationParams,
-  params: TParams,
-  filters: TFilters,
-  sorter: TSorter,
-  model: TModel,
-  action: 'excel' | 'filter' | 'sorter' | 'pagination' | string
+  options: IPaginationParams & {
+    params?: TParams;
+    filters?: TFilters;
+    sorter?: TSorter;
+    model?: TModel;
+    action?: 'excel' | 'filter' | 'sorter' | 'pagination' | string;
+  }
 ) => Promise<{
   data: TModel[];
   total?: number;
 }>;
 
-export type IDatasourceTransportPostMethod<TModel extends UnknownType<any> = UnknownType<any>, TParams extends UnknownType = never> = (
-  record: TModel,
-  query: IPaginationParams,
-  params: TParams
-) => Promise<TModel>;
+export type IDatasourceTransportPostMethod<
+  TModel extends UnknownType<any> = UnknownType<any>,
+  TParams extends UnknownType = never
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
-export type IDatasourceTransportPutMethod<TModel extends UnknownType<any> = UnknownType<any>, TParams extends UnknownType = never> = (
-  record: TModel,
-  query: IPaginationParams,
-  params: TParams
-) => Promise<TModel>;
+export type IDatasourceTransportPutMethod<
+  TModel extends UnknownType<any> = UnknownType<any>,
+  TParams extends UnknownType = never
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
-export type IDatasourceTransportDeleteMethod<TModel extends UnknownType<any> = UnknownType<any>, TParams extends UnknownType = never> = (
-  record: TModel,
-  query: IPaginationParams,
-  params: TParams
-) => Promise<TModel>;
+export type IDatasourceTransportDeleteMethod<
+  TModel extends UnknownType<any> = UnknownType<any>,
+  TParams extends UnknownType = never
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
-export type IDatasourceTransportDownloadExcelMethod<TModel extends UnknownType<any> = UnknownType<any>, TParams extends UnknownType = never> = (
-  record: TModel,
-  query: IPaginationParams,
-  params: TParams
-) => Promise<TModel>;
+export type IDatasourceTransportDownloadExcelMethod<
+  TModel extends UnknownType<any> = UnknownType<any>,
+  TParams extends UnknownType = never
+> = (record: TModel, query: IPaginationParams, params: TParams) => Promise<TModel>;
 
 /**
  * 用于加载和保存数据项的配置，根据数据源检索数据项的方式，数据是远程加载的还是本地加载
@@ -117,7 +116,10 @@ export interface IDataSourceTransport<
 
 export type IDataSourceTransportAddingMap<TModel extends UnknownType<any> = UnknownType<any>> = () => TModel;
 
-export type IDataSourceTransportEditingMap<TModel extends UnknownType<any> = UnknownType<any>> = (row: TModel, index: number) => UnknownType;
+export type IDataSourceTransportEditingMap<TModel extends UnknownType<any> = UnknownType<any>> = (
+  row: TModel,
+  index: number
+) => UnknownType;
 
 /**
  * 数据源的分组配置，若设置该值，则数据项将在填充数据源时进行分组；默认情况下，不进行分组
