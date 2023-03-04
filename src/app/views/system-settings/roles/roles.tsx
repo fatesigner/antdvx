@@ -23,7 +23,7 @@ import { clone } from 'lodash-es';
 
 import { sysRoleApi } from '@/api';
 import { COMMON_STATUS } from '@/app/core/constants';
-import { authService, sessionService } from '@/app/core/services';
+import { authService } from '@/app/core/services';
 import { i18nMessages } from '@/app/i18n';
 import { PageWrapper } from '@/app/shared/page-wrapper';
 
@@ -132,7 +132,7 @@ export default defineComponent({
           width: 150,
           excel: {}
         },
-        authService.permissible('ExchangeRatesFullAccess')
+        authService.permissible('RolesFullAccess')
           ? {
               title: 'Operation',
               width: 90,

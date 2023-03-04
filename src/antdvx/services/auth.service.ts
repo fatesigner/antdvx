@@ -1,11 +1,20 @@
-import 'reflect-metadata';
-import { isArray, mergeWith } from 'lodash-es';
-import { inject, injectable } from 'inversify';
-import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 import { StructureTree } from '@fatesigner/utils/structure-tree';
+import { isNullOrUndefined } from '@fatesigner/utils/type-check';
+import { inject, injectable } from 'inversify';
+import { isArray, mergeWith } from 'lodash-es';
 
 import { ANTDVX_SYMBOLS } from '../symbols';
-import { AuthServiceConfig, IAuthService, IMenu, IRouteLocationNormalized, ISessionService, IUser, NamesTypeOfRole, RoleTypeOfUser } from '../types';
+import {
+  AuthServiceConfig,
+  IAuthService,
+  IMenu,
+  IRouteLocationNormalized,
+  ISessionService,
+  IUser,
+  NamesTypeOfRole,
+  PermissionTypeOfRole,
+  RoleTypeOfUser
+} from '../types';
 
 const defaultConfig: AuthServiceConfig = {
   homePage: null,
@@ -34,7 +43,9 @@ const strutreeForMenu = new StructureTree<IMenu>({
 @injectable()
 export class AuthService<
   TUser extends IUser = IUser,
-  TRoute extends IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>> = IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>>,
+  TRoute extends IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>> = IRouteLocationNormalized<
+    NamesTypeOfRole<RoleTypeOfUser<TUser>>
+  >,
   TMenu extends IMenu = IMenu
 > implements IAuthService<TUser, TRoute, TMenu>
 {
@@ -58,11 +69,16 @@ export class AuthService<
     }
 
     if (isNullOrUndefined(roles)) {
-      roles = this._sessionService?.user?.role?.name ? ([this._sessionService.user.role.name] as NamesTypeOfRole<RoleTypeOfUser<TUser>>[]) : [];
+      roles = this._sessionService?.user?.role?.name
+        ? ([this._sessionService.user.role.name] as NamesTypeOfRole<RoleTypeOfUser<TUser>>[])
+        : [];
     }
 
-    // 绕过超级管理员角色
-    if (roles.length && this.config.superRole?.length && roles.some((role) => this.config.superRole.includes(role))) {
+    // 绕过超级管理员角色 enable 为 false 的情况
+    if (
+      this.config.enabled === false ||
+      (roles.length && this.config.superRole?.length && roles.some((role) => this.config.superRole.includes(role)))
+    ) {
       return true;
     }
 
@@ -98,21 +114,32 @@ export class AuthService<
       if (to?.meta?.allowAnonymous) {
         return true;
       }
-      const c = strutreeForMenu.find(this._sessionService.user?.role?.menus ?? [], (x) => x.name === to.name || x.url === to.path);
+      const c = strutreeForMenu.find(
+        this._sessionService.user?.role?.menus ?? [],
+        (x) => x.name === to.name || x.url === to.path
+      );
       return !!c;
     }
   }
 
-  permissible(permission: string) {
-    // 绕过超级管理员角色
-    if (this.config?.superRole?.includes?.(this._sessionService.user?.role?.name as NamesTypeOfRole<RoleTypeOfUser<TUser>>)) {
+  permissible(permission: PermissionTypeOfRole<RoleTypeOfUser<TUser>>) {
+    // 绕过超级管理员角色或者 enable 为 false 的情况
+    if (
+      this.config.enabled === false ||
+      this.config?.superRole?.includes?.(
+        this._sessionService.user?.role?.name as NamesTypeOfRole<RoleTypeOfUser<TUser>>
+      )
+    ) {
       return true;
     }
 
     return this._sessionService.user?.role?.permissions?.includes?.(permission);
   }
 
-  authRoles(roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[], authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]) {
+  authRoles(
+    roles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[],
+    authorizedRoles: NamesTypeOfRole<RoleTypeOfUser<TUser>>[]
+  ) {
     const authorizedRolesNew = [];
     const length = authorizedRoles?.length ?? 0;
     let temp;
@@ -146,7 +173,6 @@ export class AuthService<
       }) as any[];
     } else {
       // 服务端授权模式，分析 sessionService.user.role.menu
-
       const names = [];
       strutreeForMenu.forEach(this._sessionService.user.role.menus as TMenu[], (node) => {
         if (node.name) {

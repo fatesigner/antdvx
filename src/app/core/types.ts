@@ -7,12 +7,15 @@ import { IAuthService, IRole, IRouteRecordRaw, ISessionService, IUser } from 'an
 import { ROLES } from '@/app/core/constants';
 
 // 角色名称 联合类型
-export type RoleNamesType = typeof ROLES.keys[number];
+export type RoleNamesType = (typeof ROLES.keys)[number];
+
+// 权限 联合类型
+export type PermissionType = 'RolesFullAccess' | 'UserInformationFullAccess' | 'RolesFullAccess';
 
 export type RouteRecordRawType = IRouteRecordRaw<RoleNamesType>;
 
 // 角色
-export type RoleType = IRole<RoleNamesType>;
+export type RoleType = IRole<RoleNamesType, PermissionType>;
 
 // 用户
 export interface UserType extends IUser<RoleType> {

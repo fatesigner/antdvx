@@ -1,7 +1,7 @@
 /**
  * 操作权限
  */
-export interface IPermission {
+export interface IPermission<TPermissionName extends string = string> {
   /**
    * 权限 ID（主键，需保证唯一性）
    */
@@ -9,7 +9,7 @@ export interface IPermission {
   /**
    * 权限名称（需保证唯一性）
    */
-  name: string;
+  name: TPermissionName;
   /**
    * 权限标签，用于界面显示
    */
@@ -19,3 +19,8 @@ export interface IPermission {
    */
   description?: string;
 }
+
+/**
+ * 获取权限类型中的权限类型
+ */
+export type NamesTypeOfPermission<TPermission> = TPermission extends IPermission<infer A> ? A : string;

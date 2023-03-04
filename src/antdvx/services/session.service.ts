@@ -1,11 +1,19 @@
-import 'reflect-metadata';
-import { timer } from 'rxjs';
-import { isArray, mergeWith } from 'lodash-es';
-import { inject, injectable } from 'inversify';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
+import { inject, injectable } from 'inversify';
+import { isArray, mergeWith } from 'lodash-es';
+import { timer } from 'rxjs';
+
+import 'reflect-metadata';
 
 import { ANTDVX_SYMBOLS } from '../symbols';
-import { ISessionService, IStorageService, IUser, NamesTypeOfRole, RoleTypeOfUser, SessionLogoutResult } from '../types';
+import {
+  ISessionService,
+  IStorageService,
+  IUser,
+  NamesTypeOfRole,
+  RoleTypeOfUser,
+  SessionLogoutResult
+} from '../types';
 
 /**
  * session config

@@ -3,7 +3,7 @@ import { IMenu } from './menu';
 /**
  * 用户角色
  */
-export interface IRole<TRoleName extends string = string> {
+export interface IRole<TRoleName extends string = string, TPermission extends string = string> {
   /**
    * 角色 ID
    */
@@ -27,10 +27,15 @@ export interface IRole<TRoleName extends string = string> {
   /**
    * 该角色拥有的权限列表
    */
-  permissions?: string[];
+  permissions?: TPermission[];
 }
 
 /**
  * 获取角色类型中的名称类型
  */
 export type NamesTypeOfRole<TRole> = TRole extends IRole<infer A> ? A : string;
+
+/**
+ * 获取角色类型中的权限集合类型
+ */
+export type PermissionTypeOfRole<TRole> = TRole extends IRole<infer A, infer B> ? B : string;

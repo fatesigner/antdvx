@@ -1,12 +1,16 @@
 import { IMenu } from './menu';
-import { NamesTypeOfRole } from './role';
-import { IUser, RoleTypeOfUser } from './user';
+import { NamesTypeOfRole, PermissionTypeOfRole } from './role';
 import { IRouteLocationNormalized } from './route';
+import { IUser, RoleTypeOfUser } from './user';
 
 /**
  * 授权、认证服务配置
  */
 export interface AuthServiceConfig<TUser extends IUser = IUser> {
+  /**
+   * 是否启用权限认证，默认为 true，当设置 false 时所有验证结果都视为通过
+   */
+  enabled?: boolean;
   /**
    * 主页地址 Route Name
    */
@@ -34,7 +38,9 @@ export interface AuthServiceConfig<TUser extends IUser = IUser> {
  */
 export interface IAuthService<
   TUser extends IUser = IUser,
-  TRoute extends IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>> = IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>>,
+  TRoute extends IRouteLocationNormalized<NamesTypeOfRole<RoleTypeOfUser<TUser>>> = IRouteLocationNormalized<
+    NamesTypeOfRole<RoleTypeOfUser<TUser>>
+  >,
   TMenu extends IMenu = IMenu
 > {
   config: AuthServiceConfig<TUser>;
@@ -55,7 +61,7 @@ export interface IAuthService<
    * 判断当前用户是否拥有指定的权限
    * @param permission 权限
    */
-  permissible(permission: string);
+  permissible(permission: PermissionTypeOfRole<RoleTypeOfUser<TUser>>);
 
   /**
    * 对于指定的角色组，判断给定的角色组是否已授权（即两个集合是否交集）
