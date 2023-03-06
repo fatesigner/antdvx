@@ -1,3 +1,10 @@
+# [1.0.0-alpha.127](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.126...v1.0.0-alpha.127) (2023-03-06)
+
+
+### Features
+
+* update title slot render mode for XTable component ([1dbd583](https://github.com/fatesigner/antdvx/commit/1dbd5834af9c047dd5e38aeb7e02ea794c8974e5))
+
 # [1.0.0-alpha.126](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.125...v1.0.0-alpha.126) (2023-03-04)
 
 
