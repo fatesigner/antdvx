@@ -1243,7 +1243,13 @@ export const XTable = defineComponent({
               ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2'
             ]}
           >
-            {paginationNode}
+            <div class='tw-flex-1'>
+              <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
+                {ctx.options?.titlePrefix?.(ctx)}
+                {ctx.options?.titleSuffix?.(ctx)}
+              </div>
+            </div>
+            <div class='tw-flex-initial'>{paginationNode}</div>
           </div>
         );
       };
