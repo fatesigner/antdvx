@@ -2,24 +2,24 @@
  * Antdvx
  */
 
-import { merge } from 'lodash-es';
 import { Empty, message, notification } from 'ant-design-vue';
 import {
-  XButtonExport,
-  XButtonFullscreen,
-  XButtonFullscreenExit,
-  XButtonRefresh,
-  XTableSettingsPanelButton,
   configureEcharts,
   configureVEcharts,
   configureXTable,
   setRequestAdapter,
-  setStorageService
+  setStorageService,
+  XButtonExport,
+  XButtonFullscreen,
+  XButtonFullscreenExit,
+  XButtonRefresh,
+  XTableSettingsPanelButton
 } from 'antdvx';
 import { setAntdvxPipesConfig } from 'antdvx/pipes';
+import { merge } from 'lodash-es';
 
-import { i18n } from '@/app/i18n';
 import { httpService, localStorageService } from '@/app/core/services';
+import { i18n } from '@/app/i18n';
 
 export const Antdvx = {
   install() {
@@ -72,13 +72,13 @@ export const Antdvx = {
     configureVEcharts({
       header(chartRef) {
         return (
-          <div class='tw-flex tw-items-center tw-justify-end tw-mb-2'>
+          <div class='tw-mb-2 tw-flex tw-items-center tw-justify-end'>
             <div class='tw-flex-initial'>
               <img width='40' height='20' src={require('@/assets/img/logo.png')} alt='' title='' />
             </div>
             {chartRef.title ? (
               <div class='tw-flex-1 tw-pl-2 tw-pr-2'>
-                <div class='tw-text-base tw-text-center'>{chartRef.title}</div>
+                <div class='tw-text-center tw-text-base'>{chartRef.title}</div>
               </div>
             ) : (
               ''
@@ -88,10 +88,21 @@ export const Antdvx = {
             ) : (
               <div class='tw-flex-initial tw-space-x-2'>
                 {chartRef.refreshable ? (
-                  <XButtonRefresh disabled={chartRef.loading} color='primary' size='small' type='link' handler={chartRef.refresh} />
+                  <XButtonRefresh
+                    disabled={chartRef.loading}
+                    color='primary'
+                    size='small'
+                    type='link'
+                    handler={chartRef.refresh}
+                  />
                 ) : undefined}
                 {chartRef.exportable ? (
-                  <XButtonExport disabled={chartRef.loading} size='small' placement='bottomRight' options={chartRef.exportOptions} />
+                  <XButtonExport
+                    disabled={chartRef.loading}
+                    size='small'
+                    placement='bottomRight'
+                    options={chartRef.exportOptions}
+                  />
                 ) : undefined}
               </div>
             )}
@@ -112,7 +123,7 @@ export const Antdvx = {
       },
       locale: {
         emptyText: (
-          <div class='tw-space-y-2 tw-mt-4 tw-mb-4'>
+          <div class='tw-mt-4 tw-mb-4 tw-space-y-2'>
             <Empty
               image={require('./assets/nodata.png')}
               image-style={{
@@ -145,11 +156,18 @@ export const Antdvx = {
             type='link'
             handler={() => {
               return tbRef.handler.presentSettingsPanel();
-            }}>
+            }}
+          >
             Setting
           </XTableSettingsPanelButton>,
           tbRef.options.isFullscreen ? (
-            <XButtonFullscreenExit only-icon color='primary' size='mini' type='link' onClick={tbRef.handler.fullscreenExit}>
+            <XButtonFullscreenExit
+              only-icon
+              color='primary'
+              size='mini'
+              type='link'
+              onClick={tbRef.handler.fullscreenExit}
+            >
               Exit Fullscreen
             </XButtonFullscreenExit>
           ) : (

@@ -1,9 +1,10 @@
-import { timer } from 'rxjs';
 import { defineComponent } from 'vue';
 import { Checkbox, Input, Modal } from 'ant-design-vue';
 import {
-  IXButtonExportOptions,
+  createXModal,
+  createXTable,
   IconUserSharedLine,
+  IXButtonExportOptions,
   XButton,
   XButtonAdd,
   XButtonDelete,
@@ -12,13 +13,12 @@ import {
   XButtonRefresh,
   XButtonSearch,
   XModal,
-  XTable,
-  createXModal,
-  createXTable
+  XTable
 } from 'antdvx';
+import { timer } from 'rxjs';
 
-import { Api } from '@/mocks';
 import { PageWrapper } from '@/app/shared/page-wrapper';
+import { Api } from '@/mocks';
 
 export default defineComponent({
   setup() {
@@ -49,8 +49,6 @@ export default defineComponent({
         scroll: {
           x: true
         },
-        ignoreTitlePrefix: true,
-        ignoreTitleSuffix: true,
         size: 'small',
         rowKey: 'userid',
         rowSelection: {
@@ -153,7 +151,8 @@ export default defineComponent({
                     size='small'
                     onClick={() => {
                       tbRef.methods.showAuthModal(record);
-                    }}>
+                    }}
+                  >
                     <IconUserSharedLine />
                     授权
                   </XButton>
@@ -374,13 +373,23 @@ export default defineComponent({
     return (
       <PageWrapper title='Table' overflow='scroll'>
         <div class='tw-h-full tw-p-2'>
-          <div class='tw-h-full tw-p-4 tw-bg-white'>
+          <div class='tw-h-full tw-bg-white tw-p-4'>
             <XTable
               {...ctx.tbRef}
               v-slots={{
-                title({ options, params, handler, methods }) {
+                title({
+                  options,
+                  params,
+                  handler,
+                  methods,
+                  refreshButtonNode,
+                  fullscreenButtonNode,
+                  settingsPanelButtonNode,
+                  prefixNode,
+                  suffixNode
+                }) {
                   return (
-                    <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
+                    <div class='tw-mb-2 tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
                       <Input
                         class='tw-w-40 sm:tw-w-52'
                         allowClear
@@ -416,11 +425,20 @@ export default defineComponent({
                         搜索
                       </XButtonSearch>
                       <XButtonAdd onClick={methods.add} />
-                      <XButtonDelete disabled={!options.rowSelection.selectedRowKeys.length} color='danger' type='outline' handler={methods.delAll} />
+                      <XButtonDelete
+                        disabled={!options.rowSelection.selectedRowKeys.length}
+                        color='danger'
+                        type='outline'
+                        handler={methods.delAll}
+                      />
                       <Checkbox v-model={[options.dataSource.serverPaging, 'checked']}>服务端分页</Checkbox>
                       <Checkbox v-model={[options.autoScroll, 'checked']}>自适应高度</Checkbox>
                       <XButtonExport type='3d' options={params.exportOptions} />
-                      <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={handler.reload} />
+                      {refreshButtonNode}
+                      {settingsPanelButtonNode}
+                      {fullscreenButtonNode}
+                      {prefixNode}
+                      {suffixNode}
                     </div>
                   );
                 }

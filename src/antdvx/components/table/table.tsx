@@ -2,28 +2,45 @@
  * table
  */
 
-import to from 'await-to-js';
+import {
+  defineComponent,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  PropType,
+  reactive,
+  ref,
+  watch
+} from 'vue';
 import { useI18n } from 'vue-i18n';
-import { mergeWith } from 'lodash-es';
-import { UnknownType } from '@fatesigner/utils/types';
-import { ExceljsHelper, IWorksheetColumn } from '@fatesigner/utils/exceljs';
-import { TableProps } from 'ant-design-vue/es/table/interface';
 import { bindLazyFunc, debounce, exchangeItem } from '@fatesigner/utils';
-import { Checkbox, Input, InputNumber, Pagination, Select, Table, notification } from 'ant-design-vue';
+import { ExceljsHelper, IWorksheetColumn } from '@fatesigner/utils/exceljs';
 import { isArray, isBoolean, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
-import { PropType, defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { UnknownType } from '@fatesigner/utils/types';
+import { Checkbox, Input, InputNumber, notification, Pagination, Select, Table } from 'ant-design-vue';
+import { TableProps } from 'ant-design-vue/es/table/interface';
+import to from 'await-to-js';
+import { mergeWith } from 'lodash-es';
 
-import { i18nMessages } from '../../i18n/messages';
-import { IDataSourceRequestOptions } from '../../types';
-import { HttpContentType } from '../../services/http.service';
 import { AntdHttpAdapter, AntdStorageService } from '../../config';
-
-import { XModal, createXModal } from '../modal';
-import { XButton, XButtonFullscreenExit, XButtonSearch } from '../button';
-import { IconAddBoxLine, IconArrowDownLine, IconArrowUpLine, IconCheckboxIndeterminateLine, IconFilter2Fill, IconFilter3Line } from '../iconfont';
+import { i18nMessages } from '../../i18n/messages';
+import { HttpContentType } from '../../services/http.service';
+import { IDataSourceRequestOptions } from '../../types';
+import { XButton, XButtonFullscreen, XButtonFullscreenExit, XButtonRefresh, XButtonSearch } from '../button';
+import { IconArrowDownLine, IconArrowUpLine, IconFilter2Fill, IconFilter3Line } from '../iconfont';
+import { createXModal, XModal } from '../modal';
 
 import { defaultXTableProps } from './configure';
-import { IXTableChangeType, IXTableColumnProps, IXTableFilters, IXTableHandlers, IXTablePropsType, IXTableRefType, IXTableSorter } from './types';
+import { XTableSettingsPanelButton } from './settings-panel-button';
+import {
+  IXTableChangeType,
+  IXTableFilters,
+  IXTableHandlers,
+  IXTablePropsType,
+  IXTableRefType,
+  IXTableSorter
+} from './types';
 
 /**
  *  创建 XTable 实例
@@ -36,7 +53,11 @@ export function createXTable<
   TParams extends UnknownType = never,
   TMethods extends UnknownType<(...args: unknown[]) => unknown> = UnknownType<(...args: unknown[]) => unknown>,
   TMeta extends UnknownType = never
->(props: IXTablePropsType<TModel, TParams, TMeta>, params?: TParams, methods?: TMethods): IXTableRefType<TModel, TParams, TMethods, TMeta> {
+>(
+  props: IXTablePropsType<TModel, TParams, TMeta>,
+  params?: TParams,
+  methods?: TMethods
+): IXTableRefType<TModel, TParams, TMethods, TMeta> {
   const handler: IXTableHandlers<TModel> = {
     getAntTableRef: null,
     getElement: null,
@@ -57,12 +78,20 @@ export function createXTable<
   };
 
   // 代理异步函数
-  const bindProperties: Array<keyof IXTableHandlers<TModel>> = ['refresh', 'reload', 'validate', 'validateRow', 'downloadExcel'];
+  const bindProperties: Array<keyof IXTableHandlers<TModel>> = [
+    'refresh',
+    'reload',
+    'validate',
+    'validateRow',
+    'downloadExcel'
+  ];
 
   bindLazyFunc(handler, bindProperties);
 
   return {
-    options: reactive(mergeWith({}, defaultXTableProps, props, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined)) as any),
+    options: reactive(
+      mergeWith({}, defaultXTableProps, props, (objVal, srcVal) => (isArray(objVal) ? srcVal : undefined)) as any
+    ),
     handler,
     params: reactive(Object.assign({}, params) as any),
     methods
@@ -172,7 +201,9 @@ export const XTable = defineComponent({
       }
       // const rf = this.$el.offsetHeight;
       // this.$refs.tableRef.saveRowRef();
-      const main = Array.from(antTableRef.value.$el.querySelectorAll('.ant-table-body .ant-table-row')).map((el: HTMLElement) => el.offsetHeight);
+      const main = Array.from(antTableRef.value.$el.querySelectorAll('.ant-table-body .ant-table-row')).map(
+        (el: HTMLElement) => el.offsetHeight
+      );
 
       const fixedL = Array.from(antTableRef.value.$el.querySelectorAll('.ant-table-fixed-left .ant-table-row'));
       const fixedR = Array.from(antTableRef.value.$el.querySelectorAll('.ant-table-fixed-right .ant-table-row'));
@@ -256,11 +287,19 @@ export const XTable = defineComponent({
           } else {
             if (sorter.order === 'asc' || (sorter.order as any) === 'ascend') {
               data = data.sort((a, b) => {
-                return a[sorter.columnKey] > b[sorter.columnKey] ? 1 : a[sorter.columnKey] < b[sorter.columnKey] ? -1 : 0;
+                return a[sorter.columnKey] > b[sorter.columnKey]
+                  ? 1
+                  : a[sorter.columnKey] < b[sorter.columnKey]
+                  ? -1
+                  : 0;
               });
             } else if (sorter.order === 'desc' || (sorter.order as any) === 'descend') {
               data = data.sort((a, b) => {
-                return b[sorter.columnKey] > a[sorter.columnKey] ? 1 : b[sorter.columnKey] < a[sorter.columnKey] ? -1 : 0;
+                return b[sorter.columnKey] > a[sorter.columnKey]
+                  ? 1
+                  : b[sorter.columnKey] < a[sorter.columnKey]
+                  ? -1
+                  : 0;
               });
             }
           }
@@ -511,7 +550,10 @@ export const XTable = defineComponent({
       processData();
     };
 
-    const addData: IXTableHandlers<any>['addData'] = (start: number, data: Record<string, any> | Record<string, any>[]) => {
+    const addData: IXTableHandlers<any>['addData'] = (
+      start: number,
+      data: Record<string, any> | Record<string, any>[]
+    ) => {
       if (isArray(data)) {
         overallData.splice(start, 0, ...(data as any[]));
       } else {
@@ -533,7 +575,9 @@ export const XTable = defineComponent({
     };
 
     const getSelectedData: IXTableHandlers<any>['getSelectedData'] = () => {
-      return props.options.dataSource.data.filter((record, index) => props.options.rowSelection.selectedRowKeys.includes(getRowKey(record, index)));
+      return props.options.dataSource.data.filter((record, index) =>
+        props.options.rowSelection.selectedRowKeys.includes(getRowKey(record, index))
+      );
     };
 
     const getAllData: IXTableHandlers<any>['getAllData'] = () => {
@@ -580,7 +624,10 @@ export const XTable = defineComponent({
             if (!x.filterIcon) {
               x_.filterIcon = ({ filtered }) => {
                 return (
-                  <div class='tw-flex tw-items-center tw-justify-center tw-text-gray-500' title={t(i18nMessages.antd.action.filter)}>
+                  <div
+                    class='tw-flex tw-items-center tw-justify-center tw-text-gray-500'
+                    title={t(i18nMessages.antd.action.filter)}
+                  >
                     {filtered ? <IconFilter2Fill color='primary' /> : <IconFilter3Line scale={1.3} />}
                   </div>
                 );
@@ -615,7 +662,8 @@ export const XTable = defineComponent({
                         size='small'
                         onClick={() => {
                           clearFilters();
-                        }}>
+                        }}
+                      >
                         {t(i18nMessages.antd.action.reset)}
                       </XButton>
                     </div>
@@ -668,7 +716,9 @@ export const XTable = defineComponent({
     };
 
     // 打开当前表格的设置面板
-    const presentSettingsPanel: IXTableHandlers<any>['presentSettingsPanel'] = (onDismissed?: (changed: boolean) => void) => {
+    const presentSettingsPanel: IXTableHandlers<any>['presentSettingsPanel'] = (
+      onDismissed?: (changed: boolean) => void
+    ) => {
       settingsPanelOptions.dataSource = [];
       props.options.columns
         .filter((x) => !!x)
@@ -1101,63 +1151,99 @@ export const XTable = defineComponent({
       reload,
       fullscreen,
       fullscreenExit,
+      presentSettingsPanel,
       handleRecordChange,
       downloadExcel
     };
   },
   render(ctx) {
     const solts: any = {};
+    let paginationNode;
 
     if (
-      ctx.$slots?.title ||
-      (ctx.options.dataSource.total &&
-        ctx.options.pagination &&
-        ctx.options.dataSource.pageSize &&
-        (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top'))
+      ctx.options.dataSource.total &&
+      ctx.options.pagination &&
+      ctx.options.dataSource.pageSize &&
+      (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top')
     ) {
+      paginationNode = (
+        <Pagination
+          hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
+          pageSizeOptions={ctx.options.pagination.pageSizeOptions}
+          showLessItems={ctx.options.pagination.showLessItems}
+          showQuickJumper={ctx.options.pagination.showQuickJumper}
+          showSizeChanger={ctx.options.pagination.showSizeChanger}
+          showTotal={(total, range) =>
+            `${range[0]}-${range[1]} ` +
+            ctx.$t(i18nMessages.antd.pagination.of) +
+            ` ${total} ` +
+            ctx.$t(i18nMessages.antd.pagination.items)
+          }
+          simple={ctx.options.pagination.simple}
+          size={ctx.options.pagination.size}
+          total={ctx.options.dataSource.total}
+          v-models={[
+            [ctx.options.dataSource.pageNo, 'current'],
+            [ctx.options.dataSource.pageSize, 'pageSize']
+          ]}
+          onChange={ctx.onPageChange}
+          onShowSizeChange={ctx.onPageSizeChange}
+        />
+      );
+    }
+
+    if (ctx.$slots?.title) {
       solts.title = function (slotData) {
         return (
-          <div ref='topRef' class={['tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2', ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2']}>
-            <div class='tw-flex-1'>
-              <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
-                {ctx.options?.ignoreTitlePrefix ? undefined : ctx.options?.titlePrefix?.(ctx)}
-                {ctx.$slots?.title?.({
-                  ...slotData,
-                  options: ctx.options,
-                  params: ctx.params,
-                  methods: ctx.methods,
-                  handler: ctx.handler,
-                  handleRecordChange: ctx.handleRecordChange
-                })}
-                {ctx.options?.ignoreTitleSuffix ? undefined : ctx.options?.titleSuffix?.(ctx)}
-              </div>
-            </div>
-            {ctx.options.dataSource.total &&
-            ctx.options.pagination &&
-            ctx.options.dataSource.pageSize &&
-            (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'top') ? (
-              <div class='tw-flex-initial'>
-                <Pagination
-                  hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
-                  pageSizeOptions={ctx.options.pagination.pageSizeOptions}
-                  showLessItems={ctx.options.pagination.showLessItems}
-                  showQuickJumper={ctx.options.pagination.showQuickJumper}
-                  showSizeChanger={ctx.options.pagination.showSizeChanger}
-                  showTotal={(total, range) =>
-                    `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
-                  }
-                  simple={ctx.options.pagination.simple}
-                  size={ctx.options.pagination.size}
-                  total={ctx.options.dataSource.total}
-                  v-models={[
-                    [ctx.options.dataSource.pageNo, 'current'],
-                    [ctx.options.dataSource.pageSize, 'pageSize']
-                  ]}
-                  onChange={ctx.onPageChange}
-                  onShowSizeChange={ctx.onPageSizeChange}
-                />
-              </div>
-            ) : undefined}
+          <div ref='topRef'>
+            {ctx.$slots?.title?.({
+              ...slotData,
+              options: ctx.options,
+              params: ctx.params,
+              methods: ctx.methods,
+              handler: ctx.handler,
+              handleRecordChange: ctx.handleRecordChange,
+              prefixNode: ctx.options?.ignoreTitlePrefix ? undefined : ctx.options?.titlePrefix?.(ctx),
+              suffixNode: ctx.options?.ignoreTitleSuffix ? undefined : ctx.options?.titleSuffix?.(ctx),
+              paginationNode,
+              refreshButtonNode: (
+                <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={ctx.refresh} />
+              ),
+              settingsPanelButtonNode: (
+                <XTableSettingsPanelButton
+                  only-icon
+                  color='primary'
+                  size='mini'
+                  type='link'
+                  onClick={ctx.presentSettingsPanel}
+                >
+                  Setting
+                </XTableSettingsPanelButton>
+              ),
+              fullscreenButtonNode: ctx.options.isFullscreen ? (
+                <XButtonFullscreenExit only-icon color='primary' size='mini' type='link' onClick={ctx.fullscreenExit}>
+                  Exit Fullscreen
+                </XButtonFullscreenExit>
+              ) : (
+                <XButtonFullscreen color='primary' size='mini' type='link' onClick={ctx.fullscreen}>
+                  Fullscreen
+                </XButtonFullscreen>
+              )
+            })}
+          </div>
+        );
+      };
+    } else if (paginationNode) {
+      solts.title = function () {
+        return (
+          <div
+            ref='topRef'
+            class={[
+              'tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2',
+              ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2'
+            ]}
+          >
+            {paginationNode}
           </div>
         );
       };
@@ -1241,7 +1327,11 @@ export const XTable = defineComponent({
           (ctx.options.pagination.position === 'both' || ctx.options.pagination.position === 'bottom') ? (
             <div
               ref='bottomRef'
-              class={['tw-flex tw-justify-end tw-p-2 tw-transition-opacity', ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined]}>
+              class={[
+                'tw-flex tw-justify-end tw-p-2 tw-transition-opacity',
+                ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined
+              ]}
+            >
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1249,7 +1339,10 @@ export const XTable = defineComponent({
                 showQuickJumper={ctx.options.pagination.showQuickJumper}
                 showSizeChanger={ctx.options.pagination.showSizeChanger}
                 showTotal={(total, range) =>
-                  `${range[0]}-${range[1]} ` + ctx.$t(i18nMessages.antd.pagination.of) + ` ${total} ` + ctx.$t(i18nMessages.antd.pagination.items)
+                  `${range[0]}-${range[1]} ` +
+                  ctx.$t(i18nMessages.antd.pagination.of) +
+                  ` ${total} ` +
+                  ctx.$t(i18nMessages.antd.pagination.items)
                 }
                 simple={ctx.options.pagination.simple}
                 size={ctx.options.pagination.size}
@@ -1275,8 +1368,8 @@ export const XTable = defineComponent({
           />
         </div>
         <XModal {...ctx.settingsPanelRef}>
-          <div class='tw-flex tw-flex-col tw-h-full'>
-            <div class='tw-flex-1 tw-pt-4 tw-pr-4 tw-pl-4 tw-overflow-y-auto' style='max-height: 460px;'>
+          <div class='tw-flex tw-h-full tw-flex-col'>
+            <div class='tw-flex-1 tw-overflow-y-auto tw-pt-4 tw-pr-4 tw-pl-4' style='max-height: 460px;'>
               <Table
                 pagination={false}
                 dataSource={ctx.settingsPanelOptions.dataSource}
@@ -1341,11 +1434,16 @@ export const XTable = defineComponent({
                             title={ctx.$t(i18nMessages.antd.table.controlPanel.up)}
                             onClick={() => {
                               if (index === 0) {
-                                exchangeItem(ctx.settingsPanelOptions.dataSource, index, ctx.settingsPanelOptions.dataSource.length - 1);
+                                exchangeItem(
+                                  ctx.settingsPanelOptions.dataSource,
+                                  index,
+                                  ctx.settingsPanelOptions.dataSource.length - 1
+                                );
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1358,7 +1456,8 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}>
+                            }}
+                          >
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1368,7 +1467,7 @@ export const XTable = defineComponent({
                 ]}
               />
             </div>
-            <div class='tw-flex-initial tw-flex tw-p-4 tw-justify-end tw-space-x-4 tw-border-t tw-border-gray-200'>
+            <div class='tw-flex tw-flex-initial tw-justify-end tw-space-x-4 tw-border-t tw-border-gray-200 tw-p-4'>
               <XButton
                 color='secondary'
                 size='large'
@@ -1400,7 +1499,8 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1408,7 +1508,8 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}>
+                }}
+              >
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>
