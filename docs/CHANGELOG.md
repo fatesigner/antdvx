@@ -1,3 +1,10 @@
+# [1.0.0-alpha.128](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.127...v1.0.0-alpha.128) (2023-03-06)
+
+
+### Bug Fixes
+
+* when title slot was not set, also render titlePrefix and titleSuffix template ([bc3bd4b](https://github.com/fatesigner/antdvx/commit/bc3bd4bbb560701de294f6667a08940e06238e2c))
+
 # [1.0.0-alpha.127](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.126...v1.0.0-alpha.127) (2023-03-06)
 
 
