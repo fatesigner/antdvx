@@ -626,8 +626,7 @@ export const XTable = defineComponent({
                 return (
                   <div
                     class='tw-flex tw-items-center tw-justify-center tw-text-gray-500'
-                    title={t(i18nMessages.antd.action.filter)}
-                  >
+                    title={t(i18nMessages.antd.action.filter)}>
                     {filtered ? <IconFilter2Fill color='primary' /> : <IconFilter3Line scale={1.3} />}
                   </div>
                 );
@@ -662,8 +661,7 @@ export const XTable = defineComponent({
                         size='small'
                         onClick={() => {
                           clearFilters();
-                        }}
-                      >
+                        }}>
                         {t(i18nMessages.antd.action.reset)}
                       </XButton>
                     </div>
@@ -1195,7 +1193,7 @@ export const XTable = defineComponent({
     if (ctx.$slots?.title) {
       solts.title = function (slotData) {
         return (
-          <div ref='topRef'>
+          <div class='ant-table-x-title-wrap' ref='topRef'>
             {ctx.$slots?.title?.({
               ...slotData,
               options: ctx.options,
@@ -1215,8 +1213,7 @@ export const XTable = defineComponent({
                   color='primary'
                   size='mini'
                   type='link'
-                  onClick={ctx.presentSettingsPanel}
-                >
+                  onClick={ctx.presentSettingsPanel}>
                   Setting
                 </XTableSettingsPanelButton>
               ),
@@ -1233,16 +1230,12 @@ export const XTable = defineComponent({
           </div>
         );
       };
-    } else if (paginationNode) {
+    } else if (paginationNode || ctx.options?.titlePrefix || ctx.options?.titleSuffix) {
       solts.title = function () {
         return (
           <div
             ref='topRef'
-            class={[
-              'tw-flex tw-flex-wrap tw-items-center tw-justify-between tw-gap-2',
-              ctx.options.bordered ? 'tw-p-2' : 'tw-pb-2'
-            ]}
-          >
+            class={['ant-table-x-title', ctx.options.bordered ? 'ant-table-x-title-bordered' : undefined]}>
             <div class='tw-flex-1'>
               <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
                 {ctx.options?.titlePrefix?.(ctx)}
@@ -1336,8 +1329,7 @@ export const XTable = defineComponent({
               class={[
                 'tw-flex tw-justify-end tw-p-2 tw-transition-opacity',
                 ctx.options.loading ? 'tw-pointer-events-none tw-opacity-50' : undefined
-              ]}
-            >
+              ]}>
               <Pagination
                 hideOnSinglePage={ctx.options.pagination.hideOnSinglePage}
                 pageSizeOptions={ctx.options.pagination.pageSizeOptions}
@@ -1448,8 +1440,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index - 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowUpLine color='primary' />
                           </XButton>
                           <XButton
@@ -1462,8 +1453,7 @@ export const XTable = defineComponent({
                               } else {
                                 exchangeItem(ctx.settingsPanelOptions.dataSource, index, index + 1);
                               }
-                            }}
-                          >
+                            }}>
                             <IconArrowDownLine color='primary' />
                           </XButton>
                         </div>
@@ -1505,8 +1495,7 @@ export const XTable = defineComponent({
                   } else {
                     console.warn('Please use setStorageService for Antdvx components.');
                   }
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.save)}
               </XButton>
               <XButton
@@ -1514,8 +1503,7 @@ export const XTable = defineComponent({
                 type='3d'
                 onClick={() => {
                   ctx.settingsPanelRef.handler.dismiss();
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.antd.action.cancel)}
               </XButton>
             </div>
