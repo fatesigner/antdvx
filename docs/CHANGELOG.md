@@ -1,3 +1,10 @@
+# [1.0.0-alpha.129](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.128...v1.0.0-alpha.129) (2023-03-07)
+
+
+### Bug Fixes
+
+* update style for title slot in XTable component ([bdd5203](https://github.com/fatesigner/antdvx/commit/bdd52030ebc859f185c485e91885795e22611fe7))
+
 # [1.0.0-alpha.128](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.127...v1.0.0-alpha.128) (2023-03-06)
 
 
