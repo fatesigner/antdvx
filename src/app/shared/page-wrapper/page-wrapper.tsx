@@ -1,13 +1,15 @@
-import { defineComponent, nextTick, onMounted, PropType, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, nextTick, onMounted, PropType, ref, shallowReactive, unref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { bindPromiseQueue } from '@fatesigner/utils';
+import { StructureTree } from '@fatesigner/utils/structure-tree';
 import { isFunction, isString } from '@fatesigner/utils/type-check';
-import { Empty, Spin } from 'ant-design-vue';
-import { IconArrowLeftLine, ScrollView, TransitionZoom } from 'antdvx';
+import { Breadcrumb, BreadcrumbItem, Empty, Spin } from 'ant-design-vue';
+import { IconArrowLeftLine, ScrollView, TransitionZoom, XRouterLink } from 'antdvx';
+import { IMenu } from 'antdvx/types';
 
 import { AppFooter } from '@/app/layout/shared/footer';
 
-import $styles from './page-wrapper.module.less';
+import './page-wrapper.less';
 
 /**
  * 视图容器
@@ -17,6 +19,9 @@ export const PageWrapper = defineComponent({
   props: {
     title: {
       type: String
+    },
+    breadcrumb: {
+      type: Boolean
     },
     footer: {
       type: Boolean,
@@ -46,12 +51,19 @@ export const PageWrapper = defineComponent({
     }
   },
   setup(props, { emit }) {
+    const route = useRoute();
     const router = useRouter();
 
     const data = ref();
     const error = ref();
     const initialized = ref(false);
     const loading_ = ref(false);
+
+    const breadcrumbData = shallowReactive({
+      loading: true,
+      routes: [],
+      current: undefined
+    });
 
     if (props.loading) {
       loading_.value = true;
@@ -84,6 +96,41 @@ export const PageWrapper = defineComponent({
         });
     }, true);
 
+    // 根据当前路由获取面包屑集合
+    const menus = require('@/assets/json/menus.json');
+    const strutree = new StructureTree<IMenu>({
+      idKey: 'id',
+      labelKey: 'path',
+      childrenKey: 'children'
+    });
+
+    const getMenuByName = (names: string[]) => {
+      let name;
+      let node: ReturnType<typeof strutree.find>;
+      do {
+        name = names.pop();
+        if (name) {
+          node = strutree.find(menus, (x) => x.name === name);
+          if (node) {
+            break;
+          }
+        }
+      } while (name);
+
+      return node;
+    };
+
+    const loadBreadcrumb = () => {
+      const menu = getMenuByName(route.matched.map((x) => x?.name?.toString()));
+      if (menu?.node) {
+        breadcrumbData.current = menu.node;
+        breadcrumbData.routes = unref(menu.parentNodes);
+      }
+      nextTick(() => {
+        breadcrumbData.loading = false;
+      });
+    };
+
     // 回到上一页
     const returnToPrevious = () => {
       if (isString(props.returnable)) {
@@ -105,16 +152,27 @@ export const PageWrapper = defineComponent({
           reload();
         });
       }
+      if (props.breadcrumb) {
+        setTimeout(() => {
+          loadBreadcrumb();
+        });
+      }
     });
 
-    return { loading_, initialized, returnToPrevious, reload };
+    return {
+      loading_,
+      initialized,
+      breadcrumbData,
+      returnToPrevious,
+      reload
+    };
   },
   render(ctx) {
     const container = [
       <TransitionZoom>
         {ctx.loading_ ? (
           <div class='page-wrapper-loading'>
-            <Spin />
+            <Spin size='large' />
           </div>
         ) : undefined}
       </TransitionZoom>,
@@ -128,60 +186,105 @@ export const PageWrapper = defineComponent({
               description() {
                 return <span class='tw-text-sm tw-text-gray-500'>暂无数据</span>;
               }
-            }}
-          >
+            }}>
             {ctx.$slots.empty?.({ initialize: ctx.initialize })}
           </Empty>
-        ) : (
-          ''
-        )}
+        ) : undefined}
       </TransitionZoom>,
       !ctx.initialize || ctx.initialized ? ctx.$slots.default?.() : ctx.$slots.skeleton?.()
     ];
 
-    const hasTop = ctx.returnable || ctx.title || ctx.$slots?.title || ctx.$slots?.actions;
+    const hasTop =
+      ctx.returnable ||
+      ctx.title ||
+      ctx.$slots?.title ||
+      ctx.breadcrumb ||
+      ctx.$slots?.breadcrumb ||
+      ctx.$slots?.actions;
 
     const wrapper = (
       <div
         class={[
-          $styles['page-wrapper'],
+          'page-wrapper',
           ctx.overflow === 'hidden' ? 'tw-h-full tw-overflow-hidden' : undefined,
-          ctx.bgGray ? $styles['page-bg-gray'] : undefined
-        ]}
-      >
+          ctx.bgGray ? 'page-bg-gray' : undefined
+        ]}>
         {hasTop || ctx.$slots?.header ? (
-          <div class={$styles['page-header']}>
-            {hasTop ? (
-              <div class={$styles['page-header-top']}>
-                <div class={$styles['page-header-title']}>
-                  {[
-                    ctx.returnable ? (
-                      <span
-                        class={$styles['page-wrapper-back']}
-                        title='Return to previous page'
-                        onClick={ctx.returnToPrevious}
-                      >
-                        <IconArrowLeftLine />
-                      </span>
-                    ) : undefined,
-                    ctx.$slots.icon?.(),
-                    ctx.title ? <span>{ctx.title}</span> : undefined,
-                    ctx.$slots.title?.()
-                  ]}
+          <div class='page-header'>
+            {ctx.$slots?.breadcrumb ? (
+              <div class='page-breadcrumb'>{ctx.$slots?.breadcrumb()}</div>
+            ) : ctx.breadcrumb ? (
+              ctx.breadcrumbData.loading ? (
+                <div class='page-breadcrumb'>
+                  <Spin size='small' />
                 </div>
-                <div class={$styles['page-header-actions']}>{ctx.$slots.actions?.()}</div>
+              ) : (
+                <div class='page-breadcrumb'>
+                  {/* <Breadcrumb
+                    routes={ctx.breadcrumbData.routes}
+                    v-slots={{
+                      itemRender({ route, routes, paths }) {
+                        return route.url ? (
+                          <XRouterLink to={route.url}>{route.label}</XRouterLink>
+                        ) : (
+                          <span>{route.label}</span>
+                        );
+                      }
+                    }}
+                  /> */}
+                  <Breadcrumb>
+                    <BreadcrumbItem>
+                      <XRouterLink to='/'>Portal</XRouterLink>
+                    </BreadcrumbItem>
+                    {ctx.breadcrumbData.routes.flatMap((x, i) =>
+                      i === ctx.breadcrumbData.routes.length - 1
+                        ? [
+                            <BreadcrumbItem>
+                              {x.url ? <XRouterLink to={x.url}>{x.label}</XRouterLink> : <span>{x.label}</span>}
+                            </BreadcrumbItem>,
+                            <BreadcrumbItem>
+                              <span>{ctx.breadcrumbData.current?.label}</span>
+                            </BreadcrumbItem>
+                          ]
+                        : [
+                            <BreadcrumbItem>
+                              {x.url ? <XRouterLink to={x.url}>{x.label}</XRouterLink> : <span>{x.label}</span>}
+                            </BreadcrumbItem>
+                          ]
+                    )}
+                  </Breadcrumb>
+                </div>
+              )
+            ) : undefined}
+            {hasTop ? (
+              <div class='page-header-top'>
+                {ctx.title || ctx.$slots?.title ? (
+                  <div class='page-header-title'>
+                    {[
+                      ctx.returnable ? (
+                        <span class='page-wrapper-back' title='Return to previous page' onClick={ctx.returnToPrevious}>
+                          <IconArrowLeftLine />
+                        </span>
+                      ) : undefined,
+                      ctx.$slots.icon?.(),
+                      ctx.title ? <span>{ctx.title}</span> : undefined,
+                      ctx.$slots.title?.()
+                    ]}
+                  </div>
+                ) : undefined}
+                <div class='page-header-actions'>{ctx.$slots.actions?.()}</div>
               </div>
             ) : undefined}
             {ctx.$slots.header?.()}
           </div>
         ) : undefined}
-        <div class={$styles['page-container']}>{container}</div>
+        <div class={['page-container', ctx.overflow === 'hidden' ? 'tw-overflow-hidden' : undefined]}>{container}</div>
         {ctx.footer ? <AppFooter /> : undefined}
       </div>
     );
 
     return ctx.overflow === 'scroll' ? (
-      <ScrollView fillY scrollY>
+      <ScrollView native fillY scrollY>
         {wrapper}
       </ScrollView>
     ) : (

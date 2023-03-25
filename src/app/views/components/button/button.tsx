@@ -206,6 +206,11 @@ export default defineComponent({
                       </XButton>
                     </div>
                     <div class='tw-p-2'>
+                      <XButton loading color='primary' type={type}>
+                        loading
+                      </XButton>
+                    </div>
+                    <div class='tw-p-2'>
                       <XButton disabled color='primary' type={type}>
                         disabled
                       </XButton>
@@ -252,8 +257,7 @@ export default defineComponent({
                             </Menu>
                           );
                         }
-                      }}
-                    >
+                      }}>
                       <XButton type={type}>
                         Actions
                         <IconArrowDownSLine />
@@ -289,8 +293,7 @@ export default defineComponent({
                       type='link'
                       onClick={() => {
                         ctx.exportRef?.trigger('json');
-                      }}
-                    >
+                      }}>
                       Export json
                     </XButton>
                     <XButton
@@ -298,8 +301,7 @@ export default defineComponent({
                       type='link'
                       onClick={() => {
                         ctx.exportRef?.trigger('image');
-                      }}
-                    >
+                      }}>
                       Export image
                     </XButton>
                   </div>
@@ -397,7 +399,14 @@ export default defineComponent({
                     />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButtonRefresh
+                      only-icon
+                      spin={false}
+                      color='primary'
+                      size='mini'
+                      type='link'
+                      handler={ctx.load(3000, true)}
+                    />
                   </div>
                   <div class='tw-p-2'>
                     <XButtonDownload

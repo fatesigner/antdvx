@@ -1,8 +1,8 @@
-import { notification } from 'ant-design-vue';
 import { defineComponent, ref, watch } from 'vue';
+import { DownloadOutlined } from '@ant-design/icons-vue';
+import { notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import IconDownloadLine from '../iconfont/icons/download';
 import { IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
@@ -76,8 +76,12 @@ export const XButtonDownload = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconDownloadLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.download)}</span>
+            ctx.loading_ ? <IconLoader5Line spin={true} /> : <DownloadOutlined />,
+            ctx.$slots?.default ? (
+              ctx.$slots?.default({ loading: ctx.loading_ })
+            ) : ctx.onlyIcon ? undefined : (
+              <span>{ctx.$t(i18nMessages.antd.action.download)}</span>
+            )
           ]
         }}
       />

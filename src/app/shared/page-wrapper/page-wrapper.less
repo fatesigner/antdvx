@@ -7,17 +7,20 @@
   background-color: #fff;
 }
 
+.page-breadcrumb {
+  @apply tw-mb-2;
+}
+
 .page-header {
-  padding: 8px 16px 0 16px;
+  padding: 8px 16px 0;
   margin-bottom: 4px;
   background-color: #fff;
   box-shadow: 0 1px 4px #00152914;
 }
 
 .page-header-top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  @apply tw-flex tw-flex-wrap tw-items-center tw-gap-2;
+
   margin-bottom: 8px;
 }
 
@@ -31,8 +34,8 @@
   display: flex;
   align-items: center;
   margin-right: 8px;
-  font-weight: 500;
-  color: rgba(0, 0, 0, 0.85);
+  font-weight: 600;
+  color: rgba(0, 0, 0, 85%);
 }
 
 .page-container {
@@ -47,7 +50,7 @@
 
 .page-wrapper-loading {
   position: fixed;
-  top: 100px;
+  top: 168px;
   left: 50%;
   z-index: 100;
   transform: translate3d(-50%, 0, 0);

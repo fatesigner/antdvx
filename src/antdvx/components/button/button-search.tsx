@@ -1,5 +1,5 @@
-import { notification } from 'ant-design-vue';
 import { defineComponent, ref, watch } from 'vue';
+import { notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
 import { IconLoader5Line, IconSearchLine } from '../iconfont';
@@ -76,7 +76,11 @@ export const XButtonSearch = defineComponent({
         v-slots={{
           default: () => [
             ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconSearchLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.search)}</span>
+            ctx.$slots?.default ? (
+              ctx.$slots?.default()
+            ) : ctx.onlyIcon ? undefined : (
+              <span>{ctx.$t(i18nMessages.antd.action.search)}</span>
+            )
           ]
         }}
       />

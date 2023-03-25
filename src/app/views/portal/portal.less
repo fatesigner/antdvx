@@ -1,0 +1,80 @@
+@import '@/app/themes/default';
+
+.blanner-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.slide {
+  position: relative;
+  display: inline-block;
+  width: 80%;
+  height: 100%;
+  padding: 0;
+  text-align: center;
+}
+
+.bg-wrap {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  cursor: pointer;
+  transform: skew(-5deg) translateZ(0);
+}
+
+.bg {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform: skew(5deg) translateZ(0);
+}
+
+.mask {
+  position: absolute;
+  top: 0;
+  width: 150%;
+  height: 100%;
+  background-color: black;
+  opacity: 0;
+}
+
+.slide1 {
+  margin-left: -30%;
+
+  .bg-wrap {
+    margin-right: -20px;
+  }
+
+  .bg {
+    right: -10%;
+    background-image: url('./assets/1.jpg');
+  }
+
+  .mask {
+    right: -10%;
+  }
+}
+
+.slide2 {
+  .bg-wrap {
+    margin-left: -20px;
+  }
+
+  .bg {
+    left: -10%;
+    background-image: url('./assets/2.jpg');
+  }
+
+  .mask {
+    left: -10%;
+  }
+
+  &:hover {
+
+  }
+}

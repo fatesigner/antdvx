@@ -1,15 +1,14 @@
+import { computed, defineComponent, PropType, reactive, ref } from 'vue';
+import { DownloadOutlined } from '@ant-design/icons-vue';
+import { convertHtmlToCanvas } from '@fatesigner/utils/html-canvas';
+import { isFunction } from '@fatesigner/utils/type-check';
+import { Dropdown, Menu, MenuItem, notification } from 'ant-design-vue';
 import to from 'await-to-js';
 import { timer } from 'rxjs';
-import { isFunction } from '@fatesigner/utils/type-check';
-import { convertHtmlToCanvas } from '@fatesigner/utils/html-canvas';
-import { Dropdown, Menu, MenuItem, notification } from 'ant-design-vue';
-import { PropType, computed, defineComponent, reactive, ref } from 'vue';
 
 import { i18nMessages } from '../../i18n/messages';
-
 import { XButton } from '../button';
-import IconDownloadLine from '../iconfont/icons/download';
-import { IconCodeSSlashLine, IconDownload2Line, IconFileExcel2Line, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
+import { IconCodeSSlashLine, IconFileExcel2Line, IconFilePdfLine, IconImageLine, IconLoader5Line } from '../iconfont';
 
 import { IXButtonExportOptions, XButtonProps } from './types';
 
@@ -95,7 +94,9 @@ export const XButtonExport = defineComponent({
         options_.json = await loadOptions(props?.options?.json, options_.json).catch(() => {});
         const opt = options_?.json as any;
         if (opt?.content) {
-          const url = window.URL.createObjectURL(new Blob([opt.content], { type: 'data:application/json;charset=utf-8' }));
+          const url = window.URL.createObjectURL(
+            new Blob([opt.content], { type: 'data:application/json;charset=utf-8' })
+          );
           const link = document.createElement('a');
           link.style.display = 'none';
           link.href = url;
@@ -227,8 +228,7 @@ export const XButtonExport = defineComponent({
               ]}
             </Menu>
           )
-        }}
-      >
+        }}>
         <XButton
           block={ctx.block}
           disabled={ctx.disabled}
@@ -243,12 +243,17 @@ export const XButtonExport = defineComponent({
           color={ctx.color}
           spin={false}
           title={ctx.title ? ctx.title : ctx.$t(i18nMessages.antd.action.export)}
-        >
-          {[
-            ctx.loading_ ? <IconLoader5Line spin={ctx.loading_} /> : <IconDownloadLine spin={ctx.loading_} />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.export)}</span>
-          ]}
-        </XButton>
+          v-slots={{
+            default: () => [
+              ctx.loading_ ? <IconLoader5Line spin={true} /> : <DownloadOutlined />,
+              ctx.$slots?.default ? (
+                ctx.$slots?.default()
+              ) : ctx.onlyIcon ? undefined : (
+                <span>{ctx.$t(i18nMessages.antd.action.export)}</span>
+              )
+            ]
+          }}
+        />
       </Dropdown>
     );
   }

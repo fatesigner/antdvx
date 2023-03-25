@@ -390,8 +390,7 @@ const SlideModal = defineComponent({
     return (
       <div
         class={['slide-modal-wrap', ctx.theme === 'dark' ? 'slide-modal-dark' : 'slide-modal-light']}
-        style={ctx.wrapStyle}
-      >
+        style={ctx.wrapStyle}>
         <dl class='slide-modal-arrow'>
           <dt />
           <dd />
@@ -420,7 +419,7 @@ const SlideModal = defineComponent({
                     ? ctx.$t(i18nMessages.antd.slideCaptcha.result.failed)
                     : ctx.status === 'successful'
                     ? ctx.dragSpendedTime + ' ' + ctx.$t(i18nMessages.antd.slideCaptcha.result.successful)
-                    : ''}
+                    : undefined}
                 </div>
               </div>
             </div>
@@ -615,8 +614,7 @@ export const SlideCaptcha = defineComponent({
         title={
           ctx.valid ? ctx.$t(i18nMessages.antd.slideCaptcha.validText) : ctx.$t(i18nMessages.antd.slideCaptcha.tip)
         }
-        onClick={ctx.presentCaptchaModal}
-      >
+        onClick={ctx.presentCaptchaModal}>
         {inner}
       </div>,
       <Teleport to='body'>
@@ -634,7 +632,7 @@ export const SlideCaptcha = defineComponent({
                 onSuccessful={ctx.onSuccessful}
               />
             ]
-          : ''}
+          : undefined}
       </Teleport>
     ];
   }

@@ -16,8 +16,7 @@
   blue @blue-color,
   purple @purple-color;
 
-// Set color
-// ---------------------------------------------------
+/* Set color */
 each(@colorArr, {
   .antdvx-text-@{key} {
     color: @value;
@@ -39,7 +38,7 @@ each(@colorArr, {
 body.antdvx-theme-classic {
   // Scrollbar
   // ---------------------------------------------------
-  .scrollbar-mixin();
+  /* .scrollbar-mixin(); */
 
   // Base
   // ---------------------------------------------------
@@ -58,7 +57,9 @@ body.antdvx-theme-classic {
   }
 
   .ant-btn > .antdvx-icon + span,
-  .ant-btn > span + .antdvx-icon {
+  .ant-btn > span + .antdvx-icon,
+  .ant-btn > .anticon + span,
+  .ant-btn > span + .anticon {
     margin-left: 4px;
   }
 
@@ -157,49 +158,6 @@ body.antdvx-theme-classic {
         margin-bottom: 1px;
       }
     }
-  }
-
-  // Table
-  // ---------------------------------------------------
-  .ant-table {
-    &.ant-table-empty > .ant-table-content > .ant-table-body,
-    &.ant-table-empty > .ant-table-content > .ant-table-scroll > .ant-table-body {
-      overflow: hidden !important;
-    }
-  }
-
-  .ant-table-thead > tr > th .ant-table-header-column {
-    vertical-align: middle;
-  }
-
-  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner {
-    height: auto;
-    margin-top: 0;
-  }
-
-  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-up,
-  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-down {
-    height: auto;
-    line-height: 1;
-
-    > svg {
-      vertical-align: top;
-    }
-  }
-
-  .ant-table-thead > tr > th .anticon-filter,
-  .ant-table-thead > tr > th .ant-table-filter-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-up {
-    margin-bottom: -4.5px;
-  }
-
-  .ant-table-thead > tr > th .ant-table-column-sorter .ant-table-column-sorter-inner-full .ant-table-column-sorter-down {
-    margin-top: -4.5px;
   }
 
   // Tabs

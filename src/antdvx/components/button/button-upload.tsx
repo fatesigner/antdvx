@@ -1,11 +1,11 @@
-import { notification } from 'ant-design-vue';
-import { getGUID } from '@fatesigner/utils/random';
 import { computed, defineComponent, onMounted, ref, watch } from 'vue';
-import { IFileChooserOptions, createFileChooser } from '@fatesigner/file-chooser';
+import { UploadOutlined } from '@ant-design/icons-vue';
+import { createFileChooser, IFileChooserOptions } from '@fatesigner/file-chooser';
+import { getGUID } from '@fatesigner/utils/random';
+import { notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import IconUploadLine from '../iconfont/icons/upload';
-import { IconLoader5Line, IconUpload2Line } from '../iconfont';
+import { IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
@@ -155,8 +155,12 @@ export const XButtonUpload = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconUploadLine /> : undefined,
-            ctx.$slots?.default ? ctx.$slots?.default({ loading: ctx.loading_ }) : <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
+            ctx.showIcon ? ctx.loading_ ? <IconLoader5Line spin={true} /> : <UploadOutlined /> : undefined,
+            ctx.$slots?.default ? (
+              ctx.$slots?.default({ loading: ctx.loading_ })
+            ) : (
+              <span>{ctx.$t(i18nMessages.antd.action.upload)}</span>
+            )
           ]
         }}
       />

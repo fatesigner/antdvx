@@ -1,8 +1,9 @@
-import { notification } from 'ant-design-vue';
 import { defineComponent, ref, watch } from 'vue';
+import { EditOutlined } from '@ant-design/icons-vue';
+import { notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconLoader5Line, IconPencilLine } from '../iconfont';
+import { IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
@@ -75,8 +76,12 @@ export const XButtonEdit = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconPencilLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.edit)}</span>
+            ctx.loading_ ? <IconLoader5Line spin={true} /> : <EditOutlined />,
+            ctx.$slots?.default ? (
+              ctx.$slots?.default()
+            ) : ctx.onlyIcon ? undefined : (
+              <span>{ctx.$t(i18nMessages.antd.action.edit)}</span>
+            )
           ]
         }}
       />

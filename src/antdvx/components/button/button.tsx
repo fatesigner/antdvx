@@ -1,4 +1,5 @@
 import { defineComponent, ref, watch } from 'vue';
+import { LoadingOutlined } from '@ant-design/icons-vue';
 import { Button, notification } from 'ant-design-vue';
 
 import { XButtonProps } from './types';
@@ -50,7 +51,8 @@ export const XButton = defineComponent({
       ghost: ctx.ghost,
       href: ctx.href,
       htmlType: ctx.htmlType,
-      loading: ctx.spin ? ctx.loading_ : false,
+      // loading: ctx.spin ? ctx.loading_ : false,
+      disabled: ctx.loading_,
       shape: ctx.shape,
       size: ctx.size,
       target: ctx.target,
@@ -68,9 +70,17 @@ export const XButton = defineComponent({
           'ant-btn-outline': ctx.type === 'outline',
           'ant-btn-3d': ctx.type === '3d',
           'ant-btn-mini': ctx.size === 'mini',
-          'ant-loading': !ctx.spin && ctx.loading_
+          'antx-btn-loading': ctx.spin ? ctx.loading_ : false
         }}
         {...props}>
+        {ctx.spin && ctx.loading_
+          ? [
+              <div class='antx-btn-loading-mask' />,
+              <div class='antx-btn-loading-spin'>
+                <LoadingOutlined />
+              </div>
+            ]
+          : undefined}
         {ctx.$slots.default?.({ loading: ctx.loading_ })}
       </Button>
     );

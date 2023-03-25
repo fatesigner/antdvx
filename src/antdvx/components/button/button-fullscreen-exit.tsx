@@ -1,5 +1,5 @@
-import { notification } from 'ant-design-vue';
 import { defineComponent, ref, watch } from 'vue';
+import { notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
 import { IconFullscreenExitLine, IconLoader5Line } from '../iconfont';
@@ -79,7 +79,11 @@ export const XButtonFullscreenExit = defineComponent({
         v-slots={{
           default: () => [
             ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconFullscreenExitLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.fullscreenExit)}</span>
+            ctx.$slots?.default ? (
+              ctx.$slots?.default()
+            ) : ctx.onlyIcon ? undefined : (
+              <span>{ctx.$t(i18nMessages.antd.action.fullscreenExit)}</span>
+            )
           ]
         }}
       />

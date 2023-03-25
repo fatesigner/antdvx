@@ -10,6 +10,7 @@ export * from './components/button';
 export * from './components/code-editor';
 export * from './components/combobox';
 export * from './components/component-view';
+export * from './components/draggable';
 export * from './components/drawer';
 export * from './components/echarts';
 export * from './components/form-generator';

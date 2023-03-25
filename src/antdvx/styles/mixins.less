@@ -1,13 +1,12 @@
-// Scrollbar
-// ---------------------------------------------------
+/* Scrollbar */
 .scrollbar-mixin() {
   & when(@scrollbar-enabled = true) {
     * {
-      // FireFox
+      /* FireFox */
       scrollbar-color: @scrollbar-track-color @scrollbar-thumb-color;
       scrollbar-width: thin;
 
-      // Other
+      /* Other */
       &::-webkit-scrollbar {
         width: @scrollbar-height;
         height: @scrollbar-width;

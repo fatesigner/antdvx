@@ -1,5 +1,5 @@
-import { Spin, notification } from 'ant-design-vue';
-import { PropType, defineComponent, ref, watch } from 'vue';
+import { defineComponent, PropType, ref, watch } from 'vue';
+import { notification, Spin } from 'ant-design-vue';
 
 import { ANTDVX_SIZES } from '../../constants';
 
@@ -10,7 +10,7 @@ export const XButtonSpin = defineComponent({
       type: String
     },
     size: {
-      type: String as PropType<typeof ANTDVX_SIZES[number]>,
+      type: String as PropType<(typeof ANTDVX_SIZES)[number]>,
       default: 'default'
     },
     loading: {
@@ -66,7 +66,9 @@ export const XButtonSpin = defineComponent({
   },
   render(ctx) {
     return (
-      <div class={['ant-btn-spin', ctx.disabled ? 'ant-btn-spin-disabled' : undefined]} onClick={!ctx.disabled && ctx.trigger}>
+      <div
+        class={['ant-btn-spin', ctx.disabled ? 'ant-btn-spin-disabled' : undefined]}
+        onClick={!ctx.disabled && ctx.trigger}>
         {[
           ctx.loading_ ? (
             <div class='ant-btn-spin-loading'>

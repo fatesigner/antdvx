@@ -110,3 +110,44 @@
     top: 66%;
   }
 }
+
+.antx-table {
+  .ant-table-sticky-scroll {
+    display: none;
+  }
+}
+
+.antx-table-resize-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-clip: padding-box;
+}
+
+.antx-table-resizable-line {
+  width: 4px;
+  height: 100%;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.antx-table-resize-handler {
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  width: 10px;
+  height: 100%;
+  cursor: col-resize;
+
+  &:active,
+  &:hover {
+    .antx-table-resizable-line {
+      pointer-events: none;
+      background: #000;
+    }
+  }
+}

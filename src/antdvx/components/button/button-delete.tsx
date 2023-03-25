@@ -1,10 +1,9 @@
+import { defineComponent, PropType, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { PropType, defineComponent, ref, watch } from 'vue';
-import { Popconfirm, message, notification } from 'ant-design-vue';
+import { message, notification, Popconfirm } from 'ant-design-vue';
 
-import { i18nMessages } from '../../i18n/messages';
 import { ANTDVX_PLACEMENTS } from '../../constants';
-
+import { i18nMessages } from '../../i18n/messages';
 import { IconDeleteBinLine, IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
@@ -15,7 +14,7 @@ export const XButtonDelete = defineComponent({
   props: {
     ...XButtonProps,
     placement: {
-      type: String as PropType<typeof ANTDVX_PLACEMENTS[number]>,
+      type: String as PropType<(typeof ANTDVX_PLACEMENTS)[number]>,
       default: 'bottomRight'
     },
     confirmed: {
@@ -104,7 +103,11 @@ export const XButtonDelete = defineComponent({
           v-slots={{
             default: () => [
               ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconDeleteBinLine />,
-              ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
+              ctx.$slots?.default ? (
+                ctx.$slots?.default()
+              ) : ctx.onlyIcon ? undefined : (
+                <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
+              )
             ]
           }}
         />
@@ -130,7 +133,11 @@ export const XButtonDelete = defineComponent({
         v-slots={{
           default: () => [
             ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconDeleteBinLine />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
+            ctx.$slots?.default ? (
+              ctx.$slots?.default()
+            ) : ctx.onlyIcon ? undefined : (
+              <span>{ctx.$t(i18nMessages.antd.action.delete.title)}</span>
+            )
           ]
         }}
       />
