@@ -1,3 +1,10 @@
+# [1.0.0-alpha.130](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.129...v1.0.0-alpha.130) (2023-03-25)
+
+
+### Bug Fixes
+
+* update XButton loading spin and icons ([5749362](https://github.com/fatesigner/antdvx/commit/5749362dad93fd8abe5def6b986a83cabcae59cb))
+
 # [1.0.0-alpha.129](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.128...v1.0.0-alpha.129) (2023-03-07)
 
 
