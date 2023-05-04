@@ -531,6 +531,7 @@ export const XCombobox = defineComponent({
         onSelect={ctx.onSelect}
         onDropdownVisibleChange={ctx.onDropdownVisibleChange}
         v-slots={{
+          dropdownRender: ctx.$slots?.dropdownRender,
           options() {
             return ctx.$slots?.options?.({ options: ctx.displayOptions }) ?? renderOptions;
           }
@@ -562,6 +563,7 @@ export const XCombobox = defineComponent({
         onSelect={ctx.onSelect}
         onDropdownVisibleChange={ctx.onDropdownVisibleChange}
         v-slots={{
+          dropdownRender: ctx.$slots?.dropdownRender,
           suffixIcon: ctx.$slots?.suffixIcon
             ? () => {
                 return ctx.$slots?.suffixIcon?.();
