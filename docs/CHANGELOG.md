@@ -1,3 +1,10 @@
+# [1.0.0-alpha.131](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.130...v1.0.0-alpha.131) (2023-05-04)
+
+
+### Features
+
+* add dropdownRender slot for XCombobox ([41f4f8f](https://github.com/fatesigner/antdvx/commit/41f4f8fed6ef7c04a8ff25ecb459a89db5c2f1be))
+
 # [1.0.0-alpha.130](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.129...v1.0.0-alpha.130) (2023-03-25)
 
 
