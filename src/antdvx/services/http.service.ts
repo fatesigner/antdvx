@@ -1,10 +1,11 @@
-import 'reflect-metadata';
-import Qs from 'qs';
-import { inject, injectable, optional } from 'inversify';
 import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { inject, injectable, optional } from 'inversify';
+import Qs from 'qs';
 
-import { IHttpService } from '../types';
+import 'reflect-metadata';
+
 import { ANTDVX_SYMBOLS } from '../symbols';
+import { IHttpService } from '../types';
 
 /**
  * Http 服务 config
@@ -70,7 +71,11 @@ export class HttpService implements IHttpService {
     // 请求拦截: 为 POST 类型的传参序列化
     this.instance.interceptors.request.use(
       function (config) {
-        if (config.method !== 'get' && config.method !== 'GET' && config.headers['Content-Type'] === HttpContentType.FormUrlEncoded) {
+        if (
+          config.method !== 'get' &&
+          config.method !== 'GET' &&
+          config.headers['Content-Type'] === HttpContentType.FormUrlEncoded
+        ) {
           config.data = Qs.stringify(config.data);
         }
         return config;
@@ -146,7 +151,11 @@ export function createHttpService(
   // 请求拦截: 为 POST 类型的传参序列化
   Http.interceptors.request.use(
     function (config) {
-      if (config.method !== 'get' && config.method !== 'GET' && config.headers['Content-Type'] === HttpContentType.FormUrlEncoded) {
+      if (
+        config.method !== 'get' &&
+        config.method !== 'GET' &&
+        config.headers['Content-Type'] === HttpContentType.FormUrlEncoded
+      ) {
         config.data = Qs.stringify(config.data);
       }
       return config;

@@ -1,22 +1,24 @@
 ﻿/**
  * eslint config
- * npm i eslint prettier -D
+ * npm i eslint prettier eslint-define-config -D
  * npm i @babel/core @babel/eslint-parser @babel/preset-env -D
  * npm i @typescript-eslint/eslint-plugin @typescript-eslint/parser -D
  * npm i eslint-config-prettier eslint-config-standard eslint-plugin-html eslint-plugin-import prettier-plugin-tailwindcss eslint-plugin-node eslint-plugin-prettier eslint-plugin-promise eslint-plugin-simple-import-sort -D
+ * npm i eslint-plugin-vue vue-eslint-parser -D
  */
 
+const { defineConfig } = require('eslint-define-config');
+
+const prettierRules = {
+  endOfLine: 'auto',
+  singleQuote: true,
+  trailingComma: 'none',
+  bracketSpacing: true,
+  bracketSameLine: true,
+  jsxBracketSameLine: true
+};
+
 const baseRules = {
-  'prettier/prettier': [
-    'error',
-    {
-      singleQuote: true,
-      trailingComma: 'none',
-      bracketSpacing: true,
-      bracketSameLine: true,
-      jsxBracketSameLine: true
-    }
-  ],
   // 要求在箭头函数参数周围加上圆括号
   'arrow-parens': 'off',
   // 在命名变量时，样式指南通常属于两个阵营之一：camelcase（variableName）和underscores（variable_name）。
@@ -65,8 +67,10 @@ const baseRules = {
   // 在条件语句中禁止赋值运算符，除非这个赋值运算被括号包起来了
   'no-cond-assign': ['error', 'except-parens'],
   // 禁止使用 console
-  // @off console 的使用很常见
-  'no-console': 'off',
+  // 允许在开发模式下使用 console
+  'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  // 允许在开发模式下使用 debugger
+  'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   'no-unused-expressions': 'off',
   // 禁止将常量作为 if, for, while 里的测试条件，比如 if (true), for (;;)，除非循环内部有 break 语句
   'no-constant-condition': [
@@ -78,8 +82,6 @@ const baseRules = {
   // 禁止在正则表达式中出现 Ctrl 键的 ASCII 表示，即禁止使用 /\x1f/
   // 开启此规则，因为字符串中一般不会出现 Ctrl 键，所以一旦出现了，可能是一个代码错误
   'no-control-regex': 'error',
-  // allow debugger during development
-  'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 'off',
   // 禁止在函数参数中出现重复名称的参数
   'no-dupe-args': 'error',
   // 禁止在对象字面量中出现重复名称的键名
@@ -203,8 +205,8 @@ const eslint = {
     jest: true
   },
   // 扩展配置文件
-  extends: ['standard', 'plugin:promise/recommended', 'prettier'],
-  plugins: ['promise', 'simple-import-sort', 'import', 'prettier'],
+  extends: ['standard', 'prettier'],
+  plugins: ['import', 'node', 'prettier', 'simple-import-sort'],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly'
@@ -218,7 +220,7 @@ const eslint = {
       presets: ['@babel/preset-env']
     },
     // 指定 ECMAScript 版本，默认 5
-    ecmaVersion: 2020,
+    ecmaVersion: 2022,
     // 指定使用的额外的语言特性，所有选项默认 false
     ecmaFeatures: {
       decoratorsBeforeExport: true,
@@ -238,7 +240,8 @@ const eslint = {
     sourceType: 'module'
   },
   rules: {
-    ...baseRules
+    ...baseRules,
+    'prettier/prettier': ['error', prettierRules]
   }
 };
 
@@ -247,12 +250,13 @@ const tslint = {
   files: ['**/*.ts', '**/*.tsx'],
   env: eslint.env,
   extends: ['standard', 'prettier'],
-  plugins: ['prettier', 'promise', '@typescript-eslint'],
+  plugins: ['import', 'node', 'prettier', 'simple-import-sort', '@typescript-eslint'],
   globals: eslint.globals,
   parser: '@typescript-eslint/parser',
   parserOptions: eslint.parserOptions,
   rules: {
     ...baseRules,
+    'prettier/prettier': ['error', prettierRules],
     '@typescript-eslint/ban-ts-ignore': 'off',
     '@typescript-eslint/camelcase': 'off',
     '@typescript-eslint/class-name-casing': 'off',
@@ -274,7 +278,41 @@ const tslint = {
   }
 };
 
-module.exports = {
-  root: true,
-  overrides: [eslint, tslint]
+const vueLint = {
+  files: ['**/*.vue'],
+  env: tslint.env,
+  extends: [
+    'standard',
+    // 'eslint:recommended',
+    'plugin:vue/vue3-recommended',
+    // 'plugin:vue/recommended', // For Vue.js 2.x.
+    // 'plugin:prettier/recommended',
+    'prettier'
+  ],
+  plugins: ['vue', 'import', 'node', 'prettier', 'simple-import-sort', '@typescript-eslint'],
+  globals: tslint.globals,
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    ...eslint.parserOptions,
+    parser: {
+      // Script parser for `<script>`
+      // js: 'espree',
+      js: '@babel/eslint-parser',
+      // Script parser for `<script lang="ts">`
+      ts: '@typescript-eslint/parser',
+      // Script parser for vue directives (e.g. `v-if=` or `:attribute=`)
+      // and vue interpolations (e.g. `{{variable}}`).
+      // If not specified, the parser determined by `<script lang ="...">` is used.
+      '<template>': '@babel/eslint-parser'
+    }
+  },
+  rules: {
+    ...tslint.rules,
+    'vue/html-indent': 'off'
+  }
 };
+
+module.exports = defineConfig({
+  root: true,
+  overrides: [eslint, tslint, vueLint]
+});

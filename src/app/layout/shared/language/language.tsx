@@ -1,9 +1,9 @@
-import { IconGlobalLine } from 'antdvx';
 import { computed, defineComponent } from 'vue';
+import { GlobalOutlined } from '@ant-design/icons-vue';
 import { Dropdown, Menu, MenuItem } from 'ant-design-vue';
 
-import { Languages } from '@/app/i18n';
 import { AppStore } from '@/app/core/store';
+import { Languages } from '@/app/i18n';
 
 import $styles from './language.module.less';
 
@@ -59,7 +59,7 @@ export const NavLanguage = defineComponent({
           }
         }}>
         <div class={$styles.dropdown}>
-          <IconGlobalLine class='tw-mr-1' />
+          <GlobalOutlined class='tw-mr-1' />
           <span class={['tw-text-xs', $styles.text]}>{ctx.currentLang}</span>
         </div>
       </Dropdown>

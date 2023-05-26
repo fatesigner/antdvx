@@ -1,8 +1,8 @@
+import { defineComponent, PropType, Transition } from 'vue';
 import { gsap } from 'gsap';
-import { PropType, Transition, defineComponent } from 'vue';
 
 /**
- * 缩放
+ * 缩放过渡
  */
 export const TransitionZoom = defineComponent({
   name: 'TransitionZoom',

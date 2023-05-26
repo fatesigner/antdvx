@@ -1,10 +1,15 @@
 /**
  * stylelint config
- * npm i stylelint stylelint-config-css-modules stylelint-config-recess-order stylelint-config-standard stylelint-order -D
+ * npm i stylelint stylelint-config-css-modules stylelint-config-recess-order stylelint-config-standard-scss stylelint-config-standard stylelint-order -D
  */
 
 module.exports = {
-  extends: ['stylelint-config-standard', 'stylelint-config-recess-order', 'stylelint-config-css-modules'],
+  extends: [
+    'stylelint-config-standard',
+    'stylelint-config-standard-scss',
+    'stylelint-config-recess-order',
+    'stylelint-config-css-modules'
+  ],
   plugins: ['stylelint-order'],
   rules: {
     indentation: 2,
@@ -14,7 +19,33 @@ module.exports = {
     /* 'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['tailwind', 'apply', 'layer', 'variants', 'responsive', 'screen', 'mixin', 'extend', 'content', 'function', 'if', 'each', 'include']
+        ignoreAtRules: [
+          'tailwind',
+          'apply',
+          'responsive',
+          'variants',
+          'screen',
+          'extend',
+          'at-root',
+          'debug',
+          'warn',
+          'error',
+          'if',
+          'else',
+          'for',
+          'each',
+          'while',
+          'mixin',
+          'include',
+          'content',
+          'return',
+          'function',
+          'tailwind',
+          'apply',
+          'responsive',
+          'variants',
+          'screen'
+        ]
       }
     ], */
     'block-no-empty': null,
@@ -26,6 +57,7 @@ module.exports = {
     'function-name-case': ['lower', { ignoreFunctions: ['/colorPalette/'] }],
     'function-no-unknown': null,
     'function-parentheses-newline-inside': null,
+    'import-notation': null,
     'rule-empty-line-before': null,
     'selector-combinator-space-after': null,
     'selector-combinator-space-before': null,
@@ -41,6 +73,10 @@ module.exports = {
     // 'property-no-unknown': [true, { ignoreProperties: [] }],
     'property-no-unknown': null,
     'unit-no-unknown': [true, { ignoreUnits: ['rpx', 'upx'] }],
-    'value-list-comma-newline-after': null
+    'value-list-comma-newline-after': null,
+    // SCSS
+    'scss/at-rule-no-unknown': null,
+    'scss/double-slash-comment-empty-line-before': null,
+    'scss/double-slash-comment-whitespace-inside': null
   }
 };

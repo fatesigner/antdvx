@@ -220,5 +220,5 @@ module.exports = {
   corePlugins: {
     container: false
   },
-  plugins: [require('@tailwindcss/line-clamp')]
+  plugins: []
 };

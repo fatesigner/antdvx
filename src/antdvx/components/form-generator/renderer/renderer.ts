@@ -1,5 +1,0 @@
-/**
- * renderer
- */
-
-export function createFormRenderer() {}

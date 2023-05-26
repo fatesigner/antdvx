@@ -2,12 +2,12 @@
  * store for Vue
  */
 
-import { merge } from 'lodash-es';
+import { IXModalRefType } from 'antdvx';
 import { createStore } from 'antdvx/helpers';
-import { IXDrawerRefType, IXModalRefType } from 'antdvx';
+import { merge } from 'lodash-es';
 
-import { LanguageType, i18n } from '@/app/i18n';
 import { localStorageService } from '@/app/core/services';
+import { i18n, LanguageType } from '@/app/i18n';
 import { ProgressBarStore } from '@/app/shared/progress-bar';
 
 const storageKey = 'APP_STORE';
@@ -25,10 +25,6 @@ const state = merge(
 export const AppStore = createStore(state, function (state) {
   // 定义全局弹出层引用集合
   const popupRefs: {
-    /**
-     * 个性化
-     */
-    individuation?: IXDrawerRefType<any, any>;
     /**
      * 修改密码
      */

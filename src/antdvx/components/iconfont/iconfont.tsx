@@ -4,6 +4,17 @@ import { Component, h } from '@vue/runtime-core';
 import { ANTDVX_ICON_NAMES, ANTDVX_ICONS_REGISTERED } from './config';
 import { IconfontProps } from './types';
 
+// 静态导入 icon 组件
+/* const modules = import.meta.glob('./remixicons/*.ts', {
+  import: 'default',
+  eager: true
+}); */
+
+const modules = {} as any;
+
+/**
+ * Iconfont
+ */
 export const Iconfont = defineComponent({
   name: 'Iconfont',
   props: IconfontProps,
@@ -16,11 +27,7 @@ export const Iconfont = defineComponent({
         comp = exsitIcon.comp;
       } else {
         if (ANTDVX_ICON_NAMES.includes(props.name)) {
-          comp = defineAsyncComponent(() =>
-            import(`./remixicons/${props.name}`).then((res) => {
-              return res.default;
-            })
-          );
+          // comp = defineAsyncComponent(modules[`./remixicons/${props.name}.ts`] as any);
         } else {
           comp = <span title={props.title} data-name={props.name} />;
           console.warn(`The iconfont name '${props.name}' is not registed.`);

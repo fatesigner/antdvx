@@ -1,4 +1,5 @@
 import { defineComponent, h, PropType, reactive, ref, shallowRef } from 'vue';
+import { ReloadOutlined } from '@ant-design/icons-vue';
 import { bindLazyFunc } from '@fatesigner/utils';
 import { AsyncComponentLoader } from '@vue/runtime-core';
 import { Alert, Modal, Spin } from 'ant-design-vue';
@@ -6,8 +7,7 @@ import to from 'await-to-js';
 import { isArray, mergeWith } from 'lodash-es';
 import { timer } from 'rxjs';
 
-import { XButtonRefresh } from '../button';
-import { IconCloseLine } from '../iconfont';
+import { XButton } from '../button';
 import { ScrollView } from '../scroll-view';
 import { TransitionCollapse, TransitionOpacity, TransitionZoom } from '../transitions';
 
@@ -52,7 +52,18 @@ const XModalError = defineComponent({
             v-slots={{
               message: () => [
                 ctx.error,
-                <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />
+                <XButton
+                  only-icon
+                  color='primary'
+                  size='small'
+                  type='link'
+                  handler={ctx.reload}
+                  v-slots={{
+                    icon() {
+                      return <ReloadOutlined />;
+                    }
+                  }}
+                />
               ]
             }}
           />
@@ -277,7 +288,7 @@ export const XModal = defineComponent({
         onOk={ctx.onOk}
         v-slots={{
           cancelText: () => (ctx.$slots?.cancelText ? ctx.$slots?.cancelText() : undefined),
-          closeIcon: () => (ctx.$slots?.closeIcon ? ctx.$slots?.closeIcon() : <IconCloseLine scale='1.2' />),
+          // closeIcon: () => (ctx.$slots?.closeIcon ? ctx.$slots?.closeIcon() : <IconCloseLine scale='1.2' />),
           footer: () => (ctx.$slots?.footer ? ctx.$slots?.footer() : undefined),
           okText: () => (ctx.$slots?.okText ? ctx.$slots?.okText() : undefined),
           title: () => (ctx.$slots?.title ? ctx.$slots?.title() : undefined),

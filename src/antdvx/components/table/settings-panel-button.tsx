@@ -1,16 +1,16 @@
 import { defineComponent, ref, watch } from 'vue';
+import { ReloadOutlined, SettingOutlined } from '@ant-design/icons-vue';
 import { notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
 import { XButton } from '../button';
 import { XButtonProps } from '../button/types';
-import { IconListSettingsLine, IconLoader5Line } from '../iconfont';
 
 /**
- * 表格设置面板 按钮
+ * 表格设置按钮，点击后弹出表格设置面板
  */
 export const XTableSettingsPanelButton = defineComponent({
-  name: 'x-table-settings-panel-button',
+  name: 'XTableSettingsPanelButton',
   props: {
     ...XButtonProps,
     onlyIcon: {
@@ -77,7 +77,7 @@ export const XTableSettingsPanelButton = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconListSettingsLine />,
+            ctx.loading_ ? <ReloadOutlined spin={true} /> : <SettingOutlined />,
             ctx.$slots?.default ? (
               ctx.$slots?.default()
             ) : ctx.onlyIcon ? undefined : (

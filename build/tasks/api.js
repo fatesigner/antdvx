@@ -10,7 +10,7 @@ const https = require('https');
 const globby = require('globby');
 const { exec } = require('child_process');
 
-const { convertBridgeStrToHump } = require('../utils');
+const { convertBridgeStrToHump, capitalize } = require('../utils');
 
 gulp.task('api', async function () {
   // 读取文件配置的环境变量
@@ -50,8 +50,18 @@ gulp.task('api', async function () {
       child.on('exit', function () {
         fs.writeFileSync(
           path.join(outputPath, 'index.ts'),
-          `import { httpService } from '@/app/core/services';\n\rimport {${tags.map((x) => ` ${x}Api`).join(',')} } from './api';\n\r` +
-            tags.map((tag) => `export const ${tag.replace(tag[0], tag[0].toLowerCase())}Api = new ${tag}Api(null, '', httpService as any);`).join('\n\r') +
+          `import { httpService } from '@/app/core/services';\n\rimport {${tags
+            .map((x) => ` ${x}Api`)
+            .join(',')} } from './api';\n\r` +
+            tags
+              .map(
+                (tag) =>
+                  `export const ${tag.replace(
+                    tag[0],
+                    tag[0].toLowerCase()
+                  )}Api = new ${tag}Api(null, '', httpService as any);`
+              )
+              .join('\n\r') +
             '\n',
           {
             encoding: 'utf-8'
@@ -71,20 +81,36 @@ gulp.task('api', async function () {
 
     const tags_ = new Set();
 
-    Object.keys(data.paths).forEach((endpointPath) => {
-      const operations = Object.keys(data.paths[endpointPath]);
+    const newPaths = {};
 
+    const nameRegex = /^[A-Za-z_]+[\w_]*$/;
+
+    Object.keys(data.paths).forEach((endpointPath) => {
+      let validName = true;
+      const t = data.paths[endpointPath];
+      const operations = Object.keys(t);
       operations.forEach((operation) => {
         // 收集 tags
-        if (data.paths[endpointPath][operation].tags) {
-          data.paths[endpointPath][operation].tags.forEach((tag) => {
-            tag = convertBridgeStrToHump(tag);
-            tags_.add(`${tag.charAt(0).toUpperCase() + tag.slice(1)}`);
+        if (t[operation].tags) {
+          t[operation].tags.forEach((tag) => {
+            if (nameRegex.test(tag)) {
+              tag = convertBridgeStrToHump(tag);
+              tags_.add(`${tag.charAt(0).toUpperCase() + tag.slice(1)}`);
+            } else {
+              validName = false;
+            }
           });
         }
-        data.paths[endpointPath][operation].operationId = endpointPath.replace('/api/', '').replace(/\//g, '');
+        // t[operation].operationId = endpointPath.replace('/api/', '').replace(/\//g, '');
+        t[operation].operationId = endpointPath.replace('/api/', '').replace(/\//g, '_') + capitalize(operation);
       });
+      if (validName) {
+        // 跳过不合法的名称
+        newPaths[endpointPath] = t;
+      }
     });
+
+    data.paths = newPaths;
 
     tags = [...tags_].sort((a, b) => a.localeCompare(b));
 

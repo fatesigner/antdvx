@@ -1,12 +1,13 @@
+import { computed, defineComponent, KeepAlive } from 'vue';
 import { RouterView } from 'vue-router';
+import { MenuOutlined } from '@ant-design/icons-vue';
+import { TransitionSlide } from 'antdvx';
 import { getMatchedRoute } from 'antdvx/helpers';
-import { IconMenuLine, TransitionSlide } from 'antdvx';
-import { KeepAlive, computed, defineComponent } from 'vue';
 
 import { AppStore } from '@/app/core/store';
-import { NavUser } from '@/app/layout/shared/user';
-import { Sidebar } from '@/app/layout/shared/sidebar';
 import { NavLanguage } from '@/app/layout/shared/language';
+import { Sidebar } from '@/app/layout/shared/sidebar';
+import { NavUser } from '@/app/layout/shared/user';
 
 import $styles from './layout-sidebar.module.less';
 
@@ -35,14 +36,13 @@ const NavHeader = defineComponent({
   render(ctx) {
     return (
       <header class={$styles.header}>
-        <div class='tw-flex-initial tw-self-center tw-pt-2 tw-pb-2'>
+        <div class='tw-flex-initial tw-self-center tw-pb-2 tw-pt-2'>
           <div
             class={$styles.folder}
             onClick={() => {
               ctx.collapsed = !ctx.collapsed;
-            }}
-          >
-            <IconMenuLine color='primary' />
+            }}>
+            <MenuOutlined color='primary' />
           </div>
         </div>
         <div class='tw-flex-1 tw-self-center'></div>
@@ -78,11 +78,11 @@ export default defineComponent({
       <div class={$styles.wrap}>
         <Sidebar />
         <div class='tw-flex-1 tw-overflow-hidden'>
-          <div class='tw-flex tw-flex-col tw-h-full'>
+          <div class='tw-flex tw-h-full tw-flex-col'>
             <div class='tw-flex-initial'>
               <NavHeader />
             </div>
-            <div class='tw-flex-1 tw-bg-gray-100 tw-overflow-hidden'>
+            <div class='tw-flex-1 tw-overflow-hidden tw-bg-gray-100'>
               <RouterView
                 v-slots={{
                   default({ Component, route }) {

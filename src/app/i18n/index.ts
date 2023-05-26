@@ -2,8 +2,8 @@
  * index
  */
 
-import { ValueOf } from '@fatesigner/typed';
 import { createVueI18n } from '@fatesigner/i18n';
+import { ValueOf } from '@fatesigner/typed';
 import { convertModelArrToEnum } from '@fatesigner/utils';
 
 import { ENV } from '@/app/core/constants';
@@ -26,13 +26,16 @@ export const Languages = convertModelArrToEnum([
 
 export type LanguageType = ValueOf<typeof Languages.enum>;
 
+const modules = import.meta.glob('./locales/*.ts');
+console.log(modules);
+
 // 创建 i18n
 export const i18n = createVueI18n(
   {
     locale: ENV.APP_LANG,
     messages: {
       // 同步加载默认语言包，因为使用按需加载的方式，所以在此不导入其他语言包
-      [ENV.APP_LANG]: require(`./locales/${ENV.APP_LANG}`).default
+      // [ENV.APP_LANG]: modules[ENV.APP_LANG]
     },
     // 是否使用 vue-i18n Legacy API 模式，默认为 true
     legacy: true,
@@ -43,12 +46,15 @@ export const i18n = createVueI18n(
   },
   {
     loadLocale(lang) {
-      return import(`./locales/${lang}`).then(async (msg) => {
+      return import(`./locales/${lang}.ts`).then(async (msg) => {
         return msg.default;
       });
     }
   }
 );
+
+// 初始化语言
+i18n.set(ENV.APP_LANG as any);
 
 // 注册勾子，当语言包加载完成后执行
 i18n.hooks.afterSet.tap(function (lang) {

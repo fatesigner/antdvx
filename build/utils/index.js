@@ -309,7 +309,11 @@ exports.convertBridgeStrToHump = function (bridge) {
  */
 exports.convertHumpStrToBridge = function (hump, lowercase = false) {
   if (hump) {
-    // 先处理连续大写的情况
+    // 处理整个字符串都是大写的情况
+    if (!/[a-z]+/.test(hump)) {
+      return hump.toLowerCase();
+    }
+    // 处理连续大写的情况
     hump = hump.replace(/([A-Z]{2,})/g, function (match, p1) {
       return exports.capitalize(p1.substring(0, p1.length - 1).toLowerCase()) + p1.substring(p1.length - 1, p1.length);
     });
@@ -333,12 +337,18 @@ exports.convertHumpStrToBridge = function (hump, lowercase = false) {
  */
 exports.convertHumpStrToSpace = function (hump, lowercase = false) {
   if (hump) {
-    // 先处理连续大写的情况
+    // 处理整个字符串都是大写的情况
+    if (!/[a-z]+/.test(hump)) {
+      return hump;
+    }
+    // 处理连续大写的情况
     if (hump === 'DLA') {
       console.log(
         hump.replace(/([A-Z]{2,})/g, function (match, p1) {
           // p1 is non-digits, p2 digits, and p3 non-alphanumerics
-          return exports.capitalize(p1.substring(0, p1.length - 1).toLowerCase()) + p1.substring(p1.length - 1, p1.length);
+          return (
+            exports.capitalize(p1.substring(0, p1.length - 1).toLowerCase()) + p1.substring(p1.length - 1, p1.length)
+          );
         })
       );
     }
@@ -441,12 +451,26 @@ exports.writeFileSafely = async function (writeLocation, content, options, forma
  * @param inputPath  源文件路径
  * @param outputPath  输出文件路径
  * @param filename   文件名
+ * @param writeOptions
+ * @param format 是否格式化代码
  * @returns fileContent
  */
-exports.compileTemplate = async function (variables, inputPath, outputPath = '', filename = '', writeOptions) {
+exports.compileTemplate = async function (
+  variables,
+  inputPath,
+  outputPath = '',
+  filename = '',
+  writeOptions = null,
+  format = false
+) {
   if (!fs.existsSync(inputPath)) {
     throw new Error('The file does not exist: ' + inputPath);
   }
+
+  if (outputPath && !filename) {
+    filename = path.basename(outputPath);
+  }
+
   const data = await readFile(inputPath, 'utf8').catch((err) => {
     if (err) {
       throw err;
@@ -457,17 +481,19 @@ exports.compileTemplate = async function (variables, inputPath, outputPath = '',
 
   if (outputPath) {
     // 写入文件
-    await exports
-      .writeFileSafely(outputPath, content, Object.assign({ encoding: 'utf8', flag: 'wx' }, writeOptions))
+    return exports
+      .writeFileSafely(outputPath, content, Object.assign({ encoding: 'utf8', flag: 'wx' }, writeOptions), format)
       .then(() => {
         // 创建成功，输出消息
         const stats = fs.statSync(outputPath);
         // eslint-disable-next-line promise/always-return
-        console.info(`${chalk.green('Created')} ${filename || outputPath} (${exports.convertToBytesUnit(stats.size)})`);
+        // console.info(`${chalk.green('Created')} ${filename} (${exports.convertToBytesUnit(stats.size)})`);
+        return `${chalk.green('Created')} ${filename} (${exports.convertToBytesUnit(stats.size)})`;
       })
       .catch((err) => {
         console.log(err.message);
-        console.info(`${chalk.red('Failed')} EEXIST: file already exists, open '${outputPath}'`);
+        // console.info(`${chalk.red('Failed')} EEXIST: file already exists, open '${outputPath}'`);
+        throw new Error(`${chalk.red('Failed')} EEXIST: file already exists, open '${outputPath}'`);
       });
   }
 

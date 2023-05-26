@@ -1,15 +1,16 @@
+import { computed, defineComponent, onBeforeUnmount, onMounted, provide, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import { addClass, removeClass } from '@fatesigner/utils/document';
 import { LayoutSider } from 'ant-design-vue';
 import { ScrollView } from 'antdvx';
 import { getEventArgs } from 'antdvx/utils';
-import { addClass, removeClass } from '@fatesigner/utils/document';
-import { Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
-import { computed, defineComponent, onBeforeUnmount, onMounted, provide, ref } from 'vue';
+import { animationFrameScheduler, fromEvent, merge, Subscription } from 'rxjs';
 import { filter, map, subscribeOn, switchMap, takeUntil, takeWhile, tap } from 'rxjs/operators';
 
 import { ENV } from '@/app/core/constants';
 import { AppStore } from '@/app/core/store';
 import { NavMenu } from '@/app/layout/shared/menus';
+import { LogoImage } from '@/assets';
 
 import $styles from './sidebar.module.less';
 
@@ -139,7 +140,7 @@ export const Sidebar = defineComponent({
         theme={ctx.theme}
         width={ctx.width}
         v-model={[ctx.collapsed, 'collapsed']}>
-        <div class='tw-relative tw-flex tw-flex-col tw-h-full'>
+        <div class='tw-relative tw-flex tw-h-full tw-flex-col'>
           <div class='tw-flex-initial'>
             <div class={$styles.header} ref='headerRef'>
               <RouterLink
@@ -149,7 +150,7 @@ export const Sidebar = defineComponent({
                   default({ href }) {
                     return (
                       <a class={$styles.logo} href={href}>
-                        <img src={require('@/assets/img/logo.png')} alt='' title='' />
+                        <img src={LogoImage} alt='' title='' />
                       </a>
                     );
                   }
@@ -160,7 +161,7 @@ export const Sidebar = defineComponent({
               </h1>
             </div>
           </div>
-          <div class='tw-flex-1 tw-overflow-hidden tw-relative'>
+          <div class='tw-relative tw-flex-1 tw-overflow-hidden'>
             <NavMenu mode='inline' />
           </div>
           <div class={$styles.border} ref='borderRef'>

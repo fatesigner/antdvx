@@ -3,12 +3,12 @@
  */
 
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 
 import { i18n } from '@/app/i18n';
 
 export const Dayjs = {
   install() {
-    const duration = require('dayjs/plugin/duration');
     dayjs.extend(duration);
 
     const loadLang = async (lang) => {

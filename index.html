@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no,width=device-width" />
+  <meta name="format-detection" content="telephone=no,email=no" />
+  <meta name="renderer" content="webkit" />
+  <meta http-equiv="Content-Security-Policy" />
+  <meta name="description" content="<%= title %>" />
+  <% if (baseHref) { %>
+  <base href="<%= baseHref %>" target="_self">
+  <% } %>
+  <% if (!baseHref) { %>
+  <base target="_self">
+  <% } %>
+  <link rel="canonical" href="<%= url %>"/>
+  <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+  <title><%= title %></title>
+</head>
+<body>
+<noscript>
+  <strong>Please enable JavaScript to continue.</strong>
+</noscript>
+<div id="app"></div>
+<script type="module" src="/src/main.ts"></script>
+</body>
+</html>

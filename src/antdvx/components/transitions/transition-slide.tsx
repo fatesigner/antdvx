@@ -1,4 +1,4 @@
-import { PropType, Transition, defineComponent } from 'vue';
+import { defineComponent, PropType, Transition } from 'vue';
 
 import { ANTDVX_DIRECTIONS } from '../../constants';
 
@@ -20,7 +20,7 @@ export const TransitionSlide = defineComponent({
     },
     direction: {
       // 'up', 'right', 'down', 'left'
-      type: String as PropType<typeof ANTDVX_DIRECTIONS[number]>,
+      type: String as PropType<(typeof ANTDVX_DIRECTIONS)[number]>,
       default: 'down'
     },
     disabled: {

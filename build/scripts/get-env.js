@@ -20,7 +20,8 @@ module.exports = function () {
     dotenv.parse(fs.readFileSync(path.join(envsDir, '.env'))),
     dotenv.parse(fs.readFileSync(path.join(envsDir, '.env.' + mode))),
     {
-      NODE_ENV
+      NODE_ENV,
+      mode
     }
   );
 };

@@ -7,6 +7,7 @@
  * 1、避免因引入 polyfill 而带来的全局变量被污染的副作用
  * 2、避免生成重复的 helper 函数
  * 支持 jsx
+ * react：需安装 @babel/preset-react @babel/plugin-transform-react-jsx
  * vue：  需安装 @vue/babel-preset-jsx
  */
 

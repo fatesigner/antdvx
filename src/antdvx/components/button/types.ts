@@ -3,7 +3,7 @@ import { PropType } from 'vue';
 import { ANTDVX_BUTTON_TYPES, ANTDVX_COLORS, ANTDVX_SIZES } from '../../constants';
 
 /**
- * XButton component props type
+ * Antd Button 二次封装的 Props 类型
  */
 export const XButtonProps = {
   // Antd
@@ -70,7 +70,7 @@ export const XButtonProps = {
    * 设置按钮大小
    */
   size: {
-    type: String as PropType<typeof ANTDVX_SIZES[number]>,
+    type: String as PropType<(typeof ANTDVX_SIZES)[number]>,
     default: 'default'
   },
   /**
@@ -83,7 +83,7 @@ export const XButtonProps = {
    * 设置按钮类型，新增 outline、3d 类型
    */
   type: {
-    type: String as PropType<typeof ANTDVX_BUTTON_TYPES[number]>
+    type: String as PropType<(typeof ANTDVX_BUTTON_TYPES)[number]>
   },
 
   // Custom
@@ -91,7 +91,7 @@ export const XButtonProps = {
    * 按钮颜色
    */
   color: {
-    type: String as PropType<typeof ANTDVX_COLORS[number]>
+    type: String as PropType<(typeof ANTDVX_COLORS)[number]>
   },
   /**
    * 当 loading 为 true 时，是否显示 spin 图标

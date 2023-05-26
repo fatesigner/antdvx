@@ -1,13 +1,13 @@
+import { defineComponent, KeepAlive, onMounted, ref } from 'vue';
 import { RouterView } from 'vue-router';
 import { ConfigProvider } from 'ant-design-vue';
+import { createXModal, TransitionSlide, XModal } from 'antdvx';
 import { getMatchedRoute } from 'antdvx/helpers';
-import { KeepAlive, defineComponent, onMounted, ref } from 'vue';
-import { TransitionSlide, XDrawer, XModal, createXDrawer, createXModal } from 'antdvx';
 
-import { Api } from '@/mocks';
-import { i18n } from '@/app/i18n';
 import { AppStore } from '@/app/core/store';
+import { i18n } from '@/app/i18n';
 import { ProgressBar } from '@/app/shared/progress-bar';
+import { Api } from '@/mocks';
 
 /**
  * App
@@ -40,7 +40,7 @@ export const App = defineComponent({
                 },
                 render(ctx) {
                   return (
-                    <div class='tw-pt-4 tw-pb-8 tw-px-12'>
+                    <div class='tw-px-12 tw-pb-8 tw-pt-4'>
                       <UpdatePassword
                         class='tw-w-full'
                         readonly={ctx.readonly}
@@ -55,14 +55,6 @@ export const App = defineComponent({
               })
             };
           })
-      ),
-      individuation: createXDrawer(
-        {
-          width: 300,
-          title: '个性化设置'
-        },
-        () => import('@/app/layout/shared/individuation').then(({ IndividuationDrawer }) => ({ default: IndividuationDrawer })),
-        {}
       )
     });
 
@@ -113,7 +105,6 @@ export const App = defineComponent({
           }}
         />
         <ProgressBar />
-        <XDrawer {...ctx.popupRefs.individuation} />
         <XModal {...ctx.popupRefs.updatePassword} />
       </ConfigProvider>
     );

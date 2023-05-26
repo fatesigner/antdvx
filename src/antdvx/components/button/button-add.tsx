@@ -1,8 +1,8 @@
-import { notification } from 'ant-design-vue';
 import { defineComponent, ref, watch } from 'vue';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons-vue';
+import { notification } from 'ant-design-vue';
 
 import { i18nMessages } from '../../i18n/messages';
-import { IconAddLine, IconLoader5Line } from '../iconfont';
 
 import { XButton } from './button';
 import { XButtonProps } from './types';
@@ -75,8 +75,16 @@ export const XButtonAdd = defineComponent({
         onClick={ctx.trigger}
         v-slots={{
           default: () => [
-            ctx.loading_ ? <IconLoader5Line spin={true} /> : <IconAddLine style={{ marginRight: ctx.onlyIcon ? undefined : '-2px' }} />,
-            ctx.$slots?.default ? ctx.$slots?.default() : ctx.onlyIcon ? undefined : <span>{ctx.$t(i18nMessages.antd.action.add)}</span>
+            ctx.loading_ ? (
+              <LoadingOutlined spin={true} />
+            ) : (
+              <PlusOutlined style={{ marginRight: ctx.onlyIcon ? undefined : '-2px' }} />
+            ),
+            ctx.$slots?.default ? (
+              ctx.$slots?.default()
+            ) : ctx.onlyIcon ? undefined : (
+              <span>{ctx.$t(i18nMessages.antd.action.add)}</span>
+            )
           ]
         }}
       />

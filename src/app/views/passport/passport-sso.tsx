@@ -1,10 +1,11 @@
-import { XModal } from 'antdvx';
+import { defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Modal } from 'ant-design-vue';
-import { defineComponent, ref } from 'vue';
+import { XModal } from 'antdvx';
 
-import PassportSso from '@/app/shared/passport/sso';
 import { authService, sessionService } from '@/app/core/services';
+import PassportSso from '@/app/shared/passport/sso';
+import { AvatarImage } from '@/assets';
 
 /**
  * SSO 授权入口
@@ -41,7 +42,7 @@ export default defineComponent({
         userid: user?.USER_ID,
         realname: user?.realname,
         // 用户头像
-        avatar: user?.avatar || require('@/assets/img/avatar_default.png'),
+        avatar: user?.avatar || AvatarImage,
         // accessToken 有效时间 24 天
         tokenExpirationTime: new Date().getTime() + 24 * 60 * 60 * 1000,
         accessToken: `Bearer ${user?.ApiToken}`,

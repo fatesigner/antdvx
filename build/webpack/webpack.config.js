@@ -785,6 +785,9 @@ module.exports = async function (options) {
         port
       }
     );
+    config.watchOptions = {
+      aggregateTimeout: 600
+    };
   } else {
     config.plugins.push({
       apply: (compiler) => {

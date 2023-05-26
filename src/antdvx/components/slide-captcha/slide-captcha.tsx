@@ -1,4 +1,5 @@
 import { computed, defineComponent, onBeforeUnmount, onMounted, PropType, reactive, ref, Teleport, watch } from 'vue';
+import { CheckOutlined, CloseOutlined, ReloadOutlined } from '@ant-design/icons-vue';
 import { addClass, removeClass } from '@fatesigner/utils/document';
 import to from 'await-to-js';
 import dayjs from 'dayjs';
@@ -8,25 +9,14 @@ import { map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, waitTransitionend } from '../../utils';
 import { XButton } from '../button';
-import { IconCheckLine, IconCloseLine, IconRefreshLine } from '../iconfont';
 
-const defaultImages = [
-  require('./assets/1.jpg'),
-  require('./assets/2.jpg'),
-  require('./assets/3.jpg'),
-  require('./assets/4.jpg')
-];
+const defaultImages = Object.values(import.meta.glob('./assets/*.{png,jpg,jpeg,PNG,JPEG}', { eager: true, as: 'url' }));
 
 /**
  * 验证码弹出层
  */
 const SlideModal = defineComponent({
   name: 'SlideModal',
-  components: {
-    XButton,
-    IconCloseLine,
-    IconRefreshLine
-  },
   props: {
     theme: {
       type: String as PropType<'dark' | 'light'>,
@@ -386,8 +376,7 @@ const SlideModal = defineComponent({
     return (
       <div
         class={['slide-modal-wrap', ctx.theme === 'dark' ? 'slide-modal-dark' : 'slide-modal-light']}
-        style={ctx.wrapStyle}
-      >
+        style={ctx.wrapStyle}>
         <dl class='slide-modal-arrow'>
           <dt />
           <dd />
@@ -434,12 +423,12 @@ const SlideModal = defineComponent({
             <div class='slide-modal-actions'>
               <div class='slide-modal-action'>
                 <XButton size='mini' type='link' onClick={ctx.close}>
-                  <IconCloseLine scale='1.2' />
+                  <CloseOutlined />
                 </XButton>
               </div>
               <div class='slide-modal-action'>
                 <XButton size='mini' type='link' onClick={ctx.refreshImage}>
-                  <IconRefreshLine />
+                  <ReloadOutlined />
                 </XButton>
               </div>
             </div>
@@ -452,13 +441,10 @@ const SlideModal = defineComponent({
 });
 
 /**
- * 验证码
+ * 验证码控件
  */
 export const SlideCaptcha = defineComponent({
   name: 'SlideCaptcha',
-  components: {
-    IconCheckLine
-  },
   emits: ['update:presented', 'update:valid'],
   inheritAttrs: false,
   props: {
@@ -587,7 +573,7 @@ export const SlideCaptcha = defineComponent({
     if (ctx.valid) {
       inner = [
         <div class='slide-captcha-being'>
-          <IconCheckLine scale='1.2' />
+          <CheckOutlined />
         </div>,
         <div class='slide-captcha-tip' title={ctx.$t(i18nMessages.antd.slideCaptcha.validText)}>
           {ctx.$t(i18nMessages.antd.slideCaptcha.validText)}
@@ -611,8 +597,7 @@ export const SlideCaptcha = defineComponent({
         title={
           ctx.valid ? ctx.$t(i18nMessages.antd.slideCaptcha.validText) : ctx.$t(i18nMessages.antd.slideCaptcha.tip)
         }
-        onClick={ctx.presentCaptchaModal}
-      >
+        onClick={ctx.presentCaptchaModal}>
         {inner}
       </div>,
       <Teleport to='body'>

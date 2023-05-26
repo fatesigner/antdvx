@@ -3,11 +3,11 @@
  * 响应式媒体查询配置
  */
 
+import { isString } from '@fatesigner/utils/type-check';
 import enquire from 'enquire.js';
 import { BehaviorSubject } from 'rxjs';
-import { isString } from '@fatesigner/utils/type-check';
 
-const tailwindcssConfig = require('./tailwind.config');
+import tailwindcssConfig from './tailwind.config';
 
 type eventType = 'setup' | 'match' | 'unmatch';
 type screenType =
@@ -47,7 +47,10 @@ Object.entries(tailwindcssConfig.theme.screens).forEach(([key, item]: any[]) => 
   if (isString(item)) {
     mediaStr = `screen and (min-width: ${item})`;
   } else {
-    mediaStr = `screen and ${[item.min ? `(min-width: ${item.min})` : undefined, item.max ? `(max-width: ${item.max})` : undefined]
+    mediaStr = `screen and ${[
+      item.min ? `(min-width: ${item.min})` : undefined,
+      item.max ? `(max-width: ${item.max})` : undefined
+    ]
       .filter((x) => !!x)
       .join(' and ')}`;
   }
@@ -93,7 +96,9 @@ export function enquireRegister(
   if (max && Object.prototype.hasOwnProperty.call(tailwindcssConfig.theme.screens, max)) {
     max = tailwindcssConfig.theme.screens[max];
   }
-  const mediaStr = `screen and ${[min ? `(min-width: ${min})` : undefined, max ? `(max-width: ${max})` : undefined].filter((x) => !!x).join(' and ')}`;
+  const mediaStr = `screen and ${[min ? `(min-width: ${min})` : undefined, max ? `(max-width: ${max})` : undefined]
+    .filter((x) => !!x)
+    .join(' and ')}`;
   return enquire.register(mediaStr, {
     setup: function () {
       // Load in content via AJAX (just the once)

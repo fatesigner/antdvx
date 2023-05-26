@@ -19,6 +19,6 @@ module.exports = {
   OUTPUT_PATH,
   NODE_MODULES_Path,
   // Api json 文档地址，用于生成 http 服务层
-  API_SCHEMA: `/swagger/all/swagger.json`,
-  API_JSON_PATH: path.join(BUILD_PATH, 'api.json')
+  API_SCHEMA: `/swagger/V3/swagger.json`,
+  API_JSON_PATH: path.join(BUILD_PATH, 'api-schema.json')
 };

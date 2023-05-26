@@ -3,6 +3,9 @@ import { Button, notification } from 'ant-design-vue';
 
 import { XButtonProps } from './types';
 
+/**
+ * Antd Button 二次封装
+ */
 export const XButton = defineComponent({
   name: 'XButton',
   props: XButtonProps,
@@ -70,7 +73,10 @@ export const XButton = defineComponent({
           'ant-btn-mini': ctx.size === 'mini',
           'ant-loading': !ctx.spin && ctx.loading_
         }}
-        {...props}>
+        {...props}
+        v-slots={{
+          icon: ctx.$slots.icon
+        }}>
         {ctx.$slots.default?.({ loading: ctx.loading_ })}
       </Button>
     );

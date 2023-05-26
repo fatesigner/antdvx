@@ -1,9 +1,9 @@
-import { PropType, Transition, defineComponent } from 'vue';
+import { defineComponent, PropType, Transition } from 'vue';
 
 import $styles from './transitions-opacity.module.less';
 
 /**
- * 透明度
+ * 透明度过渡
  */
 export const TransitionOpacity = defineComponent({
   name: 'TransitionOpacity',

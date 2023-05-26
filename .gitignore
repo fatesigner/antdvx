@@ -3,6 +3,7 @@
 # release
 release.md
 /deploykeys*
+/build/generate/output/**
 
 # dependencies
 node_modules

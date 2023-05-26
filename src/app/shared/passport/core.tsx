@@ -8,6 +8,7 @@ import { of, timer } from 'rxjs';
 
 import { authService, sessionService } from '@/app/core/services';
 import { i18nMessages } from '@/app/i18n';
+import { AvatarImage, MenusJson } from '@/assets';
 
 import Passport from './passport';
 
@@ -158,7 +159,7 @@ export default defineComponent({
               childrenKey: 'children'
             });
 
-            menus = strutree.filter(require('@/assets/json/menus.json'), (node: any) => {
+            menus = strutree.filter(MenusJson as any[], (node: any) => {
               return !node?.auth || node?.auth;
             }) as any[];
 
@@ -178,7 +179,7 @@ export default defineComponent({
           userid: res.data.Result.User?.ID,
           username: res.data.Result.User?.Account,
           // 用户头像
-          avatar: require('@/assets/img/avatar_default.png'),
+          avatar: AvatarImage,
           // accessToken 有效时间 24 天
           tokenExpirationTime: new Date().getTime() + 24 * 60 * 60 * 1000,
           accessToken: 'zzzz',

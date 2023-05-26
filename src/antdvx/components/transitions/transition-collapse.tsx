@@ -1,4 +1,4 @@
-import { PropType, Transition, defineComponent } from 'vue';
+import { defineComponent, PropType, Transition } from 'vue';
 
 import { getContentHeight } from '../../utils';
 

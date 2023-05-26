@@ -1,0 +1,324 @@
+import { defineComponent, onMounted, PropType, ref } from 'vue';
+import { ODataHelper } from '@fatesigner/utils/odata';
+import { isNullOrUndefined } from '@fatesigner/utils/type-check';
+import { Alert, DatePicker, Form, FormItem, Input, Modal, notification, Spin, Upload } from 'ant-design-vue';
+import { IconFileUploadLine, TransitionCollapse, XButton, XButtonRefresh } from 'antdvx';
+import { Field as VeeField } from 'vee-validate';
+
+import { httpService } from '@/app/core/services';
+import { createForm } from '@/app/plugins/vee-validate';
+
+/**
+ * <%= label %> Form
+ */
+export default defineComponent({
+  name: '<%= name %>Form',
+  props: {
+    id: [Number, String],
+    model: {
+      type: Object as PropType<any>,
+      default() {
+        return {};
+      }
+    }
+  },
+  emits: ['close'],
+  setup(props: any, { emit }) {
+    const error = ref(false);
+    const loading = ref(true);
+
+    // 保存表单模型原始数据
+    const modelData = ref<any>({});
+
+    // 定义表单当前是否为编辑状态
+    const isEditting = !isNullOrUndefined(props.id);
+
+    // 文件列表
+    const fileList = ref([]);
+
+    // 定义表单
+    const form = createForm<any>(
+      {
+        validateOnMount: false,
+        initialValues: {
+          ...props.model,
+          FileList: []
+        }
+      },
+      async (values: any) => {
+        const formData = new FormData();
+        fileList.value.forEach(function (f) {
+          formData.append('files', f);
+        });
+        if (props?.model?.ID) {
+          return Promise.resolve([
+            `/api/`,
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+          ])
+            .then(() => {
+              notification.success({ message: 'Update success' });
+              emit('close', values);
+            })
+            .catch((err) => {
+              Modal.error({
+                title: err.message
+              });
+            });
+        }
+        return Promise.resolve([
+          `/api/`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }
+        ])
+          .then(() => {
+            notification.success({ message: 'Add success' });
+            emit('close', values);
+          })
+          .catch((err) => {
+            Modal.error({
+              title: err.message
+            });
+          });
+      }
+    );
+
+    // 初始化时，获取表单数据
+    const loadData = async () => {
+      if (props.id) {
+        loading.value = true;
+        return Promise.resolve({
+          filter: ODataHelper.filter('id', 'eq', props.id)
+        })
+          .then((res: any) => {
+            const data = res?.data?.Result?.[0];
+            if (data) {
+              modelData.value = data;
+              form.context.resetForm({
+                values: data as any
+              });
+            }
+          })
+          .catch((err) => {
+            error.value = err.message;
+          })
+          .finally(() => {
+            loading.value = false;
+          });
+      } else {
+        loading.value = false;
+      }
+    };
+
+    onMounted(() => {
+      loadData();
+    });
+
+    return () => {
+      return (
+        <div class='tw-flex tw-h-full tw-flex-col'>
+          {loading.value ? (
+            <div class='tw-flex-1 tw-p-16 tw-text-center'>
+              <Spin size='large' />
+            </div>
+          ) : error.value ? (
+            <div class='tw-flex-1 tw-p-16 tw-text-center'>
+              <Alert
+                show-icon
+                type='error'
+                message='Error'
+                v-slots={{
+                  description: () => [
+                    error.value,
+                    <XButtonRefresh only-icon color='primary' size='small' type='link' handler={loadData} />
+                  ]
+                }}
+              />
+              <XButtonRefresh onlyIcon handler={loadData} />
+            </div>
+          ) : (
+            [
+              <div class='tw-flex-1 tw-overflow-y-auto tw-pt-4 tw-pr-8 tw-pb-4 tw-pl-8'>
+                <Form
+                  class='tw-m-auto tw-max-w-xl tw-pr-8'
+                  layout='horizontal'
+                  labelAlign='right'
+                  labelCol={{ style: { width: '180px' } }}>
+                  <div class='tw-grid tw-grid-cols-12 tw-gap-4'>
+                    <FormItem class='tw-col-span-12' label='Code' required>
+                      <VeeField
+                        name='Code'
+                        label='Code'
+                        rules='required'
+                        v-slots={{
+                          default({ field, handleChange, meta, errors }) {
+                            return [
+                              <Input
+                                class='tw-w-full'
+                                value={field.value}
+                                placeholder=''
+                                onChange={(e) => {
+                                  handleChange(e);
+                                }}
+                              />,
+                              <TransitionCollapse>
+                                {meta.touched && !meta.valid && errors.length ? (
+                                  <div class='invalid-message'>{errors[0]}</div>
+                                ) : undefined}
+                              </TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-12' label='Name'>
+                      <VeeField
+                        name='Name'
+                        label='Name'
+                        v-slots={{
+                          default({ field, handleChange, meta, errors }) {
+                            return [
+                              <Input
+                                class='tw-w-full'
+                                value={field.value}
+                                placeholder=''
+                                onChange={(e) => {
+                                  handleChange(e);
+                                }}
+                              />,
+                              <TransitionCollapse>
+                                {meta.touched && !meta.valid && errors.length ? (
+                                  <div class='invalid-message'>{errors[0]}</div>
+                                ) : undefined}
+                              </TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-12' label='Start Date'>
+                      <VeeField
+                        name='StartDate'
+                        v-slots={{
+                          default({ field, handleChange, meta, errors }) {
+                            return [
+                              <DatePicker
+                                class='tw-w-32 tw-max-w-full'
+                                showToday
+                                format='YYYY-MM-DD'
+                                valueFormat='YYYY-MM-DD'
+                                value={field.value}
+                                placeholder=''
+                                onChange={(date, dateStr) => {
+                                  handleChange(dateStr);
+                                }}
+                              />,
+                              <TransitionCollapse>
+                                {meta.touched && !meta.valid && errors.length ? (
+                                  <div class='invalid-message'>{errors[0]}</div>
+                                ) : undefined}
+                              </TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-12' label='End Date'>
+                      <VeeField
+                        name='EndDate'
+                        v-slots={{
+                          default({ field, handleChange, meta, errors }) {
+                            return [
+                              <DatePicker
+                                class='tw-w-32 tw-max-w-full'
+                                showToday
+                                format='YYYY-MM-DD'
+                                valueFormat='YYYY-MM-DD'
+                                value={field.value}
+                                placeholder=''
+                                onChange={(date, dateStr) => {
+                                  handleChange(dateStr);
+                                }}
+                              />,
+                              <TransitionCollapse>
+                                {meta.touched && !meta.valid && errors.length ? (
+                                  <div class='invalid-message'>{errors[0]}</div>
+                                ) : undefined}
+                              </TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                    <FormItem class='tw-col-span-12' label='Excel File'>
+                      <VeeField
+                        name='Files'
+                        label='Excel File'
+                        v-slots={{
+                          default({ field, handleChange, meta, errors }) {
+                            return [
+                              <Upload
+                                multiple
+                                accept='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                                fileList={field.value}
+                                beforeUpload={() => {
+                                  return false;
+                                }}
+                                onChange={({ fileList }) => {
+                                  fileList = fileList.map((x) => (x.originFileObj ? x.originFileObj : x));
+                                  handleChange(fileList);
+                                }}
+                                v-slots={{
+                                  default() {
+                                    return (
+                                      <XButton>
+                                        <IconFileUploadLine />
+                                        <span>
+                                          {form.context.values.fileIDs?.length ? 'Add Excel File' : 'Choose Excel File'}
+                                        </span>
+                                      </XButton>
+                                    );
+                                  }
+                                }}
+                              />,
+                              <TransitionCollapse>
+                                {meta.touched && !meta.valid && errors.length ? (
+                                  <div class='invalid-message'>{errors[0]}</div>
+                                ) : undefined}
+                              </TransitionCollapse>
+                            ];
+                          }
+                        }}
+                      />
+                    </FormItem>
+                  </div>
+                </Form>
+              </div>,
+              <div class='tw-flex tw-justify-end tw-space-x-2 tw-border-t tw-border-gray-200 tw-p-4'>
+                <XButton color='secondary' size='large' type='3d' loading={form.isSubmitting} onClick={form.submit}>
+                  Save
+                </XButton>
+                <XButton
+                  size='large'
+                  type='3d'
+                  onClick={() => {
+                    emit('close');
+                  }}>
+                  Cancel
+                </XButton>
+              </div>
+            ]
+          )}
+        </div>
+      );
+    };
+  }
+});

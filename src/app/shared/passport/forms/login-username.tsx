@@ -1,7 +1,8 @@
 import { defineComponent, onDeactivated, PropType, reactive, ref, watch } from 'vue';
+import { LockOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { isNullOrUndefined } from '@fatesigner/utils/type-check';
 import { Checkbox, Form, FormItem, Input, InputPassword, notification } from 'ant-design-vue';
-import { IconLockLine, IconUserLine, SlideCaptcha, TransitionCollapse, XButton } from 'antdvx';
+import { SlideCaptcha, TransitionCollapse, XButton } from 'antdvx';
 import to from 'await-to-js';
 import { Field as VeeField } from 'vee-validate';
 
@@ -178,7 +179,7 @@ export default defineComponent({
                     }}
                     v-slots={{
                       prefix() {
-                        return <IconUserLine />;
+                        return <UserOutlined />;
                       }
                     }}
                   />,
@@ -210,7 +211,7 @@ export default defineComponent({
                     }}
                     v-slots={{
                       prefix() {
-                        return <IconLockLine />;
+                        return <LockOutlined />;
                       }
                     }}
                   />,
@@ -255,8 +256,7 @@ export default defineComponent({
                 class={$styles.link}
                 onClick={() => {
                   ctx.$emit('forgetPasswordClick');
-                }}
-              >
+                }}>
                 {ctx.$t(i18nMessages.app.passport.updatePassword.title)}
               </a>
             </div>
@@ -270,8 +270,7 @@ export default defineComponent({
             size='large'
             type='primary'
             loading={ctx.form.isSubmitting}
-            onClick={ctx.form.submit}
-          >
+            onClick={ctx.form.submit}>
             {ctx.$t(i18nMessages.app.passport.login.submit)}
           </XButton>
           {ctx.$slots?.extra?.()}

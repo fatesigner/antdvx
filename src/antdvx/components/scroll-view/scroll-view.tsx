@@ -1,16 +1,28 @@
-import { Alert, Spin } from 'ant-design-vue';
-import { isFunction } from '@fatesigner/utils/type-check';
+import {
+  defineComponent,
+  nextTick,
+  onActivated,
+  onBeforeUnmount,
+  onDeactivated,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+  TransitionGroup,
+  watch
+} from 'vue';
+import { ReloadOutlined } from '@ant-design/icons-vue';
 import { bindPromiseQueue, debounce } from '@fatesigner/utils';
-import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { ReplaySubject, Subscription, animationFrameScheduler, fromEvent, merge } from 'rxjs';
 import { addClass, hasClass, removeClass, scrollTo as scrollTo_ } from '@fatesigner/utils/document';
-import { PropType, TransitionGroup, defineComponent, nextTick, onActivated, onBeforeUnmount, onDeactivated, onMounted, onUnmounted, ref, watch } from 'vue';
+import { isFunction } from '@fatesigner/utils/type-check';
+import { Alert, Spin } from 'ant-design-vue';
+import { animationFrameScheduler, fromEvent, merge, ReplaySubject, Subscription } from 'rxjs';
+import { filter, map, subscribeOn, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { ANTDVX_SIZES } from '../../constants';
 import { i18nMessages } from '../../i18n/messages';
 import { getBoundaryPosition, getEventArgs, getEventTarget, getTranslate3dStyle } from '../../utils';
-
-import { XButtonRefresh } from '../button';
+import { XButton } from '../button';
 
 const styles = {
   wrap: 'antdvx-scroll-wrap',
@@ -96,7 +108,7 @@ export interface IScrollViewOptions {
   /**
    * loading 图标尺寸
    */
-  loadingSize?: typeof ANTDVX_SIZES[number];
+  loadingSize?: (typeof ANTDVX_SIZES)[number];
 
   /**
    * 是否立即执行初始化函数, 默认为 true
@@ -654,7 +666,21 @@ export const ScrollView = defineComponent({
                       show-icon
                       v-slots={{
                         message: () => ctx.$t(i18nMessages.antd.asyncAction.error),
-                        description: () => [ctx.error, <XButtonRefresh only-icon color='primary' size='small' type='link' handler={ctx.reload} />]
+                        description: () => [
+                          ctx.error,
+                          <XButton
+                            only-icon
+                            color='primary'
+                            size='small'
+                            type='link'
+                            handler={ctx.reload}
+                            v-slots={{
+                              icon() {
+                                return <ReloadOutlined />;
+                              }
+                            }}
+                          />
+                        ]
                       }}
                     />
                   </div>
@@ -665,9 +691,13 @@ export const ScrollView = defineComponent({
         ) : undefined}
         <div class={[styles.view, ctx.native ? null : styles.hideScrollbar]} ref='viewRef' onScroll={ctx.onScroll}>
           {[
-            !ctx.loading_ && !ctx.error ? [ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })] : undefined,
+            !ctx.loading_ && !ctx.error
+              ? [ctx.$slots?.default({ loading: ctx.loading_, reload: ctx.load })]
+              : undefined,
             !ctx.native && ctx.scrollX ? (
-              <div class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]} onClick={ctx.horBarClick}>
+              <div
+                class={[styles.bar, styles.horizontal, ctx.autohide ? styles.hidden : null]}
+                onClick={ctx.horBarClick}>
                 <div class={styles.thumb} ref='horThumbRef' />
               </div>
             ) : undefined,

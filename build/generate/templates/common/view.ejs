@@ -1,0 +1,340 @@
+import { createVNode, defineComponent, nextTick, reactive } from 'vue';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
+import { InputSearch, Modal, notification } from 'ant-design-vue';
+import {
+  createXModal,
+  createXTable,
+  XButton,
+  XButtonAdd,
+  XButtonDelete,
+  XButtonEdit,
+  XButtonExport,
+  XButtonRefresh,
+  XCombobox,
+  XModal,
+  XTable
+} from 'antdvx';
+import to from 'await-to-js';
+import { clone } from 'lodash-es';
+import { timer } from 'rxjs';
+
+import { formatterService, httpService } from '@/app/core/services';
+import { PageWrapper } from '@/app/shared/page-wrapper';
+
+/**
+ * <%= label %>
+ */
+export default defineComponent({
+  name: '<%= viewName %>',
+  setup() {
+    /**
+     * 查询参数
+     */
+    const query = reactive({
+      keywords: undefined,
+      status: undefined
+    });
+
+    /**
+     * 表单 弹出层
+     */
+    const formPopupRef = createXModal(
+      {
+        width: 660,
+        footer: null,
+        destroyOnClose: true
+      },
+      () => import('./<%= bridgeName %>.form'),
+      {
+        model: undefined,
+        onClose(updated) {
+          formPopupRef.handler.dismiss();
+          if (updated) {
+            tbRef.handler.reload();
+          }
+        }
+      }
+    );
+
+    /**
+     * 表格
+     */
+    const tbRef = createXTable({
+      name: '<%= viewName %>Table',
+      rowKey: 'Id',
+      rowSelection: {
+        fixed: 'left',
+        selectedRowKeys: []
+      },
+      autoScroll: true,
+      scroll: {
+        x: true
+      },
+      columns: [
+        {
+          title: 'Code',
+          dataIndex: 'Code',
+          width: 100,
+          excel: {}
+        },
+        {
+          title: 'Name',
+          dataIndex: 'Name',
+          width: 150,
+          excel: {}
+        },
+        {
+          title: 'Value',
+          dataIndex: 'Value',
+          width: 120,
+          customRender({ text }) {
+            return formatterService.currencyFormat(text);
+          },
+          excel: {}
+        },
+        {
+          title: 'Start Date',
+          dataIndex: 'StartDate',
+          width: 120,
+          sorter: true,
+          customRender({ text }) {
+            return formatterService.dateFormat(text, 'YYYY-MM-DD');
+          },
+          excel: {
+            format: 'date'
+          }
+        },
+        {
+          title: 'End Date',
+          dataIndex: 'EndDate',
+          width: 120,
+          sorter: true,
+          customRender({ text }) {
+            return formatterService.dateFormat(text, 'YYYY-MM-DD');
+          },
+          excel: {
+            format: 'date'
+          }
+        },
+        {
+          title: 'Operation',
+          align: 'center',
+          width: 145,
+          fixed: 'right',
+          customRender({ record }) {
+            return (
+              <div class='tw-flex tw-flex-wrap tw-items-center tw-justify-center tw-gap-2'>
+                <XButtonEdit
+                  notify
+                  color='primary'
+                  size='small'
+                  type='outline'
+                  onClick={() => {
+                    formPopupRef.options.title = 'Update <%= label %>';
+                    formPopupRef.compProps.model = clone(record);
+                    formPopupRef.handler.present();
+                  }}
+                />
+                <XButtonDelete
+                  confirmed
+                  notify
+                  size='small'
+                  type='outline'
+                  handler={() => {
+                    return httpService
+                      .post('/api/module/delete', {
+                        ids: [record.Id]
+                      })
+                      .then(() => {
+                        tbRef.handler.reload();
+                      });
+                  }}
+                />
+              </div>
+            );
+          }
+        }
+      ],
+      dataSource: {
+        transport: {
+          read({ pageNo, pageSize }, params, filters, sorter, model, action) {
+            const keywords = query.keywords?.trim() || undefined;
+            return Promise.resolve({
+              data: Array.from(new Array(20)).map((x, i) => ({
+                Id: i,
+                Code: '000' + i,
+                Name: 'Project Name ' + i,
+                Value: 100000,
+                StartDate: '2022-12-06',
+                EndDate: '2023-01-29'
+              }))
+            });
+            /* return httpService
+              .post('/api/module/get', {
+                req: {
+                  keywords,
+                  status: query.status,
+                  // PageOrder: '',
+                  // dataType: '',
+                  // PageSort: true,
+                  ...(action === 'excel'
+                    ? {
+                        PageIndex: 1,
+                        PageSize: 100000
+                      }
+                    : {
+                        PageIndex: pageNo,
+                        PageSize: pageSize
+                      })
+                }
+              })
+              .then((res) => {
+                tbRef.options.scroll.x = tbRef.options.columns.reduce(
+                  (prev, cur) => prev + ((cur?.width as number) || 120),
+                  0
+                );
+                return {
+                  data: res?.data?.Entity?.PageData ?? [],
+                  total: res?.data?.Entity?.DataTotal ?? 0
+                };
+              }); */
+          }
+        }
+      }
+    });
+
+    /**
+     * 加载数据
+     */
+    const loadData = async () => {
+      // 延迟，等同 nextTick
+      await timer(300).toPromise();
+      const [err] = await to(tbRef.handler.reload());
+      if (err) {
+        notification.error({ message: err.message, duration: 1 });
+      }
+    };
+
+    return () => {
+      return (
+        <PageWrapper
+          bgGray
+          breadcrumb
+          overflow='hidden'
+          title='<%= label %>'
+          v-slots={{
+            actions() {
+              return (
+                <div class='tw-flex tw-flex-wrap tw-items-start tw-justify-end tw-gap-2'>
+                  <XButtonAdd
+                    type='3d'
+                    onClick={() => {
+                      formPopupRef.options.title = 'Add <%= label %>';
+                      formPopupRef.compProps.model = null;
+                      formPopupRef.handler.present();
+                    }}>
+                    Add
+                  </XButtonAdd>
+                  <XButton
+                    type='3d'
+                    color={tbRef.options.rowSelection.selectedRowKeys.length ? 'primary' : undefined}
+                    disabled={!tbRef.options.rowSelection.selectedRowKeys.length}
+                    onClick={() => {
+                      Modal.confirm({
+                        title: 'Confirm',
+                        icon: createVNode(ExclamationCircleOutlined),
+                        content: 'Confirm and approve these data ?',
+                        onOk() {
+                          return Promise.resolve({
+                            req: {
+                              // Seqs: tbRef.handler.getSelectedData().map((x) => x.id),
+                              // DataType: '',
+                              Status: ''
+                            }
+                          })
+                            .then(() => {
+                              notification.success({ message: 'Apply success', duration: 4 });
+                              loadData();
+                            })
+                            .catch((err) => {
+                              notification.error({ message: err.message });
+                            });
+                        }
+                      });
+                    }}>
+                    Apply
+                  </XButton>
+                  <XButtonExport
+                    type='3d'
+                    options={{
+                      async excel() {
+                        return tbRef.handler.downloadExcel(undefined, `<%= viewName %>.xlsx`);
+                      }
+                    }}>
+                    Export
+                  </XButtonExport>
+                </div>
+              );
+            }
+          }}>
+          <div class='tw-mt-2 tw-h-full tw-px-2'>
+            <div class='tw-h-full tw-bg-white tw-p-2'>
+              <XTable
+                {...tbRef}
+                v-slots={{
+                  title({ suffixNode }) {
+                    return (
+                      <div class='tw-flex tw-flex-wrap tw-items-center tw-gap-2'>
+                        <div class='tw-flex tw-items-center tw-gap-2'>
+                          <div class='tw-w-[50px] tw-pr-1 tw-text-right'>Status</div>
+                          <XCombobox
+                            class='tw-w-28'
+                            autoBind
+                            clearable
+                            searchable
+                            dataKeyField='key'
+                            dataValueField='key'
+                            dataTextField='text'
+                            dropdownMatchSelectWidth={false}
+                            placeholder='All'
+                            v-model={[query.status, 'value']}
+                            onChange={loadData}
+                            options={[
+                              { key: 1, text: 'new' },
+                              { key: 2, text: 'Inprogress' },
+                              { key: 3, text: 'confirmed' }
+                            ]}
+                          />
+                        </div>
+                        <InputSearch
+                          class='tw-w-20 sm:tw-w-32 lg:tw-w-52'
+                          allowClear
+                          placeholder='Search keywords ...'
+                          v-model={[query.keywords, 'value']}
+                          onSearch={loadData}
+                          onChange={(e) => {
+                            if (!e.target.value) {
+                              loadData();
+                            }
+                          }}
+                          onKeydown={(e) => {
+                            if (e.key === 'Enter') {
+                              loadData();
+                            }
+                          }}
+                        />
+                        <XButtonRefresh color='primary' size='mini' type='link' handler={loadData} />
+                        {suffixNode}
+                      </div>
+                    );
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <XModal {...formPopupRef} />
+        </PageWrapper>
+      );
+    };
+  }
+});

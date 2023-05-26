@@ -6,18 +6,9 @@ import {
   ANTDVX_COLORS,
   ANTDVX_SIZES,
   createXModal,
-  IconArrowDownSLine,
   IXButtonExportOptions,
   XButton,
-  XButtonAdd,
-  XButtonDelete,
-  XButtonDownload,
-  XButtonEdit,
-  XButtonExport,
-  XButtonRefresh,
-  XButtonSave,
-  XButtonSpin,
-  XButtonUpload
+  XButtonAdd
 } from 'antdvx';
 import { timer } from 'rxjs';
 
@@ -175,7 +166,7 @@ export default defineComponent({
       <PageWrapper title='Button' overflow='scroll'>
         <div class='tw-p-2'>
           <div class='tw-space-y-4 tw-bg-white tw-p-4'>
-            <div class='tw-text-lg'>基础</div>
+            <div class='tw-text-lg'>基础z</div>
             <XButton href='https://www.google.com' disabled={false}>
               ddd
             </XButton>
@@ -252,12 +243,8 @@ export default defineComponent({
                             </Menu>
                           );
                         }
-                      }}
-                    >
-                      <XButton type={type}>
-                        Actions
-                        <IconArrowDownSLine />
-                      </XButton>
+                      }}>
+                      <XButton type={type}>Actions</XButton>
                     </Dropdown>
                   </div>
                 </div>
@@ -272,25 +259,24 @@ export default defineComponent({
                 <div class='tw-flex tw-flex-wrap tw-border tw-border-gray-300 tw-p-2'>
                   {ANTDVX_BUTTON_TYPES.map((type) => (
                     <div class='tw-p-2'>
-                      <XButtonUpload type={type} handler={ctx.upload(3000)} />
+                      <XButton type={type} handler={ctx.upload(3000)} />
                     </div>
                   ))}
                 </div>
                 <div class='tw-flex tw-flex-wrap tw-border tw-border-gray-300 tw-p-2'>
                   {ANTDVX_BUTTON_TYPES.map((type) => (
                     <div class='tw-p-2'>
-                      <XButtonExport type={type} options={ctx.exportOptions} />
+                      <XButton type={type} />
                     </div>
                   ))}
                   <div class='tw-p-2'>
-                    <XButtonExport type='3d' options={ctx.exportOptions} ref='exportRef' />
+                    <XButton type='3d' ref='exportRef' />
                     <XButton
                       size='small'
                       type='link'
                       onClick={() => {
                         ctx.exportRef?.trigger('json');
-                      }}
-                    >
+                      }}>
                       Export json
                     </XButton>
                     <XButton
@@ -298,8 +284,7 @@ export default defineComponent({
                       type='link'
                       onClick={() => {
                         ctx.exportRef?.trigger('image');
-                      }}
-                    >
+                      }}>
                       Export image
                     </XButton>
                   </div>
@@ -309,25 +294,25 @@ export default defineComponent({
                     <XButtonAdd notify type='outline' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonEdit notify type='outline' handler={ctx.load(3000, true)} />
+                    <XButton notify type='outline' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonSave notify type='outline' handler={ctx.load(3000, true)} />
+                    <XButton notify type='outline' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonDelete confirmed notify type='outline' handler={ctx.load(3000, true)} />
+                    <XButton notify type='outline' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonRefresh notify type='outline' handler={ctx.load(3000, true)} />
+                    <XButton notify type='outline' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonUpload notify type='outline' handler={ctx.upload(3000)} />
+                    <XButton notify type='outline' handler={ctx.upload(3000)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonUpload autosize showIcon={false} type='outline' handler={ctx.upload(3000)}>
+                    <XButton type='outline' handler={ctx.upload(3000)}>
                       <div>AAA</div>
                       <div>zzz</div>
-                    </XButtonUpload>
+                    </XButton>
                   </div>
                 </div>
                 <div class='tw-flex tw-flex-wrap'>
@@ -335,22 +320,22 @@ export default defineComponent({
                     <XButtonAdd only-icon type='text' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonEdit only-icon type='text' handler={ctx.load(3000, true)} />
+                    <XButton only-icon type='text' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonSave only-icon type='text' handler={ctx.load(3000, true)} />
+                    <XButton only-icon type='text' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonDelete confirmed only-icon type='text' handler={ctx.load(3000, true)} />
+                    <XButton type='text' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonRefresh only-icon type='text' handler={ctx.load(3000, true)} />
+                    <XButton only-icon type='text' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonDownload only-icon type='text' handler={ctx.load(3000, true)} />
+                    <XButton only-icon type='text' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonUpload only-icon type='text' handler={ctx.load(3000, true)} />
+                    <XButton only-icon type='text' handler={ctx.load(3000, true)} />
                   </div>
                 </div>
                 <div class='tw-flex tw-flex-wrap'>
@@ -358,22 +343,22 @@ export default defineComponent({
                     <XButtonAdd color='success' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonEdit color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonSave color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonDelete confirmed color='danger' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton color='danger' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonRefresh color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonDownload color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonUpload color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                 </div>
                 <div class='tw-flex tw-flex-wrap'>
@@ -381,45 +366,32 @@ export default defineComponent({
                     <XButtonAdd only-icon color='success' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonEdit only-icon color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton only-icon color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonSave only-icon color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton only-icon color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonDelete
-                      confirmed
-                      only-icon
-                      color='danger'
-                      size='mini'
-                      type='link'
-                      handler={ctx.load(3000, true)}
-                    />
+                    <XButton only-icon color='danger' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonRefresh only-icon color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton only-icon color='primary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonDownload
-                      only-icon
-                      color='secondary'
-                      size='mini'
-                      type='link'
-                      handler={ctx.load(3000, true)}
-                    />
+                    <XButton only-icon color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonUpload only-icon color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
+                    <XButton only-icon color='secondary' size='mini' type='link' handler={ctx.load(3000, true)} />
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonSpin title='AAAAAAAAA' handler={ctx.load(3000, true)}>
+                    <XButton title='AAAAAAAAA' handler={ctx.load(3000, true)}>
                       XSDASDASD
-                    </XButtonSpin>
+                    </XButton>
                   </div>
                   <div class='tw-p-2'>
-                    <XButtonSpin disabled handler={ctx.load(3000, true)}>
+                    <XButton disabled handler={ctx.load(3000, true)}>
                       XSDASDASD
-                    </XButtonSpin>
+                    </XButton>
                   </div>
                 </div>
               </div>

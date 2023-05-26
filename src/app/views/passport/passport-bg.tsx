@@ -1,9 +1,10 @@
-import { useRoute } from 'vue-router';
 import { computed, defineComponent } from 'vue';
+import { useRoute } from 'vue-router';
 
 import { ENV } from '@/app/core/constants';
-import { AppFooter } from '@/app/layout/shared/footer';
+import AppFooter from '@/app/layout/shared/footer/footer';
 import PassportCore from '@/app/shared/passport/core';
+import { LogoImage } from '@/assets';
 
 import $styles from './passport-bg.module.less';
 
@@ -33,14 +34,14 @@ export default defineComponent({
     return (
       <div class={$styles.wrap}>
         <div class={$styles.bg}>
-          <div class='_md:tw-hidden tw-m-auto tw-space-y-8 tw-p-8'>
-            <div class='tw-text-2xl lg:tw-text-5xl tw-text-white'>{ENV.APP_TITLE}</div>
-            <div class='tw-text-md lg:tw-text-2xl tw-text-white'></div>
+          <div class='tw-m-auto tw-space-y-8 tw-p-8 _md:tw-hidden'>
+            <div class='tw-text-2xl tw-text-white lg:tw-text-5xl'>{ENV.APP_TITLE}</div>
+            <div class='tw-text-md tw-text-white lg:tw-text-2xl'></div>
           </div>
         </div>
         <div class={$styles.container}>
           <div class={$styles.content}>
-            <img class={$styles.logo} height='46' src={require('@/assets/img/logo.png')} alt={ENV.APP_TITLE} title={ENV.APP_TITLE} />
+            <img class={$styles.logo} height='46' src={LogoImage} alt={ENV.APP_TITLE} title={ENV.APP_TITLE} />
             <div class={$styles.title}>{ENV.APP_TITLE}</div>
             <PassportCore />
             <div class={$styles.footer}>
