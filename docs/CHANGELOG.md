@@ -1,3 +1,10 @@
+# [1.0.0-alpha.132](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.131...v1.0.0-alpha.132) (2023-06-30)
+
+
+### Bug Fixes
+
+* 修复 Combobox 组件，当 disabled 为 true 时依旧可以加载数据 ([2730fe5](https://github.com/fatesigner/antdvx/commit/2730fe541785f9e3468af53a4a8dff310a45517b))
+
 # [1.0.0-alpha.131](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.130...v1.0.0-alpha.131) (2023-05-04)
 
 
