@@ -1,7 +1,7 @@
+import { computed, defineComponent, nextTick, onMounted, PropType, reactive, ref, watch } from 'vue';
 import { debounce } from '@fatesigner/utils';
-import { AutoComplete, Empty, Select, SelectOption, Spin } from 'ant-design-vue';
 import { isArray, isFunction, isNullOrUndefined, isString } from '@fatesigner/utils/type-check';
-import { PropType, computed, defineComponent, nextTick, onMounted, reactive, ref, watch } from 'vue';
+import { AutoComplete, Empty, Select, SelectOption, Spin } from 'ant-design-vue';
 
 import { ANTDVX_SIZES } from '../../constants';
 
@@ -21,7 +21,7 @@ export interface IXComboboxProps<TModel extends Record<string, any>> {
   /**
    * 控件尺寸
    */
-  size?: typeof ANTDVX_SIZES[number];
+  size?: (typeof ANTDVX_SIZES)[number];
 
   /**
    * 指定是否在初始化时绑定数据源，默认为 false
@@ -165,7 +165,7 @@ export const XCombobox = defineComponent({
   name: 'XCombobox',
   props: {
     size: {
-      type: String as PropType<typeof ANTDVX_SIZES[number]>,
+      type: String as PropType<(typeof ANTDVX_SIZES)[number]>,
       default: 'default'
     },
     autoBind: {
@@ -308,16 +308,24 @@ export const XCombobox = defineComponent({
             displayOptions.splice(
               0,
               displayOptions.length,
-              ...props.options.filter((x) => x?.[props.dataFilterField]?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1)
+              ...props.options.filter(
+                (x) => x?.[props.dataFilterField]?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1
+              )
             );
           } else if (!isNullOrUndefined(props.dataTextField)) {
             displayOptions.splice(
               0,
               displayOptions.length,
-              ...props.options.filter((x) => x?.[props.dataTextField]?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1)
+              ...props.options.filter(
+                (x) => x?.[props.dataTextField]?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1
+              )
             );
           } else {
-            displayOptions.splice(0, displayOptions.length, ...props.options.filter((x) => x?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1));
+            displayOptions.splice(
+              0,
+              displayOptions.length,
+              ...props.options.filter((x) => x?.toString()?.toLowerCase()?.indexOf(_searchInput) > -1)
+            );
           }
         }
       } else {
@@ -374,7 +382,11 @@ export const XCombobox = defineComponent({
       if (visible) {
         // 当数据为空时，每次展开后刷新数据
         if (isFunction(props.optionsLoader)) {
-          if ((props.reloadOnOpen || ((!displayOptions.length || displayOptions.length !== props.options.length) && !loading.value)) && !loading.value) {
+          if (
+            (props.reloadOnOpen ||
+              ((!displayOptions.length || displayOptions.length !== props.options.length) && !loading.value)) &&
+            !loading.value
+          ) {
             await loadData();
           }
         } else {
@@ -458,7 +470,7 @@ export const XCombobox = defineComponent({
     });
 
     onMounted(() => {
-      if (props.autoBind && !props.disabled) {
+      if (props.autoBind) {
         // 初始化时，自动加载数据
         loadData();
       } else {
