@@ -1,3 +1,10 @@
+# [1.0.0-alpha.133](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.132...v1.0.0-alpha.133) (2023-11-16)
+
+
+### Bug Fixes
+
+* 修复 XTable 组件在 updateColumns 后影响 sort 的问题 ([c53af10](https://github.com/fatesigner/antdvx/commit/c53af1020700e8ebdd90d542f59bfd4e9d923bcb))
+
 # [1.0.0-alpha.132](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.131...v1.0.0-alpha.132) (2023-06-30)
 
 
