@@ -602,7 +602,7 @@ export const XTable = defineComponent({
           if (x.sorter) {
             x_.sorter = true;
             // 默认排序
-            if (x.defaultSortOrder) {
+            if (x.defaultSortOrder && !sorter.field) {
               sorter.column = x_;
               sorter.columnKey = x_.dataIndex;
               sorter.field = x_.dataIndex;
