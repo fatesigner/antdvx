@@ -1,3 +1,10 @@
+# [1.0.0-alpha.134](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.133...v1.0.0-alpha.134) (2026-04-15)
+
+
+### Features
+
+* 将 axios 升级至 1.15.0 ([82838f2](https://github.com/fatesigner/antdvx/commit/82838f21384505bd2a982223d1289a3a759b8759))
+
 # [1.0.0-alpha.133](https://github.com/fatesigner/antdvx/compare/v1.0.0-alpha.132...v1.0.0-alpha.133) (2023-11-16)
 
 
