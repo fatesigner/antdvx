@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import Qs from 'qs';
 import { inject, injectable, optional } from 'inversify';
-import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 import { IHttpService } from '../types';
 import { ANTDVX_SYMBOLS } from '../symbols';
@@ -28,6 +28,18 @@ const defaultHttpServiceConfig: HttpServiceConfig = {
   withCredentials: false,
   responseType: 'json'
 };
+
+function getHeaderValue(headers: any, name: string) {
+  if (!headers) {
+    return undefined;
+  }
+
+  if (typeof headers.get === 'function') {
+    return headers.get(name) || headers.get(name.toLowerCase());
+  }
+
+  return headers[name] || headers[name.toLowerCase()];
+}
 
 /**
  * Http 服务
@@ -69,8 +81,10 @@ export class HttpService implements IHttpService {
 
     // 请求拦截: 为 POST 类型的传参序列化
     this.instance.interceptors.request.use(
-      function (config) {
-        if (config.method !== 'get' && config.method !== 'GET' && config.headers['Content-Type'] === HttpContentType.FormUrlEncoded) {
+      function (config: InternalAxiosRequestConfig) {
+        const contentType = getHeaderValue(config.headers, 'Content-Type');
+
+        if ((config.method || '').toLowerCase() !== 'get' && contentType === HttpContentType.FormUrlEncoded) {
           config.data = Qs.stringify(config.data);
         }
         return config;
@@ -145,8 +159,10 @@ export function createHttpService(
 
   // 请求拦截: 为 POST 类型的传参序列化
   Http.interceptors.request.use(
-    function (config) {
-      if (config.method !== 'get' && config.method !== 'GET' && config.headers['Content-Type'] === HttpContentType.FormUrlEncoded) {
+    function (config: InternalAxiosRequestConfig) {
+      const contentType = getHeaderValue(config.headers, 'Content-Type');
+
+      if ((config.method || '').toLowerCase() !== 'get' && contentType === HttpContentType.FormUrlEncoded) {
         config.data = Qs.stringify(config.data);
       }
       return config;
